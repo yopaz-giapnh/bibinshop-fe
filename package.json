@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
-    "test": "pnpm lint && pnpm prettier:check"
+    "test": "pnpm lint && pnpm prettier:check",
+    "generate:type": "rm -rf api/ && orval --config ./config/orval.ts"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.19",
@@ -19,6 +20,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^11.1.7",
     "next": "14.2.3",
+    "orval": "^6.28.2",
     "react": "^18",
     "react-dom": "^18",
     "zod": "^3.23.5"
