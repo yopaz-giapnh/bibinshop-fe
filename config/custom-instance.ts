@@ -1,22 +1,25 @@
+import { getSession } from 'next-auth/react';
+
 const baseURL = process.env.NEXT_PUBLIC_API_URL!;
 
 export type BodyType<BodyData> = BodyData;
 
 async function getAccessToken() {
-  return 'TODO: token';
+  const session = await getSession();
+  return session?.user.accessToken;
 }
 
 export const customInstance = async <T>({
   url,
   method,
-  headers,
+  headers = { 'Content-Type': 'application/vnd.api+json', accept: 'application/vnd.api+json' },
   params,
   data,
   signal
 }: {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  headers?: { Authorization?: string } & { 'Content-Type'?: string };
+  headers?: { Authorization?: string } & { 'Content-Type'?: string } & { accept?: string };
   params?: any;
   data?: BodyType<unknown>;
   responseType?: string;
