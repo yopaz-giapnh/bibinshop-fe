@@ -14,7 +14,8 @@ const typographyVariants = cva('text-foreground', {
       small: 'text-text text-sm font-medium not-italic leading-normal tracking-[0.42px]',
       linkBase:
         'text-paleFrostBlue text-base font-black not-italic leading-normal tracking-[0.9px]',
-      linkSmall: 'text-paleFrostBlue text-sm font-bold not-italic leading-normal tracking-[0.42px]'
+      linkSmall: 'text-paleFrostBlue text-sm font-bold not-italic leading-normal tracking-[0.42px]',
+      body: 'text-black-50 text-base font-normal not-italic leading-normal tracking-[0.48px]'
     }
   }
 });

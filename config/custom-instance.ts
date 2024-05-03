@@ -20,7 +20,7 @@ export const customInstance = async <T>({
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   headers?: { Authorization?: string } & { 'Content-Type'?: string } & { accept?: string };
-  params?: any;
+  params?: unknown;
   data?: BodyType<unknown>;
   responseType?: string;
   signal?: AbortSignal;

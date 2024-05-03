@@ -63,8 +63,11 @@ const config = {
         black: {
           base: 'black',
           10: 'rgba(0, 0, 0, 0.10)',
+          20: 'rgba(0, 0, 0, 0.20)',
           30: 'rgba(0, 0, 0, 0.30)',
+          50: 'rgba(0, 0, 0, 0.50)',
           70: 'rgba(0, 0, 0, 0.70)',
+          80: 'rgba(0, 0, 0, 0.80)',
           90: 'rgba(0, 0, 0, 0.90)'
         },
         white: {
@@ -72,7 +75,8 @@ const config = {
           30: 'rgba(255, 255, 255, 0.30)'
         },
         text: {
-          80: 'rgba(32, 34, 36, 0.80)'
+          80: 'rgba(32, 34, 36, 0.80)',
+          100: '#202224'
         },
         paleFrostBlue: '#F5F6FA'
       },
@@ -97,6 +101,9 @@ const config = {
       },
       fontFamily: {
         sans: ['var(--font-noto-sans-jp)', ...fontFamily.sans]
+      },
+      boxShadow: {
+        base: '0px 4px 10px 0px rgba(0, 0, 0, 0.03)'
       }
     }
   },

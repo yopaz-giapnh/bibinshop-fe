@@ -15,11 +15,11 @@ const components: { title: string; links: { label: string; href?: string }[] }[]
     links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
   },
   {
-    title: 'BIBINについて',
+    title: '会社情報',
     links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
   },
   {
-    title: 'BIBINについて',
+    title: 'サービス',
     links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
   }
 ];
