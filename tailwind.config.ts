@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-const { fontFamily } = require('tailwindcss/defaultTheme');
+import { fontFamily } from 'tailwindcss/defaultTheme';
 
 const config = {
   darkMode: ['class'],
@@ -7,7 +7,8 @@ const config = {
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}'
+    './src/**/*.{ts,tsx}',
+    './features/**/*.{ts,tsx}'
   ],
   prefix: '',
   theme: {
@@ -19,6 +20,9 @@ const config = {
       }
     },
     extend: {
+      backgroundImage: {
+        gradation: 'linear-gradient(74deg, #51B7FF 15.54%, #5CE686 84.04%)'
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -52,7 +56,25 @@ const config = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        }
+        },
+        bibinBlue: {
+          100: '#51B7FF'
+        },
+        black: {
+          base: 'black',
+          10: 'rgba(0, 0, 0, 0.10)',
+          30: 'rgba(0, 0, 0, 0.30)',
+          70: 'rgba(0, 0, 0, 0.70)',
+          90: 'rgba(0, 0, 0, 0.90)'
+        },
+        white: {
+          base: 'white',
+          30: 'rgba(255, 255, 255, 0.30)'
+        },
+        text: {
+          80: 'rgba(32, 34, 36, 0.80)'
+        },
+        paleFrostBlue: '#F5F6FA'
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -74,7 +96,7 @@ const config = {
         'accordion-up': 'accordion-up 0.2s ease-out'
       },
       fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans]
+        sans: ['var(--font-noto-sans-jp)', ...fontFamily.sans]
       }
     }
   },
