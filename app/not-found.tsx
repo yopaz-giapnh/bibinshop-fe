@@ -11,7 +11,7 @@ export default function NotFound() {
       <Typography as="title" element="h1">
         お探しのページが見つかりません
       </Typography>
-      <Link href="/" className="mt-10">
+      <Link href="/" className="mt-10" passHref>
         <Button type="button">ホームへ戻る</Button>
       </Link>
     </div>

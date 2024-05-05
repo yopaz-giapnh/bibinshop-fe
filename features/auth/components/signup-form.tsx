@@ -15,8 +15,8 @@ import { GoogleAuthButton } from './google-auth-button';
 import { PasswordFormField } from './password-form-field';
 import { Separator } from './separator';
 
-export default function LoginForm() {
-  const { signInByEmailAndPassword } = useAuth();
+export default function SignupForm() {
+  const { signUpByEmailAndPassword } = useAuth();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -30,22 +30,16 @@ export default function LoginForm() {
     <div>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(signInByEmailAndPassword)}
+          onSubmit={form.handleSubmit(signUpByEmailAndPassword)}
           className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 shadow-base"
         >
           <Typography as="title" element="h1" className="text-center">
-            ログイン
+            新規会員登録
           </Typography>
 
           <div>
             <EmailFormField control={form.control} />
             <PasswordFormField control={form.control} />
-
-            <Link href="/auth/forgot-password" passHref>
-              <Typography as="linkSmall" element="p" className="mt-2 text-right text-bibinBlue-100">
-                パスワードをお忘れですか？
-              </Typography>
-            </Link>
           </div>
 
           <Button
@@ -55,7 +49,7 @@ export default function LoginForm() {
             size="lg"
             variant="lg"
           >
-            {form.formState.isSubmitting ? <LoadingSpinner /> : 'ログイン'}
+            {form.formState.isSubmitting ? <LoadingSpinner /> : '会員登録'}
           </Button>
 
           <div className="flex items-center justify-center gap-6">
@@ -68,31 +62,35 @@ export default function LoginForm() {
 
           <GoogleAuthButton
             onClick={() => {
-              alert('TODO: Google アカウントでログイン');
+              alert('TODO: Google アカウントで作成');
             }}
-            title="Google アカウントでログイン"
+            title="Google アカウントで作成"
           />
+
+          <Typography as="caption" element="p" className="text-center text-black-base">
+            次に進むことで、当社の
+            <Link href={'/privacy-policy'} className="font-bold text-bibinBlue-100" passHref>
+              プライバシー
+            </Link>
+            と
+            <Link href={'/terms-of-service'} className="font-bold text-bibinBlue-100" passHref>
+              利用規約
+            </Link>
+            に同意したものとみなされます。
+          </Typography>
         </form>
       </Form>
 
-      <div className="mt-6 flex items-center justify-center gap-6">
-        <Separator />
-        <Typography as="body" element="p">
-          初めてbibinをご利用する方
+      <div className="mt-6 flex items-center justify-center">
+        <Typography as="caption" element="p" className="text-black-50">
+          すでにアカウントをお持ちですか？
         </Typography>
-        <Separator />
+        <Link href="/login" passHref>
+          <Typography as="linkSmall" element="p" className="text-bibinBlue-100">
+            サインイン
+          </Typography>
+        </Link>
       </div>
-
-      <Link href="/signup" passHref>
-        <Button
-          type="button"
-          className="mt-6 w-full border border-bibinBlue-100 bg-paleFrostBlue text-bibinBlue-100"
-          size="lg"
-          variant="lg"
-        >
-          bibinアカウントを作成する
-        </Button>
-      </Link>
     </div>
   );
 }

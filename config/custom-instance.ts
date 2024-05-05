@@ -20,7 +20,7 @@ export const customInstance = async <T>({
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   headers?: { Authorization?: string } & { 'Content-Type'?: string } & { accept?: string };
-  params?: unknown;
+  params?: string | string[][] | Record<string, string> | URLSearchParams | undefined;
   data?: BodyType<unknown>;
   responseType?: string;
   signal?: AbortSignal;

@@ -16,15 +16,30 @@ export function Copyright() {
       </div>
       <div className="flex gap-5">
         {/* TODO: Facebookアカウント */}
-        <Link href="https://www.instagram.com/bibinews_/" target="_blank" rel="noopener noreferrer">
+        <Link
+          href="https://www.instagram.com/bibinews_/"
+          target="_blank"
+          rel="noopener noreferrer"
+          passHref
+        >
           <FacebookLogo />
         </Link>
         {/* TODO: Xアカウント */}
-        <Link href="https://www.instagram.com/bibinews_/" target="_blank" rel="noopener noreferrer">
+        <Link
+          href="https://www.instagram.com/bibinews_/"
+          target="_blank"
+          rel="noopener noreferrer"
+          passHref
+        >
           <XLogo />
         </Link>
         {/* TODO: Instagramアカウント */}
-        <Link href="https://www.instagram.com/bibinews_/" target="_blank" rel="noopener noreferrer">
+        <Link
+          href="https://www.instagram.com/bibinews_/"
+          target="_blank"
+          rel="noopener noreferrer"
+          passHref
+        >
           <InstagramLogo />
         </Link>
       </div>

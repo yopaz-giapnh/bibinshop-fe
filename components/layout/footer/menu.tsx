@@ -22,7 +22,7 @@ function Separator() {
 
 function MenuItem({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
-    <Link href={href}>
+    <Link href={href} passHref>
       <div className="flex flex-col items-center">
         {icon}
         <Typography as="title" element="h1" className="mt-2 text-white-base">

@@ -34,7 +34,7 @@ export function Links() {
           </Typography>
           <div className="mt-4 flex flex-col gap-4">
             {component.links.map((link) => (
-              <Link key={link.label} href={link.href || '#'}>
+              <Link key={link.label} href={link.href || '#'} passHref>
                 <Typography as="caption" element="p">
                   {link.label}
                 </Typography>

@@ -12,6 +12,7 @@ const typographyVariants = cva('text-foreground', {
       subTitle: 'text-black-90 text-base font-black not-italic leading-normal tracking-[0.9px]',
       caption: 'text-black-70 text-sm  font-normal not-italic leading-normal tracking-[0.42px]',
       small: 'text-text text-sm font-medium not-italic leading-normal tracking-[0.42px]',
+      linkXSmall: 'text-black-80 text-xs font-bold not-italic leading-normal tracking-[0.36px]',
       linkBase:
         'text-paleFrostBlue text-base font-black not-italic leading-normal tracking-[0.9px]',
       linkSmall: 'text-paleFrostBlue text-sm font-bold not-italic leading-normal tracking-[0.42px]',
