@@ -10,13 +10,13 @@ Import to [Postman](https://raw.githubusercontent.com/spree/spree/master/api/doc
  * OpenAPI spec version: 2.0.0
  */
 import type { Product } from './product';
-import type { CreditCardIncludes } from './creditCardIncludes';
+import type { ProductIncludes } from './productIncludes';
 import type { ListLinks } from './listLinks';
 import type { ListMeta } from './listMeta';
 
 export type ProductListResponse = {
   data: Product[];
-  included?: CreditCardIncludes[];
+  included?: ProductIncludes[];
   links: ListLinks;
   meta: ListMeta;
 };

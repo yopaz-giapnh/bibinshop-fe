@@ -78,7 +78,9 @@ const config = {
           80: 'rgba(32, 34, 36, 0.80)',
           100: '#202224'
         },
-        paleFrostBlue: '#F5F6FA'
+        paleFrostBlue: '#F5F6FA',
+        lightRed: '#FE735C',
+        sunburstYellow: '#FCBE2D'
       },
       borderRadius: {
         lg: 'var(--radius)',
