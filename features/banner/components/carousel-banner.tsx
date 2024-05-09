@@ -20,6 +20,8 @@ type Banner = {
   backgroundColor: string;
 };
 
+const slideInterval = 5000 as const;
+
 export function CarouselBanner() {
   // TODO: ダミーデータ差し替える
   const banners: Banner[] = [
@@ -70,6 +72,18 @@ export function CarouselBanner() {
     api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
+
+    const intervalId = setInterval(() => {
+      if (api.selectedScrollSnap() === api.scrollSnapList().length - 1) {
+        api.scrollTo(0);
+      } else {
+        api.scrollNext();
+      }
+    }, slideInterval);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [api]);
 
   return (
