@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Noto_Sans_JP } from 'next/font/google';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 import { Providers } from './providers';
 
 const notoSansJP = Noto_Sans_JP({
@@ -24,7 +24,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <body className={cn('min-h-screen bg-background font-sans antialiased', notoSansJP.variable)}>
         <Providers>
           <Navbar />
-          <main>{children}</main>
+          <Suspense>
+            <main>{children}</main>
+          </Suspense>
           <Footer />
         </Providers>
       </body>

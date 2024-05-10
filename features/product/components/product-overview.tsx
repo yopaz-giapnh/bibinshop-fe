@@ -1,24 +1,21 @@
 'use client';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
-import { useProductsListSuspense } from '@/lib/api/products/products';
+import { ProductListResponse } from '@/lib/api/schema';
 import { isImageProductInclude } from '@/utils/product';
-import { ComponentProps } from 'react';
+import { ComponentProps, use } from 'react';
 import { ProductGrid } from './product-grid';
 import { SeeMoreButton } from './see-more-button';
 
 type Props = {
   title: string;
   seeMoreUrl: string;
+  productListResponse: Promise<ProductListResponse>;
 } & Pick<ComponentProps<typeof ProductGrid>, 'columns'>;
 
-export function ProductOverview({ title, seeMoreUrl, columns }: Props) {
-  const {
-    data: { data, included }
-  } = useProductsListSuspense({
-    include: 'images'
-  });
-
+export function ProductOverview({ title, seeMoreUrl, columns, productListResponse }: Props) {
+  const { data, included } = use(productListResponse);
   const imageIncluded = included?.filter(isImageProductInclude);
 
   // TODO: 暫定実装
@@ -40,4 +37,8 @@ export function ProductOverview({ title, seeMoreUrl, columns }: Props) {
       <SeeMoreButton href={seeMoreUrl} />
     </div>
   );
+}
+
+export function ProductOverviewSkeleton() {
+  return <Skeleton className="h-[469px] w-full" />;
 }
