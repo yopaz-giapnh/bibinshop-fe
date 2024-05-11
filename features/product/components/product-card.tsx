@@ -21,10 +21,14 @@ export function ProductCard({ product, imageSize }: Props) {
     <Link className="flex flex-col" href={`/products/${product.attributes.slug}`} passHref>
       <Image
         src={product.images[0].url || ''}
-        alt=""
+        alt={product.attributes.name || ''}
         width={imageSize}
         height={imageSize}
-        className="rounded-[5px]"
+        className={'h-full rounded-[5px] object-cover'}
+        style={{
+          height: imageSize,
+          width: imageSize
+        }}
       />
       <Typography as="xSmall" element="p" className="mt-1">
         {product.attributes.name}

@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   if (!product) return notFound();
 
   return (
-    <div className="h-full w-full bg-paleFrostBlue px-16">
+    <div className="h-full w-full bg-paleFrostBlue px-16 pb-6">
       <div className="pt-[128px]">
         {/* TODO: メニュー取得する */}
         <Breadcrumb
