@@ -1,4 +1,3 @@
-import { useAccountCreation } from '@/lib/api/account/account';
 import { isClientError } from '@/utils/error';
 import * as auth from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -27,14 +26,14 @@ export function useAuth() {
     }
   };
 
-  const accountCreation = useAccountCreation();
+  // const accountCreation = useAccountCreation();
   const signUpByEmailAndPassword = async (credentials: EmailAndPasswordCredentials) => {
     try {
-      await accountCreation.mutateAsync({
-        data: {
-          user: credentials
-        }
-      });
+      // await accountCreation.mutateAsync({
+      //   data: {
+      //     user: credentials
+      //   }
+      // });
       await signInByEmailAndPassword(credentials);
     } catch (error) {
       if (isClientError(error)) {

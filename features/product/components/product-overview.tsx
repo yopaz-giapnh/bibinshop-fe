@@ -1,40 +1,25 @@
-'use client';
-
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
-import { ProductListResponse } from '@/lib/api/schema';
-import { isImageProductInclude } from '@/utils/product';
-import { ComponentProps, use } from 'react';
+import { ComponentProps } from 'react';
+import { ProductOverviewType } from '../types/product-overview';
+import { getProducts, getSeeMoreUrl, getTitle } from '../utils/product-overview';
 import { ProductGrid } from './product-grid';
 import { SeeMoreButton } from './see-more-button';
 
 type Props = {
-  title: string;
-  seeMoreUrl: string;
-  productListResponse: Promise<ProductListResponse>;
+  type: ProductOverviewType;
 } & Pick<ComponentProps<typeof ProductGrid>, 'columns'>;
 
-export function ProductOverview({ title, seeMoreUrl, columns, productListResponse }: Props) {
-  const { data, included } = use(productListResponse);
-  const imageIncluded = included?.filter(isImageProductInclude);
-
-  // TODO: 暫定実装
-  const products = data.map((product) => ({
-    ...product,
-    imageUrl: `${process.env.NEXT_PUBLIC_IMAGE_HOST}${
-      imageIncluded?.find((image) =>
-        product.relationships.images?.data?.find((i) => i?.id === image.id)
-      )?.attributes.styles?.[2].url
-    }`
-  }));
+export async function ProductOverview({ type, columns }: Props) {
+  const products = await getProducts();
 
   return (
     <div className="flex flex-col items-center gap-4">
       <Typography as="title" element="h1" className="text-center">
-        {title}
+        {getTitle(type)}
       </Typography>
       <ProductGrid products={products} columns={columns} className="grid-cols-5" />
-      <SeeMoreButton href={seeMoreUrl} />
+      <SeeMoreButton href={getSeeMoreUrl(type)} />
     </div>
   );
 }

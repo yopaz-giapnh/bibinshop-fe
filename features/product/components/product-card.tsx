@@ -1,13 +1,13 @@
 import { Cart } from '@/components/icons/cart';
 import { Star } from '@/components/icons/star';
 import { Typography } from '@/components/ui/typography';
-import { Product } from '@/lib/api/schema';
+import { components } from '@/lib/api/storefront';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import Image from 'next/image';
 import Link from 'next/link';
 
 type Props = {
-  product: Product & {
+  product: components['schemas']['Product'] & {
     imageUrl: string | undefined;
   };
   imageSize: number;

@@ -1,6 +1,4 @@
-import { getAccountInformationQueryKey } from '@/lib/api/account/account';
-import { Token } from '@/lib/api/schema';
-import { createOrRefreshToken } from '@/lib/api/token/token';
+import { apiClient } from '@/config/api-client';
 import { isNumber } from '@/utils/isNumber';
 import { isString } from '@/utils/string';
 import type { NextAuthOptions } from 'next-auth';
@@ -20,32 +18,33 @@ export const options: NextAuthOptions = {
         if (parsedCredentials.success) {
           try {
             const { email, password } = parsedCredentials.data;
-            const loginResponse = await createOrRefreshToken({
-              grant_type: 'password',
-              username: email,
-              password
+            const loginResponse = await apiClient.POST('/spree_oauth/token', {
+              body: {
+                grant_type: 'password',
+                username: email,
+                password
+              }
             });
 
-            if (loginResponse.access_token) {
-              const userResponse = await fetch(
-                process.env.API_URL + getAccountInformationQueryKey()[0],
-                {
-                  method: 'GET',
-                  headers: {
-                    accept: 'application/vnd.api+json',
-                    Authorization: `Bearer ${loginResponse.access_token}`
-                  }
+            if (loginResponse.data?.access_token) {
+              const userResponse = await apiClient.GET('/api/v2/storefront/account', {
+                headers: {
+                  accept: 'application/vnd.api+json',
+                  Authorization: `Bearer ${loginResponse.data.access_token}`
                 }
-              );
+              });
 
-              if (userResponse.ok) {
-                const user = await userResponse.json();
+              if (!userResponse.error) {
+                const user = userResponse.data;
 
                 return {
                   id: user.data.id,
-                  accessToken: loginResponse.access_token,
-                  refreshToken: loginResponse.refresh_token,
-                  accessTokenExpires: calculateAccessTokenExpires(loginResponse)
+                  accessToken: loginResponse.data.access_token,
+                  refreshToken: loginResponse.data.refresh_token,
+                  accessTokenExpires: calculateAccessTokenExpires({
+                    createdAt: loginResponse.data.created_at,
+                    expiresIn: loginResponse.data.expires_in
+                  })
                 };
               } else {
                 console.log('Unable to retrieve user data');
@@ -102,17 +101,29 @@ export const options: NextAuthOptions = {
 
 const refreshAccessToken = async (token: JWT) => {
   try {
-    console.log('Refreshing access token', token);
-    const refreshResponse = await createOrRefreshToken({
-      grant_type: 'refresh_token',
-      refresh_token: token.refreshToken
+    if (!isString(token.refreshToken)) {
+      throw new Error('Missing refresh token');
+    }
+
+    const refreshResponse = await apiClient.POST('/spree_oauth/token', {
+      body: {
+        grant_type: 'refresh_token',
+        refresh_token: token.refreshToken
+      }
     });
+
+    if (refreshResponse.error) {
+      throw new Error('Failed to refresh access token');
+    }
 
     return {
       ...token,
-      accessToken: refreshResponse.access_token,
-      refreshToken: refreshResponse.refresh_token,
-      accessTokenExpires: calculateAccessTokenExpires(refreshResponse)
+      accessToken: refreshResponse.data?.access_token,
+      refreshToken: refreshResponse.data?.refresh_token,
+      accessTokenExpires: calculateAccessTokenExpires({
+        createdAt: refreshResponse.data?.created_at,
+        expiresIn: refreshResponse.data?.expires_in
+      })
     };
   } catch (error) {
     return {
@@ -122,8 +133,14 @@ const refreshAccessToken = async (token: JWT) => {
   }
 };
 
-function calculateAccessTokenExpires(token: Token): number {
-  const accessTokenExpires = new Date(token.created_at * 1000);
-  accessTokenExpires.setSeconds(accessTokenExpires.getSeconds() + token.expires_in);
+function calculateAccessTokenExpires({
+  createdAt,
+  expiresIn
+}: {
+  createdAt: number;
+  expiresIn: number;
+}): number {
+  const accessTokenExpires = new Date(createdAt * 1000);
+  accessTokenExpires.setSeconds(accessTokenExpires.getSeconds() + expiresIn);
   return accessTokenExpires.getTime();
 }
