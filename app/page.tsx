@@ -1,5 +1,6 @@
 import { Typography } from '@/components/ui/typography';
 import { CarouselBanner } from '@/features/banner/components/carousel-banner';
+import { getProducts } from '@/features/product/api/products';
 import { ProductOverview } from '@/features/product/components/product-overview';
 
 export default async function Page() {
@@ -10,15 +11,30 @@ export default async function Page() {
 
         <div className="flex w-full flex-col">
           <div className="flex flex-col items-center gap-6 px-[46.5px] py-6">
-            <ProductOverview type="bestsellers" columns={5} />
-            <ProductOverview type="new" columns={5} />
+            <ProductOverview
+              title="ベストセラー"
+              seeMoreUrl="/products/bestsellers"
+              products={await getProducts()}
+              columns={5}
+            />
+            <ProductOverview
+              title="新着"
+              seeMoreUrl="/products/new"
+              products={await getProducts()}
+              columns={5}
+            />
           </div>
           <div className="flex flex-col items-center bg-paleFrostBlue px-[46.5px] py-6">
             <Typography as="bold" element="h2" className="text-bibinBlue-100">
               \ 売れてる商品 /
             </Typography>
             <div className="mt-1">
-              <ProductOverview type="ranking" columns={5} />
+              <ProductOverview
+                title="ランキング"
+                seeMoreUrl="/products/ranking"
+                products={await getProducts()}
+                columns={5}
+              />
             </div>
           </div>
         </div>

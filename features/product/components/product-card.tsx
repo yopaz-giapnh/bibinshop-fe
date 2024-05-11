@@ -1,15 +1,13 @@
 import { Cart } from '@/components/icons/cart';
 import { Star } from '@/components/icons/star';
 import { Typography } from '@/components/ui/typography';
-import { components } from '@/lib/api/storefront';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Product } from '../types';
 
 type Props = {
-  product: components['schemas']['Product'] & {
-    imageUrl: string | undefined;
-  };
+  product: Product;
   imageSize: number;
 };
 
@@ -20,9 +18,9 @@ export function ProductCard({ product, imageSize }: Props) {
   };
 
   return (
-    <Link className="flex flex-col" href={`/products/${product.id}`} passHref>
+    <Link className="flex flex-col" href={`/products/${product.attributes.slug}`} passHref>
       <Image
-        src={product.imageUrl || ''}
+        src={product.images[0].url || ''}
         alt=""
         width={imageSize}
         height={imageSize}

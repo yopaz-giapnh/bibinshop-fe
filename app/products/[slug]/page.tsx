@@ -1,6 +1,13 @@
 import { Breadcrumb } from '@/components/layout/breadcrumb';
+import { getProduct } from '@/features/product/api/products';
+import { ProductDetail } from '@/features/product/components/product-detail';
+import { notFound } from 'next/navigation';
 
-export default async function Page() {
+export default async function Page({ params }: { params: { slug: string } }) {
+  const product = await getProduct(params.slug);
+
+  if (!product) return notFound();
+
   return (
     <div className="h-full w-full bg-paleFrostBlue px-16">
       <div className="pt-[128px]">
@@ -29,6 +36,8 @@ export default async function Page() {
             }
           ]}
         />
+
+        <ProductDetail product={product} />
       </div>
     </div>
   );

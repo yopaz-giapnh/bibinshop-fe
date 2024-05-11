@@ -1,7 +1,7 @@
-import { components } from '@/lib/api/storefront';
+import { ProductImageIncludes, ProductIncludes } from '@/features/product/types';
 
-export function isImageProductInclude(
-  productIncludes: components['schemas']['ProductIncludes']
-): productIncludes is components['schemas']['Image'] {
-  return productIncludes.type === 'image';
+export function isProductImageIncludes(
+  productIncludedes: ProductIncludes
+): productIncludedes is ProductImageIncludes {
+  return productIncludedes.type === 'image';
 }

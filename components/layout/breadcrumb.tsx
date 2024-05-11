@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Breadcrumb as BreadcrumbComponent,
   BreadcrumbItem,
@@ -5,6 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
+import React from 'react';
 
 type Menu = {
   name: string;
@@ -21,14 +24,15 @@ export function Breadcrumb({ menus }: Props) {
       <BreadcrumbList>
         {menus.map((menu, index) => {
           const isLast = index === menus.length - 1;
-
           return (
-            <BreadcrumbItem key={menu.name}>
+            <React.Fragment key={menu.name}>
               {index > 0 && <BreadcrumbSeparator />}
-              <BreadcrumbLink href={menu.url} passHref isLast={isLast}>
-                {menu.name}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink href={menu.url} passHref className={isLast ? 'text-black-80' : ''}>
+                  {menu.name}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </React.Fragment>
           );
         })}
       </BreadcrumbList>

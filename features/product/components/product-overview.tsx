@@ -1,25 +1,24 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
 import { ComponentProps } from 'react';
-import { ProductOverviewType } from '../types/product-overview';
-import { getProducts, getSeeMoreUrl, getTitle } from '../utils/product-overview';
+import { Product } from '../types';
 import { ProductGrid } from './product-grid';
 import { SeeMoreButton } from './see-more-button';
 
 type Props = {
-  type: ProductOverviewType;
+  title: string;
+  seeMoreUrl: string;
+  products: Product[];
 } & Pick<ComponentProps<typeof ProductGrid>, 'columns'>;
 
-export async function ProductOverview({ type, columns }: Props) {
-  const products = await getProducts();
-
+export async function ProductOverview({ title, seeMoreUrl, products, columns }: Props) {
   return (
     <div className="flex flex-col items-center gap-4">
       <Typography as="title" element="h1" className="text-center">
-        {getTitle(type)}
+        {title}
       </Typography>
       <ProductGrid products={products} columns={columns} className="grid-cols-5" />
-      <SeeMoreButton href={getSeeMoreUrl(type)} />
+      <SeeMoreButton href={seeMoreUrl} />
     </div>
   );
 }
