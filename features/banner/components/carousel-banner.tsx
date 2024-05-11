@@ -87,26 +87,24 @@ export function CarouselBanner() {
   }, [api]);
 
   return (
-    <div>
-      <Carousel setApi={setApi} className="w-full">
-        <CarouselContent>
-          {banners.map((banner) => (
-            // NOTE: "pl-[426px]は、カテゴリーメニューと同じ位置に設定"
-            <CarouselItem
-              key={banner.id}
-              className="pl-[426px]"
-              style={{
-                backgroundColor: banner.backgroundColor
-              }}
-            >
-              <Link key={banner.id} href={banner.linkUrl} passHref>
-                <Image src={banner.imageUrl} alt="banner" width={790} height={370} />
-              </Link>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselDots current={current} count={count} />
-      </Carousel>
-    </div>
+    <Carousel setApi={setApi} className="w-full">
+      <CarouselContent>
+        {banners.map((banner) => (
+          // NOTE: "pl-[426px]は、カテゴリーメニューと同じ位置に設定"
+          <CarouselItem
+            key={banner.id}
+            className="pl-[426px]"
+            style={{
+              backgroundColor: banner.backgroundColor
+            }}
+          >
+            <Link key={banner.id} href={banner.linkUrl} passHref>
+              <Image src={banner.imageUrl} alt="banner" width={790} height={370} />
+            </Link>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselDots current={current} count={count} />
+    </Carousel>
   );
 }

@@ -36,7 +36,7 @@ export async function getProduct(product_slug: string) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { tags: [TAGS.products] } });
+      return fetch(request, { next: { revalidate: 5, tags: [TAGS.products] } });
     }
   });
 

@@ -1,7 +1,24 @@
 import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { getProduct } from '@/features/product/api/products';
 import { ProductDetail } from '@/features/product/components/product-detail';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+// TODO: メタデータ設定する
+export async function generateMetadata({
+  params
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const product = await getProduct(params.slug);
+
+  if (!product) return notFound();
+
+  return {
+    title: product.attributes.name,
+    description: product.attributes.description
+  };
+}
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const product = await getProduct(params.slug);
