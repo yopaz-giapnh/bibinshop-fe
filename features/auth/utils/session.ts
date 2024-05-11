@@ -10,3 +10,8 @@ export async function isSignedIn() {
   const session = await getServerSession();
   return !!session?.user.accessToken;
 }
+
+export async function getAccessToken() {
+  const session = await getServerSession();
+  return session?.user.accessToken;
+}
