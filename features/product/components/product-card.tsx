@@ -1,10 +1,10 @@
 import { Cart } from '@/components/icons/cart';
-import { Star } from '@/components/icons/star';
 import { Typography } from '@/components/ui/typography';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '../types';
+import { ReviewStars } from './review-stars';
 
 type Props = {
   product: Product;
@@ -33,7 +33,7 @@ export function ProductCard({ product, imageSize }: Props) {
       <Typography as="xSmall" element="p" className="mt-1">
         {product.attributes.name}
       </Typography>
-      <div className="flex h-[29px] items-center gap-2">
+      <div className="flex items-center gap-2">
         <Typography as="bold" element="p" className="text-bibinBlue-100">
           {formatedPrice(product.attributes.price)}
         </Typography>
@@ -46,7 +46,7 @@ export function ProductCard({ product, imageSize }: Props) {
               </Typography>
               <div className="absolute h-[1px] w-full bg-black-20" />
             </div>
-            <div className="rounded-[4px] border border-lightRed px-1 py-[0.5px]">
+            <div className="flex items-center rounded-[4px] border border-lightRed px-1 py-[0.5px]">
               <Typography as="xSmall" element="p" className="text-lightRed">
                 {`-${calculateDiscountPercentage(
                   product.attributes.price,
@@ -64,13 +64,8 @@ export function ProductCard({ product, imageSize }: Props) {
       </div>
       <div className="mt-[2px] flex items-center">
         {/* TODO: レビュー */}
-        <div className="flex">
-          <Star />
-          <Star />
-          <Star />
-          <Star />
-          <Star />
-        </div>
+        <ReviewStars reviewCount={5} viewSize={16} starSize={12} />
+
         <Typography as="xSmall" element="p" className="ml-1 text-sunburstYellow">
           (188)
         </Typography>

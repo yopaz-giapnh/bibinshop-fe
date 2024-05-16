@@ -8,6 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
+import { useWindowSize } from '@/hooks/use-window-size';
 import clsx from 'clsx';
 import Image from 'next/image';
 import React from 'react';
@@ -18,6 +19,10 @@ type Props = {
 };
 
 export function Gallery({ images }: Props) {
+  const { width } = useWindowSize();
+  const mainImageSize = width * 0.4;
+  const subImageSize = width * 0.04;
+
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
 
@@ -56,24 +61,32 @@ export function Gallery({ images }: Props) {
               <Image
                 src={image.url}
                 alt={image.id}
-                className="h-[68px] w-[68px] object-cover"
-                width={68}
-                height={68}
+                className="object-cover"
+                style={{
+                  height: subImageSize,
+                  width: subImageSize
+                }}
+                width={subImageSize}
+                height={subImageSize}
               />
             </button>
           );
         })}
       </div>
-      <Carousel setApi={setApi} className="ml-6 w-[580px]">
+      <Carousel setApi={setApi} className="ml-6" style={{ width: mainImageSize }}>
         <CarouselContent>
           {images.map((image) => (
             <CarouselItem key={image.id}>
               <Image
                 src={image.url}
                 alt={image.id}
-                width={580}
-                height={580}
-                className="h-[580px] w-[580px] rounded-[8px] object-cover"
+                width={mainImageSize}
+                height={mainImageSize}
+                className="rounded-[8px] object-cover"
+                style={{
+                  height: mainImageSize,
+                  width: mainImageSize
+                }}
               />
             </CarouselItem>
           ))}

@@ -83,7 +83,9 @@ const config = {
         },
         paleFrostBlue: '#F5F6FA',
         lightRed: '#FE735C',
-        sunburstYellow: '#FCBE2D'
+        sunburstYellow: '#FCBE2D',
+        powderBlue: '#EEF8FF',
+        iceBlue: '#EEF8FF'
       },
       borderRadius: {
         lg: 'var(--radius)',
