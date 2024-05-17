@@ -61,11 +61,7 @@ export function Gallery({ images }: Props) {
               <Image
                 src={image.url}
                 alt={image.id}
-                className="object-cover"
-                style={{
-                  height: subImageSize,
-                  width: subImageSize
-                }}
+                className="h-[4vw] w-[4vw] object-cover"
                 width={subImageSize}
                 height={subImageSize}
               />
@@ -73,7 +69,7 @@ export function Gallery({ images }: Props) {
           );
         })}
       </div>
-      <Carousel setApi={setApi} className="ml-6" style={{ width: mainImageSize }}>
+      <Carousel setApi={setApi} className="ml-6 w-[40vw]">
         <CarouselContent>
           {images.map((image) => (
             <CarouselItem key={image.id}>
@@ -82,11 +78,7 @@ export function Gallery({ images }: Props) {
                 alt={image.id}
                 width={mainImageSize}
                 height={mainImageSize}
-                className="rounded-[8px] object-cover"
-                style={{
-                  height: mainImageSize,
-                  width: mainImageSize
-                }}
+                className="h-[40vw] w-[40vw] rounded-[8px] object-cover"
               />
             </CarouselItem>
           ))}

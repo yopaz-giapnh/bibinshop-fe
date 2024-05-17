@@ -7,7 +7,7 @@ export function ReviewList() {
   const seeMore = reviews.length > 3;
 
   return (
-    <div>
+    <div className="flex flex-col">
       <Typography as="boldTitle" element="h1">
         レビュー (95)
       </Typography>
@@ -50,7 +50,11 @@ export function ReviewList() {
               <Typography as="small" element="p" className="text-black-100 mt-2">
                 色: バーガンディ
               </Typography>
-              <Typography as="body" element="p" className="text-black-100 mt-4 font-normal">
+              <Typography
+                as="body"
+                element="p"
+                className="text-black-100 mt-4 max-w-[42vw] font-normal"
+              >
                 細かいラメのザラつきは感じますが良い感じにキラキラしてて取れにくいし1回でツヤツヤしてます。
               </Typography>
             </div>
