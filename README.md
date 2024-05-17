@@ -4,6 +4,10 @@
 
 ## インストール方法
 
+### pnpm インストール
+
+`curl -fsSL https://get.pnpm.io/install.sh | sh -`
+
 以下のコマンドで関連するライブラリをインストールします。
 
 ```bash
@@ -25,3 +29,5 @@ cp .env.example .env.local
 ```bash
 pnpm dev
 ```
+
+[localhost:4000](http://localhost:4000) でトップ画面が開けます。
