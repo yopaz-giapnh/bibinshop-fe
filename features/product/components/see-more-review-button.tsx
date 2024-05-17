@@ -1,8 +1,8 @@
 'use client';
 
-import { ArrowRight } from '@/components/icons/arrow-right';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
+import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { ComponentProps } from 'react';
 
@@ -16,7 +16,7 @@ export function SeeMoreReviewButton({ href }: Props) {
         <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
           全てのレビューを見る
         </Typography>
-        <ArrowRight />
+        <ChevronRight className="h-5 w-5 text-bibinBlue-100" />;
       </Button>
     </Link>
   );

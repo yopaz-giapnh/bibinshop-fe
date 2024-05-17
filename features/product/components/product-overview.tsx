@@ -18,7 +18,7 @@ export async function ProductOverview({ title, seeMoreUrl, products, columns }: 
         {title}
       </Typography>
       <ProductGrid products={products} columns={columns} className="grid-cols-5" />
-      <SeeMoreButton href={seeMoreUrl} />
+      <SeeMoreButton href={seeMoreUrl} arrow="right" />
     </div>
   );
 }

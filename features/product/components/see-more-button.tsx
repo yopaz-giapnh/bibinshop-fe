@@ -1,14 +1,25 @@
 'use client';
 
-import { ArrowRight } from '@/components/icons/arrow-right';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { ComponentProps } from 'react';
 
-type Props = Pick<ComponentProps<typeof Link>, 'href'>;
+type Props = Pick<ComponentProps<typeof Link>, 'href'> & {
+  arrow: 'right' | 'bottom';
+};
 
-export function SeeMoreButton({ href }: Props) {
+export function SeeMoreButton({ href, arrow }: Props) {
+  const renderArrow = () => {
+    if (arrow === 'right') {
+      return <ChevronRight className="h-[21px] w-5 text-bibinBlue-100" />;
+    }
+    if (arrow === 'bottom') {
+      return <ChevronDown className="h-[21px] w-5 text-bibinBlue-100" />;
+    }
+  };
+
   return (
     <Link href={href} passHref>
       <Button
@@ -19,7 +30,7 @@ export function SeeMoreButton({ href }: Props) {
         <Typography as="bold" element="p" className="text-bibinBlue-100">
           もっと見る
         </Typography>
-        <ArrowRight />
+        {renderArrow()}
       </Button>
     </Link>
   );
