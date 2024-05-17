@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export function Supplementary() {
   return (
-    <div className="rounded-[6px] bg-iceBlue px-6 py-4">
+    <div className="rounded-[6px] bg-powderBlue px-6 py-4">
       <div className="flex flex-col">
         <div>
           <div className="flex items-center">

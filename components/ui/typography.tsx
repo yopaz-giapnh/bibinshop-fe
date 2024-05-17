@@ -20,7 +20,8 @@ const typographyVariants = cva('text-foreground', {
       body: 'text-black-50 text-base font-normal not-italic leading-normal tracking-[0.48px]',
       bold: 'text-black-base text-base font-bold not-italic leading-normal tracking-[0.48px]',
       boldSmall: 'text-text text-sm font-bold not-italic leading-normal tracking-[0.42px]',
-      boldXLarge: 'text-black-base text-xl font-bold not-italic leading-normal tracking-[0.6px]'
+      boldXLarge: 'text-black-base text-xl font-bold not-italic leading-normal tracking-[0.6px]',
+      boldTitle: 'text-black-base text-2xl font-bold not-italic leading-normal tracking-[0.72px]'
     }
   }
 });

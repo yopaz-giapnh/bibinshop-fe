@@ -4,6 +4,7 @@ import { Product } from '../types';
 import { Gallery } from './gallery';
 import { ProductCartForm } from './product-cart-form';
 import { ProductGrid } from './product-grid';
+import { ReviewList } from './review-list';
 import { ShopCard } from './shop-card';
 import { Supplementary } from './supplementary';
 
@@ -15,7 +16,10 @@ export async function ProductDetail({ product }: Props) {
   return (
     <div className="flex flex-col">
       <div className="flex">
-        <Gallery images={product.images} />
+        <div className="flex flex-col gap-6">
+          <Gallery images={product.images} />
+          <ReviewList />
+        </div>
 
         <div className="ml-[60px] flex flex-1 flex-col gap-5">
           <ProductCartForm product={product} />
