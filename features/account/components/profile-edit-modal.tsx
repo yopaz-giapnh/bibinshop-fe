@@ -1,3 +1,5 @@
+'use client';
+
 import RoundedWhiteCamera from '@/assets/round_white_camera.svg';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +17,7 @@ import { Typography } from '@/components/ui/typography';
 import { PencilRuler } from 'lucide-react';
 import Image from 'next/image';
 
-export default async function ProfileEditModal() {
+export default function ProfileEditModal() {
   return (
     <Dialog>
       <DialogDescription>

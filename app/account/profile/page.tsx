@@ -1,12 +1,9 @@
-'use client';
-
 import DocumentBlue from '@/assets/document_blue.svg';
 import { Typography } from '@/components/ui/typography';
 import ProfileEditModal from '@/features/account/components/profile-edit-modal';
 import ReviewItem from '@/features/account/components/review-item';
 import Image from 'next/image';
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default async function Page() {
   // demo data
   const reviews = [
