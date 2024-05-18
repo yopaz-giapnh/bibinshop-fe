@@ -1,5 +1,5 @@
-import Rating from '@/components/layout/rating';
 import { Typography } from '@/components/ui/typography';
+import Rating from '@/features/review/components/rating';
 import Image from 'next/image';
 
 type ReviewProps = {
