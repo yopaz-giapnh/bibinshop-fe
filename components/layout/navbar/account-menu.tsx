@@ -23,7 +23,7 @@ type Props = {
 const components: { title: string; href: string }[] = [
   {
     title: 'プロフィール',
-    href: '/'
+    href: '/account/profile'
   },
   {
     title: '注文履歴',
