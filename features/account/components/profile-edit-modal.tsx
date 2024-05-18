@@ -22,17 +22,17 @@ export default function ProfileEditModal() {
     <Dialog>
       <DialogDescription>
         <DialogTrigger asChild>
-          <Button
+          <button
             type="button"
-            className="ml-[24px] flex w-full items-center justify-center gap-2 border border-bibinBlue-100 bg-inherit"
+            className="ml-[24px] flex w-full items-center justify-center gap-2 rounded-[100px] border border-bibinBlue-100 bg-inherit px-[16px] py-[8px]"
           >
-            <PencilRuler className="h-6 w-6" color="rgb(81 183 255 / var(--tw-text-opacity)" />
+            <PencilRuler className="h-6 w-6" color="#51B7FF" />
             <Typography as="bold" element="p" className="text-bibinBlue-100">
               編集
             </Typography>
-          </Button>
+          </button>
         </DialogTrigger>
-        <DialogContent className="dialog-center flex flex-col items-center justify-center sm:max-w-md">
+        <DialogContent className="flex w-[640px] flex-col items-center justify-center">
           <DialogHeader>
             <DialogTitle>プロフィール編集</DialogTitle>
           </DialogHeader>
