@@ -1,5 +1,3 @@
-'use client';
-
 import { Typography } from '@/components/ui/typography';
 import { Bell, CreditCard, FileText, MapPin, ShieldPlus, UserRound } from 'lucide-react';
 import Link from 'next/link';
@@ -11,7 +9,6 @@ interface SideNavButtonProps {
   label: string;
 }
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default async function AccountSideBar() {
   const sideNavButtons: SideNavButtonProps[] = [
     {
