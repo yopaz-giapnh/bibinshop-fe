@@ -35,7 +35,7 @@ export async function ProductDetail({ product }: Props) {
         </Typography>
         <ProductGrid
           columns={5}
-          products={[...(await getProducts()), ...(await getProducts())]}
+          products={[...(await getProducts())]}
           className="grid-cols-5 gap-x-2 gap-y-4"
         />
       </div>
