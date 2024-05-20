@@ -58,6 +58,8 @@ const config = {
           foreground: 'hsl(var(--card-foreground))'
         },
         bibinBlue: {
+          10: '#F6FBFF',
+          50: '#2196F3',
           100: '#51B7FF'
         },
         black: {

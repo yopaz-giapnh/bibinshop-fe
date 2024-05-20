@@ -9,6 +9,10 @@ interface SideNavButtonProps {
   label: string;
 }
 
+/**
+ * アカウント管理画面の左サイドバー共通コンポーネント
+ * @returns JSX.Element
+ */
 export default async function AccountSideBar() {
   const sideNavButtons: SideNavButtonProps[] = [
     {
@@ -16,7 +20,11 @@ export default async function AccountSideBar() {
       icon: <UserRound className="h-6 w-6" color="black" />,
       label: 'プロフィール'
     },
-    { href: '/', icon: <FileText className="h-6 w-6" color="black" />, label: '注文履歴' },
+    {
+      href: '/account/order-history',
+      icon: <FileText className="h-6 w-6" color="black" />,
+      label: '注文履歴'
+    },
     { href: '/', icon: <MapPin className="h-6 w-6" color="black" />, label: 'お届け先住所' },
     { href: '/', icon: <CreditCard className="h-6 w-6" color="black" />, label: 'お支払い方法' },
     {

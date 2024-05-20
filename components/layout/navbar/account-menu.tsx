@@ -27,7 +27,7 @@ const components: { title: string; href: string }[] = [
   },
   {
     title: '注文履歴',
-    href: '/'
+    href: '/account/order-history'
   },
   {
     title: 'メッセージ',
