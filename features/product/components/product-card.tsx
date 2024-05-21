@@ -1,10 +1,10 @@
 import { Cart } from '@/components/icons/cart';
 import { Typography } from '@/components/ui/typography';
+import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '../types';
-import { ReviewStars } from './review-stars';
 
 type Props = {
   product: Product;
@@ -64,7 +64,7 @@ export function ProductCard({ product, imageSize }: Props) {
       </div>
       <div className="mt-[2px] flex items-center">
         {/* TODO: レビュー */}
-        <ReviewStars reviewCount={5} viewSize={16} starSize={12} />
+        <Rating star={5} size={16} />
 
         <Typography as="xSmall" element="p" className="ml-1 text-sunburstYellow">
           (188)

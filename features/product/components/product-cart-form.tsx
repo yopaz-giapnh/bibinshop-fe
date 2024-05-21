@@ -6,13 +6,13 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { addItem } from '@/features/cart/actions';
 import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
+import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import clsx from 'clsx';
 import { Minus, Plus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product } from '../types';
-import { ReviewStars } from './review-stars';
 
 type Props = {
   product: Product;
@@ -69,7 +69,7 @@ export function ProductCartForm({ product }: Props) {
           </div>
 
           <div className="mt-[5px] flex items-center">
-            <ReviewStars reviewCount={5} viewSize={22} starSize={16} />
+            <Rating star={5} size={16} />
             <Typography as="xSmall" element="p" className="ml-2 text-sunburstYellow">
               5.0(188)
             </Typography>

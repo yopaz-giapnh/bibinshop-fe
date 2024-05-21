@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
+import Rating from '@/features/review/components/rating';
 import Image from 'next/image';
-import { ReviewStars } from './review-stars';
 
 export function ShopCard() {
   return (
@@ -21,7 +21,7 @@ export function ShopCard() {
             <Typography as="bold" element="p" className="text-text-100">
               ドクターディエット公式
             </Typography>
-            <ReviewStars reviewCount={5} viewSize={16} starSize={12} />
+            <Rating star={5} size={12} />
             <Typography as="xSmall" element="p" className="text-text-80">
               4.1 (188)
             </Typography>

@@ -1,10 +1,8 @@
 import { Typography } from '@/components/ui/typography';
-import { ReviewStars } from './review-stars';
-import { SeeMoreReviewButton } from './see-more-review-button';
+import Rating from './rating';
 
-export function ReviewList() {
+export function ReviewListWithAvator() {
   const reviews = [1, 2, 3, 4, 5];
-  const seeMore = reviews.length > 3;
 
   return (
     <div className="flex flex-col">
@@ -15,7 +13,7 @@ export function ReviewList() {
       <div className="mt-4 flex flex-col items-center justify-center gap-5 overflow-hidden rounded-[6px] bg-powderBlue px-6 py-4">
         <div className="flex w-full items-center gap-2 self-stretch">
           <div className="inline-flex items-center gap-[9.78px]">
-            <ReviewStars reviewCount={5} viewSize={26} starSize={19} />
+            <Rating star={5} readOnly />
           </div>
           <Typography as="boldTitle" element="h1" className="text-[32px] tracking-[0.96px]">
             5.00
@@ -45,7 +43,7 @@ export function ReviewList() {
                 <Typography as="small" element="p" className="text-charcoalGray">
                   •
                 </Typography>
-                <ReviewStars reviewCount={5} viewSize={21} starSize={18} />
+                <Rating star={5} readOnly />
               </div>
               <Typography as="small" element="p" className="text-black-100 mt-2">
                 色: バーガンディ
@@ -60,12 +58,6 @@ export function ReviewList() {
             </div>
           </div>
         ))}
-
-        {seeMore && (
-          <div className="mx-auto">
-            <SeeMoreReviewButton href="/reviews" />
-          </div>
-        )}
       </div>
     </div>
   );

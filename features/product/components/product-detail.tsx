@@ -1,5 +1,6 @@
 import { Typography } from '@/components/ui/typography';
-import ProfileReviewList from '@/features/account/profile/components/profile-review-list';
+import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
+import { SeeMoreReviewButton } from '@/features/review/components/see-more-review-button';
 import { getProducts } from '../api/products';
 import { Product } from '../types';
 import { Gallery } from './gallery';
@@ -19,7 +20,10 @@ export async function ProductDetail({ product }: Props) {
       <div className="flex">
         <div className="flex flex-col gap-6">
           <Gallery images={product.images} />
-          <ProfileReviewList />
+          <ReviewListWithAvator />
+          <div className="mx-auto">
+            <SeeMoreReviewButton href="/reviews" />
+          </div>
           <ProductDescription product={product} />
         </div>
 
