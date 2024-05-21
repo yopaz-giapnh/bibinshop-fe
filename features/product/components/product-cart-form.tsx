@@ -6,10 +6,10 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { addItem } from '@/features/cart/actions';
 import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
+import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
 import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import clsx from 'clsx';
-import { Minus, Plus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product } from '../types';
@@ -142,29 +142,17 @@ export function ProductCartForm({ product }: Props) {
           <Typography as="boldSmall" element="p" className="text-black-70">
             数量:
           </Typography>
-          <div className="ml-[23px] flex items-center justify-center gap-[9px]">
-            <button
-              className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
-              type="button"
-              onClick={() => {
+          <div className="ml-[23px]">
+            <QuantityAdjustmentButtons
+              quantity={selectedQuantity}
+              onDecrease={() => {
                 const quantity = Math.max(selectedQuantity - 1, 1);
                 setSelectedQuantity(quantity);
               }}
-            >
-              <Minus className="h-5 w-5 text-black-30" />
-            </button>
-            <Typography as="boldSmall" element="p" className="text-black-100 w-[30px] text-center">
-              {selectedQuantity}
-            </Typography>
-            <button
-              className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
-              type="button"
-              onClick={() => {
+              onIncrease={() => {
                 setSelectedQuantity(selectedQuantity + 1);
               }}
-            >
-              <Plus className="h-5 w-5 text-black-80" />
-            </button>
+            />
           </div>
         </div>
 

@@ -1,6 +1,8 @@
+import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
-import { Minus, Plus, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import Image from 'next/image';
+import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
 
 type Props = {
   cartItem: {
@@ -27,31 +29,16 @@ export function CartSheetItem({ cartItem }: Props) {
         </Typography>
 
         <div className="flex w-full justify-between">
-          <div className="flex items-center gap-[9px]">
-            <button
-              className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
-              type="button"
-              onClick={() => {}}
-            >
-              <Minus className="h-5 w-5 text-black-30" />
-            </button>
-            <Typography as="boldSmall" element="p" className="text-black-100 w-[30px] text-center">
-              {cartItem.quantity}
-            </Typography>
-            <button
-              className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
-              type="button"
-              onClick={() => {}}
-            >
-              <Plus className="h-5 w-5 text-black-80" />
-            </button>
-          </div>
-          <button className="flex items-center justify-center gap-[2px]">
-            <Trash className="h-4 w-4" fill="text-black-80" />
-            <Typography as="linkXSmall" element="p" className="text-black-80 underline">
-              削除
-            </Typography>
-          </button>
+          <QuantityAdjustmentButtons
+            quantity={cartItem.quantity}
+            onDecrease={() => {}}
+            onIncrease={() => {}}
+          />
+
+          <ButtonWithIcon
+            buttonProps={{ onClick: () => {} }}
+            icon={<Trash className="h-4 w-4" fill="text-black-80" />}
+          />
         </div>
       </div>
     </div>

@@ -1,0 +1,18 @@
+import clsx from 'clsx';
+import { Typography } from '../ui/typography';
+
+type Props = {
+  buttonProps?: React.HTMLAttributes<HTMLButtonElement>;
+  icon: React.ReactNode;
+};
+
+export function ButtonWithIcon({ buttonProps, icon }: Props) {
+  return (
+    <button {...buttonProps} className={clsx('flex items-center gap-1', buttonProps?.className)}>
+      {icon}
+      <Typography as="linkSmall" element="span" className="text-black-80">
+        削除
+      </Typography>
+    </button>
+  );
+}

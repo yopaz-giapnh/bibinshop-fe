@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
