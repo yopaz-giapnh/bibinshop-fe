@@ -1,11 +1,11 @@
 import { Typography } from '@/components/ui/typography';
+import ProfileReviewList from '@/features/account/profile/components/profile-review-list';
 import { getProducts } from '../api/products';
 import { Product } from '../types';
 import { Gallery } from './gallery';
 import { ProductCartForm } from './product-cart-form';
 import { ProductDescription } from './product-description';
 import { ProductGrid } from './product-grid';
-import { ReviewList } from './review-list';
 import { ShopCard } from './shop-card';
 import { Supplementary } from './supplementary';
 
@@ -19,7 +19,7 @@ export async function ProductDetail({ product }: Props) {
       <div className="flex">
         <div className="flex flex-col gap-6">
           <Gallery images={product.images} />
-          <ReviewList />
+          <ProfileReviewList />
           <ProductDescription product={product} />
         </div>
 

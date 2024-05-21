@@ -1,6 +1,6 @@
+import Pagenation from '../../components/pagenation';
 import OrderHistoryEmptyView from './order-history-empty-view';
 import OrderHistoryList from './order-history-list';
-import OrderHistoryPagenation from './order-history-pagenation';
 
 type OrderHistoryTabsProps = {
   orders: {
@@ -27,7 +27,7 @@ export default function OrderHistoryTabContent({ orders, status }: OrderHistoryT
 
   return (
     <div>
-      <div className="max-h-[575px] overflow-y-auto">
+      <div className="h-screen-calc overflow-y-auto">
         {filteredOrders.length > 0 ? (
           <div>
             {filteredOrders.map((order, index) => (
@@ -38,7 +38,7 @@ export default function OrderHistoryTabContent({ orders, status }: OrderHistoryT
           <OrderHistoryEmptyView status={status} />
         )}
       </div>
-      <OrderHistoryPagenation />
+      <Pagenation />
     </div>
   );
 }

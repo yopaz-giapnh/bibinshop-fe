@@ -1,6 +1,10 @@
+'use client';
+
 import { Typography } from '@/components/ui/typography';
+import clsx from 'clsx';
 import { Bell, CreditCard, FileText, MapPin, ShieldPlus, UserRound } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 
 interface SideNavButtonProps {
@@ -13,7 +17,9 @@ interface SideNavButtonProps {
  * アカウント管理画面の左サイドバー共通コンポーネント
  * @returns JSX.Element
  */
-export default async function AccountSideBar() {
+export default function AccountSideBar() {
+  const pathname = usePathname();
+
   const sideNavButtons: SideNavButtonProps[] = [
     {
       href: '/account/profile',
@@ -35,19 +41,28 @@ export default async function AccountSideBar() {
     { href: '/', icon: <Bell className="h-6 w-6" color="black" />, label: 'お知らせ' }
   ];
 
-  const SideNavButton = ({ href, icon, label }: SideNavButtonProps) => (
-    <Link href={href} passHref>
-      <button
-        type="button"
-        className="mt-[16px] flex w-[275px] items-center rounded-[6px] border border-gray-300 bg-white-base p-[24px]"
-      >
-        {icon}
-        <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
-          {label}
-        </Typography>
-      </button>
-    </Link>
-  );
+  const SideNavButton = ({ href, icon, label }: SideNavButtonProps) => {
+    const isActive = pathname === href;
+
+    return (
+      <Link href={href} passHref>
+        <button
+          type="button"
+          className={clsx(
+            'mt-[16px] flex w-[275px] items-center rounded-[6px] p-[24px]',
+            isActive
+              ? 'border-[2px] border-bibinBlue-100 bg-bibinBlue-10'
+              : 'border-[1px] border-gray-300'
+          )}
+        >
+          {icon}
+          <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
+            {label}
+          </Typography>
+        </button>
+      </Link>
+    );
+  };
 
   return (
     <div className="mt-[128px] flex w-[400px] flex-col items-center bg-paleFrostBlue pl-[24px]">

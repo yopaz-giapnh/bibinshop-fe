@@ -1,8 +1,13 @@
-import DocumentBlue from '@/assets/document_blue.svg';
 import { Typography } from '@/components/ui/typography';
-import ReviewItem from './review-item';
+import Pagenation from '../../components/pagenation';
+import ProfileReviewEmptyView from './profile-review-empty-view';
+import ProfileReviewItem from './profile-review-item';
 
-export default async function ReviewList() {
+/**
+ * ユーザープロフィールレビューリストコンポーネント
+ * @returns JSX.Element
+ */
+export default async function ProfileReviewList() {
   // demo data
   const reviews = [
     {
@@ -36,27 +41,25 @@ export default async function ReviewList() {
   ];
 
   return (
-    <div className="mx-auto flex h-screen w-full flex-col  p-[24px]">
+    <div className="mx-auto flex h-screen w-full flex-col p-[24px]">
       {reviews.length === 0 ? (
-        <div className="mt-[24px] flex flex-col items-center justify-center">
-          <DocumentBlue />
-          <Typography as="xSmall" element="p" className="mt-[24px] text-[16px] text-black-90">
-            レビューはありません。
-          </Typography>
-        </div>
+        <ProfileReviewEmptyView />
       ) : (
-        <div className="max-h-[600px] overflow-y-auto rounded-[6px] bg-white-base p-[24px]">
-          <Typography as="bold" element="p" className="mb-[16px] text-[20px] text-black-90">
-            レビュー
-          </Typography>
-          {reviews.map((review, index) => (
-            <div key={index}>
-              <ReviewItem {...review} />
-              {index < reviews.length - 1 && (
-                <div className="my-[16px] h-[1px] w-full bg-gray-200" />
-              )}
-            </div>
-          ))}
+        <div>
+          <div className="h-screen-calc overflow-y-auto rounded-[6px] bg-white-base p-[24px]">
+            <Typography as="bold" element="p" className="mb-[16px] text-[20px] text-black-90">
+              レビュー
+            </Typography>
+            {reviews.map((review, index) => (
+              <div key={index}>
+                <ProfileReviewItem {...review} />
+                {index < reviews.length - 1 && (
+                  <div className="my-[16px] h-[1px] w-full bg-gray-200" />
+                )}
+              </div>
+            ))}
+          </div>
+          <Pagenation />
         </div>
       )}
     </div>

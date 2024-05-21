@@ -1,5 +1,9 @@
 'use client';
 
+/**
+ * ユーザープロフィール編集モーダル
+ * @returns JSX.Element
+ */
 import RoundedWhiteCamera from '@/assets/round_white_camera.svg';
 import { Button } from '@/components/ui/button';
 import {

@@ -2,6 +2,10 @@ import { Typography } from '@/components/ui/typography';
 import Image from 'next/image';
 import ProfileEditModal from './profile-edit-modal';
 
+/**
+ * ユーザープロフィール画像、名前、編集ボタンコンポーネント
+ * @returns JSX.Element
+ */
 export default function ProfileDetail() {
   return (
     <div className="ml-[24px] flex items-center">

@@ -2,6 +2,10 @@ import { Typography } from '@/components/ui/typography';
 import Rating from '@/features/review/components/rating';
 import Image from 'next/image';
 
+/**
+ * ユーザープロフィールレビューカードコンポーネント
+ * @returns JSX.Element
+ */
 type ReviewProps = {
   date: string;
   star: number;

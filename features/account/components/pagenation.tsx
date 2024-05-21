@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/pagination';
 
 /**
- * 注文履歴下部ページネーションコンポーネント
+ * リスト下部ページネーションコンポーネント
  * @returns JSX.Element
  */
-export default function OrderHistoryPagenation() {
+export default function Pagenation() {
   return (
     <Pagination className="mt-[24px]">
       <PaginationContent>
