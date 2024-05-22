@@ -1,7 +1,7 @@
 import { Typography } from '@/components/ui/typography';
 import { Store } from 'lucide-react';
 import Image from 'next/image';
-import OrderDetailListItem from './order-detail-list-itam';
+import OrderDetailListItem from './order-detail-list-item';
 import OrderDetailSection from './order-detail-section';
 
 type Props = {
