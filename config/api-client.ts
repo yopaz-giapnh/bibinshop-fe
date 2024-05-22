@@ -10,6 +10,11 @@ const baseURL = process.env.NEXT_PUBLIC_API_URL!;
 
 const throwOnError: Middleware = {
   async onRequest(req) {
+    const oauthTokenRequest = req.schemaPath === '/spree_oauth/token';
+    if (oauthTokenRequest) {
+      return req;
+    }
+
     const accessToken = await getAccessToken();
     if (!accessToken) {
       return req;
