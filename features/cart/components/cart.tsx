@@ -1,8 +1,8 @@
 import { Typography } from '@/components/ui/typography';
+import { PaymentMethod } from '@/features/payment/components/payment-method';
 import { CartEmpty } from './cart-empty';
 import { CartItemList } from './cart-item-list';
 import { OrderOverview } from './order-overview';
-import { PaymentMethod } from './payment-method';
 
 export function Cart() {
   const isCartEmpty = false;

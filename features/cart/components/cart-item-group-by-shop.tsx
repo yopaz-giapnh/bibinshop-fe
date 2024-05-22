@@ -81,7 +81,11 @@ export function CartItemGroupByShop({ shop, onCheckedChangeShop, onCheckedChange
                     }}
                   />
 
-                  <ButtonWithIcon buttonProps={{ onClick: () => {} }} icon={<Trash />} />
+                  <ButtonWithIcon
+                    buttonProps={{ onClick: () => {} }}
+                    icon={<Trash />}
+                    text="削除"
+                  />
                 </div>
               </div>
             </div>

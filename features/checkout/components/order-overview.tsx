@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
-import Link from 'next/link';
 
 export function OrderOverview() {
   return (
@@ -36,11 +35,9 @@ export function OrderOverview() {
         </Typography>
       </div>
 
-      <Link href="/checkout" passHref>
-        <Button size="lg" variant="lg" className="w-full">
-          購入する
-        </Button>
-      </Link>
+      <Button size="lg" variant="lg" className="w-full">
+        注文する
+      </Button>
     </div>
   );
 }

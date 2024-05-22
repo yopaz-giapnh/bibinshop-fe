@@ -38,6 +38,7 @@ export function CartSheetItem({ cartItem }: Props) {
           <ButtonWithIcon
             buttonProps={{ onClick: () => {} }}
             icon={<Trash className="h-4 w-4" fill="text-black-80" />}
+            text="削除"
           />
         </div>
       </div>
