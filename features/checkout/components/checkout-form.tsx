@@ -4,6 +4,10 @@ import { Typography } from '@/components/ui/typography';
 import { AddressCard } from '@/features/address/components/address-card';
 import { AddressForm } from '@/features/address/components/address-form';
 import {
+  AddressFormModal,
+  AddressFormModalRef
+} from '@/features/address/components/address-form-modal';
+import {
   AddressListModal,
   AddressListModalRef
 } from '@/features/address/components/address-list-modal';
@@ -16,6 +20,7 @@ export function CheckoutForm() {
   const hasAddress = !false;
 
   const addressListModalRef = useRef<AddressListModalRef>(null);
+  const addressFormModalRef = useRef<AddressFormModalRef>(null);
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -25,7 +30,7 @@ export function CheckoutForm() {
 
       <div className="mt-[22px] w-full px-20">
         <div className="flex gap-6">
-          <div className="flex-1">
+          <div className="flex flex-1 flex-col gap-4">
             <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
               <div className="flex justify-between">
                 <Typography as="boldTitle" element="h2" className="text-text-80">
@@ -33,7 +38,12 @@ export function CheckoutForm() {
                 </Typography>
 
                 {hasAddress && (
-                  <button className="flex items-center">
+                  <button
+                    className="flex items-center"
+                    onClick={() => {
+                      addressFormModalRef.current?.open();
+                    }}
+                  >
                     <Typography as="linkSmall" element="h3" className="text-bibinBlue-100">
                       住所追加
                     </Typography>
@@ -51,11 +61,25 @@ export function CheckoutForm() {
                       }}
                     />
                   </div>
-                  <AddressListModal ref={addressListModalRef} onAdd={() => {}} />
+                  <AddressListModal
+                    ref={addressListModalRef}
+                    onAdd={() => {
+                      addressFormModalRef.current?.open();
+                    }}
+                  />
+                  <AddressFormModal ref={addressFormModalRef} />
                 </>
               ) : (
-                <AddressForm />
+                <AddressForm buttonText="住所を保存する" />
               )}
+            </div>
+
+            <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
+              <div className="flex justify-between">
+                <Typography as="boldTitle" element="h2" className="text-text-80">
+                  2. お支払い方法
+                </Typography>
+              </div>
             </div>
           </div>
           <div className="flex w-[424px] flex-none flex-col gap-4">
