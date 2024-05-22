@@ -1,12 +1,17 @@
 import Edit from '@/assets/edit.svg';
+import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
+import { FormValues } from '../types/address-form';
 
 type Props = {
   onEdit?: () => void;
+  onDelete?: () => void;
+  // TODO] 型はAPIから取得する
+  address: FormValues;
 };
 
-export function AddressCard({ onEdit }: Props) {
+export function AddressCard({ onEdit, onDelete, address }: Props) {
   return (
     <div className="flex w-full items-center rounded-[6px] border border-solid border-black-10 p-4">
       <div className="flex w-[calc(100%_-_93px)] flex-col justify-center gap-4">
@@ -20,10 +25,10 @@ export function AddressCard({ onEdit }: Props) {
         </div>
         <div className="w-2/3">
           <Typography as="body" element="p" className="text-text-90">
-            〒640-0002
+            〒{address.postalCode}
           </Typography>
           <Typography as="caption" element="p" className="text-text-90">
-            大阪府 守口市佐太東町3-101-5 OOビル101
+            {address.prefecture} {address.city} {address.address1} {address.address2}
           </Typography>
         </div>
       </div>
@@ -36,6 +41,18 @@ export function AddressCard({ onEdit }: Props) {
           }}
           icon={<Edit />}
           text="編集"
+          textProps={{ className: 'text-bibinBlue-100' }}
+        />
+      )}
+      {onDelete && (
+        <ButtonWithIcon
+          buttonProps={{
+            className:
+              'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
+            onClick: onDelete
+          }}
+          icon={<Trash />}
+          text="削除"
           textProps={{ className: 'text-bibinBlue-100' }}
         />
       )}

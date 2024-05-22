@@ -1,19 +1,27 @@
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import { forwardRef, useImperativeHandle, useState } from 'react';
+import { FormValues } from '../types/address-form';
 import { AddressForm } from './address-form';
 
 export type AddressFormModalRef = {
-  open: () => void;
+  open: (defaultValues?: FormValues) => void;
   close: () => void;
 };
 
 export const AddressFormModal = forwardRef<AddressFormModalRef>((_, ref) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [defaultValues, setDefaultValues] = useState<FormValues | undefined>();
 
   useImperativeHandle(ref, () => ({
-    open: () => setIsOpen(true),
-    close: () => setIsOpen(false)
+    open: (defaultValues?: FormValues) => {
+      setDefaultValues(defaultValues);
+      setIsOpen(true);
+    },
+    close: () => {
+      setIsOpen(false);
+      setDefaultValues(undefined);
+    }
   }));
 
   return (
@@ -21,10 +29,10 @@ export const AddressFormModal = forwardRef<AddressFormModalRef>((_, ref) => {
       <DialogDescription>
         <DialogContent className="flex flex-col items-center justify-center gap-6">
           <Typography as="title" element="h2">
-            新しい住所を追加する
+            {defaultValues ? '住所を編集する' : '新しい住所を追加する'}
           </Typography>
           <div className="w-full">
-            <AddressForm />
+            <AddressForm defaultValues={defaultValues} />
           </div>
         </DialogContent>
       </DialogDescription>

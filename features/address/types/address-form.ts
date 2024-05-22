@@ -18,8 +18,7 @@ export const formSchema = z.object({
   address2: z.string().optional(),
   phoneNumber: z
     .string()
-    .regex(/^\d{2,4}-\d{2,4}-\d{4}$/, '電話番号は xx-xxxx-xxxx の形式で入力してください'),
-  email: z.string().email('有効なメールアドレスを入力してください')
+    .regex(/^\d{2,4}-\d{2,4}-\d{4}$/, '電話番号は xx-xxxx-xxxx の形式で入力してください')
 });
 
 export type FormValues = z.infer<typeof formSchema>;

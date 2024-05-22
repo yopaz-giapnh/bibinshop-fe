@@ -22,25 +22,15 @@ import { FormValues, formSchema } from '../types/address-form';
 
 type Props = {
   buttonText?: string;
+  defaultValues?: FormValues;
 };
 
-export function AddressForm({ buttonText = '保存する' }: Props) {
+export function AddressForm({ buttonText = '保存する', defaultValues }: Props) {
   const [isDefaultAddress, setIsDefaultAddress] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      lastName: '',
-      firstName: '',
-      lastNameKana: '',
-      firstNameKana: '',
-      postalCode: '',
-      address2: '',
-      city: '',
-      prefecture: '',
-      address1: '',
-      phoneNumber: ''
-    }
+    defaultValues
   });
 
   const [message, formAction] = useFormState(addItem, null);
@@ -193,7 +183,7 @@ export function AddressForm({ buttonText = '保存する' }: Props) {
         <div className="flex w-full gap-4">
           <FormField
             control={form.control}
-            name="address1"
+            name="phoneNumber"
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>電話番号</FormLabel>

@@ -2,6 +2,10 @@
 
 import { Typography } from '@/components/ui/typography';
 import { AddressCard } from '@/features/address/components/address-card';
+import {
+  AddressDeleteModal,
+  AddressDeleteModalRef
+} from '@/features/address/components/address-delete-modal';
 import { AddressForm } from '@/features/address/components/address-form';
 import {
   AddressFormModal,
@@ -21,6 +25,7 @@ export function CheckoutForm() {
 
   const addressListModalRef = useRef<AddressListModalRef>(null);
   const addressFormModalRef = useRef<AddressFormModalRef>(null);
+  const addressDeleteModalRef = useRef<AddressDeleteModalRef>(null);
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -59,6 +64,18 @@ export function CheckoutForm() {
                       onEdit={() => {
                         addressListModalRef.current?.open();
                       }}
+                      address={{
+                        lastName: '山田',
+                        firstName: '太郎',
+                        lastNameKana: 'ヤマダ',
+                        firstNameKana: 'タロウ',
+                        postalCode: '123-4567',
+                        prefecture: '大阪府',
+                        city: '守口市',
+                        address1: '佐太東町3-101-5',
+                        address2: 'OOビル101',
+                        phoneNumber: '071-1234-5678'
+                      }}
                     />
                   </div>
                   <AddressListModal
@@ -66,8 +83,15 @@ export function CheckoutForm() {
                     onAdd={() => {
                       addressFormModalRef.current?.open();
                     }}
+                    onEdit={(values) => {
+                      addressFormModalRef.current?.open(values);
+                    }}
+                    onDelete={(values) => {
+                      addressDeleteModalRef.current?.open(values);
+                    }}
                   />
                   <AddressFormModal ref={addressFormModalRef} />
+                  <AddressDeleteModal ref={addressDeleteModalRef} />
                 </>
               ) : (
                 <AddressForm buttonText="住所を保存する" />

@@ -3,6 +3,7 @@ import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
+import { FormValues } from '../types/address-form';
 
 type Props = {
   addresses: {
@@ -12,8 +13,8 @@ type Props = {
     postalCode: string;
     address: string;
   }[];
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit: (values: FormValues) => void;
+  onDelete: (values: FormValues) => void;
 };
 
 export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
@@ -48,7 +49,20 @@ export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
                 buttonProps={{
                   className:
                     'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
-                  onClick: onEdit
+                  onClick: () => {
+                    onEdit({
+                      lastName: '山田',
+                      firstName: '太郎',
+                      lastNameKana: 'ヤマダ',
+                      firstNameKana: 'タロウ',
+                      postalCode: '123-4567',
+                      prefecture: '大阪府',
+                      city: '守口市',
+                      address1: '佐太東町3-101-5',
+                      address2: 'OOビル101',
+                      phoneNumber: '071-1234-5678'
+                    });
+                  }
                 }}
                 icon={<Edit />}
                 text="編集"
@@ -58,7 +72,20 @@ export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
                 buttonProps={{
                   className:
                     'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
-                  onClick: onDelete
+                  onClick: () => {
+                    onDelete({
+                      lastName: '山田',
+                      firstName: '太郎',
+                      lastNameKana: 'ヤマダ',
+                      firstNameKana: 'タロウ',
+                      postalCode: '123-4567',
+                      prefecture: '大阪府',
+                      city: '守口市',
+                      address1: '佐太東町3-101-5',
+                      address2: 'OOビル101',
+                      phoneNumber: '071-1234-5678'
+                    });
+                  }
                 }}
                 icon={<Trash />}
                 text="削除"
