@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
+import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
           <Navbar />
           <Suspense>
             <main>{children}</main>
+            <Toaster />
           </Suspense>
           <Footer />
         </Providers>

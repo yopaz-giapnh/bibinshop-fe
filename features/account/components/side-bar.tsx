@@ -31,7 +31,11 @@ export default function AccountSideBar() {
       icon: <FileText className="h-6 w-6" color="black" />,
       label: '注文履歴'
     },
-    { href: '/', icon: <MapPin className="h-6 w-6" color="black" />, label: 'お届け先住所' },
+    {
+      href: '/account/address',
+      icon: <MapPin className="h-6 w-6" color="black" />,
+      label: 'お届け先住所'
+    },
     { href: '/', icon: <CreditCard className="h-6 w-6" color="black" />, label: 'お支払い方法' },
     {
       href: '/',

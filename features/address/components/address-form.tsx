@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -226,9 +227,21 @@ type ButtonProps = Pick<Props, 'buttonText'>;
 
 function SaveButton({ buttonText }: ButtonProps) {
   const { pending } = useFormStatus();
+  const { toast } = useToast();
+  const handleOpenToast = () => {
+    toast({
+      title: '住所が追加されました。'
+    });
+  };
 
   return (
-    <Button size="lg" variant="lg" className="w-[392px]" disabled={pending}>
+    <Button
+      size="lg"
+      variant="lg"
+      className="w-[392px]"
+      disabled={pending}
+      onClick={handleOpenToast}
+    >
       {pending ? <LoadingSpinner /> : buttonText}
     </Button>
   );

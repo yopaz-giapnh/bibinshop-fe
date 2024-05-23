@@ -32,30 +32,32 @@ export function AddressCard({ onEdit, onDelete, address }: Props) {
           </Typography>
         </div>
       </div>
-      {onEdit && (
-        <ButtonWithIcon
-          buttonProps={{
-            className:
-              'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
-            onClick: onEdit
-          }}
-          icon={<Edit />}
-          text="編集"
-          textProps={{ className: 'text-bibinBlue-100' }}
-        />
-      )}
-      {onDelete && (
-        <ButtonWithIcon
-          buttonProps={{
-            className:
-              'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
-            onClick: onDelete
-          }}
-          icon={<Trash />}
-          text="削除"
-          textProps={{ className: 'text-bibinBlue-100' }}
-        />
-      )}
+      <div className="flex">
+        {onEdit && (
+          <ButtonWithIcon
+            buttonProps={{
+              className:
+                'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
+              onClick: onEdit
+            }}
+            icon={<Edit />}
+            text="編集"
+            textProps={{ className: 'text-bibinBlue-100' }}
+          />
+        )}
+        {onDelete && (
+          <ButtonWithIcon
+            buttonProps={{
+              className:
+                'w-[93px] ml-[8px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
+              onClick: onDelete
+            }}
+            icon={<Trash />}
+            text="削除"
+            textProps={{ className: 'text-bibinBlue-100' }}
+          />
+        )}
+      </div>
     </div>
   );
 }

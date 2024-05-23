@@ -27,7 +27,7 @@ export const AddressFormModal = forwardRef<AddressFormModalRef>((_, ref) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
-        <DialogContent className="flex flex-col items-center justify-center gap-6">
+        <DialogContent className="flex h-modal-screen-calc flex-col items-center gap-6 overflow-y-auto ">
           <Typography as="title" element="h2">
             {defaultValues ? '住所を編集する' : '新しい住所を追加する'}
           </Typography>
