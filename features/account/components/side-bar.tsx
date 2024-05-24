@@ -42,7 +42,11 @@ export default function AccountSideBar() {
       icon: <ShieldPlus className="h-6 w-6" color="black" />,
       label: 'アカウントセキュリティ'
     },
-    { href: '/', icon: <Bell className="h-6 w-6" color="black" />, label: 'お知らせ' }
+    {
+      href: '/account/message',
+      icon: <Bell className="h-6 w-6" color="black" />,
+      label: 'メッセージ'
+    }
   ];
 
   const SideNavButton = ({ href, icon, label }: SideNavButtonProps) => {
