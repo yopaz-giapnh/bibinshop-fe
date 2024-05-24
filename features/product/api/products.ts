@@ -32,7 +32,7 @@ export async function getProduct(product_slug: string) {
         product_slug
       },
       query: {
-        include: 'images'
+        include: 'images,product_properties'
       }
     },
     fetch: (request) => {

@@ -44,10 +44,14 @@ export function Gallery({ images }: Props) {
     }
   };
 
+  const enhancedImages = images.length
+    ? images
+    : [{ id: 'placeholder', url: '/placeholder-product-image.png' }];
+
   return (
     <div className="flex">
       <div className="flex flex-col gap-2">
-        {images.map((image, index) => {
+        {enhancedImages.map((image, index) => {
           const isCurrent = index === current - 1;
 
           return (
@@ -71,7 +75,7 @@ export function Gallery({ images }: Props) {
       </div>
       <Carousel setApi={setApi} className="ml-6 w-[40vw]">
         <CarouselContent>
-          {images.map((image) => (
+          {enhancedImages.map((image) => (
             <CarouselItem key={image.id}>
               <Image
                 src={image.url}
