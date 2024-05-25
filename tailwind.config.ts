@@ -116,7 +116,8 @@ const config = {
       },
       height: {
         'screen-calc': 'calc(100vh - 370px)',
-        'modal-screen-calc': 'calc(100vh - 80px)'
+        'modal-screen-calc': 'calc(100vh - 80px)',
+        'default-screen-calc': 'calc(100vh * 1.8)'
       }
     }
   },
