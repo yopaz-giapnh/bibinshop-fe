@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default async function NotFound() {
   return (
-    <div className="h-default-screen-calc mx-[49px] flex flex-col items-center justify-center">
+    <div className="mx-[49px] flex h-default-screen-calc flex-col items-center justify-center">
       <Typography as="title" element="h1" className="mb-[24px]">
         404 not found
       </Typography>
