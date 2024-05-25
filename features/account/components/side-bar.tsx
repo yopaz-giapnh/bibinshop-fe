@@ -36,9 +36,13 @@ export default function AccountSideBar() {
       icon: <MapPin className="h-6 w-6" color="black" />,
       label: 'お届け先住所'
     },
-    { href: '/', icon: <CreditCard className="h-6 w-6" color="black" />, label: 'お支払い方法' },
     {
       href: '/',
+      icon: <CreditCard className="h-6 w-6" color="black" />,
+      label: 'お支払い方法'
+    },
+    {
+      href: '/account/security',
       icon: <ShieldPlus className="h-6 w-6" color="black" />,
       label: 'アカウントセキュリティ'
     },
