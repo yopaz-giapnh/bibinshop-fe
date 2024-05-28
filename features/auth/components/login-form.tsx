@@ -1,22 +1,29 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRef } from 'react';
+import { useForm } from 'react-hook-form';
 import { useAuth } from '../hooks/use-auth';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
+import { ForgotPasswordModal, ForgotPasswordModalRef } from './forgot-password-modal';
 import { GoogleAuthButton } from './google-auth-button';
 import { PasswordFormField } from './password-form-field';
+import {
+  PasswordReserSendLinkModal,
+  PasswordReserSendLinkModalRef
+} from './password-reset-send-link-modal';
 import { Separator } from './separator';
 
 export default function LoginForm() {
   const { signInByEmailAndPassword } = useAuth();
+  const PasswordReserSendLinkModalRef = useRef<PasswordReserSendLinkModalRef>(null);
+  const ForfgotPasswordModalRef = useRef<ForgotPasswordModalRef>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -40,12 +47,22 @@ export default function LoginForm() {
           <div>
             <EmailFormField control={form.control} />
             <PasswordFormField control={form.control} />
-
-            <Link href="/auth/forgot-password" passHref>
-              <Typography as="linkSmall" element="p" className="mt-2 text-right text-bibinBlue-100">
-                パスワードをお忘れですか？
-              </Typography>
-            </Link>
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  ForfgotPasswordModalRef.current?.open();
+                }}
+                type="button"
+              >
+                <Typography
+                  as="bold"
+                  element="p"
+                  className="mt-[8px] text-right text-[14px] text-bibinBlue-100"
+                >
+                  パスワードをお忘れですか？
+                </Typography>
+              </button>
+            </div>
           </div>
 
           <Button
@@ -93,6 +110,20 @@ export default function LoginForm() {
           bibinアカウントを作成する
         </Button>
       </Link>
+      <ForgotPasswordModal
+        handleNextModalOpen={() => {
+          PasswordReserSendLinkModalRef.current?.open();
+          ForfgotPasswordModalRef.current?.close();
+        }}
+        ref={ForfgotPasswordModalRef}
+      />
+      <PasswordReserSendLinkModal
+        handleGoBack={() => {
+          ForfgotPasswordModalRef.current?.open();
+          PasswordReserSendLinkModalRef.current?.close();
+        }}
+        ref={PasswordReserSendLinkModalRef}
+      />
     </div>
   );
 }

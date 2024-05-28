@@ -8,15 +8,18 @@ import { Form } from '@/components/ui/form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
+import { useRef } from 'react';
 import { useAuth } from '../hooks/use-auth';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
 import { GoogleAuthButton } from './google-auth-button';
 import { PasswordFormField } from './password-form-field';
+import { SentEmailModal, SentEmailModalRef } from './sent-email-modal';
 import { Separator } from './separator';
 
 export default function SignupForm() {
   const { signUpByEmailAndPassword } = useAuth();
+  const SentEmailModalRef = useRef<SentEmailModalRef>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -25,6 +28,8 @@ export default function SignupForm() {
       password: ''
     }
   });
+
+  const email = form.watch('email');
 
   return (
     <div>
@@ -48,6 +53,9 @@ export default function SignupForm() {
             className="w-full"
             size="lg"
             variant="lg"
+            onClick={() => {
+              SentEmailModalRef.current?.open();
+            }}
           >
             {form.formState.isSubmitting ? <LoadingSpinner /> : '会員登録'}
           </Button>
@@ -91,6 +99,7 @@ export default function SignupForm() {
           </Typography>
         </Link>
       </div>
+      <SentEmailModal ref={SentEmailModalRef} email={email} />
     </div>
   );
 }

@@ -62,6 +62,9 @@ const config = {
           50: '#2196F3',
           100: '#51B7FF'
         },
+        bibinGreen: {
+          100: '#00B69B'
+        },
         black: {
           base: 'black',
           10: 'rgba(0, 0, 0, 0.10)',
@@ -117,7 +120,7 @@ const config = {
       height: {
         'screen-calc': 'calc(100vh - 370px)',
         'modal-screen-calc': 'calc(100vh - 80px)',
-        'default-screen-calc': 'calc(100vh * 1.8)'
+        'default-screen-calc': 'calc((100vh - 120px) * 1.8)'
       }
     }
   },
