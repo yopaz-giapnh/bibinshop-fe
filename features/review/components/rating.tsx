@@ -1,5 +1,6 @@
 'use client';
 
+import { Typography } from '@/components/ui/typography';
 import { useState } from 'react';
 
 type RatingProps = {
@@ -8,6 +9,7 @@ type RatingProps = {
   color?: string;
   readOnly?: boolean;
   withLabel?: boolean;
+  count?: number;
   onClick?: (value: number) => void;
 };
 
@@ -17,6 +19,7 @@ export default function Rating({
   color = '#FCBE2D',
   readOnly = false,
   withLabel = false,
+  count = 0,
   onClick
 }: RatingProps) {
   const [hoverValue, setHoverValue] = useState(star);
@@ -105,6 +108,16 @@ export default function Rating({
         <span className="font-bold" style={{ fontSize: `${size * 0.65}px` }}>
           {clickValue}
         </span>
+      ) : null}
+      {/* TODO: 他のベタ書きの部分を置き換え */}
+      {count > 0 ? (
+        <Typography
+          as="xSmall"
+          element="p"
+          className={`ml-1 text-${readOnly ? 'black' : 'sunburstYellow'}`}
+        >
+          ({count})
+        </Typography>
       ) : null}
     </div>
   );
