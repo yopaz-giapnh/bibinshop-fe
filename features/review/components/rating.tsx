@@ -10,6 +10,7 @@ type RatingProps = {
   readOnly?: boolean;
   withLabel?: boolean;
   count?: number;
+  parsent?: number;
   onClick?: (value: number) => void;
 };
 
@@ -20,6 +21,7 @@ export default function Rating({
   readOnly = false,
   withLabel = false,
   count = 0,
+  parsent,
   onClick
 }: RatingProps) {
   const [hoverValue, setHoverValue] = useState(star);
@@ -77,7 +79,7 @@ export default function Rating({
             return (
               <span
                 key={`star-${num}`}
-                className="p-0.5"
+                className="px-0.5"
                 onMouseMove={readOnly ? () => {} : (e) => handleOnHover(num, e)}
                 onClick={readOnly ? () => {} : (e) => handleOnClick(num, e)}
               >
@@ -97,7 +99,7 @@ export default function Rating({
         >
           {arr.map((num: number) => {
             return (
-              <span key={`star-active-${num}`} className="p-0.5">
+              <span key={`star-active-${num}`} className="px-0.5">
                 ★
               </span>
             );
@@ -119,6 +121,7 @@ export default function Rating({
           ({count})
         </Typography>
       ) : null}
+      {parsent && <>{parsent}%</>}
     </div>
   );
 }

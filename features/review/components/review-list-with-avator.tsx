@@ -1,26 +1,33 @@
 import { Typography } from '@/components/ui/typography';
 import Rating from './rating';
 
-export function ReviewListWithAvator() {
+type Props = {
+  onlyReviewList?: boolean;
+};
+
+export function ReviewListWithAvator({ onlyReviewList = false }: Props) {
   const reviews = [1, 2, 3, 4, 5];
 
   return (
     <div className="flex flex-col">
-      <Typography as="boldTitle" element="h1">
-        レビュー (95)
-      </Typography>
-
-      <div className="mt-4 flex flex-col items-center justify-center gap-5 overflow-hidden rounded-[6px] bg-powderBlue px-6 py-4">
-        <div className="flex w-full items-center gap-2 self-stretch">
-          <div className="inline-flex items-center gap-[9.78px]">
-            <Rating star={5} readOnly />
-          </div>
-          <Typography as="boldTitle" element="h1" className="text-[32px] tracking-[0.96px]">
-            5.00
+      {onlyReviewList ? null : (
+        <>
+          <Typography as="boldTitle" element="h1">
+            レビュー (95)
           </Typography>
-        </div>
-      </div>
 
+          <div className="mt-4 flex flex-col items-center justify-center gap-5 overflow-hidden rounded-[6px] bg-powderBlue px-6 py-4">
+            <div className="flex w-full items-center gap-2 self-stretch">
+              <div className="inline-flex items-center gap-[9.78px]">
+                <Rating star={5} readOnly />
+              </div>
+              <Typography as="boldTitle" element="h1" className="text-[32px] tracking-[0.96px]">
+                5.00
+              </Typography>
+            </div>
+          </div>
+        </>
+      )}
       <div className="mt-4 flex flex-col gap-6">
         {reviews.slice(0, 3).map((_, index) => (
           <div key={index} className="flex w-full">

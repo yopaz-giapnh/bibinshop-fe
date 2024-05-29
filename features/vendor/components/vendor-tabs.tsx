@@ -1,7 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProductCard } from '@/features/product/components/product-card';
 import { ComponentProps } from 'react';
+import VendorInfo from './vendor-info';
 import { VendorProducts } from './vendor-products';
+import { VendorReviews } from './vendor-reviews';
 
 type VendorTabsProps = {
   review: number;
@@ -33,10 +35,12 @@ export default async function VendorTabs({ products, review }: VendorTabsProps) 
         <VendorProducts products={products} />
       </TabsContent>
       <TabsContent value="review">
-        <div>レビューページ</div>
+        <VendorReviews />
       </TabsContent>
       <TabsContent value="shopInfo">
-        <div>ショップ情報</div>
+        <div className="mt-6 flex justify-center">
+          <VendorInfo />
+        </div>
       </TabsContent>
     </Tabs>
   );
