@@ -1,4 +1,4 @@
-import DocumentBlue from '@/assets/document_blue.svg';
+import BibiBubbleMessage from '@/assets/bibincban/bubble-message.svg';
 import { Typography } from '@/components/ui/typography';
 
 /**
@@ -8,7 +8,7 @@ import { Typography } from '@/components/ui/typography';
 export default function MessageEmptyView() {
   return (
     <div className="mt-[24px] flex flex-col items-center justify-center">
-      <DocumentBlue />
+      <BibiBubbleMessage />
       <Typography as="xSmall" element="p" className="mt-[24px] text-[16px] text-black-90">
         メッセージはありません。
       </Typography>

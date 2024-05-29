@@ -15,6 +15,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BadgeAlert, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
@@ -228,10 +229,22 @@ type ButtonProps = Pick<Props, 'buttonText'>;
 function SaveButton({ buttonText }: ButtonProps) {
   const { pending } = useFormStatus();
   const { toast } = useToast();
+  const error = true;
   const handleOpenToast = () => {
-    toast({
-      title: '住所が追加されました。'
-    });
+    // TODO: address create delete API繋ぎ込み後、responseを受け取って判定により出し分ける
+    if (!error) {
+      toast({
+        title: '住所が追加されました。',
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      toast({
+        title: '住所の追加に失敗しました。',
+        description: 'もう一度お試しください。',
+        className: 'bg-red-700',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import CartEmptyIcon from '@/assets/cart/empty.svg';
+import BibiBubbleCart from '@/assets/bibincban/bubble-cart.svg';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
@@ -6,7 +6,7 @@ import Link from 'next/link';
 export function CartEmpty() {
   return (
     <div className="flex flex-col items-center">
-      <CartEmptyIcon />
+      <BibiBubbleCart />
 
       <Typography as="body" element="h2" className="mt-6 text-center text-black-80">
         カート内に商品がありません。

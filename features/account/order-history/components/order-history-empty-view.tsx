@@ -1,4 +1,4 @@
-import DocumentBlue from '@/assets/document_blue.svg';
+import BibiVacantFace from '@/assets/bibincban/vacant-face.svg';
 import { Typography } from '@/components/ui/typography';
 
 type OrderHistoryEmptyViewProps = {
@@ -14,7 +14,7 @@ export default function OrderHistoryEmptyView({ status }: OrderHistoryEmptyViewP
 
   return (
     <div className="mt-[48px] flex flex-col items-center justify-center">
-      <DocumentBlue />
+      <BibiVacantFace />
       <Typography as="small" element="p" className="mt-[24px] text-[16px] text-black-90">
         {emptyMessage}
       </Typography>

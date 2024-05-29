@@ -1,4 +1,4 @@
-import MagnifyingGlass from '@/assets/magnifying-glass.svg';
+import BibiSuprisedFace from '@/assets/bibincban/surprised-face.svg';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { getProducts } from '@/features/product/api/products';
@@ -11,7 +11,7 @@ export default async function NotFound() {
       <Typography as="title" element="h1" className="mb-[24px]">
         404 not found
       </Typography>
-      <MagnifyingGlass />
+      <BibiSuprisedFace />
       <Typography as="caption" element="p" className="mt-[24px] text-[16px]">
         申し訳ございません。指定されたページは存在いたしません。
       </Typography>
