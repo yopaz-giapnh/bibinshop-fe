@@ -19,6 +19,7 @@ import TogglePasswordInput from './toggle-password-input';
  * @returns JSX.Element
  */
 export default function SecurityDetail() {
+  // TODO: ユーザーアカウントからメールアドレスとパスワードを取得するAPI叩く
   const [showEditPasswordForm, setShowEditPasswordForm] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -133,6 +134,7 @@ function SaveButton({ disabled }: SaveButtonProps) {
   const { pending } = useFormStatus();
 
   return (
+    // TODO: パスワードupdate API叩く
     <Button type="submit" className="w-[200px]" disabled={disabled || pending}>
       {pending ? <LoadingSpinner /> : '確認'}
     </Button>

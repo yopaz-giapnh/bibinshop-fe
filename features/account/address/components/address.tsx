@@ -19,6 +19,8 @@ export default function Address() {
   const addressFormModalRef = useRef<AddressFormModalRef>(null);
   const addressDeleteModalRef = useRef<AddressDeleteModalRef>(null);
 
+  // TODO: 住所一覧を取得するAPIを叩く
+
   const addresses = [
     {
       lastName: '佐藤',

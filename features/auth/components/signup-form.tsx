@@ -47,6 +47,7 @@ export default function SignupForm() {
             <PasswordFormField control={form.control} />
           </div>
 
+          {/* TODO:アカウント作成完了、ホーム画面遷移後に登録完了モーダルを出す */}
           <Button
             type="submit"
             disabled={!form.formState.isValid || form.formState.isSubmitting}

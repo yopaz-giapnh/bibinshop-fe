@@ -44,6 +44,7 @@ export default function OrderHistoryListInfo({ order }: OrderHistoryListInfoProp
         <OrderHistoryInfoDetail label="支払い金額:" value={order.amount} />
         <OrderHistoryInfoDetail label="注文番号:" value={order.number} />
       </div>
+      {/* TODO: 取得した注文履歴の個別の注文内容をid指定でordersに渡す */}
       <Link href="/account/orders/{orderId}" passHref className="flex items-center">
         <Typography as="small" element="p" className="text-bibinBlue-100">
           注文内容を表示

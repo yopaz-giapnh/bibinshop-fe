@@ -8,6 +8,8 @@ import ProfileReviewItem from './profile-review-item';
  * @returns JSX.Element
  */
 export default async function ProfileReviewList() {
+  // TODO: 自分がレビューした商品の一覧APIを叩いてデータを取得する
+
   // demo data
   const reviews = [
     {
@@ -59,6 +61,7 @@ export default async function ProfileReviewList() {
               </div>
             ))}
           </div>
+          {/* TODO: 自分がレビューした商品の一覧ページング */}
           <Pagenation />
         </div>
       )}

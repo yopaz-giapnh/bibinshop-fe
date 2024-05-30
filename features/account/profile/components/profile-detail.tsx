@@ -7,6 +7,7 @@ import ProfileEditModal from './profile-edit-modal';
  * @returns JSX.Element
  */
 export default function ProfileDetail() {
+  // TODO: ユーザー情報を取得するAPIを叩いてデータを取得する
   return (
     <div className="ml-[24px] flex items-center">
       <Image

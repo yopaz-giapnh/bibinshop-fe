@@ -17,7 +17,9 @@ export default function OrderHistoryActionButton({ status }: OrderHistoryActionB
 
   return (
     <div className="mr-[20px] mt-[24px]">
+      {/* TODO: 取得した注文履歴のidを渡して買い物カゴに追加するAPIを叩く */}
       {!isUnpaid && <BuyAgainModal />}
+      {/* TODO: 取得した注文履歴のidを渡してwrite-reviewに遷移する */}
       {isShipped && (
         <Link href="/account/orders/{orderId}/write-review" passHref>
           <button

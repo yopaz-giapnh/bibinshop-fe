@@ -48,7 +48,7 @@ export const AddressDeleteModal = forwardRef<AddressDeleteModalRef>((_, ref) => 
                 キャンセル
               </Typography>
             </Button>
-
+            {/* 住所一覧の指定idの住所をdeleteするAPIを叩く */}
             <Button size="lg" variant="lg" className="w-[200px]">
               削除
             </Button>
