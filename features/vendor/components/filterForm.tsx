@@ -18,6 +18,7 @@ const FilterSchema = z.object({
   categories: z.array(z.string()).nonempty({ message: 'At least one category must be selected.' })
 });
 
+// TODO: api から取得するカテゴリー一覧
 const categoriesList = [
   'スキンケア',
   'キット・コフレ・福袋',
