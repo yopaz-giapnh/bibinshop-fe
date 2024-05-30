@@ -1,5 +1,6 @@
 'use client';
 
+import { Typography } from '@/components/ui/typography';
 import { useState } from 'react';
 
 type RatingProps = {
@@ -8,6 +9,8 @@ type RatingProps = {
   color?: string;
   readOnly?: boolean;
   withLabel?: boolean;
+  count?: number;
+  parsent?: number;
   onClick?: (value: number) => void;
 };
 
@@ -17,6 +20,8 @@ export default function Rating({
   color = '#FCBE2D',
   readOnly = false,
   withLabel = false,
+  count = 0,
+  parsent,
   onClick
 }: RatingProps) {
   const [hoverValue, setHoverValue] = useState(star);
@@ -74,7 +79,7 @@ export default function Rating({
             return (
               <span
                 key={`star-${num}`}
-                className="p-0.5"
+                className="px-0.5"
                 onMouseMove={readOnly ? () => {} : (e) => handleOnHover(num, e)}
                 onClick={readOnly ? () => {} : (e) => handleOnClick(num, e)}
               >
@@ -94,7 +99,7 @@ export default function Rating({
         >
           {arr.map((num: number) => {
             return (
-              <span key={`star-active-${num}`} className="p-0.5">
+              <span key={`star-active-${num}`} className="px-0.5">
                 ★
               </span>
             );
@@ -106,6 +111,17 @@ export default function Rating({
           {clickValue}
         </span>
       ) : null}
+      {/* TODO: 他のベタ書きの部分を置き換え */}
+      {count > 0 ? (
+        <Typography
+          as="xSmall"
+          element="p"
+          className={`ml-1 text-${readOnly ? 'black' : 'sunburstYellow'}`}
+        >
+          ({count})
+        </Typography>
+      ) : null}
+      {parsent && <>{parsent}%</>}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Rating from '@/features/review/components/rating';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export function ShopCard() {
   return (
@@ -26,11 +27,14 @@ export function ShopCard() {
               4.1 (188)
             </Typography>
           </div>
-          <Button className="flex h-[40px] w-[211px] items-center border border-bibinBlue-100 bg-white-base p-[8px]">
-            <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
-              全ての商品を見る(361)
-            </Typography>
-          </Button>
+          {/* TODO:会社商品ページに遷移 */}
+          <Link href="/vendor/234">
+            <Button className="flex h-[40px] w-[211px] items-center border border-bibinBlue-100 bg-white-base p-[8px]">
+              <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
+                全ての商品を見る(361)
+              </Typography>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
