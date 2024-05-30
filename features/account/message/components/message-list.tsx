@@ -8,6 +8,9 @@ import MessageListItem from './message-list-item';
  * @returns JSX.Element
  */
 export default function MessageList() {
+  // TODO: メッセージ(ストアからのメッセージ、当サイトからのお知らせ等)を取得するAPIを叩く
+
+  // demo data
   const messages = [
     {
       id: 1,

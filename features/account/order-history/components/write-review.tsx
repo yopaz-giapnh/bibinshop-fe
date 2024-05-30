@@ -43,6 +43,7 @@ export default function WriteReview() {
           <WriteReviewItem key={index} item={item} />
         ))}
       </div>
+      {/* TODO: 自分のレビューリストに追加、updateするAPIを叩く */}
       <Button type="submit" variant="lg" className="mt-[24px] w-[392px]">
         提出
       </Button>

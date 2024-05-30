@@ -22,6 +22,8 @@ import { PencilRuler } from 'lucide-react';
 import Image from 'next/image';
 
 export default function ProfileEditModal() {
+  // TODO: ユーザー情報を取得するAPIを叩いてデータを取得する(profile-detailからpropsで受け取る？)
+
   return (
     <Dialog>
       <DialogDescription>
@@ -41,6 +43,7 @@ export default function ProfileEditModal() {
             <DialogTitle>プロフィール編集</DialogTitle>
           </DialogHeader>
           <div className="relative flex">
+            {/* TODO: 写真をアップロードできるようにする */}
             <Image
               src={'/yamada_yuka_demo.png'}
               width={100}
@@ -83,6 +86,7 @@ export default function ProfileEditModal() {
           </div>
           <div className="w-full">
             <DialogClose asChild>
+              {/* TODO: ユーザー情報を更新するAPIを叩く*/}
               <Button type="submit" size="lg" variant="lg" className="w-full">
                 保存
               </Button>

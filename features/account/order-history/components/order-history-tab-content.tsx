@@ -38,6 +38,7 @@ export default function OrderHistoryTabContent({ orders, status }: OrderHistoryT
           <OrderHistoryEmptyView status={status} />
         )}
       </div>
+      {/* TODO:注文履歴ページング */}
       <Pagenation />
     </div>
   );
