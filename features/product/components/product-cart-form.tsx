@@ -4,18 +4,19 @@ import { Share } from '@/components/icons/share';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import { addItem } from '@/features/cart/actions';
+import { addItem, getCart } from '@/features/cart/actions';
 import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
 import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product } from '../types';
 
 type Props = {
   product: Product;
+  getCart: ReturnType<typeof getCart>;
 };
 
 type Color = {
@@ -39,13 +40,16 @@ const colors: Color[] = [
   }
 ];
 
-export function ProductCartForm({ product }: Props) {
+export function ProductCartForm({ product, getCart }: Props) {
   const isColorProperty = true;
   const [selectedColor, setSelectedColor] = useState<Color>(colors[0]);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const [message, formAction] = useFormState(addItem, null);
-  const actionWithProduct = formAction.bind(null, product.id);
+  const action = formAction.bind(null, {
+    productId: product.id,
+    quantity: selectedQuantity
+  });
 
   useEffect(() => {
     if (message && message.success) {
@@ -57,7 +61,7 @@ export function ProductCartForm({ product }: Props) {
 
   return (
     <>
-      <form className="flex flex-col gap-5" action={actionWithProduct}>
+      <form className="flex flex-col gap-5" action={action}>
         <div>
           <div className="flex">
             <Typography as="small" element="h1" className="text-text-80">
@@ -159,7 +163,9 @@ export function ProductCartForm({ product }: Props) {
         <AddToCartButton />
       </form>
 
-      <CartSheet ref={cartSheetRef} />
+      <Suspense>
+        <CartSheet ref={cartSheetRef} getCart={getCart} />
+      </Suspense>
     </>
   );
 }

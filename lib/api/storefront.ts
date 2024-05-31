@@ -1089,6 +1089,10 @@ export interface components {
         digital_links?: {
           data?: components['schemas']['Relation'][];
         };
+        // TODO: api定義する
+        vendor?: {
+          data?: components['schemas']['Relation'];
+        };
       };
     };
     /** Menu */

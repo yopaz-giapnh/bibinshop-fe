@@ -1,8 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
+import { Cart } from '../types';
 
-export function OrderOverview() {
+type Props = {
+  cart: Cart;
+};
+
+export function OrderOverview({ cart }: Props) {
   return (
     <div className="w-full rounded-[6px] bg-white-base px-4 py-[19px] shadow-base">
       <Typography as="title" element="p" className="text-text-100">
@@ -11,10 +16,10 @@ export function OrderOverview() {
 
       <div className="mt-4 flex justify-between">
         <Typography as="caption" element="p" className="text-black-90">
-          商品金額(2)
+          {`商品金額(${cart.attributes.item_count})`}
         </Typography>
         <Typography as="caption" element="p" className="text-black-90">
-          7,705円
+          {cart.attributes.display_item_total}
         </Typography>
       </div>
 
@@ -23,7 +28,7 @@ export function OrderOverview() {
           送料
         </Typography>
         <Typography as="caption" element="p" className="text-black-90">
-          0円
+          {cart.attributes.display_ship_total}
         </Typography>
       </div>
 
@@ -32,7 +37,7 @@ export function OrderOverview() {
           小計
         </Typography>
         <Typography as="title" element="p" className="text-black-90">
-          7,705円
+          {cart.attributes.display_total}
         </Typography>
       </div>
 

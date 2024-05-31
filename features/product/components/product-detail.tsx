@@ -1,4 +1,5 @@
 import { Typography } from '@/components/ui/typography';
+import { getCart } from '@/features/cart/actions';
 import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
 import { SeeMoreReviewButton } from '@/features/review/components/see-more-review-button';
 import { getProducts } from '../api/products';
@@ -28,7 +29,7 @@ export async function ProductDetail({ product }: Props) {
         </div>
 
         <div className="ml-[60px] flex flex-1 flex-col gap-5">
-          <ProductCartForm product={product} />
+          <ProductCartForm product={product} getCart={getCart()} />
           <ShopCard />
           <Supplementary />
         </div>

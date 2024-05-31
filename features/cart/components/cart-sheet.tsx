@@ -6,7 +6,8 @@ import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Typography } from '@/components/ui/typography';
 import { X } from 'lucide-react';
 import Link from 'next/link';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, use, useImperativeHandle, useState } from 'react';
+import { getCart } from '../actions';
 import { CartSheetItem } from './cart-sheet-item';
 
 export type CartSheetRef = {
@@ -41,7 +42,12 @@ const cartItems = [
   }
 ];
 
-export const CartSheet = forwardRef<CartSheetRef>((_, ref) => {
+type Props = {
+  getCart: ReturnType<typeof getCart>;
+};
+
+export const CartSheet = forwardRef<CartSheetRef, Props>(({ getCart }, ref) => {
+  const cart = use(getCart);
   const [isOpen, setIsOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -77,15 +83,15 @@ export const CartSheet = forwardRef<CartSheetRef>((_, ref) => {
               <div>
                 <ScrollArea className="h-[calc(100vh_-_246px)]">
                   <div className="flex flex-col gap-6 px-6 pt-6">
-                    {cartItems.map((cartItem) => (
-                      <CartSheetItem key={cartItem.id} cartItem={cartItem} />
+                    {cart?.lineItems.map((lineItem) => (
+                      <CartSheetItem key={lineItem.id} lineItem={lineItem} />
                     ))}
                   </div>
                 </ScrollArea>
 
                 <div className="border-t border-black-10 p-6">
                   <Typography as="title" element="h1" className="text-center text-bibinBlue-100">
-                    合計:¥1,242
+                    {`合計:${cart?.attributes.display_total}`}
                   </Typography>
                   <Link href="/cart" passHref>
                     <Button size="lg" variant="lg" className="mt-4 w-full">

@@ -3,48 +3,14 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
+import { Cart } from '../types';
 import { CartItemGroupByShop } from './cart-item-group-by-shop';
 
-const shops = [
-  {
-    id: 1,
-    name: 'ドクターディエット公式',
-    items: [
-      {
-        id: 1,
-        name: 'マスカラ モテマスカラ カラーマスカラ まつげケア お湯オフ 低刺激性 クリア 透明 マスカラ 塗る つけま...',
-        price: 1030,
-        quantity: 1
-      },
-      {
-        id: 2,
-        name: 'マスカラ モテマスカラ カラーマスカラ まつげケア お湯オフ 低刺激性 クリア 透明 マスカラ 塗る つけま...',
-        price: 1030,
-        quantity: 1
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'ダルバ(d’Alba)公式',
-    items: [
-      {
-        id: 3,
-        name: '【プレミアムUVケア】日焼け止め 50ml 4種 SPF50+PA++++/トーンアップ/サンクリーム/化粧下地/敏...',
-        price: 3045,
-        quantity: 1
-      },
-      {
-        id: 4,
-        name: 'マスカラ モテマスカラ カラーマスカラ まつげケア お湯オフ 低刺激性 クリア 透明 マスカラ 塗る つけま...',
-        price: 2600,
-        quantity: 1
-      }
-    ]
-  }
-];
+type Props = {
+  cart: Cart;
+};
 
-export function CartItemList() {
+export function CartItemList({ cart }: Props) {
   return (
     <div className="flex flex-col gap-4">
       <label
@@ -55,15 +21,20 @@ export function CartItemList() {
           <Checkbox id="all" defaultChecked />
         </div>
         <Typography as="boldTitle" element="h2" className="text-text-100">
-          すべての商品 (4)
+          {`すべての商品 (${cart.attributes.item_count})`}
         </Typography>
       </label>
       <ScrollArea>
         <div className="flex h-[calc(100vh_-_373px)] flex-col gap-4">
-          {shops.map((shop) => (
+          {cart.vendorTotals.map((vendorTotal) => (
             <CartItemGroupByShop
-              key={shop.id}
-              shop={shop}
+              key={vendorTotal.id}
+              shop={{
+                ...vendorTotal,
+                lineItems: cart.lineItems.filter(
+                  (lineItem) => lineItem.relationships.vendor?.data?.id === vendorTotal.id
+                )
+              }}
               onCheckedChangeShop={() => {
                 console.log('onCheckedChangeShop');
               }}

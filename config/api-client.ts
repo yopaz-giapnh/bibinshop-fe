@@ -1,7 +1,9 @@
 import { getAccessToken } from '@/features/auth/utils/session';
+import { COOKIES } from '@/features/cart/constants';
 import type { paths as oauthPaths } from '@/lib/api/oauth';
 import type { paths as storefrontPaths } from '@/lib/api/storefront';
 import * as auth from 'next-auth/react';
+import { cookies } from 'next/headers';
 import createClient, { type Middleware } from 'openapi-fetch';
 
 type paths = oauthPaths & storefrontPaths;
@@ -15,12 +17,18 @@ const throwOnError: Middleware = {
       return req;
     }
 
+    const cartToken = cookies().get(COOKIES.cartToken);
+    if (cartToken) {
+      req.headers.set('X-Spree-Order-Token', cartToken.value);
+    }
+
     const accessToken = await getAccessToken();
     if (!accessToken) {
       return req;
     }
 
     req.headers.set('Authorization', `Bearer ${accessToken}`);
+
     return req;
   },
   async onResponse(res) {

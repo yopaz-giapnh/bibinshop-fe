@@ -4,23 +4,18 @@ import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Typography } from '@/components/ui/typography';
 import Image from 'next/image';
+import { removeLinteItem, updateItemQuantity } from '../actions';
+import { LineItem, VendorTotal } from '../types';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
 
-type Shop = {
-  id: number;
-  name: string;
-  items: {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-  }[];
+type Shop = VendorTotal & {
+  lineItems: LineItem[];
 };
 
 type Props = {
   shop: Shop;
-  onCheckedChangeShop: (checked: boolean | string, shopId: number) => void;
-  onCheckedChangeItem: (checked: boolean | string, itemId: number) => void;
+  onCheckedChangeShop: (checked: boolean | string, shopId: string) => void;
+  onCheckedChangeItem: (checked: boolean | string, itemId: string) => void;
 };
 
 export function CartItemGroupByShop({ shop, onCheckedChangeShop, onCheckedChangeItem }: Props) {
@@ -38,12 +33,12 @@ export function CartItemGroupByShop({ shop, onCheckedChangeShop, onCheckedChange
           />
         </div>
         <Typography as="bold" element="h2" className="text-black-90">
-          {shop.name}
+          {shop.attributes.name}
         </Typography>
       </label>
 
-      {shop.items.map((item) => {
-        const key = `${shop.id}-${item.id}`;
+      {shop.lineItems.map((lineItem) => {
+        const key = `${shop.id}-${lineItem.id}`;
         return (
           <label key={key} className="flex cursor-pointer items-center gap-4">
             <div className="flex h-[46px] w-[46px] items-center justify-center">
@@ -51,7 +46,7 @@ export function CartItemGroupByShop({ shop, onCheckedChangeShop, onCheckedChange
                 id={key}
                 defaultChecked
                 onCheckedChange={(checked) => {
-                  onCheckedChangeItem(checked, item.id);
+                  onCheckedChangeItem(checked, lineItem.id);
                 }}
               />
             </div>
@@ -60,29 +55,35 @@ export function CartItemGroupByShop({ shop, onCheckedChangeShop, onCheckedChange
 
             <div className="flex flex-1 flex-col gap-1">
               <Typography as="linkSmall" element="h3" className="text-black-90">
-                {item.name}
+                {lineItem.attributes.name}
               </Typography>
               <Typography as="subCaption" element="h3" className="text-black-70">
                 色: vol. 6
               </Typography>
               <div className="flex items-center justify-between">
                 <Typography as="linkSmall" element="h3" className="text-bibinBlue-100">
-                  {item.price}円
+                  {lineItem.attributes.display_price}
                 </Typography>
 
                 <div className="flex gap-6">
-                  <QuantityAdjustmentButtons
-                    quantity={item.quantity}
-                    onIncrease={() => {
-                      console.log('onIncrease');
-                    }}
-                    onDecrease={() => {
-                      console.log('onDecrease');
-                    }}
-                  />
+                  {lineItem.attributes.quantity != null && (
+                    <QuantityAdjustmentButtons
+                      quantity={lineItem.attributes.quantity}
+                      onIncrease={async () => {
+                        await updateItemQuantity({ lineItem, type: 'plus' });
+                      }}
+                      onDecrease={async () => {
+                        await updateItemQuantity({ lineItem, type: 'minus' });
+                      }}
+                    />
+                  )}
 
                   <ButtonWithIcon
-                    buttonProps={{ onClick: () => {} }}
+                    buttonProps={{
+                      onClick: async () => {
+                        await removeLinteItem(lineItem.id);
+                      }
+                    }}
                     icon={<Trash />}
                     text="削除"
                   />
