@@ -1,3 +1,5 @@
+'use server';
+
 import { apiClient } from '@/config/api-client';
 import { isProductImageIncludes } from '@/utils/product';
 import { TAGS } from '../constants';

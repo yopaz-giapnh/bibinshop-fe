@@ -2,7 +2,7 @@ import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
 import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
 import { SeeMoreReviewButton } from '@/features/review/components/see-more-review-button';
-import { getProducts } from '../api/products';
+import { getProducts } from '../actions';
 import { Product } from '../types';
 import { Gallery } from './gallery';
 import { ProductCartForm } from './product-cart-form';

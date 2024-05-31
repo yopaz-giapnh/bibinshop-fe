@@ -1,7 +1,7 @@
 import BibiSuprisedFace from '@/assets/bibincban/surprised-face.svg';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
-import { getProducts } from '@/features/product/api/products';
+import { getProducts } from '@/features/product/actions';
 import { ProductOverview } from '@/features/product/components/product-overview';
 import Link from 'next/link';
 

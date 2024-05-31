@@ -1,5 +1,5 @@
 import { Breadcrumb } from '@/components/layout/breadcrumb';
-import { getProduct } from '@/features/product/api/products';
+import { getProduct } from '@/features/product/actions';
 import { ProductDetail } from '@/features/product/components/product-detail';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';

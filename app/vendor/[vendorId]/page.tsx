@@ -1,4 +1,4 @@
-import { getProducts } from '@/features/product/api/products';
+import { getProducts } from '@/features/product/actions';
 import { VendorHeader } from '@/features/vendor/components/vendor-header';
 import VendorTabs from '@/features/vendor/components/vendor-tabs';
 

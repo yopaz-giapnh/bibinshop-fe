@@ -1,6 +1,6 @@
 import { Typography } from '@/components/ui/typography';
 import { CarouselBanner } from '@/features/banner/components/carousel-banner';
-import { getProducts } from '@/features/product/api/products';
+import { getProducts } from '@/features/product/actions';
 import { ProductOverview } from '@/features/product/components/product-overview';
 
 export default async function Page() {
