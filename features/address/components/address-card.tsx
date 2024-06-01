@@ -2,13 +2,12 @@ import Edit from '@/assets/edit.svg';
 import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
-import { FormValues } from '../types/address-form';
+import { Address } from '../types';
 
 type Props = {
   onEdit?: () => void;
   onDelete?: () => void;
-  // TODO] 型はAPIから取得する
-  address: FormValues;
+  address: Address;
 };
 
 export function AddressCard({ onEdit, onDelete, address }: Props) {
@@ -25,10 +24,11 @@ export function AddressCard({ onEdit, onDelete, address }: Props) {
         </div>
         <div className="w-2/3">
           <Typography as="body" element="p" className="text-text-90">
-            〒{address.postalCode}
+            〒{address.attributes.zipcode}
           </Typography>
           <Typography as="caption" element="p" className="text-text-90">
-            {address.prefecture} {address.city} {address.address1} {address.address2}
+            {address.attributes.state_name} {address.attributes.city} {address.attributes.address1}{' '}
+            {address.attributes.address2}
           </Typography>
         </div>
       </div>

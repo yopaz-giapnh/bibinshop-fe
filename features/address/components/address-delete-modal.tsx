@@ -1,20 +1,23 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import { forwardRef, useImperativeHandle, useState } from 'react';
-import { FormValues } from '../types/address-form';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
+import { removeAccountAddress } from '../actions';
+import { Address } from '../types';
 import { AddressCard } from './address-card';
 
 export type AddressDeleteModalRef = {
-  open: (values?: FormValues) => void;
+  open: (values?: Address) => void;
   close: () => void;
 };
 
 export const AddressDeleteModal = forwardRef<AddressDeleteModalRef>((_, ref) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [values, setValues] = useState<FormValues>();
+  const [values, setValues] = useState<Address>();
 
-  const onOpen = (values?: FormValues) => {
+  const onOpen = (values?: Address) => {
     setValues(values);
     setIsOpen(true);
   };
@@ -27,6 +30,19 @@ export const AddressDeleteModal = forwardRef<AddressDeleteModalRef>((_, ref) => 
     open: onOpen,
     close: onClose
   }));
+
+  const [message, formAction] = useFormState(removeAccountAddress, null);
+  const action = formAction.bind(null, values?.id || '');
+
+  useEffect(() => {
+    if (!message) {
+      return;
+    }
+
+    if (message.success) {
+      onClose();
+    }
+  }, [message]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -43,15 +59,15 @@ export const AddressDeleteModal = forwardRef<AddressDeleteModalRef>((_, ref) => 
               size="lg"
               variant="lg"
               onClick={onClose}
+              type="button"
             >
               <Typography as="bold" element="p" className="text-bibinBlue-100">
                 キャンセル
               </Typography>
             </Button>
-            {/* 住所一覧の指定idの住所をdeleteするAPIを叩く */}
-            <Button size="lg" variant="lg" className="w-[200px]">
-              削除
-            </Button>
+            <form action={action}>
+              <DeleteButton />
+            </form>
           </div>
         </DialogContent>
       </DialogDescription>
@@ -60,3 +76,13 @@ export const AddressDeleteModal = forwardRef<AddressDeleteModalRef>((_, ref) => 
 });
 
 AddressDeleteModal.displayName = 'AddressDeleteModal';
+
+function DeleteButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button size="lg" variant="lg" className="w-[200px]" disabled={pending}>
+      {pending ? <LoadingSpinner /> : '削除'}
+    </Button>
+  );
+}

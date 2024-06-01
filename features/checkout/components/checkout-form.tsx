@@ -1,4 +1,5 @@
 import { Typography } from '@/components/ui/typography';
+import { getAccountAddresses } from '@/features/address/actions';
 import { getAccountCreditCards } from '@/features/payment/actions';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
 import { Suspense } from 'react';
@@ -16,7 +17,9 @@ export async function CheckoutForm() {
       <div className="mt-[22px] w-full px-20">
         <div className="flex gap-6">
           <div className="flex flex-1 flex-col gap-4">
-            <CheckoutAddressForm />
+            <Suspense fallback={<div>Loading...</div>}>
+              <CheckoutAddressForm getAccountAddresses={getAccountAddresses()} />
+            </Suspense>
             <Suspense fallback={<div>Loading...</div>}>
               <CheckoutPaymentForm getAccountCreditCards={getAccountCreditCards()} />
             </Suspense>

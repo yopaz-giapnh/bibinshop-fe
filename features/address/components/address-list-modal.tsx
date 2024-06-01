@@ -4,7 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { CirclePlus } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useState } from 'react';
-import { FormValues } from '../types/address-form';
+import { Address } from '../types';
 import { AddressSelection } from './address-selection';
 
 export type AddressListModalRef = {
@@ -14,36 +14,13 @@ export type AddressListModalRef = {
 
 type Props = {
   onAdd: () => void;
-  onEdit: (values: FormValues) => void;
-  onDelete: (values: FormValues) => void;
+  onEdit: (values: Address) => void;
+  onDelete: (values: Address) => void;
+  addresses: Address[];
 };
 
-const addresses = [
-  {
-    id: 1,
-    name: '山田太郎',
-    phone: '071-1234-5678',
-    postalCode: '640-0002',
-    address: '大阪府 守口市佐太東町3-101-5 OOビル101'
-  },
-  {
-    id: 2,
-    name: '山田太郎',
-    phone: '071-1234-5678',
-    postalCode: '640-0002',
-    address: '大阪府 守口市佐太東町3-101-5 OOビル101'
-  },
-  {
-    id: 3,
-    name: '山田太郎',
-    phone: '071-1234-5678',
-    postalCode: '640-0002',
-    address: '大阪府 守口市佐太東町3-101-5 OOビル101'
-  }
-];
-
 export const AddressListModal = forwardRef<AddressListModalRef, Props>(
-  ({ onAdd, onEdit, onDelete }, ref) => {
+  ({ onAdd, onEdit, onDelete, addresses }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
 
     useImperativeHandle(ref, () => ({

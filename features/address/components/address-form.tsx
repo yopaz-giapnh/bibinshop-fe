@@ -16,32 +16,70 @@ import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BadgeAlert, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { addItem } from '../actions';
+import { addAccountAddress, updateAccountAddress } from '../actions';
+import { Address } from '../types';
 import { FormValues, formSchema } from '../types/address-form';
 
 type Props = {
   buttonText?: string;
-  defaultValues?: FormValues;
+  address?: Address;
+  onSaved?: () => void;
 };
 
-export function AddressForm({ buttonText = '保存する', defaultValues }: Props) {
+export function AddressForm({ buttonText = '保存する', address, onSaved }: Props) {
   const [isDefaultAddress, setIsDefaultAddress] = useState(false);
+  const isEdit = !!address;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues
+    defaultValues: {
+      lastName: address?.attributes.lastname || '',
+      firstName: address?.attributes.firstname || '',
+      lastNameKana: address?.attributes.lastname || '',
+      firstNameKana: address?.attributes.firstname || '',
+      postalCode: address?.attributes.zipcode || '',
+      prefecture: address?.attributes.state_name || '',
+      city: address?.attributes.city || '',
+      address1: address?.attributes.address1 || '',
+      address2: address?.attributes.address2 || '',
+      phoneNumber: address?.attributes.phone || ''
+    }
   });
 
-  const [message, formAction] = useFormState(addItem, null);
-  const actionWithProduct = formAction.bind(null, { ...form.getValues(), isDefaultAddress });
-  console.log('AddressForm', message);
+  const [state, formAction] = useFormState(isEdit ? updateAccountAddress : addAccountAddress, null);
+  const formData = { ...form.getValues(), isDefaultAddress };
+  const action = formAction.bind(null, isEdit ? { ...formData, id: address?.id } : formData);
+
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!state) {
+      return;
+    }
+
+    if (state?.success) {
+      form.reset();
+      toast({
+        title: state.message,
+        icon: <Check className="h-6 w-6" />
+      });
+      onSaved?.();
+    } else {
+      toast({
+        title: state.message,
+        description: state.description,
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
+  }, [form, state, toast, onSaved]);
 
   return (
     <Form {...form}>
-      <form action={actionWithProduct} className="flex flex-col items-center justify-center gap-4">
+      <form action={action} className="flex flex-col items-center justify-center gap-4">
         <div className="flex w-full gap-4">
           <FormField
             control={form.control}
@@ -108,7 +146,7 @@ export function AddressForm({ buttonText = '保存する', defaultValues }: Prop
               <FormItem className="flex-1">
                 <FormLabel>郵便番号</FormLabel>
                 <FormControl>
-                  <Input {...field} autoComplete="username" placeholder="例：123-4567" />
+                  <Input {...field} autoComplete="username" placeholder="例：1234567" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,7 +167,7 @@ export function AddressForm({ buttonText = '保存する', defaultValues }: Prop
               <FormItem className="w-full">
                 <FormLabel>都道府県</FormLabel>
                 <FormControl>
-                  <Input {...field} autoComplete="username" placeholder="例：山田" />
+                  <Input {...field} autoComplete="username" placeholder="例：東京都" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -142,7 +180,7 @@ export function AddressForm({ buttonText = '保存する', defaultValues }: Prop
               <FormItem className="w-full">
                 <FormLabel>市区郡町村</FormLabel>
                 <FormControl>
-                  <Input {...field} autoComplete="username" placeholder="例：OO区" />
+                  <Input {...field} autoComplete="username" placeholder="例：港区" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -158,7 +196,7 @@ export function AddressForm({ buttonText = '保存する', defaultValues }: Prop
               <FormItem className="flex-1">
                 <FormLabel>番地</FormLabel>
                 <FormControl>
-                  <Input {...field} autoComplete="username" placeholder="例：1-2-3" />
+                  <Input {...field} autoComplete="username" placeholder="例：赤坂1-2-3" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -169,7 +207,7 @@ export function AddressForm({ buttonText = '保存する', defaultValues }: Prop
         <div className="flex w-full gap-4">
           <FormField
             control={form.control}
-            name="address1"
+            name="address2"
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>アパート・マンション・部屋番号</FormLabel>
@@ -193,7 +231,7 @@ export function AddressForm({ buttonText = '保存する', defaultValues }: Prop
                   <Input
                     {...field}
                     autoComplete="username"
-                    placeholder="例：0712345678 (ハイフンなし)"
+                    placeholder="例：07012345678 (ハイフンなし)"
                   />
                 </FormControl>
                 <FormMessage />
@@ -219,45 +257,21 @@ export function AddressForm({ buttonText = '保存する', defaultValues }: Prop
           </label>
         </div>
 
-        <SaveButton buttonText={buttonText} />
+        <SaveButton buttonText={buttonText} disabled={!form.formState.isValid} />
       </form>
     </Form>
   );
 }
 
-type ButtonProps = Pick<Props, 'buttonText'>;
+type ButtonProps = Pick<Props, 'buttonText'> & {
+  disabled?: boolean;
+};
 
-function SaveButton({ buttonText }: ButtonProps) {
+function SaveButton({ buttonText, disabled }: ButtonProps) {
   const { pending } = useFormStatus();
-  const { toast } = useToast();
-  const error = true;
-  const handleOpenToast = () => {
-    // TODO: address create delete API繋ぎ込み後、responseを受け取って判定により出し分ける
-    if (!error) {
-      toast({
-        title: '住所が追加されました。',
-        icon: <Check className="h-6 w-6" />
-      });
-    } else {
-      toast({
-        title: '住所の追加に失敗しました。',
-        description: 'もう一度お試しください。',
-        className: 'bg-red-700',
-        icon: <BadgeAlert className="h-6 w-6" />
-      });
-    }
-  };
 
   return (
-    //TODO: 追加の場合、住所一覧に新しい住所を追加(update)するAPIを叩く
-    //TODO: 編集の場合、住所一覧のidを指定して住所を編集(update)するAPIを叩く
-    <Button
-      size="lg"
-      variant="lg"
-      className="w-[392px]"
-      disabled={pending}
-      onClick={handleOpenToast}
-    >
+    <Button size="lg" variant="lg" className="w-[392px]" disabled={pending || disabled}>
       {pending ? <LoadingSpinner /> : buttonText}
     </Button>
   );

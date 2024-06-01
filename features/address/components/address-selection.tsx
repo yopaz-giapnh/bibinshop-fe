@@ -3,18 +3,12 @@ import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
-import { FormValues } from '../types/address-form';
+import { Address } from '../types';
 
 type Props = {
-  addresses: {
-    id: number;
-    name: string;
-    phone: string;
-    postalCode: string;
-    address: string;
-  }[];
-  onEdit: (values: FormValues) => void;
-  onDelete: (values: FormValues) => void;
+  addresses: Address[];
+  onEdit: (values: Address) => void;
+  onDelete: (values: Address) => void;
 };
 
 export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
@@ -28,18 +22,21 @@ export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
               <div className="flex  flex-col justify-center gap-4">
                 <div className="flex-none items-center justify-center gap-4">
                   <Typography as="bold" element="p" className="text-text-90">
-                    {address.name}
+                    {address.attributes.lastname} {address.attributes.firstname}
                   </Typography>
                   <Typography as="caption" element="p" className="text-text-90">
-                    {address.phone}
+                    {address.attributes.phone}
                   </Typography>
                 </div>
                 <div className="w-2/3">
                   <Typography as="body" element="p" className="text-text-90">
-                    〒{address.postalCode}
+                    〒{address.attributes.zipcode}
                   </Typography>
                   <Typography as="caption" element="p" className="text-text-90">
-                    {address.address}
+                    {address.attributes.state_name}
+                    {address.attributes.city}
+                    {address.attributes.address1}
+                    {address.attributes.address2}
                   </Typography>
                 </div>
               </div>
@@ -49,20 +46,7 @@ export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
                 buttonProps={{
                   className:
                     'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
-                  onClick: () => {
-                    onEdit({
-                      lastName: '山田',
-                      firstName: '太郎',
-                      lastNameKana: 'ヤマダ',
-                      firstNameKana: 'タロウ',
-                      postalCode: '123-4567',
-                      prefecture: '大阪府',
-                      city: '守口市',
-                      address1: '佐太東町3-101-5',
-                      address2: 'OOビル101',
-                      phoneNumber: '071-1234-5678'
-                    });
-                  }
+                  onClick: () => onEdit(address)
                 }}
                 icon={<Edit />}
                 text="編集"
@@ -72,20 +56,7 @@ export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
                 buttonProps={{
                   className:
                     'w-[93px] h-10 flex justify-center px-2 py-4 flex-1 border border-bibinBlue-100 rounded-[100px]',
-                  onClick: () => {
-                    onDelete({
-                      lastName: '山田',
-                      firstName: '太郎',
-                      lastNameKana: 'ヤマダ',
-                      firstNameKana: 'タロウ',
-                      postalCode: '123-4567',
-                      prefecture: '大阪府',
-                      city: '守口市',
-                      address1: '佐太東町3-101-5',
-                      address2: 'OOビル101',
-                      phoneNumber: '071-1234-5678'
-                    });
-                  }
+                  onClick: () => onDelete(address)
                 }}
                 icon={<Trash />}
                 text="削除"

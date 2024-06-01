@@ -1,6 +1,7 @@
 'use client';
 
 import { Typography } from '@/components/ui/typography';
+import { getAccountAddresses } from '@/features/address/actions';
 import { AddressCard } from '@/features/address/components/address-card';
 import {
   AddressDeleteModal,
@@ -16,10 +17,15 @@ import {
   AddressListModalRef
 } from '@/features/address/components/address-list-modal';
 import { ChevronRight } from 'lucide-react';
-import { useRef } from 'react';
+import { use, useRef } from 'react';
 
-export function CheckoutAddressForm() {
-  const hasAddress = !false;
+type Props = {
+  getAccountAddresses: ReturnType<typeof getAccountAddresses>;
+};
+
+export function CheckoutAddressForm({ getAccountAddresses }: Props) {
+  const addresses = use(getAccountAddresses);
+  const hasAddress = addresses.length > 0;
 
   const addressListModalRef = useRef<AddressListModalRef>(null);
   const addressFormModalRef = useRef<AddressFormModalRef>(null);
@@ -54,22 +60,12 @@ export function CheckoutAddressForm() {
               onEdit={() => {
                 addressListModalRef.current?.open();
               }}
-              address={{
-                lastName: '山田',
-                firstName: '太郎',
-                lastNameKana: 'ヤマダ',
-                firstNameKana: 'タロウ',
-                postalCode: '123-4567',
-                prefecture: '大阪府',
-                city: '守口市',
-                address1: '佐太東町3-101-5',
-                address2: 'OOビル101',
-                phoneNumber: '071-1234-5678'
-              }}
+              address={addresses[0]}
             />
           </div>
           <AddressListModal
             ref={addressListModalRef}
+            addresses={addresses}
             onAdd={() => {
               addressFormModalRef.current?.open();
             }}

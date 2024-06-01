@@ -88,6 +88,7 @@ const config = {
         },
         paleFrostBlue: '#F5F6FA',
         lightRed: '#FE735C',
+        error: '#FD5454',
         sunburstYellow: '#FCBE2D',
         powderBlue: '#EEF8FF',
         charcoalGray: '#6E6E73'
