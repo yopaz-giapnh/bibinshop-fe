@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { associateCart } from '@/features/cart/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRef } from 'react';
@@ -37,7 +38,10 @@ export default function LoginForm() {
     <div>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(signInByEmailAndPassword)}
+          onSubmit={form.handleSubmit(async () => {
+            await signInByEmailAndPassword(form.getValues());
+            await associateCart();
+          })}
           className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 shadow-base"
         >
           <Typography as="title" element="h1" className="text-center">

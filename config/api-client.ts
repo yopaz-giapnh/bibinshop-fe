@@ -17,17 +17,17 @@ const throwOnError: Middleware = {
       return req;
     }
 
-    const cartToken = cookies().get(COOKIES.cartToken);
-    if (cartToken) {
-      req.headers.set('X-Spree-Order-Token', cartToken.value);
-    }
-
     const accessToken = await getAccessToken();
-    if (!accessToken) {
+    if (accessToken) {
+      req.headers.set('Authorization', `Bearer ${accessToken}`);
       return req;
     }
 
-    req.headers.set('Authorization', `Bearer ${accessToken}`);
+    const cartToken = cookies().get(COOKIES.cartToken);
+    if (cartToken) {
+      req.headers.set('X-Spree-Order-Token', cartToken.value);
+      return req;
+    }
 
     return req;
   },

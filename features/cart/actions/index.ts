@@ -151,3 +151,25 @@ export async function updateItemQuantity({
     quantity: type === 'plus' ? lineItem.attributes.quantity + 1 : lineItem.attributes.quantity - 1
   });
 }
+
+export async function associateCart() {
+  try {
+    const cartToken = cookies().get(COOKIES.cartToken);
+    if (!cartToken) {
+      return;
+    }
+
+    await apiClient.PATCH('/api/v2/storefront/cart/associate', {
+      params: {
+        query: {
+          guest_order_token: cartToken.value
+        }
+      }
+    });
+    cookies().delete(COOKIES.cartToken);
+
+    revalidateTag(TAGS.cart);
+  } catch (e) {
+    console.error(e);
+  }
+}
