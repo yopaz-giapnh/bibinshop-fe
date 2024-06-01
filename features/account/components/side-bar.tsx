@@ -37,7 +37,7 @@ export default function AccountSideBar() {
       label: 'お届け先住所'
     },
     {
-      href: '/',
+      href: '/account/payment',
       icon: <CreditCard className="h-6 w-6" color="black" />,
       label: 'お支払い方法'
     },
