@@ -35,11 +35,7 @@ export const AddressDeleteModal = forwardRef<AddressDeleteModalRef>((_, ref) => 
   const action = formAction.bind(null, values?.id || '');
 
   useEffect(() => {
-    if (!message) {
-      return;
-    }
-
-    if (message.success) {
+    if (message && message.success) {
       onClose();
     }
   }, [message]);

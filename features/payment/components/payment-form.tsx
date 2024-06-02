@@ -21,7 +21,11 @@ import { createPayment, getPaymentMethods } from '../actions';
 import { cardOptions, stripePromise } from '../constants';
 import { FormValues, formSchema } from '../types';
 
-function Form() {
+type Props = {
+  onClose?: () => void;
+};
+
+function Form({ onClose }: Props) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -106,6 +110,7 @@ function Form() {
             variant="lg"
             className="w-[392px]"
             disabled={isLoading || !stripe}
+            onClick={onClose}
           >
             {isLoading ? <LoadingSpinner /> : 'お支払い方法を保存する'}
           </Button>
@@ -115,10 +120,10 @@ function Form() {
   );
 }
 
-export function PaymentForm() {
+export function PaymentForm({ onClose }: Props) {
   return (
     <Elements stripe={stripePromise}>
-      <Form />
+      <Form onClose={onClose} />
     </Elements>
   );
 }

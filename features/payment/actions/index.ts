@@ -4,6 +4,7 @@ import { apiClient } from '@/config/api-client';
 import { Token } from '@stripe/stripe-js';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
+import { AccountCreditState } from '../types';
 
 export async function getAccountCreditCards() {
   const { data, error } = await apiClient.GET('/api/v2/storefront/account/credit_cards', {
@@ -19,6 +20,33 @@ export async function getAccountCreditCards() {
   const { data: accountCreditCards } = data;
 
   return accountCreditCards;
+}
+
+export async function deleteAccountCreditCard(prevState: AccountCreditState, id: string) {
+  try {
+    await apiClient.DELETE('/api/v2/storefront/account/credit_cards/{id}', {
+      params: {
+        path: {
+          id
+        }
+      }
+    });
+
+    revalidateTag(TAGS.accountCreditCards);
+
+    return {
+      success: true,
+      message: 'クレジットカードが削除されました。'
+    };
+  } catch (e) {
+    console.error(e);
+
+    return {
+      success: false,
+      message: 'クレジットカードの削除に失敗しました。',
+      description: 'もう一度お試しください。'
+    };
+  }
 }
 
 export async function getPaymentMethods() {

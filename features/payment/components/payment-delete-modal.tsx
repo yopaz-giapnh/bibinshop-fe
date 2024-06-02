@@ -2,9 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription } from '@/components/ui/dialog';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
+import { deleteAccountCreditCard } from '../actions';
 import { CreditCard } from '../types';
 import { getCreditCardBrandIcon } from '../utils';
 
@@ -15,7 +18,6 @@ export type PaymentDeleteModalRef = {
 
 type PaymentDeleteModalProps = {
   creditCard: CreditCard;
-  onDelete: (creditCard: CreditCard) => void;
 };
 
 /**
@@ -23,17 +25,29 @@ type PaymentDeleteModalProps = {
  * @returns JSX.Element
  */
 export const PaymentDeleteModal = forwardRef<PaymentDeleteModalRef, PaymentDeleteModalProps>(
-  ({ creditCard, onDelete }, ref) => {
+  ({ creditCard }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
 
+    const onOpen = () => {
+      setIsOpen(true);
+    };
+    const onClose = () => {
+      setIsOpen(false);
+    };
+
     useImperativeHandle(ref, () => ({
-      open: () => {
-        setIsOpen(true);
-      },
-      close: () => {
-        setIsOpen(false);
-      }
+      open: onOpen,
+      close: onClose
     }));
+
+    const [message, formAction] = useFormState(deleteAccountCreditCard, null);
+    const action = formAction.bind(null, creditCard.id || '');
+
+    useEffect(() => {
+      if (message && message.success) {
+        onClose();
+      }
+    }, [message]);
 
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -69,16 +83,9 @@ export const PaymentDeleteModal = forwardRef<PaymentDeleteModalRef, PaymentDelet
                     キャンセル
                   </button>
                 </DialogClose>
-                <DialogClose asChild>
-                  <Button
-                    type="button"
-                    variant="lg"
-                    className="w-[170px]"
-                    onClick={() => onDelete(creditCard)}
-                  >
-                    削除
-                  </Button>
-                </DialogClose>
+                <form action={action}>
+                  <DeleteButton />
+                </form>
               </div>
             </div>
           </DialogContent>
@@ -89,3 +96,13 @@ export const PaymentDeleteModal = forwardRef<PaymentDeleteModalRef, PaymentDelet
 );
 
 PaymentDeleteModal.displayName = 'PaymentDeleteModal';
+
+function DeleteButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button size="lg" variant="lg" className="w-[170px]" disabled={pending}>
+      {pending ? <LoadingSpinner /> : '削除'}
+    </Button>
+  );
+}

@@ -10,10 +10,9 @@ import { PaymentDeleteModal, PaymentDeleteModalRef } from './payment-delete-moda
 
 type Props = {
   creditCards: CreditCard[];
-  onDelete: (creditCard: CreditCard) => void;
 };
 
-export function PaymentList({ creditCards, onDelete }: Props) {
+export function PaymentList({ creditCards }: Props) {
   const [selectedValue, setSelectedValue] = useState(creditCards[0].id.toString());
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
 
@@ -49,7 +48,6 @@ export function PaymentList({ creditCards, onDelete }: Props) {
                   'w-[93px] h-10 flex justify-center px-2 py-4 border border-bibinBlue-100 rounded-[100px]',
                 onClick: () => {
                   paymentDeleteModalRef.current?.open();
-                  onDelete(creditCard);
                 }
               }}
               icon={<Trash />}
@@ -57,11 +55,7 @@ export function PaymentList({ creditCards, onDelete }: Props) {
               textProps={{ className: 'text-bibinBlue-100' }}
             />
           </div>
-          <PaymentDeleteModal
-            ref={paymentDeleteModalRef}
-            creditCard={creditCard}
-            onDelete={onDelete}
-          />
+          <PaymentDeleteModal ref={paymentDeleteModalRef} creditCard={creditCard} />
         </label>
       ))}
     </RadioGroup>

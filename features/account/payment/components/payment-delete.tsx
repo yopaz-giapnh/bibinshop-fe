@@ -21,7 +21,7 @@ export default function PaymentDelete({ creditCard }: Props) {
       <ButtonWithIcon
         buttonProps={{
           className:
-            'relative bottom-[-5px] ml-[14px] w-[93px] h-5 flex justify-center py-4 border border-bibinBlue-100 rounded-[100px]',
+            'w-[93px] h-5 flex justify-center py-4 border border-bibinBlue-100 rounded-[100px]',
           onClick: () => {
             paymentDeleteModalRef.current?.open();
           }
@@ -31,12 +31,7 @@ export default function PaymentDelete({ creditCard }: Props) {
         textProps={{ className: 'text-bibinBlue-100' }}
       />
 
-      <PaymentDeleteModal
-        ref={paymentDeleteModalRef}
-        creditCard={creditCard}
-        // TODO: カード情報delete処理を実装
-        onDelete={() => {}}
-      />
+      <PaymentDeleteModal ref={paymentDeleteModalRef} creditCard={creditCard} />
     </>
   );
 }

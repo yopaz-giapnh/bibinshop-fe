@@ -28,8 +28,7 @@ export function CheckoutPaymentForm({ getAccountCreditCards }: Props) {
         </Typography>
         {hasCreditCard ? (
           <>
-            {/* TODO: クレカdelete処理追加 */}
-            <PaymentList creditCards={accountCreditCards} onDelete={() => {}} />
+            <PaymentList creditCards={accountCreditCards} />
             <button
               type="button"
               className="flex w-fit items-center justify-center gap-1"

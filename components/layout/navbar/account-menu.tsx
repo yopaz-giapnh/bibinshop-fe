@@ -30,8 +30,20 @@ const components: { title: string; href: string }[] = [
     href: '/account/order-history'
   },
   {
+    title: 'お届け先住所',
+    href: '/account/address'
+  },
+  {
+    title: 'お支払い方法',
+    href: '/account/payment'
+  },
+  {
+    title: 'アカウントセキュリティ',
+    href: '/account/security'
+  },
+  {
     title: 'メッセージ',
-    href: '/'
+    href: '/account/message'
   }
 ];
 
