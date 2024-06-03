@@ -1,4 +1,5 @@
 import { Typography } from '@/components/ui/typography';
+import { cn } from '@/lib/utils';
 import { Store } from 'lucide-react';
 import Image from 'next/image';
 import OrderDetailListItem from './order-detail-list-item';
@@ -12,16 +13,17 @@ type Props = {
     price: string;
     store: string;
   }[];
+  className?: string;
 };
 
 /**
  * 注文内容共通コンポーネント
  * @returns JSX.Element
  */
-export default function OrderDetail({ items }: Props) {
+export default function OrderDetail({ className, items }: Props) {
   return (
     <>
-      <div className="h-screen-calc w-5/6 overflow-y-auto">
+      <div className={cn('w-5/6 overflow-y-auto', className)}>
         {/*↓ TODO: ステータスが「出荷済みの場合表示させる」 */}
         <OrderDetailSection title="出荷済み">
           <Typography as="caption" element="p" className="mt-[16px] text-[16px] text-black-90">

@@ -1,7 +1,6 @@
 import Shop from '@/assets/cart/shop.svg';
 import Trash from '@/assets/trash.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Typography } from '@/components/ui/typography';
 import Image from 'next/image';
 import { removeLinteItem, updateItemQuantity } from '../actions';
@@ -14,24 +13,12 @@ type Shop = VendorTotal & {
 
 type Props = {
   shop: Shop;
-  onCheckedChangeShop: (checked: boolean | string, shopId: string) => void;
-  onCheckedChangeItem: (checked: boolean | string, itemId: string) => void;
 };
 
-export function CartItemGroupByShop({ shop, onCheckedChangeShop, onCheckedChangeItem }: Props) {
+export function CartItemGroupByShop({ shop }: Props) {
   return (
     <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4 shadow-base">
       <label key={shop.id.toString()} className="flex cursor-pointer items-center">
-        <div className="flex h-[46px] w-[46px] items-center justify-center">
-          <Checkbox
-            id={shop.id.toString()}
-            defaultChecked
-            onCheckedChange={(checked) => {
-              onCheckedChangeShop(checked, shop.id);
-              console.log('event.target', checked);
-            }}
-          />
-        </div>
         <Typography as="bold" element="h2" className="text-black-90">
           {shop.attributes.name}
         </Typography>
@@ -41,18 +28,7 @@ export function CartItemGroupByShop({ shop, onCheckedChangeShop, onCheckedChange
         const key = `${shop.id}-${lineItem.id}`;
         return (
           <label key={key} className="flex cursor-pointer items-center gap-4">
-            <div className="flex h-[46px] w-[46px] items-center justify-center">
-              <Checkbox
-                id={key}
-                defaultChecked
-                onCheckedChange={(checked) => {
-                  onCheckedChangeItem(checked, lineItem.id);
-                }}
-              />
-            </div>
-
             <Image src="/shop.png" width={100} height={100} alt="" className="rounded-[4px]" />
-
             <div className="flex flex-1 flex-col gap-1">
               <Typography as="linkSmall" element="h3" className="text-black-90">
                 {lineItem.attributes.name}

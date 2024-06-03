@@ -1,13 +1,17 @@
 import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
+import { getCart } from '@/features/cart/actions';
 import { getAccountCreditCards } from '@/features/payment/actions';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
 import { Suspense } from 'react';
 import { CheckoutAddressForm } from './checkout-address-form';
+import { CheckoutCartForm } from './checkout-cart-form';
 import { CheckoutPaymentForm } from './checkout-payment-form';
 import { OrderOverview } from './order-overview';
 
 export async function CheckoutForm() {
+  const cart = await getCart();
+
   return (
     <div className="flex h-full w-full flex-col">
       <Typography as="boldTitle" element="h1" className="mt-6 text-center text-text-80">
@@ -23,9 +27,14 @@ export async function CheckoutForm() {
             <Suspense fallback={<div>Loading...</div>}>
               <CheckoutPaymentForm getAccountCreditCards={getAccountCreditCards()} />
             </Suspense>
+            {cart && (
+              <Suspense fallback={<div>Loading...</div>}>
+                <CheckoutCartForm cart={cart} />
+              </Suspense>
+            )}
           </div>
           <div className="flex w-[424px] flex-none flex-col gap-4">
-            <OrderOverview />
+            {cart && <OrderOverview cart={cart} />}
             <PaymentMethod />
           </div>
         </div>

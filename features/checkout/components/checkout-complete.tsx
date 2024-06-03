@@ -1,12 +1,10 @@
+import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
-import OrderDetail from '../../../order/components/order-detail';
-import OrderHistoryDetailBottomButton from './order-history-detail-bottom-button';
+import OrderDetail from '@/features/order/components/order-detail';
+import Link from 'next/link';
 
-/**
- * 注文履歴ページ注文内容コンポーネント
- * @returns JSX.Element
- */
-export default function OrderHistoryDetail() {
+export default function CheckoutComplete() {
+  // demo data
   const items = [
     {
       imageSrc: '/item-demo.png',
@@ -39,14 +37,22 @@ export default function OrderHistoryDetail() {
       store: 'ダルバ(d’Alba)公式'
     }
   ];
-
   return (
-    <>
-      <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
-        注文内容を表示
-      </Typography>
-      <OrderDetail className="h-screen-calc" items={items} />
-      <OrderHistoryDetailBottomButton />
-    </>
+    <div className="h-full w-full bg-paleFrostBlue">
+      <div className="mx-auto flex w-full flex-col items-center pt-[24px]">
+        <Typography as="boldTitle" element="h2" className="text-text-80">
+          ご購入ありがとうございました
+        </Typography>
+        <Typography as="caption" element="p" className="pb-[24px] pt-[16px] text-text-80">
+          ご注文を承りました。
+        </Typography>
+        <OrderDetail items={items} />
+        <Link href="/" passHref>
+          <Button size="lg" variant="lg" className="mt-[24px] w-[392px]">
+            お買い物を続ける
+          </Button>
+        </Link>
+      </div>
+    </div>
   );
 }
