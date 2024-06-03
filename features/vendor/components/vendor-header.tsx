@@ -15,19 +15,21 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
   return (
     <div className=" my-6 flex flex-col">
       {/* TODO: image のサイズどうするか */}
-      <Image
-        src="/vendor-header-image-sample.png"
-        className="mb-6"
-        width={1300}
-        height={300}
-        alt={''}
-      />
+      <div className="relative h-[300px] w-full">
+        <Image
+          src={vendor.vendorBannerImage?.url || ''}
+          className="mb-6"
+          layout="fill"
+          objectFit="cover"
+          alt={vendor.attributes.name || ''}
+        />
+      </div>
       <div className="ml-4 flex items-center">
         <Image
-          src={vendor.vendorImages[0]?.url || require('/public/placeholder-product-image.png')}
+          src={vendor.vendorImage?.url || require('/public/placeholder-product-image.png')}
           width={82}
           height={82}
-          alt={''}
+          alt={vendor.attributes.name || ''}
         />
         <div className="ml-3">
           <Typography as="title" element="h1" className="text-black-90">

@@ -20,7 +20,7 @@ export async function ShopCard({ vendorId }: Props) {
           alt="ショップ名"
           width={82}
           height={82}
-          src="/shop.png"
+          src={vendor.vendorImage?.url || require('/public/placeholder-product-image.png')}
         />
         <div className="flex flex-col gap-[8px]">
           <div className="inline-flex items-center justify-center gap-[8px] pr-7">

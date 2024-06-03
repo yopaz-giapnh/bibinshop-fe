@@ -1881,22 +1881,44 @@ export interface components {
         name?: string;
         /** @example Example about_us */
         about_us?: string | null;
+        /** @example Example notification_email */
+        notification_email?: string | null;
+        /** @example Example address */
+        address?: string | null;
+        /** @example Example phone */
+        phone?: string | null;
       };
       relationships: {
         /** @description List of Product Properties */
         products?: {
           data?: components['schemas']['Relation'][];
         };
-        /** @description List of Images associated with this Product */
+        /** @description image associated with this vendoer */
         image?: {
+          data?: components['schemas']['Relation'][];
+        };
+        /** @description banner associated with this vendor */
+        banner_image?: {
           data?: components['schemas']['Relation'][];
         };
       };
     };
     /** Vendor Includes */
-    VendorIncludes: components['schemas']['VendorImage'];
-    /** Image */
+    VendorIncludes:
+      | components['schemas']['VendorImage']
+      | components['schemas']['VendorBannerImage'];
     VendorImage: {
+      /** @example 1 */
+      id?: string;
+      /** @default vendor_image */
+      type?: string;
+      attributes?: {
+        /** @description An array of pre-scaled image styles */
+        styles?: components['schemas']['ImageStyle'][];
+      };
+    };
+    /** Image */
+    VendorBannerImage: {
       /** @example 1 */
       id: string;
       /** @default vendor_image */
@@ -2386,7 +2408,7 @@ export interface components {
      * @example name,token,is_default,is_private,variant_included
      */
     SparseFieldsWishlist?: string;
-    /** @example image */
+    /** @example image,banner_image */
     VendorIncludeParam?: string;
   };
   requestBodies: never;

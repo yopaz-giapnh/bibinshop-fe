@@ -9,13 +9,6 @@ type Props = {
 };
 
 const VendorInfo = ({ vendor }: Props) => {
-  // TODO: API で取得したベンダー情報を表示する(親 component から props でもらってもいいかも)
-  const vendorInfo = {
-    address: 'B1F, 33, Sangmugongwon-ro, Seo-gu, Gwangju 61958, Republic of Korea',
-    mail: 'hoge@gmail.com',
-    tel: '+82-070-8744-5678'
-  };
-
   return (
     <Card className="flex h-[340px] w-[580px] flex-col items-center justify-center gap-5 rounded-md bg-[#EEF8FF] p-4">
       <div className="flex w-[532px] flex-col items-center justify-center gap-1 p-0">
@@ -51,7 +44,7 @@ const VendorInfo = ({ vendor }: Props) => {
           element="p"
           className="h-[18px] w-[532px] text-[12px] font-medium leading-[17px] tracking-[0.03em] text-primary"
         >
-          {vendorInfo.address}
+          {vendor.attributes.address}
         </Typography>
       </div>
       <div className="flex h-[43px] w-[532px] flex-col items-center justify-center gap-1 p-0">
@@ -69,7 +62,7 @@ const VendorInfo = ({ vendor }: Props) => {
           element="p"
           className="h-[18px] w-[532px] text-[12px] font-medium leading-[17px] tracking-[0.03em] text-primary"
         >
-          {vendorInfo.mail}
+          {vendor.attributes.notification_email}
         </Typography>
       </div>
       <div className="flex h-[43px] w-[532px] flex-col items-center justify-center gap-1 p-0">
@@ -87,7 +80,7 @@ const VendorInfo = ({ vendor }: Props) => {
           element="p"
           className="h-[18px] w-[532px] text-[12px] font-medium leading-[17px] tracking-[0.03em] text-primary"
         >
-          {vendorInfo.tel}
+          {vendor.attributes.phone}
         </Typography>
       </div>
     </Card>

@@ -4,6 +4,8 @@ export type VendorIncludes = components['schemas']['VendorIncludes'];
 
 export type VendorImage = components['schemas']['VendorImage'];
 
+export type VendorBannerImage = components['schemas']['VendorBannerImage'];
+
 export type VendorData = components['schemas']['Vendor'];
 
 export type VendorImageWithUrl = VendorImage & {
@@ -11,5 +13,6 @@ export type VendorImageWithUrl = VendorImage & {
 };
 
 export type Vendor = VendorData & {
-  vendorImages: VendorImageWithUrl[];
+  vendorImage: VendorImageWithUrl | undefined;
+  vendorBannerImage: VendorImageWithUrl | undefined;
 };
