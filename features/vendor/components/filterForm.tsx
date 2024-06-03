@@ -18,6 +18,8 @@ const FilterSchema = z.object({
   categories: z.array(z.string()).nonempty({ message: 'At least one category must be selected.' })
 });
 
+type FormValues = z.infer<typeof FilterSchema>;
+
 // TODO: api から取得するカテゴリー一覧
 const categoriesList = [
   'スキンケア',
@@ -34,7 +36,7 @@ const categoriesList = [
 ];
 
 export function FilterForm() {
-  const form = useForm({
+  const form = useForm<FormValues>({
     resolver: zodResolver(FilterSchema),
     defaultValues: {
       categories: []
@@ -44,7 +46,7 @@ export function FilterForm() {
   // TODO: カテゴリーの選択状態が変わるたびにクエリパラメーターを更新する
 
   // TODO: 価格も一円単位で変わった場合にクエリパラメーターを更新するかどうか検討(form 使うかどうか)
-  function onSubmit(data) {
+  function onSubmit(data: FormValues) {
     console.log(data);
   }
 

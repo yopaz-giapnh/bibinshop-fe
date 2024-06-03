@@ -509,6 +509,17 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/vendors/{id}': {
+    /**
+     * Retrieve a Vendor
+     * @description Returns Vendor details.:
+     *
+     * ```
+     * GET /api/v2/storefront/vendors/1
+     * ```
+     */
+    get: operations['show-vendor'];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -1089,7 +1100,6 @@ export interface components {
         digital_links?: {
           data?: components['schemas']['Relation'][];
         };
-        // TODO: api定義する
         vendor?: {
           data?: components['schemas']['Relation'];
         };
@@ -1860,6 +1870,53 @@ export interface components {
         };
       };
     };
+    /** Vendor */
+    Vendor: {
+      /** @example 1 */
+      id: string;
+      /** @default vendor */
+      type: string;
+      attributes: {
+        /** @example Example vendor name */
+        name?: string;
+        /** @example Example about_us */
+        about_us?: string | null;
+      };
+      relationships: {
+        /** @description List of Product Properties */
+        products?: {
+          data?: components['schemas']['Relation'][];
+        };
+        /** @description List of Images associated with this Product */
+        image?: {
+          data?: components['schemas']['Relation'][];
+        };
+      };
+    };
+    /** Vendor Includes */
+    VendorIncludes: components['schemas']['VendorImage'];
+    /** Image */
+    VendorImage: {
+      /** @example 1 */
+      id: string;
+      /** @default vendor_image */
+      type: string;
+      attributes: {
+        /** @description An array of pre-scaled image styles */
+        styles?: components['schemas']['ImageStyle'][];
+      };
+    };
+    /** Vendor Total */
+    VendorTotal: {
+      /** @example 1 */
+      id: string;
+      /** @default vendor_totals */
+      type: string;
+      attributes: {
+        /** @example Sample vendor total */
+        name?: string;
+      };
+    };
   };
   responses: {
     /** @description 404 Not Found - Resource not found. */
@@ -2122,6 +2179,15 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns the `vendor` object. */
+    Vendor: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Vendor'];
+          included?: components['schemas']['VendorIncludes'][];
+        };
+      };
+    };
   };
   parameters: {
     /**
@@ -2266,6 +2332,11 @@ export interface components {
     /** @description Fetch only resources with corresponding Location */
     FilterByLocation?: string;
     /**
+     * @description Fetch only resources with corresponding Vendor
+     * @example 1,2
+     */
+    FilterByVendorIds?: string;
+    /**
      * @description Specify the fields you would like returned in the response body. [More information](https://jsonapi.org/format/#fetching-sparse-fieldsets).
      * @example firstname,lastname,country_name
      */
@@ -2315,6 +2386,8 @@ export interface components {
      * @example name,token,is_default,is_private,variant_included
      */
     SparseFieldsWishlist?: string;
+    /** @example image */
+    VendorIncludeParam?: string;
   };
   requestBodies: never;
   headers: never;
@@ -3181,6 +3254,7 @@ export interface operations {
       query?: {
         'filter[ids]'?: components['parameters']['FilterByIds'];
         'filter[skus]'?: components['parameters']['FilterBySKUs'];
+        'filter[vendor_ids]'?: components['parameters']['FilterByVendorIds'];
         /**
          * @description Filter Products based on price (minimum, maximum range)
          * @example 10,100
@@ -3741,6 +3815,29 @@ export interface operations {
         };
       };
       403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Retrieve a Vendor
+   * @description Returns Vendor details.:
+   *
+   * ```
+   * GET /api/v2/storefront/vendors/1
+   * ```
+   */
+  'show-vendor': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['VendorIncludeParam'];
+      };
+      path: {
+        /** @description The ID of the `vendor` you wish to retrieve. */
+        id: string;
+      };
+    };
+    responses: {
+      200: components['responses']['Vendor'];
+      404: components['responses']['NotFound'];
     };
   };
 }

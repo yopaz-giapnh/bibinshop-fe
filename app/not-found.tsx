@@ -23,7 +23,7 @@ export default async function NotFound() {
       <ProductOverview
         title="新着"
         seeMoreUrl="/products/new"
-        products={await getProducts()}
+        products={(await getProducts()).data}
         columns={5}
       />
     </div>

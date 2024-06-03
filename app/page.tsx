@@ -14,13 +14,13 @@ export default async function Page() {
             <ProductOverview
               title="ベストセラー"
               seeMoreUrl="/products/bestsellers"
-              products={await getProducts()}
+              products={(await getProducts()).data}
               columns={5}
             />
             <ProductOverview
               title="新着"
               seeMoreUrl="/products/new"
-              products={await getProducts()}
+              products={(await getProducts()).data}
               columns={5}
             />
           </div>
@@ -32,7 +32,7 @@ export default async function Page() {
               <ProductOverview
                 title="ランキング"
                 seeMoreUrl="/products/ranking"
-                products={await getProducts()}
+                products={(await getProducts()).data}
                 columns={5}
               />
             </div>

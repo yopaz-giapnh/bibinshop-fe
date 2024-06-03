@@ -2,15 +2,15 @@
 
 import { Card } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
+import { Vendor } from '../types';
 
-const VendorInfo = () => {
+type Props = {
+  vendor: Vendor;
+};
+
+const VendorInfo = ({ vendor }: Props) => {
   // TODO: API で取得したベンダー情報を表示する(親 component から props でもらってもいいかも)
   const vendorInfo = {
-    name: 'ドクターディエット公式s info',
-    info: `韓国ダイエット食品一位、健康で科学的なダイエット「Dr.diet」。
-    「ドクターダイエット」で気になることは、 いつでもお問い合わせください。
-    お客様の健康で簡単なダイエット、ドクターダイエットが応援します！
-    よい一日をすごしてください！`,
     address: 'B1F, 33, Sangmugongwon-ro, Seo-gu, Gwangju 61958, Republic of Korea',
     mail: 'hoge@gmail.com',
     tel: '+82-070-8744-5678'
@@ -25,7 +25,7 @@ const VendorInfo = () => {
             element="p"
             className="h-[21px] w-[532px] text-[14px] font-bold leading-[20px] tracking-[0.03em] text-bibinBlue-100"
           >
-            {vendorInfo.name}
+            {vendor.attributes.name}
           </Typography>
         </div>
         <Typography
@@ -33,7 +33,7 @@ const VendorInfo = () => {
           element="p"
           className="w-[532px] text-[12px] font-medium leading-[17px] tracking-[0.03em] text-primary"
         >
-          {vendorInfo.info}
+          {vendor.attributes.about_us}
         </Typography>
       </div>
       <div className="flex h-[43px] w-[532px] flex-col items-center justify-center gap-1 p-0">

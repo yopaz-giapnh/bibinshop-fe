@@ -1,22 +1,22 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ProductCard } from '@/features/product/components/product-card';
-import { ComponentProps } from 'react';
+import { Vendor } from '../types';
 import VendorInfo from './vendor-info';
 import { VendorProducts } from './vendor-products';
 import { VendorReviews } from './vendor-reviews';
 
 type VendorTabsProps = {
   review: number;
-  products: ComponentProps<typeof ProductCard>['product'][];
+  vendor: Vendor;
 };
 
 /**
  * ベンダーページタブコンポーネント
  * @returns JSX.Element
  */
-export default async function VendorTabs({ products, review }: VendorTabsProps) {
+export default async function VendorTabs({ review, vendor }: VendorTabsProps) {
+  const productsCount = vendor.relationships.products?.data?.length;
   const tabs = [
-    { label: `商品(${products.length + 1}件)`, value: 'products' },
+    { label: `商品(${productsCount}件)`, value: 'products' },
     { label: `レビュー(${review}★)`, value: 'review' },
     { label: 'ショップ情報', value: 'shopInfo' }
   ];
@@ -32,14 +32,14 @@ export default async function VendorTabs({ products, review }: VendorTabsProps) 
       </TabsList>
       <div className="relative top-[-2px] border-[1px]" />
       <TabsContent value="products">
-        <VendorProducts products={products} />
+        <VendorProducts vendorId={vendor.id} />
       </TabsContent>
       <TabsContent value="review">
         <VendorReviews />
       </TabsContent>
       <TabsContent value="shopInfo">
         <div className="mt-6 flex justify-center">
-          <VendorInfo />
+          <VendorInfo vendor={vendor} />
         </div>
       </TabsContent>
     </Tabs>

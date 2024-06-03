@@ -2,6 +2,7 @@ import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
 import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
 import { SeeMoreReviewButton } from '@/features/review/components/see-more-review-button';
+import { Suspense } from 'react';
 import { getProducts } from '../actions';
 import { Product } from '../types';
 import { Gallery } from './gallery';
@@ -30,7 +31,9 @@ export async function ProductDetail({ product }: Props) {
 
         <div className="ml-[60px] flex flex-1 flex-col gap-5">
           <ProductCartForm product={product} getCart={getCart()} />
-          <ShopCard />
+          <Suspense fallback={<div>Loading...</div>}>
+            {product.vendor && <ShopCard vendorId={product.vendor.id} />}
+          </Suspense>
           <Supplementary />
         </div>
       </div>
@@ -40,7 +43,7 @@ export async function ProductDetail({ product }: Props) {
         </Typography>
         <ProductGrid
           columns={5}
-          products={[...(await getProducts())]}
+          products={[...(await getProducts()).data]}
           className="grid-cols-5 gap-x-2 gap-y-4"
         />
       </div>

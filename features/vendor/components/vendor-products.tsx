@@ -1,15 +1,15 @@
 import { SortButton } from '@/components/button/sort-button';
 import { PriceSlider } from '@/components/ui/priceSlider';
-import { ProductCard } from '@/features/product/components/product-card';
+import { getProducts } from '@/features/product/actions';
 import { ProductGrid } from '@/features/product/components/product-grid';
-import { ComponentProps } from 'react';
+import { Suspense } from 'react';
 import { FilterForm } from './filterForm';
 
 type Props = {
-  products: ComponentProps<typeof ProductCard>['product'][];
+  vendorId: string;
 };
 
-export function VendorProducts({ products }: Props) {
+export async function VendorProducts({ vendorId }: Props) {
   return (
     <div className="flex flex-col">
       <div className="flex">
@@ -21,9 +21,21 @@ export function VendorProducts({ products }: Props) {
           <div className="absolute right-0 mr-14">
             <SortButton />
           </div>
-          <ProductGrid products={products} columns={4} className="mt-16 grid-cols-4" />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ProductsList vendorId={vendorId} />
+          </Suspense>
         </div>
       </div>
     </div>
   );
+}
+
+async function ProductsList({ vendorId }: Props) {
+  const products = await getProducts({
+    query: {
+      'filter[vendor_ids]': vendorId
+    }
+  });
+
+  return <ProductGrid products={products.data} columns={4} className="mt-16 grid-cols-4" />;
 }

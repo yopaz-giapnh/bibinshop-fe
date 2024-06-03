@@ -1,7 +1,14 @@
-import { ProductImageIncludes, ProductIncludes } from '@/features/product/types';
+import { Image, ProductIncludes } from '@/features/product/types';
+import { VendorData } from '@/features/vendor/types';
 
 export function isProductImageIncludes(
   productIncludedes: ProductIncludes
-): productIncludedes is ProductImageIncludes {
+): productIncludedes is Image {
   return productIncludedes.type === 'image';
+}
+
+export function isProductVendorIncludes(
+  productIncludedes: ProductIncludes
+): productIncludedes is VendorData {
+  return productIncludedes.type === 'vendor';
 }

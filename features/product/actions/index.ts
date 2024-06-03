@@ -1,30 +1,36 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
-import { isProductImageIncludes } from '@/utils/product';
+import { isProductImageIncludes, isProductVendorIncludes } from '@/utils/product';
 import { TAGS } from '../constants';
-import { ProductData, ProductImageIncludes, ProductIncludes } from '../types';
+import { Image, ProductData, ProductIncludes, ProductsListParameters } from '../types';
 
-export async function getProducts() {
-  const response = await apiClient.GET('/api/v2/storefront/products', {
+export async function getProducts(params?: ProductsListParameters) {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
     params: {
       query: {
-        include: 'images'
+        include: 'images,vendor',
+        ...params?.query
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 5, tags: [TAGS.products] } });
+      return fetch(request, { next: { revalidate: 3600, tags: [TAGS.products] } });
     }
   });
 
-  if (response.error) {
-    throw new Error(response);
+  if (error) {
+    throw new Error(error);
   }
 
-  return reshapeProducts({
-    products: response.data.data,
-    productIncluded: response.data.included
-  });
+  const { data: products, included: productIncluded, meta } = data;
+
+  return {
+    data: reshapeProducts({
+      products,
+      productIncluded
+    }),
+    meta
+  };
 }
 
 export async function getProduct(product_slug: string) {
@@ -34,11 +40,11 @@ export async function getProduct(product_slug: string) {
         product_slug
       },
       query: {
-        include: 'images,product_properties'
+        include: 'images,product_properties,vendor'
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 5, tags: [TAGS.products] } });
+      return fetch(request, { next: { revalidate: 3600, tags: [TAGS.products] } });
     }
   });
 
@@ -60,10 +66,12 @@ const reshapeProduct = ({
   productIncluded: ProductIncludes[] | undefined;
 }) => {
   const imageIncluded = productIncluded?.filter(isProductImageIncludes);
+  const vendorIncluded = productIncluded?.filter(isProductVendorIncludes)?.[0];
 
   return {
     ...product,
-    images: reshapeImages(imageIncluded)
+    images: reshapeImages(imageIncluded),
+    vendor: vendorIncluded
   };
 };
 
@@ -87,7 +95,7 @@ const reshapeProducts = ({
   return reshapedProducts;
 };
 
-const reshapeImages = (imageProductIncluded: ProductImageIncludes[] | undefined) => {
+const reshapeImages = (imageProductIncluded: Image[] | undefined) => {
   if (!imageProductIncluded) {
     return [];
   }
