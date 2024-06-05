@@ -1,10 +1,11 @@
+'use client';
+
 import Shop from '@/assets/cart/shop.svg';
-import Trash from '@/assets/trash.svg';
-import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
 import Image from 'next/image';
-import { removeLinteItem, updateItemQuantity } from '../actions';
+import { updateItemQuantity } from '../actions';
 import { LineItem, VendorTotal } from '../types';
+import { CartDeleteItemButton } from './cart-delete-item-button';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
 
 type Shop = VendorTotal & {
@@ -54,15 +55,7 @@ export function CartItemGroupByShop({ shop }: Props) {
                     />
                   )}
 
-                  <ButtonWithIcon
-                    buttonProps={{
-                      onClick: async () => {
-                        await removeLinteItem(lineItem.id);
-                      }
-                    }}
-                    icon={<Trash />}
-                    text="削除"
-                  />
+                  <CartDeleteItemButton lineItemId={lineItem.id} />
                 </div>
               </div>
             </div>

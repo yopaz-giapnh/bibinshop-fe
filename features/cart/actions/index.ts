@@ -94,7 +94,7 @@ export async function addItem(
   }
 }
 
-export async function removeLinteItem(id: string) {
+export async function removeLineItem(id: string) {
   try {
     await apiClient.DELETE('/api/v2/storefront/cart/remove_line_item/{id}', {
       params: {
@@ -119,7 +119,7 @@ export async function setQuantity({
 }) {
   try {
     if (quantity === 0) {
-      return removeLinteItem(lineItemId);
+      return removeLineItem(lineItemId);
     }
 
     await apiClient.PATCH('/api/v2/storefront/cart/set_quantity', {

@@ -2,7 +2,7 @@ import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
 import { Trash } from 'lucide-react';
 import Image from 'next/image';
-import { removeLinteItem, updateItemQuantity } from '../actions';
+import { removeLineItem, updateItemQuantity } from '../actions';
 import { LineItem } from '../types';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
 
@@ -41,7 +41,7 @@ export function CartSheetItem({ lineItem }: Props) {
           <ButtonWithIcon
             buttonProps={{
               onClick: async () => {
-                await removeLinteItem(lineItem.id);
+                await removeLineItem(lineItem.id);
               }
             }}
             icon={<Trash className="h-4 w-4" fill="text-black-80" />}

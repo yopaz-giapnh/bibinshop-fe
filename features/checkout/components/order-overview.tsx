@@ -5,15 +5,12 @@ import Link from 'next/link';
 
 type Props = {
   cart: Cart;
+  canOrder: boolean;
 };
 
-export function OrderOverview({ cart }: Props) {
+export async function OrderOverview({ cart, canOrder }: Props) {
   return (
-    <div className="w-full rounded-[6px] bg-white-base px-4 py-[19px] shadow-base">
-      <Typography as="title" element="p" className="text-text-100">
-        注文概要
-      </Typography>
-
+    <>
       <div className="mt-4 flex justify-between">
         <Typography as="caption" element="p" className="text-black-90">
           {`商品金額(${cart.attributes.item_count})`}
@@ -41,10 +38,10 @@ export function OrderOverview({ cart }: Props) {
         </Typography>
       </div>
       <Link href="/checkout-complete" passHref>
-        <Button size="lg" variant="lg" className="w-full">
+        <Button size="lg" variant="lg" className="w-full" disabled={!canOrder}>
           注文する
         </Button>
       </Link>
-    </div>
+    </>
   );
 }
