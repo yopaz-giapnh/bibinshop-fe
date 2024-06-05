@@ -1,6 +1,6 @@
 import { hasProperty } from '@/utils/type';
-import { User } from '../types';
+import { UserSchema } from '../types';
 
-export function isUser(included: unknown): included is User {
+export function isUser(included: unknown): included is UserSchema {
   return hasProperty(included, 'type') && included.type === 'user';
 }
