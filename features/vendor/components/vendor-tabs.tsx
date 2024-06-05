@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Suspense } from 'react';
 import { Vendor } from '../types';
 import VendorInfo from './vendor-info';
 import { VendorProducts } from './vendor-products';
@@ -35,7 +36,9 @@ export default async function VendorTabs({ review, vendor }: VendorTabsProps) {
         <VendorProducts vendorId={vendor.id} />
       </TabsContent>
       <TabsContent value="review">
-        <VendorReviews />
+        <Suspense fallback={<div>Loading...</div>}>
+          <VendorReviews vendorId={vendor.id} />
+        </Suspense>
       </TabsContent>
       <TabsContent value="shopInfo">
         <div className="mt-6 flex justify-center">

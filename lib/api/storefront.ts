@@ -520,6 +520,35 @@ export interface paths {
      */
     get: operations['show-vendor'];
   };
+  '/api/v2/storefront/reviews': {
+    /**
+     * Retrieve a Reviews
+     * @description Returns Reviews.:
+     *
+     * ```
+     * GET /api/v2/storefront/reviews
+     * ```
+     */
+    get: operations['review-list'];
+    /**
+     * Create an Review
+     * @description Creates a new review for the current user.
+     */
+    post: operations['create-review'];
+  };
+  '/api/v2/storefront/reviews/{id}': {
+    /**
+     * Update an Review
+     * @description Updates the specified review for the current user.
+     */
+    patch: operations['update-review'];
+    parameters: {
+      path: {
+        /** @description The ID of the `review` you wish to retrieve. */
+        id: string;
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -1286,6 +1315,8 @@ export interface components {
         display_compare_at_price?: string | null;
         /** @description Provides product's slugs in other locales */
         localized_slugs?: Record<string, never>;
+        stars?: number;
+        reviews_count?: number;
       };
       relationships: {
         /** @description List of Product Variants, excluding Master Variant */
@@ -1939,6 +1970,44 @@ export interface components {
         name?: string;
       };
     };
+    /**
+     * Review
+     * @description The Review model.
+     */
+    Review: {
+      /** @example 1 */
+      id: string;
+      /** @default review */
+      type: string;
+      attributes: {
+        /** @example 3 */
+        rating?: number;
+        /** @example Doe */
+        review?: string | null;
+        created_at?: components['schemas']['Timestamp'];
+      };
+      relationships: {
+        user?: {
+          data?: components['schemas']['Relation'];
+        };
+        product?: {
+          data?: components['schemas']['Relation'][];
+        };
+      };
+    };
+    /**
+     * @example {
+     *   "product_id": 1,
+     *   "rating": 3,
+     *   "review": "細かいラメのザラつきは感じますが良い感じにキラキラしてて取れにくいし1回でツヤツヤしてます。"
+     * }
+     */
+    ReviewPayload: {
+      rating: number;
+      review?: string;
+    };
+    /** Review Includes */
+    ReviewIncludes: components['schemas']['User'] | components['schemas']['Product'];
   };
   responses: {
     /** @description 404 Not Found - Resource not found. */
@@ -2210,6 +2279,25 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns an array of `review` objects. */
+    ReviewList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Review'][];
+          included?: components['schemas']['ReviewIncludes'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
+    /** @description 200 Success - Returns the `review` object. */
+    Review: {
+      content: {
+        'application/vnd.api+json': {
+          data?: components['schemas']['Review'];
+        };
+      };
+    };
   };
   parameters: {
     /**
@@ -2359,6 +2447,16 @@ export interface components {
      */
     FilterByVendorIds?: string;
     /**
+     * @description Fetch only resources with corresponding Product
+     * @example 1,2
+     */
+    FilterByProductIds?: string;
+    /**
+     * @description Fetch only resources with corresponding User
+     * @example 1,2
+     */
+    FilterByUserIds?: string;
+    /**
      * @description Specify the fields you would like returned in the response body. [More information](https://jsonapi.org/format/#fetching-sparse-fieldsets).
      * @example firstname,lastname,country_name
      */
@@ -2410,6 +2508,13 @@ export interface components {
     SparseFieldsWishlist?: string;
     /** @example image,banner_image */
     VendorIncludeParam?: string;
+    /** @example user,product */
+    ReviewIncludeParam?: string;
+    /**
+     * @description Specify the fields you would like returned in the response body. [More information](https://jsonapi.org/format/#fetching-sparse-fieldsets).
+     * @example rating,review
+     */
+    SparseFieldsReview?: string;
   };
   requestBodies: never;
   headers: never;
@@ -3860,6 +3965,76 @@ export interface operations {
     responses: {
       200: components['responses']['Vendor'];
       404: components['responses']['NotFound'];
+    };
+  };
+  /**
+   * Retrieve a Reviews
+   * @description Returns Reviews.:
+   *
+   * ```
+   * GET /api/v2/storefront/reviews
+   * ```
+   */
+  'review-list': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['ReviewIncludeParam'];
+        'filter[product_ids]'?: components['parameters']['FilterByProductIds'];
+        'filter[vendor_ids]'?: components['parameters']['FilterByVendorIds'];
+        'filter[user_ids]'?: components['parameters']['FilterByUserIds'];
+      };
+    };
+    responses: {
+      200: components['responses']['ReviewList'];
+      404: components['responses']['NotFound'];
+    };
+  };
+  /**
+   * Create an Review
+   * @description Creates a new review for the current user.
+   */
+  'create-review': {
+    parameters: {
+      query?: {
+        'fields[review]'?: components['parameters']['SparseFieldsReview'];
+      };
+    };
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          address?: components['schemas']['ReviewPayload'];
+        };
+      };
+    };
+    responses: {
+      200: components['responses']['Review'];
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Update an Review
+   * @description Updates the specified review for the current user.
+   */
+  'update-review': {
+    parameters: {
+      query?: {
+        'fields[review]'?: components['parameters']['SparseFieldsReview'];
+      };
+      path: {
+        /** @description The ID of the `review` you wish to retrieve. */
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          review?: components['schemas']['ReviewPayload'];
+        };
+      };
+    };
+    responses: {
+      200: components['responses']['Review'];
+      403: components['responses']['Forbidden'];
     };
   };
 }

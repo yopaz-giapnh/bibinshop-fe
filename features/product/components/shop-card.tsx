@@ -27,7 +27,7 @@ export async function ShopCard({ vendorId }: Props) {
             <Typography as="bold" element="p" className="text-text-100">
               {vendor?.attributes.name}
             </Typography>
-            <Rating star={5} size={12} />
+            <Rating star={5} size={12} readOnly />
             <Typography as="xSmall" element="p" className="text-text-80">
               4.1 (188)
             </Typography>

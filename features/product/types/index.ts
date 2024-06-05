@@ -1,7 +1,7 @@
 import { VendorData } from '@/features/vendor/types';
 import { components, operations, paths } from '@/lib/api/storefront';
 
-export type ProductData = components['schemas']['Product'];
+export type ProductSchema = components['schemas']['Product'];
 
 export type ProductIncludes = components['schemas']['ProductIncludes'];
 
@@ -14,7 +14,7 @@ export type Image = components['schemas']['Image'];
 
 export type ProductImage = components['schemas']['Image'] & { url: string };
 
-export type Product = ProductData & {
+export type Product = ProductSchema & {
   images: ProductImage[];
   vendor?: VendorData;
 };

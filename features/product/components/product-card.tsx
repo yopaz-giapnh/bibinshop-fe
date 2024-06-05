@@ -63,11 +63,12 @@ export function ProductCard({ product, imageSize }: Props) {
         </Typography>
       </div>
       <div className="mt-[2px] flex items-center">
-        {/* TODO: レビュー */}
-        <Rating star={5} size={16} />
+        {product.attributes.stars != null && (
+          <Rating star={product.attributes.stars} size={16} readOnly />
+        )}
 
         <Typography as="xSmall" element="p" className="ml-1 text-sunburstYellow">
-          (188)
+          {`(${product.attributes.reviews_count})`}
         </Typography>
         <button onClick={addToCart} type="button">
           <Cart className="ml-2" />

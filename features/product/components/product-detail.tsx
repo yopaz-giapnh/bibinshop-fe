@@ -1,7 +1,6 @@
 import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
-import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
-import { SeeMoreReviewButton } from '@/features/review/components/see-more-review-button';
+import Rating from '@/features/review/components/rating';
 import { Suspense } from 'react';
 import { getProducts } from '../actions';
 import { Product } from '../types';
@@ -9,6 +8,7 @@ import { Gallery } from './gallery';
 import { ProductCartForm } from './product-cart-form';
 import { ProductDescription } from './product-description';
 import { ProductGrid } from './product-grid';
+import { ProductReviewList } from './product-review-list';
 import { ShopCard } from './shop-card';
 import { Supplementary } from './supplementary';
 
@@ -22,10 +22,29 @@ export async function ProductDetail({ product }: Props) {
       <div className="flex">
         <div className="flex flex-col gap-6">
           <Gallery images={product.images} />
-          <ReviewListWithAvator />
-          <div className="mx-auto">
-            <SeeMoreReviewButton href="/reviews" />
-          </div>
+          <>
+            <Typography as="boldTitle" element="h1">
+              {`レビュー (${product.attributes.reviews_count})`}
+            </Typography>
+
+            <div className="mt-4 flex flex-col items-center justify-center gap-5 overflow-hidden rounded-[6px] bg-powderBlue px-6 py-4">
+              <div className="flex w-full items-center gap-2 self-stretch">
+                {product.attributes.stars != null && (
+                  <div className="inline-flex items-center gap-[9.78px]">
+                    <Rating star={product.attributes.stars} readOnly />
+                  </div>
+                )}
+                <Typography as="boldTitle" element="h1" className="text-[32px] tracking-[0.96px]">
+                  {product.attributes.stars}
+                </Typography>
+              </div>
+            </div>
+          </>
+
+          <Suspense fallback={<div>Loading...</div>}>
+            <ProductReviewList productId={product.id} />
+          </Suspense>
+
           <ProductDescription product={product} />
         </div>
 

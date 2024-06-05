@@ -73,9 +73,11 @@ export function ProductCartForm({ product, getCart }: Props) {
           </div>
 
           <div className="mt-[5px] flex items-center">
-            <Rating star={5} size={16} />
+            {product.attributes.stars != null && (
+              <Rating star={product.attributes.stars} size={16} readOnly />
+            )}
             <Typography as="xSmall" element="p" className="ml-2 text-sunburstYellow">
-              5.0(188)
+              {`(${product.attributes.reviews_count})`}
             </Typography>
           </div>
         </div>

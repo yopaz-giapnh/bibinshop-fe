@@ -1,5 +1,3 @@
-'use client';
-
 import { Card } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
 import { Vendor } from '../types';

@@ -1,36 +1,18 @@
 import { Typography } from '@/components/ui/typography';
+import { formatDateString } from '@/utils/date';
+import { Review } from '../types';
 import Rating from './rating';
 
 type Props = {
-  onlyReviewList?: boolean;
+  reviews: Review[];
 };
 
-export function ReviewListWithAvator({ onlyReviewList = false }: Props) {
-  const reviews = [1, 2, 3, 4, 5];
-
+export function ReviewListWithAvator({ reviews }: Props) {
   return (
     <div className="flex flex-col">
-      {onlyReviewList ? null : (
-        <>
-          <Typography as="boldTitle" element="h1">
-            レビュー (95)
-          </Typography>
-
-          <div className="mt-4 flex flex-col items-center justify-center gap-5 overflow-hidden rounded-[6px] bg-powderBlue px-6 py-4">
-            <div className="flex w-full items-center gap-2 self-stretch">
-              <div className="inline-flex items-center gap-[9.78px]">
-                <Rating star={5} readOnly />
-              </div>
-              <Typography as="boldTitle" element="h1" className="text-[32px] tracking-[0.96px]">
-                5.00
-              </Typography>
-            </div>
-          </div>
-        </>
-      )}
       <div className="mt-4 flex flex-col gap-6">
-        {reviews.slice(0, 3).map((_, index) => (
-          <div key={index} className="flex w-full">
+        {reviews.map((review) => (
+          <div key={review.id} className="flex w-full">
             <div className="flex h-[40px] w-[40px] items-center justify-center rounded-[20px] bg-bibinBlue-100">
               <Typography as="boldSmall" element="p" className="text-white-base">
                 C
@@ -39,18 +21,18 @@ export function ReviewListWithAvator({ onlyReviewList = false }: Props) {
             <div className="ml-6">
               <div className="flex items-center gap-2">
                 <Typography as="boldSmall" element="p" className="text-charcoalGray">
-                  chi***
+                  TODO: ニックネーム
                 </Typography>
                 <Typography as="small" element="p" className="text-charcoalGray">
                   •
                 </Typography>
                 <Typography as="small" element="p" className="font-normal text-charcoalGray">
-                  2024/3/8
+                  {formatDateString(review.attributes.created_at)}
                 </Typography>
                 <Typography as="small" element="p" className="text-charcoalGray">
                   •
                 </Typography>
-                <Rating star={5} readOnly />
+                <Rating star={review.attributes.rating ?? 0} readOnly />
               </div>
               <Typography as="small" element="p" className="text-black-100 mt-2">
                 色: バーガンディ
@@ -60,7 +42,7 @@ export function ReviewListWithAvator({ onlyReviewList = false }: Props) {
                 element="p"
                 className="text-black-100 mt-4 max-w-[42vw] font-normal"
               >
-                細かいラメのザラつきは感じますが良い感じにキラキラしてて取れにくいし1回でツヤツヤしてます。
+                {review.attributes.review}
               </Typography>
             </div>
           </div>

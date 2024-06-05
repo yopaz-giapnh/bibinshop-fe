@@ -1,10 +1,14 @@
 import { SortButton } from '@/components/button/sort-button';
 import { Progress } from '@/components/ui/progress';
 import Rating from '@/features/review/components/rating';
-import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
+import { Suspense } from 'react';
+import { VendorReviewList } from './vendor-review-list';
 
-export function VendorReviews() {
-  // TODO: api 繋ぎこみ
+type Props = {
+  vendorId: string;
+};
+
+export async function VendorReviews({ vendorId }: Props) {
   return (
     <div className="flex flex-col">
       <div className="flex">
@@ -38,7 +42,9 @@ export function VendorReviews() {
             {/* TODO: ソートのやつ検討 */}
             <SortButton />
           </div>
-          <ReviewListWithAvator onlyReviewList />
+          <Suspense fallback={<div>Loading...</div>}>
+            <VendorReviewList vendorId={vendorId} />
+          </Suspense>
         </div>
       </div>
     </div>
