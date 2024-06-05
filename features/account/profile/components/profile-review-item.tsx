@@ -1,5 +1,7 @@
 import { Typography } from '@/components/ui/typography';
 import Rating from '@/features/review/components/rating';
+import { Review } from '@/features/review/types';
+import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
 
 /**
@@ -7,41 +9,28 @@ import Image from 'next/image';
  * @returns JSX.Element
  */
 type ReviewProps = {
-  date: string;
-  star: number;
-  color: string;
-  text: string;
-  price: string;
-  productImageSrc: string;
-  productDescription: string;
+  review: Review;
 };
 
-export default async function ReviewItem({
-  date,
-  star,
-  color,
-  text,
-  price,
-  productImageSrc,
-  productDescription
-}: ReviewProps) {
+export async function ProfileReviewItem({ review }: ReviewProps) {
   return (
     <div>
       <div className="flex items-baseline">
-        <Rating star={star} readOnly />
+        <Rating star={review.attributes.rating || 0} readOnly />
         <Typography as="xSmall" element="p" className="text-[14px] text-gray-400">
-          ・{date}
+          ・{formatDateString(review.attributes.created_at)}
         </Typography>
       </div>
       <Typography as="bold" element="p" className="mt-[8px] text-[14px] text-black-90">
-        色：{color}
+        色： TODO: プロパティ
       </Typography>
       <Typography as="xSmall" element="p" className="mt-[16px] text-[16px] text-black-90">
-        {text}
+        {review.attributes.review}
       </Typography>
       <div className="mt-[32px] flex items-center rounded-[4px] bg-paleFrostBlue p-[16px]">
         <Image
-          src={productImageSrc}
+          // TODO: 商品画像を取得する
+          src={require('/public/placeholder-product-image.png')}
           width={100}
           height={100}
           className="rounded-[100px]"
@@ -49,10 +38,10 @@ export default async function ReviewItem({
         />
         <div className="pl-[16px]">
           <Typography as="bold" element="p" className="text-[16px] text-black-90">
-            {productDescription}
+            {review.product?.attributes.name}
           </Typography>
           <Typography as="bold" element="p" className="mt-[10px] text-[14px] text-bibinBlue-100">
-            {price}円
+            {review.product?.attributes.display_price}
           </Typography>
         </div>
       </div>

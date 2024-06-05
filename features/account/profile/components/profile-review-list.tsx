@@ -1,50 +1,25 @@
 import { Typography } from '@/components/ui/typography';
+import { getReviews } from '@/features/review/actions';
 import Pagenation from '../../components/pagenation';
 import ProfileReviewEmptyView from './profile-review-empty-view';
-import ProfileReviewItem from './profile-review-item';
+import { ProfileReviewItem } from './profile-review-item';
 
 /**
  * ユーザープロフィールレビューリストコンポーネント
  * @returns JSX.Element
  */
 export default async function ProfileReviewList() {
-  // TODO: 自分がレビューした商品の一覧APIを叩いてデータを取得する
-
-  // demo data
-  const reviews = [
-    {
-      date: '2024/3/8',
-      star: 4,
-      color: 'バーガンディ',
-      text: '細かいラメのザラつきは感じますが良い感じにキラキラしてて取れにくいし1回でツヤツヤしてます。',
-      price: '1,030',
-      productImageSrc: '/banner.png',
-      productDescription:
-        'マスカラ モテマスカラ カラーマスカラ まつげケア お湯オフ 低刺激性 クリア 透明 マスカラ 塗る つけマスカラマ...'
-    },
-    {
-      date: '2024/3/9',
-      star: 2,
-      color: '赤',
-      text: 'キラキラしてて取れにくいし1回でツヤツヤしてます。',
-      price: '1,050',
-      productImageSrc: '/banner.png',
-      productDescription: 'マスカラ モテマスカラ カラーマスカラ yaho-'
-    },
-    {
-      date: '2024/3/9',
-      star: 2,
-      color: '青',
-      text: 'キラキラしてて取れにくいし1回でツヤツヤしてます。',
-      price: '1,050',
-      productImageSrc: '/banner.png',
-      productDescription: 'マスカラ モテマスカラ カラーマスカラ yaho-'
+  const reviews = await getReviews({
+    query: {
+      // TODO: アカウントIDを取得する
+      'filter[user_ids]': '1'
     }
-  ];
+  });
+  const reviewsEmpty = (reviews.meta.total_count ?? 0) === 0;
 
   return (
     <div className="mx-auto flex h-screen w-full flex-col p-[24px]">
-      {reviews.length === 0 ? (
+      {reviewsEmpty ? (
         <ProfileReviewEmptyView />
       ) : (
         <div>
@@ -52,10 +27,10 @@ export default async function ProfileReviewList() {
             <Typography as="bold" element="p" className="mb-[16px] text-[20px] text-black-90">
               レビュー
             </Typography>
-            {reviews.map((review, index) => (
+            {reviews.data.map((review, index) => (
               <div key={index}>
-                <ProfileReviewItem {...review} />
-                {index < reviews.length - 1 && (
+                <ProfileReviewItem review={review} />
+                {index < reviews.data.length - 1 && (
                   <div className="my-[16px] h-[1px] w-full bg-gray-200" />
                 )}
               </div>

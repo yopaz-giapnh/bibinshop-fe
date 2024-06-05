@@ -2,7 +2,9 @@
 
 import { apiClient } from '@/config/api-client';
 import { UserSchema } from '@/features/account/types';
-import { isUser } from '@/features/account/utils';
+import { isUserSchema } from '@/features/account/utils';
+import { ProductSchema } from '@/features/product/types';
+import { isProductSchema } from '@/features/product/utils';
 import { TAGS } from '../constants';
 import { ReviewListParameters, ReviewSchema } from '../types';
 
@@ -26,19 +28,36 @@ export async function getReviews(params?: ReviewListParameters) {
 
   const { data: reviews, meta, included } = data;
 
-  const users = included?.filter(isUser) || [];
+  const users = included?.filter(isUserSchema) || [];
+  const products = included?.filter(isProductSchema) || [];
 
   return {
-    data: reshapeReviews(reviews, users),
+    data: reshapeReviews({
+      reviews,
+      users,
+      products
+    }),
     meta
   };
 }
 
-function reshapeReviews(reviews: ReviewSchema[], users: UserSchema[]) {
+function reshapeReviews({
+  reviews,
+  users,
+  products
+}: {
+  reviews: ReviewSchema[];
+  users: UserSchema[];
+  products: ProductSchema[];
+}) {
+  const userMap = new Map(users.map((user) => [user.id, user]));
+  const productMap = new Map(products.map((product) => [product.id, product]));
+
   return reviews.map((review) => {
     return {
       ...review,
-      user: users?.find((user) => user.id === review.relationships.user?.data?.id)
+      user: userMap.get(review.relationships.user?.data?.id),
+      product: productMap.get(review.relationships.product?.data?.id)
     };
   });
 }

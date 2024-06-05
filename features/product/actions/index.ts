@@ -1,9 +1,10 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
-import { isProductImageIncludes, isProductVendorIncludes } from '@/utils/product';
+import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
-import { Image, ProductIncludes, ProductSchema, ProductsListParameters } from '../types';
+import { ImageSchema, ProductIncludes, ProductSchema, ProductsListParameters } from '../types';
+import { isImageSchema } from '../utils';
 
 export async function getProducts(params?: ProductsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
@@ -65,8 +66,8 @@ const reshapeProduct = ({
   product: ProductSchema;
   productIncluded: ProductIncludes[] | undefined;
 }) => {
-  const imageIncluded = productIncluded?.filter(isProductImageIncludes);
-  const vendorIncluded = productIncluded?.filter(isProductVendorIncludes)?.[0];
+  const imageIncluded = productIncluded?.filter(isImageSchema);
+  const vendorIncluded = productIncluded?.filter(isVendorSchema)?.[0];
 
   return {
     ...product,
@@ -83,7 +84,7 @@ const reshapeProducts = ({
   productIncluded: ProductIncludes[] | undefined;
 }) => {
   const reshapedProducts = products.map((product) => {
-    const imageIncluded = productIncluded?.filter(isProductImageIncludes);
+    const imageIncluded = productIncluded?.filter(isImageSchema);
     return reshapeProduct({
       product,
       productIncluded: imageIncluded?.filter((i) =>
@@ -95,7 +96,7 @@ const reshapeProducts = ({
   return reshapedProducts;
 };
 
-const reshapeImages = (imageProductIncluded: Image[] | undefined) => {
+const reshapeImages = (imageProductIncluded: ImageSchema[] | undefined) => {
   if (!imageProductIncluded) {
     return [];
   }

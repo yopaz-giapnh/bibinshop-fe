@@ -1,5 +1,6 @@
 import ProfileDetail from '@/features/account/profile/components/profile-detail';
 import ProfileReviewList from '@/features/account/profile/components/profile-review-list';
+import { Suspense } from 'react';
 
 /**
  * ユーザープロフィールホーム画面
@@ -9,7 +10,9 @@ export default async function Page() {
   return (
     <div className="mx-auto mt-[128px] flex h-screen w-full flex-col justify-center bg-paleFrostBlue p-[24px]">
       <ProfileDetail />
-      <ProfileReviewList />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ProfileReviewList />
+      </Suspense>
     </div>
   );
 }

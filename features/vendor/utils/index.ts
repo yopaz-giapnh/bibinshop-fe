@@ -1,4 +1,5 @@
-import { VendorBannerImage, VendorImage, VendorIncludes } from '../types';
+import { hasProperty } from '@/utils/type';
+import { VendorBannerImage, VendorImage, VendorIncludes, VendorSchema } from '../types';
 
 export function isVendorImageIncludes(
   vendorIncludes: VendorIncludes
@@ -10,4 +11,8 @@ export function isVendorBannerImageIncludes(
   vendorIncludes: VendorIncludes
 ): vendorIncludes is VendorBannerImage {
   return vendorIncludes.type === 'vendor_banner_image';
+}
+
+export function isVendorSchema(includedObject: unknown): includedObject is VendorSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'vendor';
 }

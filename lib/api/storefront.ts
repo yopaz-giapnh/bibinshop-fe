@@ -1991,7 +1991,7 @@ export interface components {
           data?: components['schemas']['Relation'];
         };
         product?: {
-          data?: components['schemas']['Relation'][];
+          data?: components['schemas']['Relation'];
         };
       };
     };

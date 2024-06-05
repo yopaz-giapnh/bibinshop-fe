@@ -6,13 +6,13 @@ export type VendorImage = components['schemas']['VendorImage'];
 
 export type VendorBannerImage = components['schemas']['VendorBannerImage'];
 
-export type VendorData = components['schemas']['Vendor'];
+export type VendorSchema = components['schemas']['Vendor'];
 
 export type VendorImageWithUrl = VendorImage & {
   url: string;
 };
 
-export type Vendor = VendorData & {
+export type Vendor = VendorSchema & {
   vendorImage: VendorImageWithUrl | undefined;
   vendorBannerImage: VendorImageWithUrl | undefined;
 };
