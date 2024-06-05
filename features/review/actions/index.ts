@@ -54,10 +54,17 @@ function reshapeReviews({
   const productMap = new Map(products.map((product) => [product.id, product]));
 
   return reviews.map((review) => {
+    const user = review.relationships.user?.data?.id
+      ? userMap.get(review.relationships.user.data.id)
+      : undefined;
+    const product = review.relationships.product?.data?.id
+      ? productMap.get(review.relationships.product.data.id)
+      : undefined;
+
     return {
       ...review,
-      user: userMap.get(review.relationships.user?.data?.id),
-      product: productMap.get(review.relationships.product?.data?.id)
+      user,
+      product
     };
   });
 }
