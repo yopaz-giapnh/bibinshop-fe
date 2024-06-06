@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BadgeAlert, Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
@@ -19,9 +21,9 @@ import TogglePasswordInput from './toggle-password-input';
  * @returns JSX.Element
  */
 export default function SecurityDetail() {
-  // TODO: ユーザーアカウントからメールアドレスとパスワードを取得するAPI叩く
   const [showEditPasswordForm, setShowEditPasswordForm] = useState(false);
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  // TODO:BE側のRequest bodyに無いため一旦コメントアウト
+  // const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showNewPasswordConfirm, setShowNewPasswordConfirm] = useState(false);
 
@@ -34,15 +36,33 @@ export default function SecurityDetail() {
     }
   });
 
-  const [formState, formAction] = useFormState(updateAccountSecurity, null);
-  const dispatch = formAction.bind(null, form.getValues());
+  const { control } = form;
+
+  const [state, formAction] = useFormState(updateAccountSecurity, null);
+  const action = formAction.bind(null, form.getValues());
+
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (formState?.result) {
-      form.reset();
-      setShowEditPasswordForm(false);
+    if (!state) {
+      return;
     }
-  }, [form, formState]);
+
+    if (state?.success) {
+      form.reset();
+      toast({
+        title: state.message,
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      toast({
+        title: state.message,
+        description: state.description,
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
+  }, [form, state, toast]);
 
   return (
     <>
@@ -81,21 +101,21 @@ export default function SecurityDetail() {
         </div>
         {showEditPasswordForm && (
           <Form {...form}>
-            <form action={dispatch}>
+            <form action={action}>
               <div className="mt-[16px] w-2/5">
-                <TogglePasswordInput
+                {/* TODO:BE側のRequest bodyに無いため一旦コメントアウト */}
+                {/* <TogglePasswordInput
                   label="古いパスワード"
                   showPassword={showCurrentPassword}
                   toggleShowPassword={() => setShowCurrentPassword((prev) => !prev)}
-                  control={form.control}
+                  control={control}
                   name="password"
-                />
-
+                /> */}
                 <TogglePasswordInput
                   label="新しいパスワード"
                   showPassword={showNewPassword}
                   toggleShowPassword={() => setShowNewPassword((prev) => !prev)}
-                  control={form.control}
+                  control={control}
                   name="newPassword"
                 />
 
@@ -103,7 +123,7 @@ export default function SecurityDetail() {
                   label="新しいパスワードの再入力"
                   showPassword={showNewPasswordConfirm}
                   toggleShowPassword={() => setShowNewPasswordConfirm((prev) => !prev)}
-                  control={form.control}
+                  control={control}
                   name="newConfirmPassword"
                 />
               </div>
@@ -116,7 +136,7 @@ export default function SecurityDetail() {
                     キャンセル
                   </Typography>
                 </Button>
-                <SaveButton disabled={!form.formState.isValid} />
+                <SaveButton disabled={false} />
               </div>
             </form>
           </Form>
@@ -134,7 +154,6 @@ function SaveButton({ disabled }: SaveButtonProps) {
   const { pending } = useFormStatus();
 
   return (
-    // TODO: パスワードupdate API叩く
     <Button type="submit" className="w-[200px]" disabled={disabled || pending}>
       {pending ? <LoadingSpinner /> : '確認'}
     </Button>
