@@ -1789,6 +1789,9 @@ export interface components {
          * }
          */
         public_metadata?: Record<string, never>;
+        nickname?: string;
+        /** @enum {string} */
+        sex?: 'not_known' | 'male' | 'female' | 'not_applicable';
       };
       relationships: {
         /** @description Default billing address associated with this Account */
@@ -2618,6 +2621,9 @@ export interface operations {
             password?: string;
             /** @example spree123 */
             password_confirmation?: string;
+            nickname?: string;
+            /** @enum {string} */
+            sex?: 'not_known' | 'male' | 'female' | 'not_applicable';
           };
         };
       };
