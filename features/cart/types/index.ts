@@ -6,7 +6,9 @@ export type LineItem = components['schemas']['LineItem'];
 
 export type VendorTotal = components['schemas']['VendorTotal'];
 
-export type Cart = components['schemas']['Cart'] & {
+export type CartSchema = components['schemas']['Cart'];
+
+export type Cart = CartSchema & {
   lineItems: LineItem[];
   vendorTotals: VendorTotal[];
 };

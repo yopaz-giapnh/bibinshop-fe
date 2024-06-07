@@ -1,18 +1,20 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
+import { isAddressSchema } from '@/features/address/utils';
+import { isCreditCardSchema } from '@/features/payment/utils';
 import { isNotFound } from '@/utils/api';
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { COOKIES, TAGS } from '../constants';
-import { LineItem } from '../types';
+import { CartIncludes, CartSchema, LineItem } from '../types';
 import { isLineItemIncludes, isVendorTotalsIncludes } from '../utils';
 
 export async function getCart() {
   const { response, error, data } = await apiClient.GET('/api/v2/storefront/cart', {
     params: {
       query: {
-        include: 'line_items,vendors,vendor_totals'
+        include: 'line_items,vendors,vendor_totals,payments.source,billing_address'
       }
     },
     fetch: (request) => {
@@ -28,16 +30,12 @@ export async function getCart() {
     throw new Error(error.error);
   }
 
-  const { data: cart } = data;
+  const { data: cart, included } = data;
 
-  const lineItems = data.included?.filter(isLineItemIncludes) || [];
-  const vendorTotals = data.included?.filter(isVendorTotalsIncludes) || [];
-
-  return {
-    ...cart,
-    lineItems,
-    vendorTotals
-  };
+  return reshapeCart({
+    cart,
+    included
+  });
 }
 
 export async function createCart() {
@@ -47,16 +45,12 @@ export async function createCart() {
     throw new Error(error);
   }
 
-  const { data: cart } = data;
+  const { data: cart, included } = data;
 
-  const lineItems = data.included?.filter(isLineItemIncludes) || [];
-  const vendorTotals = data.included?.filter(isVendorTotalsIncludes) || [];
-
-  return {
-    ...cart,
-    lineItems,
-    vendorTotals
-  };
+  return reshapeCart({
+    cart,
+    included
+  });
 }
 
 export async function addItem(
@@ -172,4 +166,25 @@ export async function associateCart() {
   } catch (e) {
     console.error(e);
   }
+}
+
+function reshapeCart({
+  cart,
+  included
+}: {
+  cart: CartSchema;
+  included: CartIncludes[] | undefined;
+}) {
+  const lineItems = included?.filter(isLineItemIncludes) || [];
+  const vendorTotals = included?.filter(isVendorTotalsIncludes) || [];
+  const creditCard = included?.filter(isCreditCardSchema)?.[0];
+  const address = included?.filter(isAddressSchema)?.[0];
+
+  return {
+    ...cart,
+    lineItems,
+    vendorTotals,
+    creditCard,
+    address
+  };
 }

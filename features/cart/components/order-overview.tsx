@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
@@ -23,27 +25,18 @@ export function OrderOverview({ cart }: Props) {
         </Typography>
       </div>
 
-      <div className="mt-4 flex justify-between">
-        <Typography as="caption" element="p" className="text-black-90">
-          送料
-        </Typography>
-        <Typography as="caption" element="p" className="text-black-90">
-          {cart.attributes.display_ship_total}
-        </Typography>
-      </div>
-
       <div className="mt-4 flex items-center justify-between border-t border-t-black-10 py-4">
         <Typography as="caption" element="p" className="text-black-90">
           小計
         </Typography>
         <Typography as="title" element="p" className="text-black-90">
-          {cart.attributes.display_total}
+          {cart.attributes.display_item_total}
         </Typography>
       </div>
 
       <Link href="/checkout" passHref>
         <Button size="lg" variant="lg" className="w-full">
-          購入する
+          次へ進む
         </Button>
       </Link>
     </div>

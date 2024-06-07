@@ -603,6 +603,9 @@ export interface components {
          * @example Home
          */
         label?: string | null;
+        is_default?: boolean;
+        firstname_katakana?: string;
+        lastname_katakana?: string;
       };
     };
     /**
@@ -644,6 +647,9 @@ export interface components {
        * @example Work
        */
       label?: string;
+      is_default?: boolean;
+      firstname_katakana: string;
+      lastname_katakana: string;
     };
     /**
      * Cart
@@ -792,7 +798,8 @@ export interface components {
       | components['schemas']['User']
       | components['schemas']['Shipment']
       | components['schemas']['DigitalLink']
-      | components['schemas']['Product'];
+      | components['schemas']['Product']
+      | components['schemas']['Address'];
     /**
      * CMS Page
      * @description The CMS Page model contains page data for Standard pages, Feature Pages and Homepages.
@@ -3163,6 +3170,7 @@ export interface operations {
                 name?: string;
               };
             }[];
+            existing_card?: string;
           };
         };
       };

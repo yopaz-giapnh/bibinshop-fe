@@ -53,7 +53,12 @@ export async function CheckoutForm({ cart }: Props) {
             <Typography as="title" element="p" className="text-text-100">
               注文概要
             </Typography>
-            <OrderOverview cart={cart} canOrder={canOrder} />
+            <OrderOverview
+              cart={cart}
+              canOrder={canOrder}
+              address={addresses[0]}
+              creditCard={creditCards[0]}
+            />
           </div>
           <PaymentMethod />
         </div>

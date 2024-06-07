@@ -1,9 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import OrderDetail from '@/features/order/components/order-detail';
+import { redirectToTop } from '@/utils/navigation';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { COOKIES } from '../constants';
 
-export default function CheckoutComplete() {
+export default async function CheckoutComplete() {
+  const orderNumber = cookies().get(COOKIES.checkoutCompletedOrderNumber)?.value;
+  if (!orderNumber) {
+    return redirectToTop();
+  }
+
   // demo data
   const items = [
     {

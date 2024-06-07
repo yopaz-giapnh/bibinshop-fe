@@ -28,13 +28,16 @@ export async function addAccountAddress(prevState: AddressState, formData: Addre
         address: {
           firstname: formData.firstName,
           lastname: formData.lastName,
+          firstname_katakana: formData.firstNameKana,
+          lastname_katakana: formData.lastNameKana,
           address1: formData.address1,
           address2: formData.address2,
           city: formData.city,
           phone: formData.phoneNumber,
           zipcode: formData.postalCode,
           state_name: formData.prefecture,
-          country_iso: 'JP'
+          country_iso: 'JP',
+          is_default: formData.isDefaultAddress
         }
       }
     });
@@ -96,13 +99,16 @@ export async function updateAccountAddress(prevState: AddressState, formData: Ad
         address: {
           firstname: formData.firstName,
           lastname: formData.lastName,
+          firstname_katakana: formData.firstNameKana,
+          lastname_katakana: formData.lastNameKana,
           address1: formData.address1,
           address2: formData.address2,
           city: formData.city,
           phone: formData.phoneNumber,
           zipcode: formData.postalCode,
           state_name: formData.prefecture,
-          country_iso: 'JP'
+          country_iso: 'JP',
+          is_default: formData.isDefaultAddress
         }
       }
     });

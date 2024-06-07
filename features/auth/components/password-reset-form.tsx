@@ -37,7 +37,7 @@ export default function PasswordResetForm() {
   const dispatch = formAction.bind(null, form.getValues());
 
   useEffect(() => {
-    if (formState?.result) {
+    if (formState?.success) {
       form.reset();
     }
   }, [form, formState]);

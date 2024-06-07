@@ -67,7 +67,7 @@ export async function createPayment({
   paymentMethodId: string;
 }) {
   try {
-    const checkoutResponse = await apiClient.PATCH('/api/v2/storefront/checkout', {
+    await apiClient.PATCH('/api/v2/storefront/checkout', {
       body: {
         order: {
           payments_attributes: [
@@ -88,8 +88,6 @@ export async function createPayment({
     });
 
     revalidateTag(TAGS.accountCreditCards);
-
-    console.log(checkoutResponse);
   } catch (error) {
     console.error(error);
   }

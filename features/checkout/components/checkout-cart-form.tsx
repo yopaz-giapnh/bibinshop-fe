@@ -1,7 +1,5 @@
-import { Button } from '@/components/ui/button';
 import { CartItemGroupByShop } from '@/features/cart/components/cart-item-group-by-shop';
 import { Cart } from '@/features/cart/types';
-import Link from 'next/link';
 
 type Props = {
   cart: Cart;
@@ -23,11 +21,6 @@ export async function CheckoutCartForm({ cart }: Props) {
           />
         ))}
       </div>
-      <Link href="/checkout-complete" passHref>
-        <Button size="lg" variant="lg" className="w-[392px]">
-          注文する
-        </Button>
-      </Link>
     </div>
   );
 }
