@@ -2,11 +2,11 @@
 
 import { type DialogProps } from '@radix-ui/react-dialog';
 import { Command as CommandPrimitive } from 'cmdk';
-import { Search } from 'lucide-react';
 import * as React from 'react';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { Search } from 'lucide-react';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -39,8 +39,11 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+    disableButton?: boolean;
+    onHandleClick?: () => void;
+  }
+>(({ className, onHandleClick, disableButton, ...props }, ref) => (
   <div className="flex items-center border-b pl-3 pr-0.5" cmdk-input-wrapper="">
     <CommandPrimitive.Input
       ref={ref}
@@ -50,9 +53,14 @@ const CommandInput = React.forwardRef<
       )}
       {...props}
     />
-    <div className="flex h-10 w-[54px] items-center justify-center rounded-[24px] bg-gradation">
+    <button
+      type="button"
+      disabled={disableButton}
+      onClick={onHandleClick}
+      className={`flex h-10 w-[54px] items-center justify-center rounded-[24px] ${disableButton ? 'bg-gray-200' : 'bg-gradation'}`}
+    >
       <Search className="h-5 w-5 text-white-base" />
-    </div>
+    </button>
   </div>
 ));
 

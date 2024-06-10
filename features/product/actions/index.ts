@@ -76,6 +76,34 @@ const reshapeProduct = ({
   };
 };
 
+export async function getProductsOnTaxons(taxonIds: string[]) {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
+    params: {
+      query: {
+        'filter[taxons]': taxonIds.join(','),
+        include: 'images,vendor'
+      }
+    },
+    fetch: (request) => {
+      return fetch(request, { next: { revalidate: 3600, tags: [TAGS.products] } });
+    }
+  });
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  const { data: products, included: productIncluded, meta } = data;
+
+  return {
+    data: reshapeProducts({
+      products,
+      productIncluded
+    }),
+    meta
+  };
+}
+
 const reshapeProducts = ({
   products,
   productIncluded
