@@ -787,6 +787,10 @@ export interface components {
         shipping_address?: {
           data?: components['schemas']['Relation'];
         };
+        // TODO: API定義
+        vendors?: {
+          data?: components['schemas']['Relation'][];
+        };
       };
     };
     /** Cart Includes */

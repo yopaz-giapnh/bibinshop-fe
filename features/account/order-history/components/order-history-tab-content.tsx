@@ -1,44 +1,37 @@
+import { getShipmentStateTitle } from '@/features/order/utils';
 import Pagenation from '../../components/pagenation';
+import { getAccountOrders } from '../actions';
 import OrderHistoryEmptyView from './order-history-empty-view';
 import OrderHistoryList from './order-history-list';
 
 type OrderHistoryTabsProps = {
-  orders: {
-    status: string;
-    date: string;
-    amount: string;
-    number: string;
-    items: {
-      image: string;
-      alt: string;
-      name: string;
-      details: string;
-    }[];
-  }[];
-  status: string | null;
+  status: string;
 };
 
 /**
  * 注文履歴タブ内のコンテンツコンポーネント
  * @returns JSX.Element
  */
-export default function OrderHistoryTabContent({ orders, status }: OrderHistoryTabsProps) {
-  const filteredOrders = status ? orders.filter((order) => order.status === status) : orders;
+export async function OrderHistoryTabContent({ status }: OrderHistoryTabsProps) {
+  const orders = await getAccountOrders();
+  const filteredOrders = status
+    ? orders.data.filter((order) => getShipmentStateTitle(order) === status)
+    : orders.data;
+  const isEmpty = filteredOrders.length === 0;
 
   return (
     <div>
       <div className="h-screen-calc overflow-y-auto">
-        {filteredOrders.length > 0 ? (
+        {isEmpty ? (
+          <OrderHistoryEmptyView status={status} />
+        ) : (
           <div>
-            {filteredOrders.map((order, index) => (
-              <OrderHistoryList key={index} order={order} />
+            {filteredOrders.map((order) => (
+              <OrderHistoryList key={order.id} order={order} />
             ))}
           </div>
-        ) : (
-          <OrderHistoryEmptyView status={status} />
         )}
       </div>
-      {/* TODO:注文履歴ページング */}
       <Pagenation />
     </div>
   );

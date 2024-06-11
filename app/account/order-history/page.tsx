@@ -1,4 +1,4 @@
-import OrderHistoryTabs from '@/features/account/order-history/components/order-history-tabs';
+import { OrderHistoryTabs } from '@/features/account/order-history/components/order-history-tabs';
 
 /**
  * 注文履歴ホーム画面

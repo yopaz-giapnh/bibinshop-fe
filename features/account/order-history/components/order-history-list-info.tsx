@@ -1,14 +1,12 @@
 import { Typography } from '@/components/ui/typography';
+import { getShipmentStateTitle } from '@/features/order/utils';
+import { formatDateString } from '@/utils/date';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { Order } from '../types';
 
 type OrderHistoryListInfoProps = {
-  order: {
-    status: string;
-    date: string;
-    amount: string;
-    number: string;
-  };
+  order: Order;
 };
 
 type OrderHistoryInfoDetailProps = {
@@ -37,15 +35,25 @@ export default function OrderHistoryListInfo({ order }: OrderHistoryListInfoProp
   return (
     <div className="flex items-center justify-between rounded-t-[6px] border-b-[1px] bg-bibinBlue-10 px-[24px] py-[16px]">
       <Typography as="bold" element="p">
-        {order.status}
+        {getShipmentStateTitle(order)}
       </Typography>
       <div className="flex w-[500px] items-center justify-between">
-        <OrderHistoryInfoDetail label="注文時間:" value={order.date} />
-        <OrderHistoryInfoDetail label="支払い金額:" value={order.amount} />
-        <OrderHistoryInfoDetail label="注文番号:" value={order.number} />
+        <OrderHistoryInfoDetail
+          label="注文時間:"
+          value={formatDateString(order.attributes.created_at)}
+        />
+        <OrderHistoryInfoDetail
+          label="支払い金額:"
+          value={order.attributes.display_item_total || ''}
+        />
+        <OrderHistoryInfoDetail label="注文番号:" value={order.attributes.number || ''} />
       </div>
       {/* TODO: 取得した注文履歴の個別の注文内容をid指定でordersに渡す */}
-      <Link href="/account/orders/{orderId}" passHref className="flex items-center">
+      <Link
+        href={`/account/orders/${order.attributes.number}`}
+        passHref
+        className="flex items-center"
+      >
         <Typography as="small" element="p" className="text-bibinBlue-100">
           注文内容を表示
         </Typography>

@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 
 export function formatDateString(
-  dateString: string | undefined,
+  dateString: string | undefined | null,
   formatString = 'yyyy/MM/dd'
 ): string {
   if (!dateString) {

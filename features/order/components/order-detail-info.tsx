@@ -33,6 +33,7 @@ export function OrderDetailInfo({ lineItems, vendorTotals }: Props) {
             </div>
             {lineItemsByVendor.map((lineItem) => (
               <OrderDetailListItem
+                key={lineItem.id}
                 imageSrc={require('/public/placeholder-product-image.png')}
                 title={lineItem.attributes.name ?? ''}
                 color={''}

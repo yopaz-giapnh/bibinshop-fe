@@ -14,3 +14,7 @@ export type AccountCreditState = {
 export type FormValues = z.infer<typeof formSchema>;
 
 export type CreditCard = components['schemas']['CreditCard'];
+
+export type ShippmentSchema = components['schemas']['Shipment'];
+
+export type PaymentSchema = components['schemas']['Payment'];

@@ -16,7 +16,7 @@ export function Supplementary() {
           </div>
           <div className="mt-1">
             <Typography as="xSmall" element="p" className="text-black-50">
-              ネコポス - 200円
+              ネコポス - 200円
             </Typography>
             <Typography as="xSmall" element="p" className="text-black-50">
               本日決済で3月26日以内に発送

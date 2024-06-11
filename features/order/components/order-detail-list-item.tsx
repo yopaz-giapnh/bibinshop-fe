@@ -24,7 +24,7 @@ export default function OrderDetailListItem({ imageSrc, title, color, price }: I
           色: {color}
         </Typography>
         <Typography as="boldSmall" element="p" className="mt-[4px] text-[14px] text-bibinBlue-100">
-          {price}円
+          {price}
         </Typography>
       </div>
     </div>

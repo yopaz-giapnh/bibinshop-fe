@@ -1,14 +1,10 @@
 import { Typography } from '@/components/ui/typography';
+import { LineItem } from '@/features/cart/types';
 import Image from 'next/image';
 import BuyAgainModal from './buy-again-modal';
 
 type OrderHistoryItemProps = {
-  item: {
-    image: string;
-    alt: string;
-    name: string;
-    details: string;
-  };
+  item: LineItem;
   status: string;
 };
 
@@ -21,14 +17,16 @@ export default function OrderHistoryItem({ item, status }: OrderHistoryItemProps
 
   return (
     <div className="flex border-b-[1px] py-[16px]">
-      <Image src={item.image} width={100} height={100} alt={item.alt} />
+      {/* TODO: /api/v2/storefront/account/ordersでimage取得後追加 */}
+      <Image src="/item-demo.png" width={100} height={100} alt={''} />
       <div className="ml-[8px] flex flex-col justify-between">
         <div>
           <Typography as="bold" element="p" className="text-[14px] text-black-90">
-            {item.name}
+            {item.attributes.name}
           </Typography>
           <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
-            {item.details}
+            {/* TODO: /api/v2/storefront/account/ordersでdetail取得後追加 */}
+            色：vol. 6
           </Typography>
         </div>
         {/* TODO: 取得した注文履歴のidを渡して買い物カゴに追加するAPIを叩く */}
