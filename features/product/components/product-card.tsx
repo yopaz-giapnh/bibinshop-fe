@@ -1,7 +1,10 @@
 import { Cart } from '@/components/icons/cart';
 import { Typography } from '@/components/ui/typography';
+import { useToast } from '@/components/ui/use-toast';
+import { addItem } from '@/features/cart/actions';
 import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
+import { BadgeAlert, Check } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '../types';
@@ -12,9 +15,23 @@ type Props = {
 };
 
 export function ProductCard({ product, imageSize }: Props) {
-  const addToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const { toast } = useToast();
+
+  const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    alert('TODO: カートに追加しました');
+    const result = await addItem(null, { productId: product.id, quantity: 1 });
+    if (result.success) {
+      toast({
+        title: 'カートに追加しました',
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      toast({
+        title: 'カートに追加できませんでした',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
   };
 
   return (
