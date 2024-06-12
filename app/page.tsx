@@ -20,10 +20,14 @@ export default async function Page() {
           <div className="flex flex-col items-center gap-6 px-[46.5px] py-6">
             <Suspense fallback={<LoadingSpinner />}>
               {bestSellerTaxonId &&
-                renderProductOverview(bestSellerTaxonId, 'ベストセラー', '/products/best-seller')}
+                renderProductOverview(
+                  bestSellerTaxonId,
+                  'ベストセラー',
+                  '/products/bestseller?page=1'
+                )}
             </Suspense>
             <Suspense fallback={<LoadingSpinner />}>
-              {newTaxonId && renderProductOverview(newTaxonId, '新着', '/products/new')}
+              {newTaxonId && renderProductOverview(newTaxonId, '新着', '/products/new?page=1')}
             </Suspense>
           </div>
           <div className="flex flex-col items-center bg-paleFrostBlue px-[46.5px] py-6">
@@ -33,7 +37,7 @@ export default async function Page() {
             <div className="mt-1">
               <Suspense fallback={<LoadingSpinner />}>
                 {rankingTaxonId &&
-                  renderProductOverview(rankingTaxonId, 'ランキング', '/products/ranking')}
+                  renderProductOverview(rankingTaxonId, 'ランキング', '/products/ranking?page=1')}
               </Suspense>
             </div>
           </div>
@@ -55,3 +59,18 @@ const renderProductOverview = async (taxonId: string, title: string, seeMoreUrl:
     <ProductOverview title={title} products={products.data} columns={5} seeMoreUrl={seeMoreUrl} />
   );
 };
+
+const renderProductOverviewWithPagination = async (
+  taxonId: string,
+  title: string,
+  page: string
+) => {
+  const products = await getProductsOnTaxons([taxonId], page);
+  const totalPages = products.meta.total_pages;
+
+  return (
+    <ProductOverview title={title} products={products.data} columns={5} totalPages={totalPages} />
+  );
+};
+
+export { getTaxonsId, renderProductOverview, renderProductOverviewWithPagination };

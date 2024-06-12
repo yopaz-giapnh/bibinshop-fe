@@ -76,11 +76,12 @@ const reshapeProduct = ({
   };
 };
 
-export async function getProductsOnTaxons(taxonIds: string[]) {
+export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
     params: {
       query: {
         'filter[taxons]': taxonIds.join(','),
+        page: Number(page || 1),
         include: 'images,vendor'
       }
     },

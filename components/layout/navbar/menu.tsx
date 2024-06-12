@@ -86,7 +86,7 @@ export function Menu() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
+            <Link href="/products/bestseller?page=1" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 <HandThumbUpIcon className="h-5 w-5 text-white-base" />
                 <Typography as="linkSmall" element="p" className="ml-0.5">
@@ -96,7 +96,7 @@ export function Menu() {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
+            <Link href="/products/ranking?page=1" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 <StarIcon className="h-5 w-5 text-white-base" />
                 <Typography as="linkSmall" element="p" className="ml-0.5">
@@ -106,7 +106,7 @@ export function Menu() {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
+            <Link href="/products/new?page=1" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 <Typography as="linkSmall" element="p">
                   新着
