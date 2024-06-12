@@ -1,11 +1,8 @@
-'use client';
-
 import { Logo } from '@/components/icons/logo';
-import { Typography } from '@/components/ui/typography';
-import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
-import { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { AccountMenu } from './account-menu';
+import { CartMenu } from './cart-menu';
 import { Search } from './search';
 
 type Props = ComponentProps<typeof AccountMenu>;
@@ -21,14 +18,9 @@ export function Header({ isSignedIn }: Props) {
       </div>
       <div className="absolute right-6 flex items-center justify-center gap-4">
         <AccountMenu isSignedIn={isSignedIn} />
-        <Link href="/cart" passHref>
-          <div className="flex">
-            <ShoppingCart className="h-6 w-6" />
-            <Typography as="small" element="p" className="ml-1">
-              カート
-            </Typography>
-          </div>
-        </Link>
+        <Suspense fallback={<div>Loading...</div>}>
+          <CartMenu />
+        </Suspense>
       </div>
     </div>
   );

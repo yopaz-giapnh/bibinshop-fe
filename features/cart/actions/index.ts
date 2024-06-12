@@ -10,7 +10,7 @@ import { COOKIES, TAGS } from '../constants';
 import { CartIncludes, CartSchema, LineItem } from '../types';
 import { isLineItemIncludes, isVendorTotalsIncludes } from '../utils';
 
-export async function getCart() {
+export async function getCart({ cache = 'no-store' }: { cache?: RequestCache } = {}) {
   const { response, error, data } = await apiClient.GET('/api/v2/storefront/cart', {
     params: {
       query: {
@@ -18,7 +18,7 @@ export async function getCart() {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { tags: [TAGS.cart] }, cache: 'no-store' });
+      return fetch(request, { next: { tags: [TAGS.cart] }, cache });
     }
   });
 
