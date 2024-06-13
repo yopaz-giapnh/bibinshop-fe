@@ -9,7 +9,6 @@ import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
 import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
-import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product } from '../types';
@@ -19,30 +18,30 @@ type Props = {
   getCart: ReturnType<typeof getCart>;
 };
 
-type Color = {
-  name: string;
-  value: string;
-};
+// type Color = {
+//   name: string;
+//   value: string;
+// };
 
 // TODO: color
-const colors: Color[] = [
-  {
-    name: '赤',
-    value: '#FF0000'
-  },
-  {
-    name: '黒',
-    value: '#000000'
-  },
-  {
-    name: '青',
-    value: '#0000FF'
-  }
-];
+// const colors: Color[] = [
+//   {
+//     name: '赤',
+//     value: '#FF0000'
+//   },
+//   {
+//     name: '黒',
+//     value: '#000000'
+//   },
+//   {
+//     name: '青',
+//     value: '#0000FF'
+//   }
+// ];
 
 export function ProductCartForm({ product, getCart }: Props) {
-  const isColorProperty = true;
-  const [selectedColor, setSelectedColor] = useState<Color>(colors[0]);
+  // const isColorProperty = true;
+  // const [selectedColor, setSelectedColor] = useState<Color>(colors[0]);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const [message, formAction] = useFormState(addItem, null);
@@ -107,13 +106,13 @@ export function ProductCartForm({ product, getCart }: Props) {
           )}
         </div>
 
-        <div>
+        {/* TODO: api 実装されてから */}
+        {/* <div>
           {isColorProperty ? (
             <div className="flex flex-col py-2">
               <Typography as="boldSmall" element="p" className="text-black-70">
                 色: {selectedColor?.name}
               </Typography>
-              {/* TODO: 色名 */}
               <div className="mt-2 flex gap-4">
                 {colors.map((color) => {
                   return (
@@ -142,7 +141,7 @@ export function ProductCartForm({ product, getCart }: Props) {
           ) : (
             <></>
           )}
-        </div>
+        </div> */}
 
         <div className="flex items-center py-2">
           <Typography as="boldSmall" element="p" className="text-black-70">

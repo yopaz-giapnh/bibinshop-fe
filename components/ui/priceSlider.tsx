@@ -1,18 +1,32 @@
 'use client';
-
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Typography } from './typography';
 
 type SliderProps = React.ComponentProps<typeof Slider>;
 
 export function PriceSlider({ className, ...props }: SliderProps) {
-  // TODO: 初期値をどうするか
-  const [value, setValue] = useState([103, 5000]);
+  const [value, setValue] = useState([500, 10000]);
+  const router = useRouter();
+  const [debounceTimer, setDebounceTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   const handleChange = (newValue: number[]) => {
     setValue(newValue);
+    clearTimeout(debounceTimer as ReturnType<typeof setTimeout>);
+    const timer = setTimeout(() => {
+      updateQueryParams(newValue);
+    }, 500); // 500ms の遅延を設定
+    setDebounceTimer(timer);
+  };
+
+  const updateQueryParams = (newValue: number[]) => {
+    const currentUrl = new URL(window.location.href);
+    const params = new URLSearchParams(currentUrl.search);
+    params.set('prices', `${newValue[0]},${newValue[1]}`);
+    const newUrl = `${currentUrl.pathname}?${params.toString()}`;
+    router.push(newUrl);
   };
 
   return (
@@ -23,7 +37,7 @@ export function PriceSlider({ className, ...props }: SliderProps) {
       <Slider
         value={value}
         onValueChange={handleChange}
-        max={5000}
+        max={20000}
         step={1}
         className={cn('w-full', className)}
         {...props}

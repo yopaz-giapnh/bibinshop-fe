@@ -7,7 +7,7 @@ import { ProductGrid } from './product-grid';
 import { SeeMoreButton } from './see-more-button';
 
 type Props = {
-  title: string;
+  title?: string;
   products: Product[];
   seeMoreUrl?: string;
   totalPages?: number;
@@ -16,10 +16,12 @@ type Props = {
 export async function ProductOverview({ title, seeMoreUrl, products, columns, totalPages }: Props) {
   return (
     <div className="flex flex-col items-center gap-4">
-      <Typography as="title" element="h1" className="text-center">
-        {title}
-      </Typography>
-      <ProductGrid products={products} columns={columns} className="grid-cols-5" />
+      {title && (
+        <Typography as="title" element="h1" className="text-center">
+          {title}
+        </Typography>
+      )}
+      <ProductGrid products={products} columns={columns} className={`grid-cols-${columns}`} />
       {seeMoreUrl && <SeeMoreButton href={seeMoreUrl} arrow="right" />}
       {totalPages && <Pagination totalPages={totalPages} />}
     </div>

@@ -1,5 +1,4 @@
 'use client';
-import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-react';
 
 import {
   Command,
@@ -11,16 +10,16 @@ import {
   CommandSeparator,
   CommandShortcut
 } from '@/components/ui/command';
+import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export function Search() {
   const [searchValue, setSearchValue] = useState('');
+  const route = useRouter();
   return (
     <Command
       className="h-[48px] w-[456px] rounded-[44px] border-2 border-bibinBlue-100"
-      onKeyDown={() => {
-        // TODO: API にクエリとして投げる
-      }}
       value={searchValue}
     >
       <CommandInput
@@ -29,8 +28,14 @@ export function Search() {
           setSearchValue(v);
         }}
         disableButton={searchValue === ''}
-        // TODO: 検索ページに遷移
-        onHandleClick={() => {}}
+        onHandleClick={() => {
+          route.push(`/search?key=${searchValue}`);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && searchValue !== '') {
+            route.push(`/search?key=${searchValue}`);
+          }
+        }}
       />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>

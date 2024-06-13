@@ -2,9 +2,15 @@
 
 import { apiClient } from '@/config/api-client';
 import { TAGS } from '../constans';
+import { TaxonsListParameters } from '../types';
 
-export async function getTaxons() {
+export async function getTaxons(params?: TaxonsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/taxons', {
+    params: {
+      query: {
+        ...params?.query
+      }
+    },
     fetch: (request) => {
       return fetch(request, { next: { revalidate: 3600, tags: [TAGS.taxons] } });
     }

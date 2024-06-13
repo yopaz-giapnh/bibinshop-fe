@@ -16,7 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { HandThumbUpIcon, StarIcon } from '@heroicons/react/24/solid';
+import { HandThumbUpIcon, MegaphoneIcon, StarIcon } from '@heroicons/react/24/solid';
 
 const components: { title: string; href: string }[] = [
   {
@@ -108,7 +108,8 @@ export function Menu() {
           <NavigationMenuItem>
             <Link href="/products/new?page=1" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                <Typography as="linkSmall" element="p">
+                <MegaphoneIcon className="h-5 w-5 text-white-base" />
+                <Typography as="linkSmall" element="p" className="ml-0.5">
                   新着
                 </Typography>
               </NavigationMenuLink>

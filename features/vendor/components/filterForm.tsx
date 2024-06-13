@@ -1,115 +1,96 @@
 'use client';
-
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
 import { Typography } from '@/components/ui/typography';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { getTaxons } from '@/features/taxon/actions';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { use, useEffect, useState } from 'react';
 
-const FilterSchema = z.object({
-  categories: z.array(z.string()).nonempty({ message: 'At least one category must be selected.' })
-});
+type Props = {
+  getTaxons: ReturnType<typeof getTaxons>;
+};
 
-type FormValues = z.infer<typeof FilterSchema>;
+export function FilterForm({ getTaxons }: Props) {
+  const categoriesList = use(getTaxons);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-// TODO: api から取得するカテゴリー一覧
-const categoriesList = [
-  'スキンケア',
-  'キット・コフレ・福袋',
-  'ドラッグストア',
-  'メンズビューティー',
-  'ボディ・ハンド・フットケア',
-  'ベビー・マタニティ',
-  'ベースメイク',
-  'UVケア',
-  'ヘア',
-  'メイク小物',
-  '健康食品・サプリ'
-];
+  useEffect(() => {
+    const taxons = searchParams.getAll('taxons');
+    setSelectedCategories(taxons);
+  }, [searchParams]);
 
-export function FilterForm() {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FilterSchema),
-    defaultValues: {
-      categories: []
+  const handleCategoryChange = (category: string, checked: boolean) => {
+    let updatedTaxons: string[];
+    if (checked) {
+      updatedTaxons = [...selectedCategories, category].filter(
+        (value, index, self) => self.indexOf(value) === index
+      );
+    } else {
+      updatedTaxons = selectedCategories.filter((c) => c !== category);
     }
-  });
+    setSelectedCategories(updatedTaxons);
 
-  // TODO: カテゴリーの選択状態が変わるたびにクエリパラメーターを更新する
+    // 現在の URL から既存のクエリパラメーターを取得
+    const currentUrl = new URL(window.location.href);
+    const currentParams = new URLSearchParams(currentUrl.search);
 
-  // TODO: 価格も一円単位で変わった場合にクエリパラメーターを更新するかどうか検討(form 使うかどうか)
-  function onSubmit(data: FormValues) {
-    console.log(data);
-  }
+    // taxons パラメーターを更新
+    currentParams.delete('taxons'); // 既存の taxons パラメーターを削除
+    updatedTaxons.forEach((taxon) => currentParams.append('taxons', taxon));
 
-  function onClear() {
-    form.reset({ categories: [] });
-  }
+    // 更新後のクエリパラメーターを含む URL を作成して遷移
+    const newUrl = `${currentUrl.pathname}?${currentParams.toString()}`;
+    router.push(newUrl);
+  };
+
+  const handleClearCategories = () => {
+    setSelectedCategories([]);
+
+    // 現在の URL から既存のクエリパラメーターを取得
+    const currentUrl = new URL(window.location.href);
+    const currentParams = new URLSearchParams(currentUrl.search);
+
+    // taxons パラメーターを削除
+    currentParams.delete('taxons');
+
+    // 更新後のクエリパラメーターを含む URL を作成して遷移
+    const newUrl = `${currentUrl.pathname}?${currentParams.toString()}`;
+    router.push(newUrl);
+  };
 
   return (
-    // TODO: form を使わない方法で実装(api 繋ぎこみじに修正)
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-[216px] space-y-6">
-        <FormField
-          control={form.control}
-          name="categories"
-          render={({ field }) => (
-            <FormItem>
-              <Typography
-                as="linkSmall"
-                element="p"
-                className="mb-[20px] text-[20px] text-black-80"
-              >
-                絞り込み
+    <div className="w-[216px] space-y-6">
+      <div>
+        <Typography as="linkSmall" element="p" className="mb-[20px] text-[20px] text-black-80">
+          絞り込み
+        </Typography>
+        <div className="mb-2 flex items-center justify-between">
+          <Typography as="body" element="p" className="text-[16px]">
+            カテゴリー
+          </Typography>
+          <button type="button" onClick={handleClearCategories}>
+            <Typography as="body" element="p" className="text-[16px] font-bold text-bibinBlue-100">
+              すべてクリア
+            </Typography>
+          </button>
+        </div>
+        <div className="flex flex-col space-y-2">
+          {categoriesList.map((category, index) => (
+            <div key={index} className="flex items-center space-x-2">
+              <Checkbox
+                value={category.id}
+                checked={selectedCategories.includes(category.id)}
+                onCheckedChange={(checked: boolean) => handleCategoryChange(category.id, checked)}
+                id={`category-${index}`}
+              />
+              <Typography as="body" element="p" className="text-[14px] text-black-80">
+                {category.attributes.name}
               </Typography>
-              <div className="mb-2 flex items-center justify-between">
-                <FormLabel className="text-[16px]">カテゴリー</FormLabel>
-                <button type="button" onClick={onClear}>
-                  <Typography
-                    as="body"
-                    element="p"
-                    className="text-[16px] font-bold text-bibinBlue-100"
-                  >
-                    すべてクリア
-                  </Typography>
-                </button>
-              </div>
-              <FormControl>
-                <div className="flex flex-col space-y-2">
-                  {categoriesList.map((category, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <Checkbox
-                        value={category}
-                        checked={field.value.includes(category)}
-                        onCheckedChange={(checked: boolean) => {
-                          if (checked) {
-                            field.onChange([...field.value, category]);
-                          } else {
-                            field.onChange(field.value.filter((v) => v !== category));
-                          }
-                        }}
-                        id={`category-${index}`}
-                      />
-                      <Typography as="body" element="p" className="text-[14px] text-black-80">
-                        {category}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
