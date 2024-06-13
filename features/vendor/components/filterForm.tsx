@@ -1,4 +1,5 @@
 'use client';
+
 import { Checkbox } from '@/components/ui/checkbox';
 import { Typography } from '@/components/ui/typography';
 import { getTaxons } from '@/features/taxon/actions';
