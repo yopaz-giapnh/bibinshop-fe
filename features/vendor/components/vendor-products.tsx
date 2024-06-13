@@ -2,6 +2,7 @@ import { SortButton } from '@/components/button/sort-button';
 import { PriceSlider } from '@/components/ui/priceSlider';
 import { getProducts } from '@/features/product/actions';
 import { ProductGrid } from '@/features/product/components/product-grid';
+import { getTaxons } from '@/features/taxon/actions';
 import { Suspense } from 'react';
 import { FilterForm } from './filterForm';
 
@@ -14,7 +15,7 @@ export async function VendorProducts({ vendorId }: Props) {
     <div className="flex flex-col">
       <div className="flex">
         <div className="flex flex-col gap-6">
-          <FilterForm />
+          <FilterForm getTaxons={getTaxons()} />
           <PriceSlider />
         </div>
         <div className="ml-14 mt-6">
