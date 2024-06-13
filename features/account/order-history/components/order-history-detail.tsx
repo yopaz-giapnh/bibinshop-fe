@@ -1,7 +1,7 @@
 import { Typography } from '@/components/ui/typography';
 
 import { Order } from '@/features/order/types';
-import OrderDetail from '../../../order/components/order-detail';
+import { OrderDetail } from '../../../order/components/order-detail';
 import OrderHistoryDetailBottomButton from './order-history-detail-bottom-button';
 
 type Props = {
@@ -14,7 +14,9 @@ export default function OrderHistoryDetail({ order }: Props) {
       <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
         注文内容を表示
       </Typography>
-      <OrderDetail className="h-screen-calc" order={order} />
+      {!!order.attributes.number && (
+        <OrderDetail className="h-screen-calc" orderNumber={order.attributes.number} />
+      )}
       <OrderHistoryDetailBottomButton />
     </>
   );
