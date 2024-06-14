@@ -8,7 +8,7 @@ import { Suspense } from 'react';
  */
 export default async function Page() {
   return (
-    <div className="mx-auto mt-[128px] flex h-screen w-full flex-col justify-center bg-paleFrostBlue p-[24px]">
+    <div className="mx-auto flex h-screen w-full flex-col justify-center bg-paleFrostBlue p-[24px]">
       <ProfileDetail />
       <Suspense fallback={<div>Loading...</div>}>
         <ProfileReviewList />

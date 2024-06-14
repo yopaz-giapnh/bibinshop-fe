@@ -6,7 +6,7 @@ import WriteReview from '@/features/account/order-history/components/write-revie
  */
 export default async function Page() {
   return (
-    <div className="mx-auto mt-[128px] flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
+    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
       <WriteReview />
     </div>
   );
