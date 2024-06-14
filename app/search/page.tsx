@@ -28,14 +28,13 @@ export default async function Page({
               <SortButton />
             </div> */}
             <Suspense fallback={<LoadingSpinner />}>
-              {searchParams?.key &&
-                renderProductOverviewWithPagination(
-                  searchParams?.key,
-                  Array.isArray(searchParams?.taxons)
-                    ? searchParams?.taxons.join(',')
-                    : searchParams?.taxons,
-                  searchParams?.prices
-                )}
+              {renderProductOverviewWithPagination(
+                searchParams?.key,
+                Array.isArray(searchParams?.taxons)
+                  ? searchParams?.taxons.join(',')
+                  : searchParams?.taxons,
+                searchParams?.prices
+              )}
             </Suspense>
           </div>
         </div>
@@ -45,13 +44,13 @@ export default async function Page({
 }
 
 const renderProductOverviewWithPagination = async (
-  key: string,
+  key?: string,
   taxons?: string,
   prices?: string
 ) => {
   const params = {
     query: {
-      'filter[name]': key,
+      'filter[name]': key || '',
       'filter[taxons]': '',
       'filter[price]': prices || ''
     }
