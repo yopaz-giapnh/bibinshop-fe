@@ -50,17 +50,15 @@ export default function RootLayout({ children }: PropsWithChildren) {
   const [breadcrumbMenus, setBreadcrumbMenus] = useState<Menu[]>([]);
 
   useEffect(() => {
-    const path = pathname;
+    const pathSegments = pathname.split('/').filter(Boolean);
     const breadcrumb: Menu[] = [menus[0]];
     let currentPath = '';
 
-    path.split('/').forEach((segment) => {
-      if (segment) {
-        currentPath += `/${segment}`;
-        const menu = menus.find((menu) => menu.url === currentPath);
-        if (menu) {
-          breadcrumb.push(menu);
-        }
+    pathSegments.forEach((segment) => {
+      currentPath += `/${segment}`;
+      const menu = menus.find((menu) => menu.url === currentPath);
+      if (menu) {
+        breadcrumb.push(menu);
       }
     });
 
