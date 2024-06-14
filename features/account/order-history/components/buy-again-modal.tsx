@@ -11,13 +11,37 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
-import { IterationCcw } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import { addItem } from '@/features/cart/actions';
+import { BadgeAlert, Check, IterationCcw } from 'lucide-react';
+
+type Props = {
+  productId: string;
+};
 
 /**
  * 再度購入するか確認モーダル
  * @returns JSX.Element
  */
-export default function BuyAgainModal() {
+export default function BuyAgainModal({ productId }: Props) {
+  const { toast } = useToast();
+
+  const addToCart = async () => {
+    const result = await addItem(null, { productId, quantity: 1 });
+    if (result.success) {
+      toast({
+        title: 'カートに追加しました',
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      toast({
+        title: 'カートに追加できませんでした',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
+  };
+
   return (
     <Dialog>
       <DialogDescription>
@@ -44,7 +68,7 @@ export default function BuyAgainModal() {
               </button>
             </DialogClose>
             <DialogClose asChild>
-              <Button type="submit" variant="lg" className="w-[170px]">
+              <Button type="submit" variant="lg" className="w-[170px]" onClick={addToCart}>
                 確認
               </Button>
             </DialogClose>

@@ -29,8 +29,7 @@ export default function OrderHistoryItem({ item, status }: OrderHistoryItemProps
             色：vol. 6
           </Typography>
         </div>
-        {/* TODO: 取得した注文履歴のidを渡して買い物カゴに追加するAPIを叩く */}
-        {!isUnpaid && <BuyAgainModal />}
+        {!isUnpaid && <BuyAgainModal productId={item.id} />}
       </div>
     </div>
   );

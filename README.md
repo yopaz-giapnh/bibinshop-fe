@@ -31,4 +31,3 @@ pnpm dev
 ```
 
 [localhost:4000](http://localhost:4000) でトップ画面が開けます。
-
