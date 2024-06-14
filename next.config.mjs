@@ -6,6 +6,14 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'localhost',
         port: '3000'
+      },
+      {
+        protocol: 'https',
+        hostname: 'stg-assets.bibin.shop'
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.bibin.shop'
       }
     ]
   },

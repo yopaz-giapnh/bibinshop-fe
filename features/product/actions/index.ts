@@ -132,6 +132,6 @@ const reshapeImages = (imageProductIncluded: ImageSchema[] | undefined) => {
 
   return imageProductIncluded.map((image) => ({
     ...image,
-    url: `${process.env.NEXT_PUBLIC_IMAGE_HOST}${image.attributes.styles?.[image.attributes.styles.length - 1].url}`
+    url: `${image.attributes.styles?.[image.attributes.styles.length - 1].url}`
   }));
 };

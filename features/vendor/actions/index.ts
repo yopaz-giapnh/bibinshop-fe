@@ -46,6 +46,6 @@ const reshapeImage = (vendorImage: VendorImage | undefined) => {
 
   return {
     ...vendorImage,
-    url: `${process.env.NEXT_PUBLIC_IMAGE_HOST}${vendorImage.attributes?.styles?.[vendorImage.attributes?.styles?.length - 1]?.url}`
+    url: `${vendorImage.attributes?.styles?.[vendorImage.attributes?.styles?.length - 1]?.url}`
   };
 };
