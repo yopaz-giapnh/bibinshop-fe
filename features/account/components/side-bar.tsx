@@ -77,7 +77,7 @@ export default function AccountSideBar() {
   };
 
   return (
-    <div className="mt-[128px] flex w-[400px] flex-col items-center bg-paleFrostBlue pl-[24px]">
+    <div className="flex w-[400px] flex-col items-center bg-paleFrostBlue pl-[24px]">
       {sideNavButtons.map((button) => (
         <SideNavButton
           key={button.label}

@@ -9,7 +9,7 @@ import { Suspense } from 'react';
  */
 export default async function Page() {
   return (
-    <div className="mx-auto mt-[128px] flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
+    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
       <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
         お支払い方法
       </Typography>
