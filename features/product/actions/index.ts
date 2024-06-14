@@ -4,7 +4,7 @@ import { apiClient } from '@/config/api-client';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
 import { ImageSchema, ProductIncludes, ProductSchema, ProductsListParameters } from '../types';
-import { isImageSchema } from '../utils';
+import { isImageSchema, isTaxonSchema } from '../utils';
 
 export async function getProducts(params?: ProductsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
@@ -35,13 +35,13 @@ export async function getProducts(params?: ProductsListParameters) {
 }
 
 export async function getProduct(product_slug: string) {
-  const response = await apiClient.GET('/api/v2/storefront/products/{product_slug}', {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/products/{product_slug}', {
     params: {
       path: {
         product_slug
       },
       query: {
-        include: 'images,product_properties,vendor'
+        include: 'images,product_properties,vendor,taxons'
       }
     },
     fetch: (request) => {
@@ -49,13 +49,15 @@ export async function getProduct(product_slug: string) {
     }
   });
 
-  if (response.error) {
+  if (error) {
     return;
   }
 
+  const { data: product, included } = data;
+
   return reshapeProduct({
-    product: response.data.data,
-    productIncluded: response.data.included
+    product,
+    productIncluded: included
   });
 }
 
@@ -68,11 +70,13 @@ const reshapeProduct = ({
 }) => {
   const imageIncluded = productIncluded?.filter(isImageSchema);
   const vendorIncluded = productIncluded?.filter(isVendorSchema)?.[0];
+  const taxons = productIncluded?.filter(isTaxonSchema) || [];
 
   return {
     ...product,
     images: reshapeImages(imageIncluded),
-    vendor: vendorIncluded
+    vendor: vendorIncluded,
+    taxons
   };
 };
 
