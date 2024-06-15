@@ -17,7 +17,7 @@ export default function OrderHistoryDetail({ order }: Props) {
       {!!order.attributes.number && (
         <OrderDetail className="h-screen-calc" orderNumber={order.attributes.number} />
       )}
-      <OrderHistoryDetailBottomButton />
+      <OrderHistoryDetailBottomButton order={order} />
     </>
   );
 }

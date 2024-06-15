@@ -1,17 +1,25 @@
 import { Typography } from '@/components/ui/typography';
+import { Order } from '@/features/order/types';
+import { isString } from '@/utils/string';
 import { FilePen } from 'lucide-react';
 import Link from 'next/link';
 import BuyAgainModal from './buy-again-modal';
+
+type Props = {
+  order: Order;
+};
 
 /**
  * 注文履歴詳細ページの下部のボタンコンポーネント
  * @returns JSX.Element
  */
-export default function OrderHistoryDetailBottomButton() {
+export default function OrderHistoryDetailBottomButton({ order }: Props) {
+  const variantIds =
+    order.relationships.variants?.data?.map((variant) => variant?.id).filter(isString) || [];
+
   return (
     <div className="mr-[20px] mt-[24px] flex items-center justify-between">
-      {/* TODO: 取得した注文履歴のidを渡して買い物カゴに追加するAPIを叩く */}
-      <BuyAgainModal />
+      <BuyAgainModal variantIds={variantIds} />
       {/* TODO: 取得した注文履歴のidを渡してwrite-reviewに遷移する */}
       <Link href="/account/orders/{order_number}/write-review" passHref>
         <button

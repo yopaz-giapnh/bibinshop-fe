@@ -14,6 +14,7 @@ type OrderHistoryItemProps = {
  */
 export default function OrderHistoryItem({ item, status }: OrderHistoryItemProps) {
   const isUnpaid = status === '未払い';
+  const variantId = item.relationships.variant?.data?.id;
 
   return (
     <div className="flex border-b-[1px] py-[16px]">
@@ -29,7 +30,7 @@ export default function OrderHistoryItem({ item, status }: OrderHistoryItemProps
             色：vol. 6
           </Typography>
         </div>
-        {!isUnpaid && <BuyAgainModal productId={item.id} />}
+        {!isUnpaid && variantId && <BuyAgainModal variantIds={[variantId]} />}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { ImageSchema, ProductSchema, TaxonSchema } from '@/features/product/types';
+import { ImageSchema, ProductSchema, TaxonSchema, VariantSchema } from '@/features/product/types';
 import { hasProperty } from '@/utils/type';
 
 export function isImageSchema(includedObject: unknown): includedObject is ImageSchema {
@@ -11,4 +11,8 @@ export function isProductSchema(includedObject: unknown): includedObject is Prod
 
 export function isTaxonSchema(includedObject: unknown): includedObject is TaxonSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'taxon';
+}
+
+export function isVariantSchema(includedObject: unknown): includedObject is VariantSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'variant';
 }

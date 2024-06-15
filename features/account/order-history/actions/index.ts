@@ -5,6 +5,7 @@ import { isAddressSchema, isShippmentSchema } from '@/features/address/utils';
 import { CartIncludes, CartSchema } from '@/features/cart/types';
 import { isLineItemIncludes } from '@/features/cart/utils';
 import { isCreditCardSchema, isPaymentSchema } from '@/features/payment/utils';
+import { isVariantSchema } from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
 
@@ -12,7 +13,8 @@ export async function getAccountOrders() {
   const { data, error } = await apiClient.GET('/api/v2/storefront/account/orders', {
     params: {
       query: {
-        include: 'line_items,vendors,vendor_totals,billing_address,payments.source,shipments'
+        include:
+          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants'
       }
     },
     fetch: (request) => {
@@ -39,6 +41,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
   const allCreditCards = included?.filter(isCreditCardSchema) || [];
   const allPayments = included?.filter(isPaymentSchema) || [];
   const allShipments = included?.filter(isShippmentSchema) || [];
+  const allVariants = included?.filter(isVariantSchema) || [];
 
   return orders.map((order) => {
     const lineItems = allLineItems.filter((item) =>
@@ -59,6 +62,9 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
     const shipment = allShipments.find((shipment) =>
       order.relationships.shipments?.data?.map((i) => i?.id).includes(shipment.id)
     );
+    const variants = allVariants.filter((variant) =>
+      order.relationships.variants?.data?.map((i) => i?.id).includes(variant.id)
+    );
 
     return {
       ...order,
@@ -66,7 +72,8 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
       vendors,
       address,
       creditCard,
-      shipment
+      shipment,
+      variants
     };
   });
 }
@@ -78,7 +85,8 @@ export async function getOrder(order_number: string) {
         order_number
       },
       query: {
-        include: 'line_items,vendors,vendor_totals,billing_address,payments.source,shipments'
+        include:
+          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants'
       }
     },
     fetch: (request) => {
@@ -97,6 +105,7 @@ export async function getOrder(order_number: string) {
   const address = included?.find(isAddressSchema);
   const creditCard = included?.find(isCreditCardSchema);
   const shipment = included?.find(isShippmentSchema);
+  const variants = included?.filter(isVariantSchema) || [];
 
   return {
     ...order,
@@ -104,6 +113,7 @@ export async function getOrder(order_number: string) {
     vendors,
     address,
     creditCard,
-    shipment
+    shipment,
+    variants
   };
 }

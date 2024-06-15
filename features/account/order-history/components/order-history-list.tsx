@@ -1,8 +1,8 @@
 import { Typography } from '@/components/ui/typography';
+import { Order } from '@/features/order/types';
 import { getShipmentStateTitle } from '@/features/order/utils';
 import { FilePen } from 'lucide-react';
 import Link from 'next/link';
-import { Order } from '../types';
 import OrderHistoryItem from './order-history-item';
 import OrderHistoryListInfo from './order-history-list-info';
 

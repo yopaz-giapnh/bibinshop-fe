@@ -5,6 +5,8 @@ export type ProductSchema = components['schemas']['Product'];
 
 export type TaxonSchema = components['schemas']['Taxon'];
 
+export type VariantSchema = components['schemas']['Variant'];
+
 export type ProductIncludes = components['schemas']['ProductIncludes'];
 
 export type Products =

@@ -16,19 +16,22 @@ import { addItem } from '@/features/cart/actions';
 import { BadgeAlert, Check, IterationCcw } from 'lucide-react';
 
 type Props = {
-  productId: string;
+  variantIds: string[];
 };
 
 /**
  * 再度購入するか確認モーダル
  * @returns JSX.Element
  */
-export default function BuyAgainModal({ productId }: Props) {
+export default function BuyAgainModal({ variantIds }: Props) {
   const { toast } = useToast();
 
   const addToCart = async () => {
-    const result = await addItem(null, { productId, quantity: 1 });
-    if (result.success) {
+    const results = await Promise.all(
+      variantIds.map((variantId) => addItem(null, { productId: variantId, quantity: 1 }))
+    );
+
+    if (results.some((result) => result.success)) {
       toast({
         title: 'カートに追加しました',
         icon: <Check className="h-6 w-6" />
