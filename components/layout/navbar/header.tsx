@@ -6,7 +6,7 @@ import { AccountMenu } from './account-menu';
 import { CartMenu } from './cart-menu';
 import { Search } from './search';
 
-type Props = ComponentProps<typeof AccountMenu>;
+type Props = Pick<ComponentProps<typeof AccountMenu>, 'isSignedIn'>;
 
 export function Header({ isSignedIn }: Props) {
   return (
