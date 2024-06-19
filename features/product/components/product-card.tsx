@@ -37,7 +37,7 @@ export function ProductCard({ product, imageSize }: Props) {
   return (
     <Link className="flex flex-col" href={`/products/${product.attributes.slug}`} passHref>
       <Image
-        src={product.images[0]?.url || require('/public/placeholder-product-image.png')}
+        src={product.images[0]?.url || '/placeholder-product-image.png'}
         alt={product.attributes.name || ''}
         width={imageSize}
         height={imageSize}

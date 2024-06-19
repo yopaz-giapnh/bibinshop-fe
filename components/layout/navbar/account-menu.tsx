@@ -9,15 +9,17 @@ import {
   NavigationMenuTrigger
 } from '@/components/ui/navigation-menu';
 import { Typography } from '@/components/ui/typography';
+import { getAccount } from '@/features/account/profile/actions';
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import { NavigationMenuList } from '@radix-ui/react-navigation-menu';
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { use } from 'react';
 
 type Props = {
   isSignedIn: boolean;
+  getAccount: ReturnType<typeof getAccount>;
 };
 
 const components: { title: string; href: string }[] = [
@@ -47,7 +49,7 @@ const components: { title: string; href: string }[] = [
   }
 ];
 
-export function AccountMenu({ isSignedIn }: Props) {
+export function AccountMenu({ isSignedIn, getAccount }: Props) {
   const { signOut } = useAuth();
 
   return isSignedIn ? (
@@ -65,7 +67,7 @@ export function AccountMenu({ isSignedIn }: Props) {
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[201px] md:grid-cols-1">
-                <UserName title="yamada_taro136" />
+                <UserName getAccount={getAccount} />
                 <Separator />
                 {components.map((component) => (
                   <ListItem key={component.title} title={component.title} href={component.href} />
@@ -95,9 +97,15 @@ export function AccountMenu({ isSignedIn }: Props) {
   );
 }
 
-const UserName = React.forwardRef<React.ElementRef<'div'>, React.ComponentPropsWithoutRef<'div'>>(
-  ({ className, title, ...props }, ref) => {
-    return (
+const UserName = React.forwardRef<
+  React.ElementRef<'div'>,
+  React.ComponentPropsWithoutRef<'div'> & { getAccount: ReturnType<typeof getAccount> }
+>(({ className, getAccount, ...props }, ref) => {
+  const account = use(getAccount);
+  const { nickname } = account.attributes;
+
+  return (
+    !!nickname && (
       <li>
         <NavigationMenuLink asChild>
           <div
@@ -109,14 +117,14 @@ const UserName = React.forwardRef<React.ElementRef<'div'>, React.ComponentPropsW
             {...props}
           >
             <Typography as="linkXSmall" element="p" className="">
-              {title}
+              {nickname}
             </Typography>
           </div>
         </NavigationMenuLink>
       </li>
-    );
-  }
-);
+    )
+  );
+});
 UserName.displayName = 'UserName';
 
 const ListItem = React.forwardRef<

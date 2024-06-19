@@ -30,7 +30,7 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
       <div className="mt-[32px] flex items-center rounded-[4px] bg-paleFrostBlue p-[16px]">
         <Image
           // TODO: 商品画像を取得する
-          src={require('/public/placeholder-product-image.png')}
+          src={'/placeholder-product-image.png'}
           width={100}
           height={100}
           className="rounded-[100px]"

@@ -1,4 +1,5 @@
 import { Logo } from '@/components/icons/logo';
+import { getAccount } from '@/features/account/profile/actions';
 import Link from 'next/link';
 import { ComponentProps, Suspense } from 'react';
 import { AccountMenu } from './account-menu';
@@ -17,7 +18,7 @@ export function Header({ isSignedIn }: Props) {
         <Search />
       </div>
       <div className="absolute right-6 flex items-center justify-center gap-4">
-        <AccountMenu isSignedIn={isSignedIn} />
+        <AccountMenu isSignedIn={isSignedIn} getAccount={getAccount()} />
         <Suspense fallback={<div>Loading...</div>}>
           <CartMenu />
         </Suspense>

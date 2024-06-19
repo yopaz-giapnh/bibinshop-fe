@@ -21,6 +21,29 @@ export interface paths {
      */
     patch: operations['account-updates'];
   };
+  '/api/v2/storefront/account/avatars': {
+    /**
+     * Upload avatar image for user
+     * @description Uploads an avatar image for the current user.
+     */
+    post: {
+      requestBody?: {
+        content: {
+          'multipart/form-data': {
+            /**
+             * Format: binary
+             * @description The image file to upload.
+             */
+            avatar?: string;
+          };
+        };
+      };
+      responses: {
+        200: components['responses']['UserAvatar'];
+        403: components['responses']['Forbidden'];
+      };
+    };
+  };
   '/api/v2/storefront/account/addresses': {
     /**
      * List all Addresses
@@ -787,7 +810,6 @@ export interface components {
         shipping_address?: {
           data?: components['schemas']['Relation'];
         };
-        // TODO: API定義
         vendors?: {
           data?: components['schemas']['Relation'][];
         };
@@ -1806,6 +1828,12 @@ export interface components {
         default_shipping_address?: {
           data?: components['schemas']['Relation'];
         };
+        avatars?: {
+          data?: components['schemas']['UserAvatar'][];
+        };
+        reviews?: {
+          data?: components['schemas']['Review'][];
+        };
       };
     };
     /**
@@ -2022,6 +2050,16 @@ export interface components {
     };
     /** Review Includes */
     ReviewIncludes: components['schemas']['User'] | components['schemas']['Product'];
+    UserAvatar: {
+      /** @example 1 */
+      id?: string;
+      /** @default user_avatar */
+      type?: string;
+      attributes?: {
+        /** @description An array of pre-scaled image styles */
+        styles?: components['schemas']['ImageStyle'][];
+      };
+    };
   };
   responses: {
     /** @description 404 Not Found - Resource not found. */
@@ -2079,7 +2117,9 @@ export interface components {
       content: {
         'application/vnd.api+json': {
           data: components['schemas']['User'];
-          included?: components['schemas']['Address'][];
+          included?: (components['schemas']['Address'] &
+            components['schemas']['UserAvatar'] &
+            components['schemas']['Review'])[];
         };
       };
     };
@@ -2309,6 +2349,14 @@ export interface components {
       content: {
         'application/vnd.api+json': {
           data?: components['schemas']['Review'];
+        };
+      };
+    };
+    /** @description 200 Success - Returns the `user_avatar` object. */
+    UserAvatar: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['UserAvatar'];
         };
       };
     };

@@ -26,7 +26,7 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
       </div>
       <div className="ml-4 flex items-center">
         <Image
-          src={vendor.vendorImage?.url || require('/public/placeholder-product-image.png')}
+          src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
           width={82}
           height={82}
           alt={vendor.attributes.name || ''}
