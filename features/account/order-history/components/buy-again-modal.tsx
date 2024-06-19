@@ -17,13 +17,21 @@ import { BadgeAlert, Check, IterationCcw } from 'lucide-react';
 
 type Props = {
   variantIds: string[];
+  buttonStyle?: string;
+  buttonIconStyle?: string;
+  buttonTextStyle?: string;
 };
 
 /**
  * 再度購入するか確認モーダル
  * @returns JSX.Element
  */
-export default function BuyAgainModal({ variantIds }: Props) {
+export default function BuyAgainModal({
+  variantIds,
+  buttonStyle,
+  buttonIconStyle,
+  buttonTextStyle
+}: Props) {
   const { toast } = useToast();
 
   const addToCart = async () => {
@@ -49,9 +57,9 @@ export default function BuyAgainModal({ variantIds }: Props) {
     <Dialog>
       <DialogDescription>
         <DialogTrigger asChild>
-          <Button type="button" className="w-[222px]">
-            <IterationCcw className="h-[18px] w-[18px]" />
-            <Typography as="bold" element="p" className="ml-[8px] text-[14px] text-white-base">
+          <Button type="button" className={buttonStyle}>
+            <IterationCcw className={buttonIconStyle} />
+            <Typography as="bold" element="p" className={buttonTextStyle}>
               再度購入
             </Typography>
           </Button>

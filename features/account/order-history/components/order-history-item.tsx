@@ -30,7 +30,14 @@ export default function OrderHistoryItem({ item, status }: OrderHistoryItemProps
             色：vol. 6
           </Typography>
         </div>
-        {!isUnpaid && variantId && <BuyAgainModal variantIds={[variantId]} />}
+        {!isUnpaid && !!variantId && (
+          <BuyAgainModal
+            variantIds={[variantId]}
+            buttonStyle="w-[105px] h-[30px]"
+            buttonIconStyle="h-[16px] w-[16px]"
+            buttonTextStyle="ml-[8px] text-[12px] text-white-base"
+          />
+        )}
       </div>
     </div>
   );

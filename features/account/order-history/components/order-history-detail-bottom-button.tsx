@@ -19,7 +19,12 @@ export default function OrderHistoryDetailBottomButton({ order }: Props) {
 
   return (
     <div className="mr-[20px] mt-[24px] flex items-center justify-between">
-      <BuyAgainModal variantIds={variantIds} />
+      <BuyAgainModal
+        variantIds={variantIds}
+        buttonStyle="w-[222px]"
+        buttonIconStyle="h-[18px] w-[18px]"
+        buttonTextStyle="ml-[8px] text-[14px] text-white-base"
+      />
       {/* TODO: 取得した注文履歴のidを渡してwrite-reviewに遷移する */}
       <Link href="/account/orders/{order_number}/write-review" passHref>
         <button

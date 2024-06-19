@@ -25,7 +25,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
       <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
         注文履歴
       </Typography>
-      <Tabs defaultValue={tabState} className="w-full justify-center">
+      <Tabs defaultValue={tabState} className="z-0 w-full justify-center">
         <TabsList className="w-full pb-4">
           {tabs.map((tab) => (
             <Link key={tab.value} href={`?state=${tab.value}`} passHref>

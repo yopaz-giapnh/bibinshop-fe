@@ -12,7 +12,7 @@ export default async function Page({ params }: { params: { order_number: string 
   if (!order) return notFound();
 
   return (
-    <div className="mx-auto mt-[128px] flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
+    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
       <OrderHistoryDetail order={order} />
     </div>
   );
