@@ -12,3 +12,14 @@ export const getShipmentStateTitle = (order: Order) => {
       return '未払い';
   }
 };
+
+export const getTabValue = (status: string) => {
+  switch (status) {
+    case 'all':
+      return 'すべて';
+    case 'processing':
+      return '処理中';
+    case 'shipped':
+      return '出荷済み';
+  }
+};

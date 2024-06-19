@@ -34,7 +34,7 @@ export function OrderDetailInfo({ lineItems, vendorTotals }: Props) {
             {lineItemsByVendor.map((lineItem) => (
               <OrderDetailListItem
                 key={lineItem.id}
-                imageSrc={require('/public/placeholder-product-image.png')}
+                imageSrc={'/placeholder-product-image.png'}
                 title={lineItem.attributes.name ?? ''}
                 color={''}
                 price={lineItem.attributes.display_price ?? ''}

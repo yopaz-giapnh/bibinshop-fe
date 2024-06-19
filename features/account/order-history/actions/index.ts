@@ -9,12 +9,17 @@ import { isVariantSchema } from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
 
-export async function getAccountOrders() {
+export async function getAccountOrders({
+  shipment_state,
+  page
+}: { shipment_state?: string; page?: number } = {}) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/account/orders', {
     params: {
       query: {
         include:
-          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants'
+          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants',
+        'filter[shipment_state]': shipment_state,
+        page
       }
     },
     fetch: (request) => {

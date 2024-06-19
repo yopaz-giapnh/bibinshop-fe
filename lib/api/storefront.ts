@@ -2834,6 +2834,8 @@ export interface operations {
         'fields[cart]'?: components['parameters']['SparseFieldsCart'];
         page?: components['parameters']['PageParam'];
         per_page?: components['parameters']['PerPageParam'];
+        /** @example backorder,canceled,partial,pending,ready,shipped */
+        'filter[shipment_state]'?: string;
       };
     };
     responses: {

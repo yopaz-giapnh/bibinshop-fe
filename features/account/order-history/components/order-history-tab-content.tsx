@@ -1,23 +1,21 @@
-import { getShipmentStateTitle } from '@/features/order/utils';
-import Pagenation from '../../components/pagenation';
+import Pagination from '@/features/pagination/components/pagination';
 import { getAccountOrders } from '../actions';
+import { buildShipmentState } from '../utils';
 import OrderHistoryEmptyView from './order-history-empty-view';
 import OrderHistoryList from './order-history-list';
 
 type OrderHistoryTabsProps = {
   status: string;
+  currentPage: number;
 };
 
 /**
  * 注文履歴タブ内のコンテンツコンポーネント
  * @returns JSX.Element
  */
-export async function OrderHistoryTabContent({ status }: OrderHistoryTabsProps) {
-  const orders = await getAccountOrders();
-  const filteredOrders = status
-    ? orders.data.filter((order) => getShipmentStateTitle(order) === status)
-    : orders.data;
-  const isEmpty = filteredOrders.length === 0;
+export async function OrderHistoryTabContent({ status, currentPage }: OrderHistoryTabsProps) {
+  const orders = await getAccountOrders({ ...buildShipmentState(status), page: currentPage });
+  const isEmpty = orders.data.length === 0;
 
   return (
     <div>
@@ -26,13 +24,13 @@ export async function OrderHistoryTabContent({ status }: OrderHistoryTabsProps) 
           <OrderHistoryEmptyView status={status} />
         ) : (
           <div>
-            {filteredOrders.map((order) => (
+            {orders.data.map((order) => (
               <OrderHistoryList key={order.id} order={order} />
             ))}
           </div>
         )}
       </div>
-      <Pagenation />
+      {!!orders.meta.total_pages && <Pagination totalPages={orders.meta.total_pages} />}
     </div>
   );
 }
