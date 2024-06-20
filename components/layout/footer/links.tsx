@@ -4,7 +4,6 @@ import { Typography } from '@/components/ui/typography';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import useMedia from 'use-media';
 
 const components: { title: string; links: { label: string; href?: string }[] }[] = [
   {
@@ -31,7 +30,6 @@ const components: { title: string; links: { label: string; href?: string }[] }[]
 
 export function Links() {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
-  const isPc = useMedia({ minWidth: '768px' });
 
   const toggleSection = (title: string) => {
     setOpenSections((prev) => ({
@@ -60,7 +58,7 @@ export function Links() {
             </span>
           </button>
           <div
-            className={`mt-4 flex flex-col gap-4 ${isPc ? 'block' : openSections[component.title] ? 'block' : 'hidden'}`}
+            className={`mt-4 flex flex-col gap-4 ${openSections[component.title] ? 'block' : 'hidden'} md:block`}
           >
             <Typography as="subTitle" element="h2" className="hidden md:block">
               {component.title}
