@@ -1,5 +1,4 @@
 'use client';
-
 import {
   Command,
   CommandEmpty,
@@ -11,12 +10,21 @@ import {
   CommandShortcut
 } from '@/components/ui/command';
 import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export function Search() {
   const [searchValue, setSearchValue] = useState('');
   const route = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleSearch = () => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set('key', searchValue);
+    const newQueryString = `?${currentQuery.toString()}`;
+    route.push(`/search${newQueryString}`);
+  };
+
   return (
     <Command
       className="h-[48px] w-[456px] rounded-[44px] border-2 border-bibinBlue-100"
@@ -28,12 +36,10 @@ export function Search() {
           setSearchValue(v);
         }}
         disableButton={searchValue === ''}
-        onHandleClick={() => {
-          route.push(`/search?key=${searchValue}`);
-        }}
+        onHandleClick={handleSearch}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && searchValue !== '') {
-            route.push(`/search?key=${searchValue}`);
+            handleSearch();
           }
         }}
       />
