@@ -16,7 +16,9 @@ export async function CheckoutCartForm({ cart }: Props) {
               ...vendorTotal,
               lineItems: cart.lineItems.filter(
                 (lineItem) => lineItem.relationships.vendor?.data?.id === vendorTotal.id
-              )
+              ),
+              variants: cart.variants,
+              images: cart.images
             }}
           />
         ))}

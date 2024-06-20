@@ -1,5 +1,7 @@
 import { Typography } from '@/components/ui/typography';
 import { LineItem, VendorTotal } from '@/features/cart/types';
+import { ImageSchema, VariantSchema } from '@/features/product/types';
+import { findImageFromLineItem, getProductImageUrl } from '@/features/product/utils';
 import { Store } from 'lucide-react';
 import OrderDetailListItem from './order-detail-list-item';
 import OrderDetailSection from './order-detail-section';
@@ -7,9 +9,11 @@ import OrderDetailSection from './order-detail-section';
 type Props = {
   lineItems: LineItem[];
   vendorTotals: VendorTotal[];
+  variants: VariantSchema[];
+  images: ImageSchema[];
 };
 
-export function OrderDetailInfo({ lineItems, vendorTotals }: Props) {
+export function OrderDetailInfo({ lineItems, vendorTotals, variants, images }: Props) {
   return (
     <OrderDetailSection title="注文情報">
       {vendorTotals.map((vendorTotal) => {
@@ -31,15 +35,18 @@ export function OrderDetailInfo({ lineItems, vendorTotals }: Props) {
                 </Typography>
               </div>
             </div>
-            {lineItemsByVendor.map((lineItem) => (
-              <OrderDetailListItem
-                key={lineItem.id}
-                imageSrc={'/placeholder-product-image.png'}
-                title={lineItem.attributes.name ?? ''}
-                color={''}
-                price={lineItem.attributes.display_price ?? ''}
-              />
-            ))}
+            {lineItemsByVendor.map((lineItem) => {
+              const image = findImageFromLineItem({ lineItem, variants, images });
+
+              return (
+                <OrderDetailListItem
+                  key={lineItem.id}
+                  imageSrc={getProductImageUrl(image)}
+                  title={lineItem.attributes.name ?? ''}
+                  price={lineItem.attributes.display_price ?? ''}
+                />
+              );
+            })}
             <div className="mt-[16px] border-[1px]" />
           </div>
         );

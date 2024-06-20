@@ -3,6 +3,7 @@
 import { apiClient } from '@/config/api-client';
 import { isAddressSchema } from '@/features/address/utils';
 import { isCreditCardSchema } from '@/features/payment/utils';
+import { isImageSchema, isVariantSchema } from '@/features/product/utils';
 import { isNotFound } from '@/utils/api';
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -14,7 +15,7 @@ export async function getCart({ cache = 'no-store' }: { cache?: RequestCache } =
   const { response, error, data } = await apiClient.GET('/api/v2/storefront/cart', {
     params: {
       query: {
-        include: 'line_items,vendors,vendor_totals,payments.source,billing_address'
+        include: 'line_items,vendors,vendor_totals,payments.source,billing_address,variants.images'
       }
     },
     fetch: (request) => {
@@ -177,14 +178,18 @@ function reshapeCart({
 }) {
   const lineItems = included?.filter(isLineItemIncludes) || [];
   const vendorTotals = included?.filter(isVendorTotalsIncludes) || [];
-  const creditCard = included?.filter(isCreditCardSchema)?.[0];
-  const address = included?.filter(isAddressSchema)?.[0];
+  const creditCard = included?.find(isCreditCardSchema);
+  const address = included?.find(isAddressSchema);
+  const variants = included?.filter(isVariantSchema) || [];
+  const images = included?.filter(isImageSchema) || [];
 
   return {
     ...cart,
     lineItems,
     vendorTotals,
     creditCard,
-    address
+    address,
+    variants,
+    images
   };
 }

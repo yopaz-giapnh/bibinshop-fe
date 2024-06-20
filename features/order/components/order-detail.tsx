@@ -21,6 +21,10 @@ type Props = {
 export async function OrderDetail({ className, orderNumber }: Props) {
   const order = await getOrder(orderNumber);
 
+  if (!order) {
+    return;
+  }
+
   return (
     <>
       <div className={cn('w-5/6 overflow-y-auto', className)}>
@@ -37,7 +41,12 @@ export async function OrderDetail({ className, orderNumber }: Props) {
         <OrderDetailOverview item={order} />
         {order.creditCard && <OrderDetailPaymentMethod creditCard={order.creditCard} />}
         {order.address && <OrderDetailAddress address={order.address} />}
-        <OrderDetailInfo lineItems={order.lineItems} vendorTotals={order.vendors} />
+        <OrderDetailInfo
+          lineItems={order.lineItems}
+          vendorTotals={order.vendors}
+          variants={order.variants}
+          images={order.images}
+        />
       </div>
     </>
   );

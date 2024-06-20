@@ -5,8 +5,9 @@ import { isAddressSchema, isShippmentSchema } from '@/features/address/utils';
 import { CartIncludes, CartSchema } from '@/features/cart/types';
 import { isLineItemIncludes } from '@/features/cart/utils';
 import { isCreditCardSchema, isPaymentSchema } from '@/features/payment/utils';
-import { isVariantSchema } from '@/features/product/utils';
+import { isImageSchema, isVariantSchema } from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
+import { isNotFound } from '@/utils/api';
 import { TAGS } from '../constants';
 
 export async function getAccountOrders({
@@ -17,7 +18,7 @@ export async function getAccountOrders({
     params: {
       query: {
         include:
-          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants',
+          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images',
         'filter[shipment_state]': shipment_state,
         page
       }
@@ -39,6 +40,7 @@ export async function getAccountOrders({
   };
 }
 
+// TODO: リファクタリングする
 function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: CartIncludes[] }) {
   const allLineItems = included?.filter(isLineItemIncludes) || [];
   const allVendors = included?.filter(isVendorSchema) || [];
@@ -47,6 +49,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
   const allPayments = included?.filter(isPaymentSchema) || [];
   const allShipments = included?.filter(isShippmentSchema) || [];
   const allVariants = included?.filter(isVariantSchema) || [];
+  const allImages = included?.filter(isImageSchema) || [];
 
   return orders.map((order) => {
     const lineItems = allLineItems.filter((item) =>
@@ -70,6 +73,13 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
     const variants = allVariants.filter((variant) =>
       order.relationships.variants?.data?.map((i) => i?.id).includes(variant.id)
     );
+    const images =
+      allImages.filter((image) =>
+        variants
+          .map((variant) => variant.relationships.images?.data?.map((i) => i?.id))
+          .flat()
+          .includes(image.id)
+      ) || [];
 
     return {
       ...order,
@@ -78,26 +88,34 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
       address,
       creditCard,
       shipment,
-      variants
+      variants,
+      images
     };
   });
 }
 
 export async function getOrder(order_number: string) {
-  const { data, error } = await apiClient.GET('/api/v2/storefront/account/orders/{order_number}', {
-    params: {
-      path: {
-        order_number
+  const { response, data, error } = await apiClient.GET(
+    '/api/v2/storefront/account/orders/{order_number}',
+    {
+      params: {
+        path: {
+          order_number
+        },
+        query: {
+          include:
+            'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images'
+        }
       },
-      query: {
-        include:
-          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants'
+      fetch: (request) => {
+        return fetch(request, { next: { tags: [TAGS.orders] } });
       }
-    },
-    fetch: (request) => {
-      return fetch(request, { next: { tags: [TAGS.orders] } });
     }
-  });
+  );
+
+  if (isNotFound(response)) {
+    return;
+  }
 
   if (error) {
     throw error;
@@ -111,6 +129,7 @@ export async function getOrder(order_number: string) {
   const creditCard = included?.find(isCreditCardSchema);
   const shipment = included?.find(isShippmentSchema);
   const variants = included?.filter(isVariantSchema) || [];
+  const images = included?.filter(isImageSchema) || [];
 
   return {
     ...order,
@@ -119,6 +138,7 @@ export async function getOrder(order_number: string) {
     address,
     creditCard,
     shipment,
-    variants
+    variants,
+    images
   };
 }

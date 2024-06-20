@@ -19,7 +19,12 @@ export default async function CheckoutConfirm() {
         <OrderDetailOverview item={cart} />
         {cart.creditCard && <OrderDetailPaymentMethod creditCard={cart.creditCard} />}
         {cart.address && <OrderDetailAddress address={cart.address} />}
-        <OrderDetailInfo lineItems={cart.lineItems} vendorTotals={cart.vendorTotals} />
+        <OrderDetailInfo
+          lineItems={cart.lineItems}
+          vendorTotals={cart.vendorTotals}
+          variants={cart.variants}
+          images={cart.images}
+        />
       </div>
       <CheckoutConfirmForm />
     </div>

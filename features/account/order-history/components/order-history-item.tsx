@@ -1,10 +1,12 @@
 import { Typography } from '@/components/ui/typography';
 import { LineItem } from '@/features/cart/types';
+import { ImageSchema } from '@/features/product/types';
 import Image from 'next/image';
 import BuyAgainModal from './buy-again-modal';
 
 type OrderHistoryItemProps = {
   item: LineItem;
+  image: ImageSchema | undefined;
   status: string;
 };
 
@@ -12,23 +14,30 @@ type OrderHistoryItemProps = {
  * 注文履歴アイテムの詳細コンポーネント
  * @returns JSX.Element
  */
-export default function OrderHistoryItem({ item, status }: OrderHistoryItemProps) {
+export default function OrderHistoryItem({ item, image, status }: OrderHistoryItemProps) {
   const isUnpaid = status === '未払い';
   const variantId = item.relationships.variant?.data?.id;
+  const imageUrl = image?.attributes.styles?.[image?.attributes.styles?.length - 1].url;
 
   return (
     <div className="flex border-b-[1px] py-[16px]">
-      {/* TODO: /api/v2/storefront/account/ordersでimage取得後追加 */}
-      <Image src="/item-demo.png" width={100} height={100} alt={''} />
+      <div className="relative h-[100px] w-[100px]">
+        <Image
+          src={imageUrl || '/placeholder-product-image.png'}
+          layout="fill"
+          objectFit="cover"
+          alt={''}
+        />
+      </div>
       <div className="ml-[8px] flex flex-col justify-between">
         <div>
           <Typography as="bold" element="p" className="text-[14px] text-black-90">
             {item.attributes.name}
           </Typography>
-          <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
-            {/* TODO: /api/v2/storefront/account/ordersでdetail取得後追加 */}
+          {/* TODO: /api/v2/storefront/account/ordersでdetail取得後追加 */}
+          {/* <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
             色：vol. 6
-          </Typography>
+          </Typography> */}
         </div>
         {!isUnpaid && !!variantId && (
           <BuyAgainModal

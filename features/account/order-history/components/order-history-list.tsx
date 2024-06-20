@@ -1,6 +1,7 @@
 import { Typography } from '@/components/ui/typography';
 import { Order } from '@/features/order/types';
 import { getShipmentStateTitle } from '@/features/order/utils';
+import { findImageFromLineItem } from '@/features/product/utils';
 import { FilePen } from 'lucide-react';
 import Link from 'next/link';
 import OrderHistoryItem from './order-history-item';
@@ -22,9 +23,21 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
       <OrderHistoryListInfo order={order} />
       <div className="flex justify-between px-[16px]">
         <div className="flex flex-col">
-          {order.lineItems.map((item) => (
-            <OrderHistoryItem key={item.id} item={item} status={getShipmentStateTitle(order)} />
-          ))}
+          {order.lineItems.map((item) => {
+            const image = findImageFromLineItem({
+              lineItem: item,
+              variants: order.variants,
+              images: order.images
+            });
+            return (
+              <OrderHistoryItem
+                key={item.id}
+                item={item}
+                image={image}
+                status={getShipmentStateTitle(order)}
+              />
+            );
+          })}
         </div>
         <div className="mr-[20px] mt-[12px]">
           {isShipped && (

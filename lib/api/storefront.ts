@@ -325,6 +325,20 @@ export interface paths {
      */
     get: operations['shipping-rates'];
   };
+  '/api/v2/storefront/notifications': {
+    /**
+     * List all notifications
+     * @description Returns a list of notifications for the current user.
+     */
+    get: operations['notifications-list'];
+  };
+  '/api/v2/storefront/notifications/{id}': {
+    /**
+     * Read single notifications
+     * @description Returns a single notification for the current user, and marks it as read automatically.
+     */
+    get: operations['notifications-read'];
+  };
   '/api/v2/storefront/products': {
     /**
      * List all Products
@@ -825,7 +839,8 @@ export interface components {
       | components['schemas']['Shipment']
       | components['schemas']['DigitalLink']
       | components['schemas']['Product']
-      | components['schemas']['Address'];
+      | components['schemas']['Address']
+      | components['schemas']['Image'];
     /**
      * CMS Page
      * @description The CMS Page model contains page data for Standard pages, Feature Pages and Homepages.
@@ -2050,6 +2065,28 @@ export interface components {
     };
     /** Review Includes */
     ReviewIncludes: components['schemas']['User'] | components['schemas']['Product'];
+    NotificationsList: components['schemas']['Notification'][];
+    /**
+     * Notification
+     * @description The notification model.
+     */
+    Notification: {
+      /** @example 1 */
+      id: string;
+      /** @default notification */
+      type: string;
+      attributes: {
+        /** @example title */
+        title: string;
+        /** @example notification content here. Might include html tags and/or complex content. */
+        content: string;
+        /** @example false */
+        read: boolean;
+        created_at: components['schemas']['Timestamp'];
+      };
+    };
+    /** Notification Includes */
+    NotificationIncludes: components['schemas']['User'] | components['schemas']['Vendor'];
     UserAvatar: {
       /** @example 1 */
       id?: string;
@@ -2352,6 +2389,25 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns a list of notifications object. */
+    NotificationList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Notification'][];
+          included?: components['schemas']['NotificationIncludes'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
+    /** @description 200 Success - Returns the `notification` object. */
+    Notification: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Notification'];
+        };
+      };
+    };
     /** @description 200 Success - Returns the `user_avatar` object. */
     UserAvatar: {
       content: {
@@ -2577,6 +2633,13 @@ export interface components {
      * @example rating,review
      */
     SparseFieldsReview?: string;
+    /**
+     * @description The notification id
+     * @example 3
+     */
+    NotificationId: string;
+    /** @example vendor,user */
+    NotificationIncludeParam?: string;
   };
   requestBodies: never;
   headers: never;
@@ -3438,6 +3501,39 @@ export interface operations {
     responses: {
       200: components['responses']['Shipment'];
       404: components['responses']['NotFound'];
+    };
+  };
+  /**
+   * List all notifications
+   * @description Returns a list of notifications for the current user.
+   */
+  'notifications-list': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['NotificationIncludeParam'];
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+    };
+    responses: {
+      200: components['responses']['NotificationList'];
+    };
+  };
+  /**
+   * Read single notifications
+   * @description Returns a single notification for the current user, and marks it as read automatically.
+   */
+  'notifications-read': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['NotificationIncludeParam'];
+      };
+      path: {
+        id: components['parameters']['NotificationId'];
+      };
+    };
+    responses: {
+      200: components['responses']['Notification'];
     };
   };
   /**
