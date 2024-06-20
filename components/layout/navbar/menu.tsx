@@ -14,54 +14,16 @@ import {
 } from '@/components/ui/navigation-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
+import { getTaxons } from '@/features/taxon/actions';
 import { cn } from '@/lib/utils';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { HandThumbUpIcon, MegaphoneIcon, StarIcon } from '@heroicons/react/24/solid';
 
-const components: { title: string; href: string }[] = [
-  {
-    title: 'スキンケア',
-    href: '/'
-  },
-  {
-    title: 'ベースメイク',
-    href: '/'
-  },
-  {
-    title: 'ポイントメイク',
-    href: '/'
-  },
-  {
-    title: 'メイク小物',
-    href: '/'
-  },
-  {
-    title: 'UVケア',
-    href: '/'
-  },
-  {
-    title: 'ボディ・ハンド・フットケア',
-    href: '/'
-  },
-  {
-    title: '脱毛・除毛',
-    href: '/'
-  },
-  {
-    title: 'ヘア',
-    href: '/'
-  },
-  {
-    title: 'ネイル',
-    href: '/'
-  },
-  {
-    title: '香水',
-    href: '/'
-  }
-];
-
-export function Menu() {
+type Props = {
+  getTaxons: ReturnType<typeof getTaxons>;
+};
+export function Menu({ getTaxons }: Props) {
+  const categoriesList = React.use(getTaxons);
   return (
     <div className="flex h-[56px] items-center bg-bibinBlue-100 px-[142px]">
       <NavigationMenu>
@@ -78,8 +40,12 @@ export function Menu() {
             <NavigationMenuContent>
               <ScrollArea>
                 <ul className="grid max-h-[370px] w-[270px] md:grid-cols-1">
-                  {components.map((component) => (
-                    <ListItem key={component.title} title={component.title} href={component.href} />
+                  {categoriesList.map((category) => (
+                    <ListItem
+                      key={category.id}
+                      title={category.attributes.name}
+                      href={`/search?taxons=${category.id}`}
+                    />
                   ))}
                 </ul>
               </ScrollArea>

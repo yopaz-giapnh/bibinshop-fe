@@ -1,4 +1,5 @@
 import * as session from '@/features/auth/utils/session';
+import { getTaxons } from '@/features/taxon/actions';
 import { Header } from './header';
 import { Menu } from './menu';
 
@@ -8,7 +9,7 @@ export async function Navbar() {
   return (
     <div className="fixed left-0 right-0 top-0 z-50">
       <Header isSignedIn={isSignedIn} />
-      <Menu />
+      <Menu getTaxons={getTaxons()} />
     </div>
   );
 }

@@ -34,9 +34,10 @@ export function ReviewListWithAvator({ reviews }: Props) {
                 </Typography>
                 <Rating star={review.attributes.rating ?? 0} readOnly />
               </div>
-              <Typography as="small" element="p" className="text-black-100 mt-2">
+              {/* TODO: api が実装されてから */}
+              {/* <Typography as="small" element="p" className="text-black-100 mt-2">
                 色: バーガンディ
-              </Typography>
+              </Typography> */}
               <Typography
                 as="body"
                 element="p"

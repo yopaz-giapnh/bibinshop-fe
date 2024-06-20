@@ -21,9 +21,10 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
           ・{formatDateString(review.attributes.created_at)}
         </Typography>
       </div>
-      <Typography as="bold" element="p" className="mt-[8px] text-[14px] text-black-90">
+      {/* TODO: api が実装されてから */}
+      {/* <Typography as="bold" element="p" className="mt-[8px] text-[14px] text-black-90">
         色： TODO: プロパティ
-      </Typography>
+      </Typography> */}
       <Typography as="xSmall" element="p" className="mt-[16px] text-[16px] text-black-90">
         {review.attributes.review}
       </Typography>

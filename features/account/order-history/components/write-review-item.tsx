@@ -26,9 +26,10 @@ export default function WriteReviewItem({ item }: Props) {
           <Typography as="bold" element="p" className="text-[14px] text-black-90">
             {item.title}
           </Typography>
-          <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
+          {/* TODO: 色は api が実装されてから */}
+          {/* <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
             {`色: ${item.color}`}
-          </Typography>
+          </Typography> */}
         </div>
       </div>
       <div className="mt-[16px] flex items-center">
