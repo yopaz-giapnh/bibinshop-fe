@@ -40,16 +40,14 @@ export function Copyright() {
 
   return (
     <div className="flex flex-col items-center justify-center md:flex-row md:justify-between">
-      <div className="flex flex-col items-center justify-center md:flex">
+      <div className="flex flex-col items-center justify-center md:flex  md:flex-row">
         <Logo />
-        <>
-          <div className="mt-[16px] flex gap-5 md:hidden">
-            <SocialLinks id="sp" />
-          </div>
-          <Typography as="caption" element="p" className="mt-[16px]">
-            Copyright ⓒ bibin co.,Ltd ALL RIGHTS RESERVED.
-          </Typography>
-        </>
+        <div className="mt-[16px] flex gap-5 md:hidden">
+          <SocialLinks id="sp" />
+        </div>
+        <Typography as="caption" element="p" className="mt-[16px] md:ml-4">
+          Copyright ⓒ bibin co.,Ltd ALL RIGHTS RESERVED.
+        </Typography>
       </div>
       <div className="hidden gap-5 md:flex">
         <SocialLinks id="pc" />
