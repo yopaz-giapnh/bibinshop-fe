@@ -20,9 +20,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="ja" suppressHydrationWarning>
+    <html lang="ja" suppressHydrationWarning style={{ overflowX: 'hidden' }}>
       <head />
-      <body className={cn('min-h-screen bg-background font-sans antialiased', notoSansJP.variable)}>
+      <body
+        className={cn(
+          'min-h-screen overflow-x-hidden bg-background font-sans antialiased',
+          notoSansJP.variable
+        )}
+      >
         <Providers>
           <Navbar />
           <Suspense>
