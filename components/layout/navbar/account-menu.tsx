@@ -60,9 +60,11 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
             <NavigationMenuTrigger className="justify-start border-l border-r border-white-30 pl-[22px]">
               <div className="flex">
                 <UserRound className="h-6 w-6" />
-                <Typography as="small" element="p" className="ml-1">
-                  アカウント管理
-                </Typography>
+                <Link href="/account/profile">
+                  <Typography as="small" element="p" className="ml-1">
+                    アカウント管理
+                  </Typography>
+                </Link>
               </div>
             </NavigationMenuTrigger>
             <NavigationMenuContent>
