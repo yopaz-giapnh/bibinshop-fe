@@ -20,7 +20,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="ja" suppressHydrationWarning style={{ overflowX: 'hidden' }}>
+    //TODO: 横のサイズが大きいコンポーネントの影響で横スクロールが発生するため、overflow-x-hiddenを一旦入れてます
+    <html lang="ja" suppressHydrationWarning className="overflow-x-hidden">
       <head />
       <body
         className={cn(
