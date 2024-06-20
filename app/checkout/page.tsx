@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
 import { CheckoutForm } from '@/features/checkout/components/checkout-form';
@@ -19,7 +20,7 @@ export default async function Page() {
           <Typography as="boldTitle" element="h1" className="mt-6 text-center text-text-80">
             購入手続き
           </Typography>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <CheckoutForm cart={cart} />
           </Suspense>
         </div>

@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
@@ -36,7 +37,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
         <div className="relative top-[-2px] border-[1px]" />
         {tabs.map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingSpinner />}>
               <OrderHistoryTabContent status={tabState} currentPage={currentPage} />
             </Suspense>
           </TabsContent>

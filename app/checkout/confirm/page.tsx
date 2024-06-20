@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import CheckoutConfirm from '@/features/checkout/components/checkout-confirm';
 import { Suspense } from 'react';
@@ -11,7 +12,7 @@ export default async function Page() {
             <Typography as="boldTitle" element="h2" className="text-text-80">
               購入確認
             </Typography>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingSpinner />}>
               <CheckoutConfirm />
             </Suspense>
           </div>

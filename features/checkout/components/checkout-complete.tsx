@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { OrderDetail } from '@/features/order/components/order-detail';
 import { redirectToTop } from '@/utils/navigation';
@@ -22,7 +23,7 @@ export default async function CheckoutComplete() {
         <Typography as="caption" element="p" className="pb-[24px] pt-[16px] text-text-80">
           ご注文を承りました。
         </Typography>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingSpinner />}>
           <OrderDetail orderNumber={orderNumber} />
           <Link href="/" passHref>
             <Button size="lg" variant="lg" className="mt-[24px] w-[392px]">

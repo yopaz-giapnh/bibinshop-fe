@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import MessageList from '@/features/account/message/components/message-list';
 import { Suspense } from 'react';
@@ -20,7 +21,7 @@ export default function Page({
       <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
         メッセージ
       </Typography>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <MessageList currentPage={currentPage} />
       </Suspense>
     </div>

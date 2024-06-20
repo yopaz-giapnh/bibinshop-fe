@@ -28,10 +28,17 @@ PaginationItem.displayName = 'PaginationItem';
 
 type PaginationLinkProps = {
   isActive?: boolean;
+  disable?: boolean;
 } & Pick<ButtonProps, 'size'> &
   React.ComponentProps<'a'>;
 
-const PaginationLink = ({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) => (
+const PaginationLink = ({
+  className,
+  isActive,
+  disable,
+  size = 'icon',
+  ...props
+}: PaginationLinkProps) => (
   <a
     aria-current={isActive ? 'page' : undefined}
     className={cn(
@@ -40,8 +47,10 @@ const PaginationLink = ({ className, isActive, size = 'icon', ...props }: Pagina
         size
       }),
       `${isActive ? 'border-bibinBlue-50 bg-bibinBlue-10 text-bibinBlue-100' : ''} rounded-[100px] border-[1px]`,
+      disable && 'cursor-not-allowed opacity-50',
       className
     )}
+    {...(disable ? { 'aria-disabled': true, tabIndex: -1 } : {})}
     {...props}
   />
 );

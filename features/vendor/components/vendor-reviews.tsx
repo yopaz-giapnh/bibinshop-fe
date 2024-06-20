@@ -1,4 +1,4 @@
-import { SortButton } from '@/components/button/sort-button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
 import Rating from '@/features/review/components/rating';
 import { Suspense } from 'react';
@@ -38,11 +38,11 @@ export async function VendorReviews({ vendorId }: Props) {
           </div>
         </div>
         <div className="ml-14 mt-6">
-          <div className="absolute right-0 mr-14">
-            {/* TODO: ソートのやつ検討 */}
+          {/* TODO: api ができてから */}
+          {/* <div className="absolute right-0 mr-14">
             <SortButton />
-          </div>
-          <Suspense fallback={<div>Loading...</div>}>
+          </div> */}
+          <Suspense fallback={<LoadingSpinner />}>
             <VendorReviewList vendorId={vendorId} />
           </Suspense>
         </div>

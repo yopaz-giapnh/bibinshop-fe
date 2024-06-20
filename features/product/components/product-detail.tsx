@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
 import Rating from '@/features/review/components/rating';
@@ -41,7 +42,7 @@ export async function ProductDetail({ product }: Props) {
             </div>
           </>
 
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <ProductReviewList productId={product.id} />
           </Suspense>
 
@@ -50,7 +51,7 @@ export async function ProductDetail({ product }: Props) {
 
         <div className="ml-[60px] flex flex-1 flex-col gap-5">
           <ProductCartForm product={product} getCart={getCart()} />
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             {product.vendor && <ShopCard vendorId={product.vendor.id} />}
           </Suspense>
           <Supplementary />

@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Suspense } from 'react';
 import { Vendor } from '../types';
@@ -36,7 +37,7 @@ export default async function VendorTabs({ review, vendor }: VendorTabsProps) {
         <VendorProducts vendorId={vendor.id} />
       </TabsContent>
       <TabsContent value="review">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingSpinner />}>
           <VendorReviews vendorId={vendor.id} />
         </Suspense>
       </TabsContent>

@@ -1,4 +1,5 @@
 import { Logo } from '@/components/icons/logo';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getAccount } from '@/features/account/profile/actions';
 import Link from 'next/link';
 import { ComponentProps, Suspense } from 'react';
@@ -19,7 +20,7 @@ export function Header({ isSignedIn }: Props) {
       </div>
       <div className="absolute right-6 flex items-center justify-center gap-4">
         <AccountMenu isSignedIn={isSignedIn} getAccount={getAccount()} />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingSpinner />}>
           <CartMenu />
         </Suspense>
       </div>

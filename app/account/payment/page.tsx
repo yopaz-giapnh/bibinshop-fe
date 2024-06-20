@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import PaymentCreate from '@/features/account/payment/components/payment-create';
 import PaymentList from '@/features/account/payment/components/payment-list';
@@ -14,7 +15,7 @@ export default async function Page() {
         お支払い方法
       </Typography>
       <PaymentCreate />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <PaymentList />
       </Suspense>
     </div>

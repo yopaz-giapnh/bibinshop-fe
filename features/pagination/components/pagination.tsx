@@ -3,9 +3,10 @@ import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
 } from '@/components/ui/pagination';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 type Props = {
@@ -23,7 +24,8 @@ export default function CustomPagination({ totalPages }: Props) {
 
   const getPageLink = (page: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set('page', page.toString());
+    const pageToSet = page <= 0 ? 1 : page > totalPages ? totalPages : page;
+    params.set('page', pageToSet.toString());
     return `${pathname}?${params.toString()}`;
   };
 
@@ -31,9 +33,7 @@ export default function CustomPagination({ totalPages }: Props) {
     <Pagination className="mt-[24px]">
       <PaginationContent>
         <PaginationItem>
-          <PaginationLink href={getPageLink(currentPage - 1)}>
-            <ChevronLeft className="h-4 w-4" />
-          </PaginationLink>
+          <PaginationPrevious href={getPageLink(currentPage - 1)} disable={currentPage === 1} />
         </PaginationItem>
         {startPage > 1 && (
           <PaginationItem>
@@ -57,9 +57,10 @@ export default function CustomPagination({ totalPages }: Props) {
           </PaginationItem>
         )}
         <PaginationItem>
-          <PaginationLink href={getPageLink(currentPage + 1)}>
-            <ChevronRight className="h-4 w-4" />
-          </PaginationLink>
+          <PaginationNext
+            href={getPageLink(currentPage + 1)}
+            disable={currentPage === totalPages}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

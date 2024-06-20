@@ -1,4 +1,4 @@
-import { SortButton } from '@/components/button/sort-button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { PriceSlider } from '@/components/ui/priceSlider';
 import { getProducts } from '@/features/product/actions';
 import { ProductGrid } from '@/features/product/components/product-grid';
@@ -19,10 +19,11 @@ export async function VendorProducts({ vendorId }: Props) {
           <PriceSlider />
         </div>
         <div className="ml-14 mt-6">
-          <div className="absolute right-0 mr-14">
+          {/* TODO: api できてから */}
+          {/* <div className="absolute right-0 mr-14">
             <SortButton />
-          </div>
-          <Suspense fallback={<div>Loading...</div>}>
+          </div> */}
+          <Suspense fallback={<LoadingSpinner />}>
             <ProductsList vendorId={vendorId} />
           </Suspense>
         </div>

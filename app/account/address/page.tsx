@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import Address from '@/features/account/address/components/address';
 import { getAccountAddresses } from '@/features/address/actions';
 import { Suspense } from 'react';
@@ -9,7 +10,7 @@ import { Suspense } from 'react';
 export default async function Page() {
   return (
     <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <Address getAccountAddresses={getAccountAddresses()} />
       </Suspense>
     </div>
