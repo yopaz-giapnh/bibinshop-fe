@@ -1,33 +1,43 @@
-// components/MessageListItem.js
 import { Typography } from '@/components/ui/typography';
+import { getVendorImageUrl } from '@/features/vendor/utils';
+import { cn } from '@/lib/utils';
+import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
+import { Message } from '../types';
 import MessageSeeMoreModal from './message-see-more-modal';
 
 type Props = {
-  title: string;
-  date: string;
-  content: string;
-  imgSrc: string;
-  star: number;
-  rate: string;
+  message: Message;
 };
 
 /**
  * メッセージ一覧のリストアイテムコンポーネント
  * @returns JSX.Element
  */
-export default function MessageListItem({ title, date, content, imgSrc, star, rate }: Props) {
+export default function MessageListItem({ message }: Props) {
+  const vendorImageUrl = getVendorImageUrl(message.vendorImage);
+  const date = formatDateString(message.attributes.created_at, 'yyyy年MM月dd日');
+
   return (
     <div className="flex items-center justify-between">
-      <Image alt="" src={imgSrc} width={40} height={40} className="relative rounded-[4px]" />
+      <Image
+        alt=""
+        src={vendorImageUrl}
+        width={40}
+        height={40}
+        className="relative rounded-[4px]"
+      />
       <div className="mx-[12px] w-full">
         <div className="flex items-center">
           <Typography as="boldSmall" element="p" className="text-[14px] text-black-90">
-            {title}
+            {message.attributes.title}
           </Typography>
-          {/* TODO: no readマークはisReadみたいなパラメーターで管理する？ */}
-          <div className=" ml-[4px] h-[6px] w-[6px] rounded-[100px] bg-red-600" />
-          {/* TODO: ↑ */}
+          <div
+            className={cn(
+              'ml-[4px] h-[6px] w-[6px] rounded-[100px]',
+              !message.attributes.read ? 'bg-red-600' : ''
+            )}
+          />
         </div>
         <Typography
           as="caption"
@@ -41,17 +51,10 @@ export default function MessageListItem({ title, date, content, imgSrc, star, ra
           element="p"
           className="line-clamp-3 overflow-hidden text-ellipsis break-words text-[14px] text-charcoalGray"
         >
-          {content}
+          {message.attributes.content}
         </Typography>
       </div>
-      <MessageSeeMoreModal
-        title={title}
-        date={date}
-        content={content}
-        imgSrc={imgSrc}
-        star={star}
-        rate={rate}
-      />
+      <MessageSeeMoreModal message={message} />
     </div>
   );
 }

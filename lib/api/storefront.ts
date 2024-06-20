@@ -1981,9 +1981,8 @@ export interface components {
         products?: {
           data?: components['schemas']['Relation'][];
         };
-        /** @description image associated with this vendoer */
         image?: {
-          data?: components['schemas']['Relation'][];
+          data?: components['schemas']['Relation'];
         };
         /** @description banner associated with this vendor */
         banner_image?: {
@@ -2084,9 +2083,20 @@ export interface components {
         read: boolean;
         created_at: components['schemas']['Timestamp'];
       };
+      relationships: {
+        user?: {
+          data?: components['schemas']['Relation'];
+        };
+        vendor?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
     };
     /** Notification Includes */
-    NotificationIncludes: components['schemas']['User'] | components['schemas']['Vendor'];
+    NotificationIncludes:
+      | components['schemas']['User']
+      | components['schemas']['Vendor']
+      | components['schemas']['VendorImage'];
     UserAvatar: {
       /** @example 1 */
       id?: string;
@@ -2405,6 +2415,7 @@ export interface components {
       content: {
         'application/vnd.api+json': {
           data: components['schemas']['Notification'];
+          included?: components['schemas']['NotificationIncludes'][];
         };
       };
     };

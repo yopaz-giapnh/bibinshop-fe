@@ -1,5 +1,11 @@
 import { hasProperty } from '@/utils/type';
-import { VendorBannerImage, VendorImage, VendorIncludes, VendorSchema } from '../types';
+import {
+  VendorBannerImage,
+  VendorImage,
+  VendorImageSchema,
+  VendorIncludes,
+  VendorSchema
+} from '../types';
 
 export function isVendorImageIncludes(
   vendorIncludes: VendorIncludes
@@ -15,4 +21,16 @@ export function isVendorBannerImageIncludes(
 
 export function isVendorSchema(includedObject: unknown): includedObject is VendorSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'vendor';
+}
+
+export function isVendorImageSchema(includedObject: unknown): includedObject is VendorImageSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'vendor_image';
+}
+
+export function getVendorImageUrl(image: VendorImageSchema | undefined) {
+  if (!image) {
+    return '/placeholder-product-image.png';
+  }
+
+  return `${image.attributes?.styles?.[image.attributes?.styles?.length - 1]?.url}`;
 }

@@ -8,6 +8,8 @@ export type VendorBannerImage = components['schemas']['VendorBannerImage'];
 
 export type VendorSchema = components['schemas']['Vendor'];
 
+export type VendorImageSchema = components['schemas']['VendorImage'];
+
 export type VendorImageWithUrl = VendorImage & {
   url: string;
 };
