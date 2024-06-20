@@ -11,6 +11,7 @@ export async function getProducts(params?: ProductsListParameters) {
     params: {
       query: {
         include: 'images,vendor',
+        'filter[in_stock]': true,
         ...params?.query
       }
     },
@@ -41,7 +42,8 @@ export async function getProduct(product_slug: string) {
         product_slug
       },
       query: {
-        include: 'images,product_properties,vendor,taxons'
+        include: 'images,product_properties,vendor,taxons',
+        'filter[in_stock]': true
       }
     },
     fetch: (request) => {
