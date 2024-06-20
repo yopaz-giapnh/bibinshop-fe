@@ -84,13 +84,13 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
     </>
   ) : (
     <>
-      <Link href="/signup" passHref>
+      <Link href="/signup" passHref className="hidden md:block">
         <Button type="button">アカウント作成</Button>
       </Link>
       <Link href="/login" passHref>
         <div className="flex">
           <UserRound className="h-6 w-6" />
-          <Typography as="small" element="p" className="ml-1">
+          <Typography as="small" element="p" className="ml-1 hidden md:block">
             ログイン
           </Typography>
         </div>

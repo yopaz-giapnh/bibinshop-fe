@@ -20,7 +20,7 @@ export async function CartMenu() {
             </div>
           )}
         </div>
-        <Typography as="small" element="p" className="ml-1">
+        <Typography as="small" element="p" className="ml-1 hidden md:block">
           カート
         </Typography>
       </div>

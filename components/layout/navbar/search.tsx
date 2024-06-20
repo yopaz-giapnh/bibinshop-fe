@@ -9,6 +9,7 @@ import {
   CommandSeparator,
   CommandShortcut
 } from '@/components/ui/command';
+import { useIsPc } from '@/hooks/use-is-pc';
 import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -24,14 +25,15 @@ export function Search() {
     const newQueryString = `?${currentQuery.toString()}`;
     route.push(`/search${newQueryString}`);
   };
+  const isPc = useIsPc();
 
   return (
     <Command
-      className="h-[48px] w-[456px] rounded-[44px] border-2 border-bibinBlue-100"
+      className="h-[48px] w-[171px] rounded-[44px] border-2 border-bibinBlue-100 md:w-[456px]"
       value={searchValue}
     >
       <CommandInput
-        placeholder="アゼライン酸10美容液"
+        placeholder={isPc ? 'アゼライン酸10美容液' : 'アゼライン酸10...'}
         onValueChange={(v) => {
           setSearchValue(v);
         }}
