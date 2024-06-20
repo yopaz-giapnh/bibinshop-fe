@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
 import {
@@ -24,12 +25,14 @@ type Props = {
 };
 export function Menu({ getTaxons }: Props) {
   const categoriesList = React.use(getTaxons);
+  const pathname = usePathname();
+
   return (
-    <div className="flex h-[56px] items-center bg-bibinBlue-100 px-[142px]">
+    <div className="z-50 flex h-[44px] items-center bg-white-base md:h-[56px] md:bg-bibinBlue-100">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <div className="bg-gradation">
+            <div className="hidden bg-gradation md:block">
               <NavigationMenuTrigger className="h-[56px] w-[268px] justify-start border-l border-r border-white-30 pl-[22px]">
                 <Bars3Icon className="h-6 w-6 text-white-base" />
                 <Typography as="linkBase" element="p" className="ml-1">
@@ -51,11 +54,34 @@ export function Menu({ getTaxons }: Props) {
               </ScrollArea>
             </NavigationMenuContent>
           </NavigationMenuItem>
+          <NavigationMenuItem className="md:hidden">
+            <Link href="/" legacyBehavior passHref>
+              <NavigationMenuLink
+                className={cn(navigationMenuTriggerStyle(), {
+                  'underline decoration-2 underline-offset-4': pathname === '/',
+                  'md:no-underline': pathname === '/'
+                })}
+              >
+                <Typography as="linkSmall" element="p" className="ml-0.5 text-black-90">
+                  ホーム
+                </Typography>
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/products/bestseller?page=1" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                <HandThumbUpIcon className="h-5 w-5 text-white-base" />
-                <Typography as="linkSmall" element="p" className="ml-0.5">
+              <NavigationMenuLink
+                className={cn(navigationMenuTriggerStyle(), {
+                  'underline decoration-2 underline-offset-4': pathname === '/products/bestseller',
+                  'md:no-underline': pathname === '/products/bestseller'
+                })}
+              >
+                <HandThumbUpIcon className="hidden h-5 w-5 text-white-base md:block" />
+                <Typography
+                  as="linkSmall"
+                  element="p"
+                  className="ml-0.5 text-black-90 md:text-white-base"
+                >
                   ベストセラー
                 </Typography>
               </NavigationMenuLink>
@@ -63,9 +89,18 @@ export function Menu({ getTaxons }: Props) {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/products/ranking?page=1" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                <StarIcon className="h-5 w-5 text-white-base" />
-                <Typography as="linkSmall" element="p" className="ml-0.5">
+              <NavigationMenuLink
+                className={cn(navigationMenuTriggerStyle(), {
+                  'underline decoration-2 underline-offset-4': pathname === '/products/ranking',
+                  'md:no-underline': pathname === '/products/ranking'
+                })}
+              >
+                <StarIcon className="hidden h-5 w-5 text-white-base md:block" />
+                <Typography
+                  as="linkSmall"
+                  element="p"
+                  className="ml-0.5 text-black-90 md:text-white-base"
+                >
                   ランキング
                 </Typography>
               </NavigationMenuLink>
@@ -73,9 +108,18 @@ export function Menu({ getTaxons }: Props) {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/products/new?page=1" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                <MegaphoneIcon className="h-5 w-5 text-white-base" />
-                <Typography as="linkSmall" element="p" className="ml-0.5">
+              <NavigationMenuLink
+                className={cn(navigationMenuTriggerStyle(), {
+                  'underline decoration-2 underline-offset-4': pathname === '/products/new',
+                  'md:no-underline': pathname === '/products/new'
+                })}
+              >
+                <MegaphoneIcon className="hidden h-5 w-5 text-white-base md:block" />
+                <Typography
+                  as="linkSmall"
+                  element="p"
+                  className="ml-0.5 text-black-90 md:text-white-base"
+                >
                   新着
                 </Typography>
               </NavigationMenuLink>
