@@ -12,7 +12,7 @@ type Props = {
 
 export function AddressCard({ onEdit, onDelete, address }: Props) {
   return (
-    <div className="flex w-full items-center rounded-[6px] border border-solid border-black-10 p-4">
+    <div className="flex w-full items-center rounded-[6px] border border-solid border-black-10 bg-white-base p-4 shadow-base">
       <div className="flex w-[calc(100%_-_93px)] flex-col justify-center gap-4">
         <div className="flex-none items-center justify-center gap-4">
           <Typography as="bold" element="p" className="text-text-90">

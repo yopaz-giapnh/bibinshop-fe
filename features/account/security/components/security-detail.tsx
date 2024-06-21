@@ -69,7 +69,7 @@ export default function SecurityDetail() {
       <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
         アカウントセキュリティ
       </Typography>
-      <div className="w-full px-[48px]">
+      <div className="w-full rounded-[6px] bg-white-base px-[48px] py-6 shadow-base">
         <Typography as="bold" element="p" className="mb-[8px] text-[20px] text-black-90">
           メール
         </Typography>

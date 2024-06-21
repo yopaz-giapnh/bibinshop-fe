@@ -1,6 +1,7 @@
 import { Typography } from '@/components/ui/typography';
+import Pagination from '@/features/pagination/components/pagination';
 import { getReviews } from '@/features/review/actions';
-import Pagenation from '../../components/pagenation';
+import { getAccount } from '../actions';
 import ProfileReviewEmptyView from './profile-review-empty-view';
 import { ProfileReviewItem } from './profile-review-item';
 
@@ -9,13 +10,14 @@ import { ProfileReviewItem } from './profile-review-item';
  * @returns JSX.Element
  */
 export default async function ProfileReviewList() {
+  const account = await getAccount();
   const reviews = await getReviews({
     query: {
-      // TODO: アカウントIDを取得する
-      'filter[user_ids]': '1'
+      'filter[user_ids]': account.id
     }
   });
   const reviewsEmpty = (reviews.meta.total_count ?? 0) === 0;
+  const totalPages = reviews.meta.total_pages;
 
   return (
     <div className="mx-auto flex h-screen w-full flex-col p-[24px]">
@@ -23,7 +25,7 @@ export default async function ProfileReviewList() {
         <ProfileReviewEmptyView />
       ) : (
         <div>
-          <div className="h-screen-calc overflow-y-auto rounded-[6px] bg-white-base p-[24px]">
+          <div className="h-fit overflow-y-auto rounded-[6px] bg-white-base p-[24px]">
             <Typography as="bold" element="p" className="mb-[16px] text-[20px] text-black-90">
               レビュー
             </Typography>
@@ -36,8 +38,7 @@ export default async function ProfileReviewList() {
               </div>
             ))}
           </div>
-          {/* TODO: 自分がレビューした商品の一覧ページング */}
-          <Pagenation />
+          {!!totalPages && <Pagination totalPages={totalPages} />}
         </div>
       )}
     </div>

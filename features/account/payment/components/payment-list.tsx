@@ -16,7 +16,7 @@ export default async function PaymentList() {
     <div className="mt-[24px] grid w-full grid-cols-2 gap-4 md:grid-cols-2">
       {accountCreditCards.map((creditCard) => (
         <div key={creditCard.id}>
-          <div className="relative flex w-full items-end rounded-[6px] border border-solid border-black-10 p-4 shadow-md">
+          <div className="relative flex w-full items-end rounded-[6px] border border-solid border-black-10 bg-white-base p-4 shadow-base">
             <div className="flex flex-col gap-4">
               <div className="flex items-center">
                 {getCreditCardBrandIcon(creditCard)}
