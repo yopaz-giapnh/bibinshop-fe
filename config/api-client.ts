@@ -2,8 +2,8 @@ import { getAccessToken } from '@/features/auth/utils/session';
 import { COOKIES } from '@/features/cart/constants';
 import type { paths as oauthPaths } from '@/lib/api/oauth';
 import type { paths as storefrontPaths } from '@/lib/api/storefront';
-import * as auth from 'next-auth/react';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import createClient, { type Middleware } from 'openapi-fetch';
 
 type paths = oauthPaths & storefrontPaths;
@@ -32,9 +32,8 @@ const throwOnError: Middleware = {
     return req;
   },
   async onResponse(res) {
-    // TODO: ちゃんと実装する
     if (res.status === 401) {
-      await auth.signOut();
+      redirect('/auth/signout');
     }
 
     return res;

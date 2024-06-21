@@ -2,38 +2,63 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
 import Rating from '@/features/review/components/rating';
 import { Suspense } from 'react';
+import { Vendor } from '../types';
+import { calculateReviewsCountPercent } from '../utils';
 import { VendorReviewList } from './vendor-review-list';
 
 type Props = {
-  vendorId: string;
+  vendor: Vendor;
 };
 
-export async function VendorReviews({ vendorId }: Props) {
+export async function VendorReviews({ vendor }: Props) {
+  const avgReview = vendor.attributes.stars;
+  const reviewsCount = vendor.attributes.reviews_count;
+  const reviewsCountOnePercent = calculateReviewsCountPercent(
+    vendor.attributes.reviews_count_one,
+    reviewsCount
+  );
+  const reviewsCountTwoPercent = calculateReviewsCountPercent(
+    vendor.attributes.reviews_count_two,
+    reviewsCount
+  );
+  const reviewsCountThreePercent = calculateReviewsCountPercent(
+    vendor.attributes.reviews_count_three,
+    reviewsCount
+  );
+  const reviewsCountFourPercent = calculateReviewsCountPercent(
+    vendor.attributes.reviews_count_four,
+    reviewsCount
+  );
+  const reviewsCountFivePercent = calculateReviewsCountPercent(
+    vendor.attributes.reviews_count_five,
+    reviewsCount
+  );
+
   return (
     <div className="flex flex-col">
       <div className="flex">
         <div className="flex flex-col">
-          <Rating star={3.5} size={32} withLabel readOnly />
+          {avgReview != null && <Rating star={avgReview} size={32} withLabel readOnly />}
           <div>
             <div className="flex items-center justify-center">
-              <Progress value={56} className="mr-2 h-2 w-[100px]" />
-              <Rating star={5} readOnly parsent={56} size={22} />
+              <Progress value={reviewsCountFivePercent} className="mr-2 h-2 w-[100px]" />
+              <Rating star={5} readOnly parsent={reviewsCountFivePercent} size={22} />
             </div>
             <div className="flex items-center justify-center">
-              <Progress value={10} className="mr-2 h-2 w-[100px]" />
-              <Rating star={4} readOnly parsent={10} size={22} />
+              <Progress value={reviewsCountFourPercent} className="mr-2 h-2 w-[100px]" />
+              <Rating star={4} readOnly parsent={reviewsCountFourPercent} size={22} />
             </div>
             <div className="flex items-center justify-center">
-              <Progress value={9} className="mr-2 h-2 w-[100px]" />
-              <Rating star={3} readOnly parsent={9} size={22} />
+              <Progress value={reviewsCountThreePercent} className="mr-2 h-2 w-[100px]" />
+              <Rating star={3} readOnly parsent={reviewsCountThreePercent} size={22} />
             </div>
             <div className="flex items-center justify-center">
-              <Progress value={11} className="mr-2 h-2 w-[100px]" />
-              <Rating star={2} readOnly parsent={11} size={22} />
+              <Progress value={reviewsCountTwoPercent} className="mr-2 h-2 w-[100px]" />
+              <Rating star={2} readOnly parsent={reviewsCountTwoPercent} size={22} />
             </div>
             <div className="flex items-center justify-center">
-              <Progress value={4} className="mr-2 h-2 w-[100px]" />
-              <Rating star={1} readOnly parsent={4} size={22} />
+              <Progress value={reviewsCountOnePercent} className="mr-2 h-2 w-[100px]" />
+              <Rating star={1} readOnly parsent={reviewsCountOnePercent} size={22} />
             </div>
           </div>
         </div>
@@ -43,7 +68,7 @@ export async function VendorReviews({ vendorId }: Props) {
             <SortButton />
           </div> */}
           <Suspense fallback={<LoadingSpinner />}>
-            <VendorReviewList vendorId={vendorId} />
+            <VendorReviewList vendorId={vendor.id} />
           </Suspense>
         </div>
       </div>

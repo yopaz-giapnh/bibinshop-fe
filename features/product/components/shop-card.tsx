@@ -17,7 +17,7 @@ export async function ShopCard({ vendorId }: Props) {
       <div className="inline-flex items-center gap-[16px]">
         <Image
           className="h-[82px] w-[82px] object-cover"
-          alt="ショップ名"
+          alt={vendor.attributes.name || ''}
           width={82}
           height={82}
           src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
@@ -27,9 +27,11 @@ export async function ShopCard({ vendorId }: Props) {
             <Typography as="bold" element="p" className="text-text-100">
               {vendor?.attributes.name}
             </Typography>
-            <Rating star={5} size={12} readOnly />
+            {vendor.attributes.stars != null && (
+              <Rating star={vendor.attributes.stars} size={12} readOnly />
+            )}
             <Typography as="xSmall" element="p" className="text-text-80">
-              4.1 (188)
+              {`${vendor.attributes.stars} (${vendor.attributes.reviews_count})`}
             </Typography>
           </div>
           <Link href={`/vendors/${vendor.id}`}>

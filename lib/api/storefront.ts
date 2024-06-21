@@ -1975,6 +1975,13 @@ export interface components {
         address?: string | null;
         /** @example Example phone */
         phone?: string | null;
+        reviews_count_one?: number;
+        reviews_count_two?: number;
+        reviews_count_three?: number;
+        reviews_count_four?: number;
+        reviews_count_five?: number;
+        stars?: number;
+        reviews_count?: number;
       };
       relationships: {
         /** @description List of Product Properties */

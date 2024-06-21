@@ -35,7 +35,15 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
           <Typography as="title" element="h1" className="text-black-90">
             {vendor.attributes.name}
           </Typography>
-          <Rating star={4.5} size={16} withLabel readOnly count={34} />
+          {vendor.attributes.stars != null && (
+            <Rating
+              star={vendor.attributes.stars}
+              size={16}
+              withLabel
+              readOnly
+              count={vendor.attributes.reviews_count}
+            />
+          )}
         </div>
       </div>
     </div>

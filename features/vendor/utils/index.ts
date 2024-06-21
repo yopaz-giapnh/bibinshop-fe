@@ -34,3 +34,11 @@ export function getVendorImageUrl(image: VendorImageSchema | undefined) {
 
   return `${image.attributes?.styles?.[image.attributes?.styles?.length - 1]?.url}`;
 }
+
+export function calculateReviewsCountPercent(count: number | undefined, total: number | undefined) {
+  if (count == null || total == null || total === 0) {
+    return 0;
+  }
+
+  return (count / total) * 100;
+}

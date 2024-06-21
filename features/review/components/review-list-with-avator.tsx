@@ -21,7 +21,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
             <div className="ml-6">
               <div className="flex items-center gap-2">
                 <Typography as="boldSmall" element="p" className="text-charcoalGray">
-                  TODO: ニックネーム
+                  {review.user?.attributes.nickname ?? '匿名'}
                 </Typography>
                 <Typography as="small" element="p" className="text-charcoalGray">
                   •

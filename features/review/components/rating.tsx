@@ -121,7 +121,7 @@ export default function Rating({
           ({count})
         </Typography>
       ) : null}
-      {parsent && <>{parsent}%</>}
+      {parsent != null && <>{parsent}%</>}
     </div>
   );
 }

@@ -7,19 +7,23 @@ import { VendorProducts } from './vendor-products';
 import { VendorReviews } from './vendor-reviews';
 
 type VendorTabsProps = {
-  review: number;
   vendor: Vendor;
+  searchParams: {
+    [key: string]: string | string[] | undefined;
+  };
 };
 
 /**
  * ベンダーページタブコンポーネント
  * @returns JSX.Element
  */
-export default async function VendorTabs({ review, vendor }: VendorTabsProps) {
+export default async function VendorTabs({ vendor, searchParams }: VendorTabsProps) {
   const productsCount = vendor.relationships.products?.data?.length;
+  const avgReview = vendor.attributes.stars;
+
   const tabs = [
     { label: `商品(${productsCount}件)`, value: 'products' },
-    { label: `レビュー(${review}★)`, value: 'review' },
+    { label: `レビュー(${avgReview}★)`, value: 'review' },
     { label: 'ショップ情報', value: 'shopInfo' }
   ];
 
@@ -34,11 +38,11 @@ export default async function VendorTabs({ review, vendor }: VendorTabsProps) {
       </TabsList>
       <div className="relative top-[-2px] border-[1px]" />
       <TabsContent value="products">
-        <VendorProducts vendorId={vendor.id} />
+        <VendorProducts vendorId={vendor.id} searchParams={searchParams} />
       </TabsContent>
       <TabsContent value="review">
         <Suspense fallback={<LoadingSpinner />}>
-          <VendorReviews vendorId={vendor.id} />
+          <VendorReviews vendor={vendor} />
         </Suspense>
       </TabsContent>
       <TabsContent value="shopInfo">

@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/components/cart';
 import { Suspense } from 'react';
@@ -10,9 +11,7 @@ export default async function Page() {
           <Typography as="boldTitle" element="h1" className="mt-6 text-center text-text-80">
             カート
           </Typography>
-          <Suspense
-            fallback={<div className="flex flex-grow items-center justify-center">Loading...</div>}
-          >
+          <Suspense fallback={<LoadingSpinner />}>
             <Cart />
           </Suspense>
         </div>
