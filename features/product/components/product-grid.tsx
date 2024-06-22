@@ -2,25 +2,21 @@
 
 import { useIsPc } from '@/hooks/use-is-pc';
 import { useWindowSize } from '@/hooks/use-window-size';
-import clsx from 'clsx';
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { ProductCard } from './product-card';
 
 type Props = {
-  columns: number;
-} & { products: ComponentProps<typeof ProductCard>['product'][] } & Pick<
-    ComponentProps<'div'>,
-    'className'
-  >;
+  columns: 4 | 5;
+} & { products: ComponentProps<typeof ProductCard>['product'][] };
 
-export function ProductGrid({ columns, products, className }: Props) {
+export function ProductGrid({ columns, products }: Props) {
   const { width } = useWindowSize();
   const imageSize = width / columns;
   const spImageSize = width / 2;
   const isPc = useIsPc();
 
   return (
-    <div className={clsx('grid w-full gap-x-4 gap-y-6', className)}>
+    <Wrapper columns={columns}>
       {products.map((product) => {
         return (
           <ProductCard
@@ -30,6 +26,19 @@ export function ProductGrid({ columns, products, className }: Props) {
           />
         );
       })}
-    </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = ({ columns, children }: { columns: 4 | 5; children: ReactNode }) => {
+  switch (columns) {
+    case 4:
+      return (
+        <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-4">{children}</div>
+      );
+    case 5:
+      return (
+        <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-5">{children}</div>
+      );
+  }
+};

@@ -61,11 +61,7 @@ export async function ProductDetail({ product }: Props) {
         <Typography as="title" element="h1" className="text-black-90">
           おすすめ商品
         </Typography>
-        <ProductGrid
-          columns={5}
-          products={[...(await getProducts()).data]}
-          className="grid-cols-5 gap-x-2 gap-y-4"
-        />
+        <ProductGrid columns={5} products={[...(await getProducts()).data]} />
       </div>
     </div>
   );

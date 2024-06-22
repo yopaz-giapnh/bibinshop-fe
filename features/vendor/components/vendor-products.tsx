@@ -57,7 +57,7 @@ async function ProductsList({ vendorId, searchParams }: Props) {
 
   return (
     <>
-      <ProductGrid products={products.data} columns={4} className="mt-16 grid-cols-4" />
+      <ProductGrid products={products.data} columns={4} />
       {!!totalPages && <Pagination totalPages={totalPages} />}
     </>
   );

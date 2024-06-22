@@ -26,11 +26,7 @@ export async function ProductOverview({ title, seeMoreUrl, products, columns, to
           {title}
         </Typography>
       )}
-      <ProductGrid
-        products={products}
-        columns={columns}
-        className={`grid-cols-2 md:grid-cols-${columns}`}
-      />
+      <ProductGrid products={products} columns={columns} />
       {seeMoreUrl && <SeeMoreButton href={seeMoreUrl} arrow="right" />}
       {totalPages && <Pagination totalPages={totalPages} />}
       {!isSignedIn && (
