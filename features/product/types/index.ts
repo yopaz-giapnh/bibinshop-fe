@@ -3,6 +3,8 @@ import { components, operations, paths } from '@/lib/api/storefront';
 
 export type ProductSchema = components['schemas']['Product'];
 
+export type ProductPropertySchema = components['schemas']['ProductProperty'];
+
 export type TaxonSchema = components['schemas']['Taxon'];
 
 export type VariantSchema = components['schemas']['Variant'];
@@ -22,4 +24,5 @@ export type Product = ProductSchema & {
   images: ProductImage[];
   vendor?: VendorSchema;
   taxons: TaxonSchema[];
+  productProperties: ProductPropertySchema[];
 };

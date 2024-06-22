@@ -1,5 +1,11 @@
 import { LineItem } from '@/features/cart/types';
-import { ImageSchema, ProductSchema, TaxonSchema, VariantSchema } from '@/features/product/types';
+import {
+  ImageSchema,
+  ProductPropertySchema,
+  ProductSchema,
+  TaxonSchema,
+  VariantSchema
+} from '@/features/product/types';
 import { hasProperty } from '@/utils/type';
 
 export function isImageSchema(includedObject: unknown): includedObject is ImageSchema {
@@ -16,6 +22,12 @@ export function isTaxonSchema(includedObject: unknown): includedObject is TaxonS
 
 export function isVariantSchema(includedObject: unknown): includedObject is VariantSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'variant';
+}
+
+export function isProductPropertySchema(
+  includedObject: unknown
+): includedObject is ProductPropertySchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'product_property';
 }
 
 export function findImageFromLineItem({

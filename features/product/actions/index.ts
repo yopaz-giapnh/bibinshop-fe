@@ -4,13 +4,13 @@ import { apiClient } from '@/config/api-client';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
 import { ImageSchema, ProductIncludes, ProductSchema, ProductsListParameters } from '../types';
-import { isImageSchema, isTaxonSchema } from '../utils';
+import { isImageSchema, isProductPropertySchema, isTaxonSchema } from '../utils';
 
 export async function getProducts(params?: ProductsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
     params: {
       query: {
-        include: 'images,vendor',
+        include: 'images,vendor,product_properties',
         'filter[in_stock]': true,
         ...params?.query
       }
@@ -21,7 +21,7 @@ export async function getProducts(params?: ProductsListParameters) {
   });
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   const { data: products, included: productIncluded, meta } = data;
@@ -73,12 +73,14 @@ const reshapeProduct = ({
   const imageIncluded = productIncluded?.filter(isImageSchema);
   const vendorIncluded = productIncluded?.filter(isVendorSchema)?.[0];
   const taxons = productIncluded?.filter(isTaxonSchema) || [];
+  const productProperties = productIncluded?.filter(isProductPropertySchema) || [];
 
   return {
     ...product,
     images: reshapeImages(imageIncluded),
     vendor: vendorIncluded,
-    taxons
+    taxons,
+    productProperties
   };
 };
 
@@ -88,7 +90,7 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
       query: {
         'filter[taxons]': taxonIds.join(','),
         page: Number(page || 1),
-        include: 'images,vendor'
+        include: 'images,vendor,product_properties'
       }
     },
     fetch: (request) => {
@@ -97,7 +99,7 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
   });
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   const { data: products, included: productIncluded, meta } = data;
@@ -119,12 +121,16 @@ const reshapeProducts = ({
   productIncluded: ProductIncludes[] | undefined;
 }) => {
   const reshapedProducts = products.map((product) => {
-    const imageIncluded = productIncluded?.filter(isImageSchema);
+    const imageIncluded = (productIncluded?.filter(isImageSchema) || []).filter((i) =>
+      product.relationships.images?.data?.some((d) => d?.id === i.id)
+    );
+    const productProperties = (productIncluded?.filter(isProductPropertySchema) || []).filter((p) =>
+      product.relationships.product_properties?.data?.map((pp) => pp?.id).includes(p.id)
+    );
+
     return reshapeProduct({
       product,
-      productIncluded: imageIncluded?.filter((i) =>
-        product.relationships.images?.data?.some((d) => d?.id === i.id)
-      )
+      productIncluded: [...imageIncluded, ...productProperties]
     });
   });
 
