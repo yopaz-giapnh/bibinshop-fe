@@ -47,7 +47,16 @@ export function ProductCard({ product, imageSize }: Props) {
           width: imageSize
         }}
       />
-      <Typography as="xSmall" element="p" className="mt-1">
+      <Typography
+        as="xSmall"
+        element="p"
+        className="mt-1 overflow-hidden whitespace-normal break-words"
+        style={{
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 1
+        }}
+      >
         {product.attributes.name}
       </Typography>
       <div className="flex items-center gap-2">

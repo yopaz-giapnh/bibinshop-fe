@@ -93,7 +93,7 @@ export function CarouselBanner() {
           // NOTE: "pl-[426px]は、カテゴリーメニューと同じ位置に設定"
           <CarouselItem
             key={banner.id}
-            className="pl-[426px]"
+            className="md:pl-[426px]"
             style={{
               backgroundColor: banner.backgroundColor
             }}

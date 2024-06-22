@@ -1,22 +1,22 @@
 import { Logo } from '@/components/icons/logo';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getAccount } from '@/features/account/profile/actions';
-import { AlignJustify } from 'lucide-react';
+import { getTaxons } from '@/features/taxon/actions';
 import Link from 'next/link';
 import { ComponentProps, Suspense } from 'react';
 import { AccountMenu } from './account-menu';
 import { CartMenu } from './cart-menu';
 import { Search } from './search';
+import { SpSideBar } from './sp-side-bar';
 
-type Props = Pick<ComponentProps<typeof AccountMenu>, 'isSignedIn'>;
+type Props = Pick<ComponentProps<typeof AccountMenu>, 'isSignedIn'> & {
+  getTaxons: ReturnType<typeof getTaxons>;
+};
 
-export function Header({ isSignedIn }: Props) {
+export function Header({ isSignedIn, getTaxons }: Props) {
   return (
     <div className="z-50 flex h-[72px] items-center justify-between bg-white-base px-[8px] py-3">
-      {/* TODO: ハンバーガーメニュー開閉実装 */}
-      <button className="flex items-center justify-center md:hidden">
-        <AlignJustify className="h-6 w-6" />
-      </button>
+      <SpSideBar getTaxons={getTaxons} isSignedIn={isSignedIn} />
       <Link href="/" className="md:absolute md:left-[51px]" passHref>
         <Logo />
       </Link>
