@@ -24,7 +24,7 @@ export function Header({ isSignedIn, getTaxons }: Props) {
         <Search />
       </div>
       <div className="right-6 flex items-center justify-center gap-4 md:absolute">
-        <AccountMenu isSignedIn={isSignedIn} getAccount={getAccount()} />
+        <AccountMenu isSignedIn={isSignedIn} getAccount={isSignedIn ? getAccount() : null} />
         <Suspense fallback={<LoadingSpinner />}>
           <CartMenu />
         </Suspense>

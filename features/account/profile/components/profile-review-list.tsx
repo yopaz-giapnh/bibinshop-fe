@@ -5,18 +5,23 @@ import { getAccount } from '../actions';
 import ProfileReviewEmptyView from './profile-review-empty-view';
 import { ProfileReviewItem } from './profile-review-item';
 
+type Props = {
+  currentPage: number;
+};
+
 /**
  * ユーザープロフィールレビューリストコンポーネント
  * @returns JSX.Element
  */
-export default async function ProfileReviewList() {
+export default async function ProfileReviewList({ currentPage }: Props) {
   const account = await getAccount();
   const reviews = await getReviews({
     query: {
-      'filter[user_ids]': account.id
+      'filter[user_ids]': account.id,
+      page: currentPage
     }
   });
-  const reviewsEmpty = (reviews.meta.total_count ?? 0) === 0;
+  const reviewsEmpty = reviews.data.length === 0;
   const totalPages = reviews.meta.total_pages;
 
   return (
@@ -25,7 +30,7 @@ export default async function ProfileReviewList() {
         <ProfileReviewEmptyView />
       ) : (
         <div>
-          <div className="h-fit overflow-y-auto rounded-[6px] bg-white-base p-[24px]">
+          <div className="max-h-[calc(100vh_-_240px)]  overflow-y-auto rounded-[6px] bg-white-base p-[24px]">
             <Typography as="bold" element="p" className="mb-[16px] text-[20px] text-black-90">
               レビュー
             </Typography>

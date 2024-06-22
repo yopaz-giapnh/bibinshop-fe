@@ -2066,11 +2066,15 @@ export interface components {
      * }
      */
     ReviewPayload: {
+      product_id: string;
       rating: number;
       review?: string;
     };
     /** Review Includes */
-    ReviewIncludes: components['schemas']['User'] | components['schemas']['Product'];
+    ReviewIncludes:
+      | components['schemas']['User']
+      | components['schemas']['Product']
+      | components['schemas']['Image'];
     NotificationsList: components['schemas']['Notification'][];
     /**
      * Notification
@@ -2592,6 +2596,8 @@ export interface components {
      * @example 1,2
      */
     FilterByUserIds?: string;
+    /** @example a,b */
+    FilterBySlugs?: string;
     /**
      * @description Specify the fields you would like returned in the response body. [More information](https://jsonapi.org/format/#fetching-sparse-fieldsets).
      * @example firstname,lastname,country_name
@@ -3564,6 +3570,7 @@ export interface operations {
         'filter[ids]'?: components['parameters']['FilterByIds'];
         'filter[skus]'?: components['parameters']['FilterBySKUs'];
         'filter[vendor_ids]'?: components['parameters']['FilterByVendorIds'];
+        'filter[slugs]'?: components['parameters']['FilterBySlugs'];
         /**
          * @description Filter Products based on price (minimum, maximum range)
          * @example 10,100
@@ -4164,6 +4171,8 @@ export interface operations {
         'filter[product_ids]'?: components['parameters']['FilterByProductIds'];
         'filter[vendor_ids]'?: components['parameters']['FilterByVendorIds'];
         'filter[user_ids]'?: components['parameters']['FilterByUserIds'];
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
       };
     };
     responses: {
@@ -4184,7 +4193,7 @@ export interface operations {
     requestBody: {
       content: {
         'application/vnd.api+json': {
-          address?: components['schemas']['ReviewPayload'];
+          review?: components['schemas']['ReviewPayload'];
         };
       };
     };

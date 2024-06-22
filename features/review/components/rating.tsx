@@ -29,18 +29,20 @@ export default function Rating({
   const [isHovered, setIsHovered] = useState(false);
   const arr = [1, 2, 3, 4, 5];
 
-  const calcRes = (amount: number, event: React.MouseEvent<HTMLSpanElement>) => {
-    const target = event.currentTarget;
-    const rect = target.getBoundingClientRect();
-    const clickX = event.pageX;
-    const positionX = rect.left + window.pageXOffset;
-    const x = clickX - positionX;
-    const half = rect.width / 2;
-    let res = amount;
-    if (x < half) {
-      res = amount - 0.5;
-    }
-    return res;
+  const calcRes = (amount: number, _: React.MouseEvent<HTMLSpanElement>) => {
+    // TODO: BEが小数点対応していないため
+    return amount;
+    // const target = event.currentTarget;
+    // const rect = target.getBoundingClientRect();
+    // const clickX = event.pageX;
+    // const positionX = rect.left + window.pageXOffset;
+    // const x = clickX - positionX;
+    // const half = rect.width / 2;
+    // let res = amount;
+    // if (x < half) {
+    //   res = amount - 0.5;
+    // }
+    // return res;
   };
 
   const handleOnClick = (amount: number, event: React.MouseEvent<HTMLSpanElement>) => {

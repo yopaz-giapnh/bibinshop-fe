@@ -17,6 +17,7 @@ type OrderHistoryListProps = {
  */
 export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const isShipped = order.attributes.shipment_state === 'shipped';
+  const productSlugs = order.products.map((product) => product.attributes.slug);
 
   return (
     <div className="mt-[24px] rounded-[6px] border-[1px] bg-white-base shadow-sm">
@@ -41,7 +42,10 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
         </div>
         <div className="mr-[20px] mt-[12px]">
           {isShipped && (
-            <Link href={`/account/orders/${order.attributes.number}/write-review`} passHref>
+            <Link
+              href={`/account/orders/write-review?${productSlugs.map((slug) => `slug=${slug}`).join('&')}`}
+              passHref
+            >
               <button
                 type="button"
                 className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"

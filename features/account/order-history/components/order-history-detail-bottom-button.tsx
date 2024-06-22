@@ -16,6 +16,8 @@ type Props = {
 export default function OrderHistoryDetailBottomButton({ order }: Props) {
   const variantIds =
     order.relationships.variants?.data?.map((variant) => variant?.id).filter(isString) || [];
+  const productSlugs = order.products.map((product) => product.attributes.slug);
+  const isShipped = order.attributes.shipment_state === 'shipped';
 
   return (
     <div className="mr-[20px] mt-[24px] flex items-center justify-between">
@@ -25,18 +27,22 @@ export default function OrderHistoryDetailBottomButton({ order }: Props) {
         buttonIconStyle="h-[18px] w-[18px]"
         buttonTextStyle="ml-[8px] text-[14px] text-white-base"
       />
-      {/* TODO: 取得した注文履歴のidを渡してwrite-reviewに遷移する */}
-      <Link href="/account/orders/{order_number}/write-review" passHref>
-        <button
-          type="button"
-          className="ml-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+      {isShipped && (
+        <Link
+          href={`/account/orders/write-review?${productSlugs.map((slug) => `slug=${slug}`).join('&')}`}
+          passHref
         >
-          <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
-          <Typography as="bold" element="p" className="ml-[8px] text-[14px] text-bibinBlue-100">
-            レビューを書く
-          </Typography>
-        </button>
-      </Link>
+          <button
+            type="button"
+            className="ml-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+          >
+            <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
+            <Typography as="bold" element="p" className="ml-[8px] text-[14px] text-bibinBlue-100">
+              レビューを書く
+            </Typography>
+          </button>
+        </Link>
+      )}
     </div>
   );
 }

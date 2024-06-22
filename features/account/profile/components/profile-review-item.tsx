@@ -1,4 +1,5 @@
 import { Typography } from '@/components/ui/typography';
+import { getProductImageUrl } from '@/features/product/utils';
 import Rating from '@/features/review/components/rating';
 import { Review } from '@/features/review/types';
 import { formatDateString } from '@/utils/date';
@@ -29,14 +30,15 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
         {review.attributes.review}
       </Typography>
       <div className="mt-[32px] flex items-center rounded-[4px] bg-paleFrostBlue p-[16px]">
-        <Image
-          // TODO: 商品画像を取得する
-          src={'/placeholder-product-image.png'}
-          width={100}
-          height={100}
-          className="rounded-[100px]"
-          alt={''}
-        />
+        <div className="relative h-[100px] w-[100px]">
+          <Image
+            src={getProductImageUrl(review.images[0])}
+            layout="fill"
+            objectFit="cover"
+            alt={''}
+            className="rounded-[100px]"
+          />
+        </div>
         <div className="pl-[16px]">
           <Typography as="bold" element="p" className="text-[16px] text-black-90">
             {review.product?.attributes.name}

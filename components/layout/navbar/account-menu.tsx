@@ -19,7 +19,7 @@ import React, { use } from 'react';
 
 type Props = {
   isSignedIn: boolean;
-  getAccount: ReturnType<typeof getAccount>;
+  getAccount: ReturnType<typeof getAccount> | null;
 };
 
 const components: { title: string; href: string }[] = [
@@ -101,10 +101,10 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
 
 const UserName = React.forwardRef<
   React.ElementRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'> & { getAccount: ReturnType<typeof getAccount> }
+  React.ComponentPropsWithoutRef<'div'> & { getAccount: ReturnType<typeof getAccount> | null }
 >(({ className, getAccount, ...props }, ref) => {
-  const account = use(getAccount);
-  const { nickname } = account.attributes;
+  const account = getAccount ? use(getAccount) : null;
+  const nickname = account ? account.attributes.nickname : '';
 
   return (
     !!nickname && (

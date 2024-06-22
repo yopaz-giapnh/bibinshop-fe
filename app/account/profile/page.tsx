@@ -7,14 +7,22 @@ import { Suspense } from 'react';
  * ユーザープロフィールホーム画面
  * @returns JSX.Element
  */
-export default async function Page() {
+export default async function Page({
+  searchParams
+}: {
+  searchParams: {
+    [key: string]: string | string[] | undefined;
+  };
+}) {
+  const currentPage = Number(searchParams?.page) || 1;
+
   return (
     <div className="mx-auto flex h-screen w-full flex-col justify-center bg-paleFrostBlue p-[24px]">
       <Suspense fallback={<LoadingSpinner />}>
         <ProfileDetail />
       </Suspense>
       <Suspense fallback={<LoadingSpinner />}>
-        <ProfileReviewList />
+        <ProfileReviewList currentPage={currentPage} />
       </Suspense>
     </div>
   );

@@ -1,52 +1,28 @@
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
-import WriteReviewItem from './write-review-item';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { getProducts } from '@/features/product/actions';
+import { getReviews } from '@/features/review/actions';
+import { Suspense } from 'react';
+import WriteReviewForm from './write-review-form';
+
+type Props = {
+  slugs: string[];
+};
 
 /**
  * レビューを書く画面
  * @returns JSX.Element
  */
-export default function WriteReview() {
-  const reviewItems = [
-    {
-      title:
-        '【プレミアムUVケア】日焼け止め 50ml 4種 SPF50+PA++++/トーンアップ/サンクリーム/化粧下地/敏感肌/メイ...',
-      color: 'vol. 6',
-      rating: 0,
-      image: '/item-demo.png',
-      alt: '商品画像'
-    },
-    {
-      title:
-        '【プレミアムUVケア】日焼け止め 50ml 4種 SPF50+PA++++/トーンアップ/サンクリーム/化粧下地/敏感肌/メイ...',
-      color: 'vol. 6',
-      rating: 0,
-      image: '/item-demo.png',
-      alt: '商品画像'
-    },
-    {
-      title:
-        '【プレミアムUVケア】日焼け止め 50ml 4種 SPF50+PA++++/トーンアップ/サンクリーム/化粧下地/敏感肌/メイ...',
-      color: 'vol. 6',
-      rating: 0,
-      image: '/item-demo.png',
-      alt: '商品画像'
-    }
-  ];
+export default async function WriteReview({ slugs }: Props) {
+  const products = await getProducts({ query: { 'filter[slugs]': slugs.join(',') } });
+  const reviews = await getReviews({
+    query: { 'filter[product_ids]': products.data.map((product) => product.id).join(',') }
+  });
+
   return (
     <>
-      <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
-        レビューを書く
-      </Typography>
-      <div className="h-screen-calc w-full overflow-y-auto">
-        {reviewItems.map((item, index) => (
-          <WriteReviewItem key={index} item={item} />
-        ))}
-      </div>
-      {/* TODO: 自分のレビューリストに追加、updateするAPIを叩く */}
-      <Button type="submit" variant="lg" className="mt-[24px] w-[392px]">
-        提出
-      </Button>
+      <Suspense fallback={<LoadingSpinner />}>
+        <WriteReviewForm products={products.data} reviews={reviews.data} />
+      </Suspense>
     </>
   );
 }

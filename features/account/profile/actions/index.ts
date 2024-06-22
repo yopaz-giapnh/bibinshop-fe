@@ -1,18 +1,12 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
-import { isSignedIn } from '@/features/auth/utils/session';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import { UserAvatarSchema, UserSex } from '../types';
 import { isUserAvatarSchema } from '../utils';
 
 export async function getAccount() {
-  const signeIn = await isSignedIn();
-  if (!signeIn) {
-    return;
-  }
-
   const { data, error } = await apiClient.GET('/api/v2/storefront/account', {
     params: {
       query: {

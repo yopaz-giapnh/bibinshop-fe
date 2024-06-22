@@ -5,7 +5,7 @@ import { isAddressSchema, isShippmentSchema } from '@/features/address/utils';
 import { CartIncludes, CartSchema } from '@/features/cart/types';
 import { isLineItemIncludes } from '@/features/cart/utils';
 import { isCreditCardSchema, isPaymentSchema } from '@/features/payment/utils';
-import { isImageSchema, isVariantSchema } from '@/features/product/utils';
+import { isImageSchema, isProductSchema, isVariantSchema } from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { isNotFound } from '@/utils/api';
 import { TAGS } from '../constants';
@@ -18,7 +18,7 @@ export async function getAccountOrders({
     params: {
       query: {
         include:
-          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images',
+          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images,variants.product',
         'filter[shipment_state]': shipment_state,
         page
       }
@@ -29,7 +29,7 @@ export async function getAccountOrders({
   });
 
   if (error) {
-    throw new Error(error.error);
+    throw error;
   }
 
   const { data: orders, included, meta } = data;
@@ -50,6 +50,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
   const allShipments = included?.filter(isShippmentSchema) || [];
   const allVariants = included?.filter(isVariantSchema) || [];
   const allImages = included?.filter(isImageSchema) || [];
+  const allProducts = included?.filter(isProductSchema) || [];
 
   return orders.map((order) => {
     const lineItems = allLineItems.filter((item) =>
@@ -80,6 +81,9 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
           .flat()
           .includes(image.id)
       ) || [];
+    const products = allProducts.filter((product) =>
+      variants.map((variant) => variant.relationships.product?.data?.id).includes(product.id)
+    );
 
     return {
       ...order,
@@ -89,7 +93,8 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
       creditCard,
       shipment,
       variants,
-      images
+      images,
+      products
     };
   });
 }
@@ -104,7 +109,7 @@ export async function getOrder(order_number: string) {
         },
         query: {
           include:
-            'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images'
+            'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images,variants.product'
         }
       },
       fetch: (request) => {
@@ -130,6 +135,7 @@ export async function getOrder(order_number: string) {
   const shipment = included?.find(isShippmentSchema);
   const variants = included?.filter(isVariantSchema) || [];
   const images = included?.filter(isImageSchema) || [];
+  const products = included?.filter(isProductSchema) || [];
 
   return {
     ...order,
@@ -139,6 +145,7 @@ export async function getOrder(order_number: string) {
     creditCard,
     shipment,
     variants,
-    images
+    images,
+    products
   };
 }
