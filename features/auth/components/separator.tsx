@@ -1,3 +1,6 @@
-export function Separator() {
-  return <div className="h-[1px] w-[99px] bg-black-10" />;
+type Props = {
+  w?: string;
+};
+export function Separator({ w }: Props) {
+  return <div className={(w ? `w-${w}` : '') + ' h-[1px] w-[99px] bg-black-10'} />;
 }

@@ -36,9 +36,9 @@ export default function SignupForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(signUpByEmailAndPassword)}
-          className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 shadow-base"
+          className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 md:shadow-base"
         >
-          <Typography as="title" element="h1" className="text-center">
+          <Typography as="title" element="h1" className="text-center text-gray-800/80">
             新規会員登録
           </Typography>
 

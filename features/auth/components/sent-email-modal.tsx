@@ -1,4 +1,5 @@
 import BibiBubbleEmail from '@/assets/bibincban/bubble-email.svg';
+import EmailSentGif from '@/assets/bibincban/email_sent.gif';
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
@@ -56,7 +57,8 @@ export const SentEmailModal = forwardRef<SentEmailModalRef, { email: string }>((
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
-        <DialogContent className="flex w-[472px] flex-col items-center justify-center">
+        {/* PC */}
+        <DialogContent className="flex hidden w-[472px] flex-col items-center justify-center md:block">
           <BibiBubbleEmail />
           <Typography as="bold" element="p" className="mb-[24px] text-[20px] text-black-90">
             入力したアドレスにメールを送信しました
@@ -72,6 +74,36 @@ export const SentEmailModal = forwardRef<SentEmailModalRef, { email: string }>((
             size="lg"
             variant="lg"
             className={`w-4/5 ${isButtonDisabled ? 'bg-gray-400' : ''}`}
+            onClick={handleResendEmail}
+            disabled={isButtonDisabled}
+          >
+            {buttonText} {isButtonDisabled && `${count}s`}
+          </Button>
+        </DialogContent>
+        {/* Mobile */}
+        <DialogContent
+          className="flex w-11/12 flex-col items-center justify-center md:hidden"
+          hideCloseButton
+        >
+          <img src={EmailSentGif.src} />
+          <Typography
+            as="bold"
+            element="p"
+            className="mb-[24px] text-center text-[20px] text-black-90"
+          >
+            入力したアドレスにメールを送信しました
+          </Typography>
+          <Typography as="bold" element="p" className="mb-[24px] text-[14px] text-bibinGreen-100">
+            {email}
+          </Typography>
+          <Typography as="caption" element="p" className="mb-[24px] text-[14px] text-black-90">
+            入力いただいたメールアドレスに確認のメールが送信されます。メールが届いていない場合は、迷惑メールフォルダをご確認ください。
+          </Typography>
+          <Button
+            type="button"
+            size="lg"
+            variant="lg"
+            className={`w-11/12 ${isButtonDisabled ? 'bg-gray-400' : ''}`}
             onClick={handleResendEmail}
             disabled={isButtonDisabled}
           >

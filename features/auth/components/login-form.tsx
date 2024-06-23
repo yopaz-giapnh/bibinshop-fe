@@ -36,15 +36,36 @@ export default function LoginForm() {
 
   return (
     <div>
+      <div className="background bg-white-base md:hidden ">
+        <div className="ml-2 mr-2 mt-6 flex items-center justify-center gap-6">
+          <Separator w="1/5" />
+          <Typography as="body" element="p" className="w-3/5 text-center text-sm">
+            初めてbibinをご利用する方
+          </Typography>
+          <Separator w="1/5" />
+        </div>
+
+        <Link href="/signup" passHref className="flex justify-center">
+          <Button
+            type="button"
+            className="mt-6 w-5/6 border border-bibinBlue-100 bg-white-base text-bibinBlue-100"
+            size="lg"
+            variant="lg"
+          >
+            bibin会員登録
+          </Button>
+        </Link>
+      </div>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(async () => {
             await signInByEmailAndPassword(form.getValues());
             await associateCart();
           })}
-          className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 shadow-base"
+          className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 md:shadow-base"
         >
-          <Typography as="title" element="h1" className="text-center">
+          <Typography as="title" element="h1" className="text-center  text-gray-800/80">
             ログイン
           </Typography>
 
@@ -96,7 +117,7 @@ export default function LoginForm() {
         </form>
       </Form>
 
-      <div className="mt-6 flex items-center justify-center gap-6">
+      <div className="mt-6 flex hidden items-center justify-center gap-6 md:flex">
         <Separator />
         <Typography as="body" element="p">
           初めてbibinをご利用する方
@@ -104,7 +125,7 @@ export default function LoginForm() {
         <Separator />
       </div>
 
-      <Link href="/signup" passHref>
+      <Link href="/signup" passHref className="hidden md:flex">
         <Button
           type="button"
           className="mt-6 w-full border border-bibinBlue-100 bg-paleFrostBlue text-bibinBlue-100"
