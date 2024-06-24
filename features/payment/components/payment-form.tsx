@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { createCart, getCart } from '@/features/cart/actions';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -63,6 +64,12 @@ function Form({ onClose, iconLayout }: Props) {
     if (error) {
       setMessage(error.message ?? null);
     } else {
+      // HACK: カートがない場合、支払い方法が取得できない
+      const cart = await getCart();
+      if (!cart) {
+        await createCart();
+      }
+
       // NOTE: 支払い方法は、Stripeの1種類のみ
       const paymentMethods = await getPaymentMethods();
       const paymentMethodId = paymentMethods?.[0].id;
