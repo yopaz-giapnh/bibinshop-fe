@@ -29,7 +29,7 @@ export default async function VendorTabs({ vendor, searchParams }: VendorTabsPro
 
   return (
     <Tabs defaultValue={tabs[0].value} className="justify-center">
-      <TabsList className="bg-color-white w-full pb-4">
+      <TabsList className="bg-color-white my-2 w-full md:pb-4">
         {tabs.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value}>
             {tab.label}
@@ -46,7 +46,7 @@ export default async function VendorTabs({ vendor, searchParams }: VendorTabsPro
         </Suspense>
       </TabsContent>
       <TabsContent value="shopInfo">
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 flex w-full justify-center">
           <VendorInfo vendor={vendor} />
         </div>
       </TabsContent>

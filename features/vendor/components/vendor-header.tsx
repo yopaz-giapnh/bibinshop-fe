@@ -13,7 +13,7 @@ type VendorHeaderProps = {
  */
 export function VendorHeader({ vendor }: VendorHeaderProps) {
   return (
-    <div className=" my-6 flex flex-col">
+    <div className="flex flex-col md:my-6">
       {/* TODO: image のサイズどうするか */}
       <div className="relative h-[300px] w-full">
         <Image
@@ -24,14 +24,15 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
           alt={vendor.attributes.name || ''}
         />
       </div>
-      <div className="ml-4 flex items-center">
+      <div className="flex w-full items-center rounded border-2 md:ml-4">
         <Image
           src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
           width={82}
           height={82}
           alt={vendor.attributes.name || ''}
+          className="m-4"
         />
-        <div className="ml-3">
+        <div className="my-4">
           <Typography as="title" element="h1" className="text-black-90">
             {vendor.attributes.name}
           </Typography>

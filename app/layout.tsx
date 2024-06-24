@@ -25,7 +25,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <head />
       <body
         className={cn(
-          'min-h-screen overflow-x-hidden bg-background font-sans antialiased',
+          'h-screen overflow-x-hidden bg-background font-sans antialiased md:min-h-screen',
           notoSansJP.variable
         )}
       >

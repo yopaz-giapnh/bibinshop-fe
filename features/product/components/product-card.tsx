@@ -59,7 +59,12 @@ export function ProductCard({ product, imageSize }: Props) {
       >
         {product.attributes.name}
       </Typography>
-      <div className="flex items-center gap-2">
+      <div className="items-center gap-2 md:flex">
+        <Typography as="xSmall" element="p" className="text-black-70 md:hidden">
+          {/* TODO: 販売個数 */}
+          2,561 個販売
+        </Typography>
+
         <Typography as="bold" element="p" className="text-bibinBlue-100">
           {formatedPrice(product.attributes.price)}
         </Typography>
@@ -83,7 +88,7 @@ export function ProductCard({ product, imageSize }: Props) {
           </>
         )}
 
-        <Typography as="xSmall" element="p" className="text-black-70">
+        <Typography as="xSmall" element="p" className="hidden text-black-70 md:flex">
           {/* TODO: 販売個数 */}
           2,561 個販売
         </Typography>

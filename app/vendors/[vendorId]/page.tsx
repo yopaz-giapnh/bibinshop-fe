@@ -17,7 +17,7 @@ export default async function Page({
   if (!vendor) return notFound();
 
   return (
-    <div className="h-full w-full bg-white-base px-16 pb-6">
+    <div className="h-full w-full bg-white-base px-4 pb-6 md:px-16">
       <div className="pt-[128px]">
         <VendorHeader vendor={vendor} />
         <VendorTabs vendor={vendor} searchParams={searchParams} />
