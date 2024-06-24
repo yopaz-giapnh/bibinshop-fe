@@ -12,6 +12,7 @@ import Rating from '@/features/review/components/rating';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { Check, ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product } from '../types';
@@ -195,7 +196,9 @@ export function ProductCartForm({ product, getCart }: Props) {
         action={action}
       >
         <AddToCartButton />
-        <ShoppingCart className="h-8 w-8" />
+        <Link href="/cart">
+          <ShoppingCart className="h-8 w-8" />
+        </Link>
       </form>
     </>
   );

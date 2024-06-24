@@ -2,6 +2,7 @@ import { Typography } from '@/components/ui/typography';
 import Rating from '@/features/review/components/rating';
 import Image from 'next/image';
 import { Vendor } from '../types';
+import { getVendorBannerImageUrl } from '../utils';
 
 type VendorHeaderProps = {
   vendor: Vendor;
@@ -17,14 +18,14 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
       {/* TODO: image のサイズどうするか */}
       <div className="relative h-[300px] w-full">
         <Image
-          src={vendor.vendorBannerImage?.url || ''}
+          src={getVendorBannerImageUrl(vendor.vendorBannerImage)}
           className="mb-6"
           layout="fill"
           objectFit="cover"
           alt={vendor.attributes.name || ''}
         />
       </div>
-      <div className="flex w-full items-center rounded border-2 md:border-none">
+      <div className="mt-2 flex w-full items-center rounded border-2 md:mt-5 md:border-none">
         <Image
           src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
           width={82}

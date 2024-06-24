@@ -3,6 +3,7 @@ import {
   VendorBannerImage,
   VendorImage,
   VendorImageSchema,
+  VendorImageWithUrl,
   VendorIncludes,
   VendorSchema
 } from '../types';
@@ -41,4 +42,12 @@ export function calculateReviewsCountPercent(count: number | undefined, total: n
   }
 
   return (count / total) * 100;
+}
+
+export function getVendorBannerImageUrl(image: VendorImageWithUrl | undefined) {
+  if (!image) {
+    return '/placeholder-banner-image.png';
+  }
+
+  return `${image.attributes?.styles?.[image.attributes?.styles?.length - 1]?.url}`;
 }
