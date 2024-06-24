@@ -39,8 +39,15 @@ export function OrderOverview({ cart, canOrder, address, creditCard }: Props) {
           {cart.attributes.display_item_total}
         </Typography>
       </div>
-      <form action={action}>
-        <OrderConfirmButton disabled={!canOrder} />
+      <form action={action} className="flex">
+        <div className="w-1/2 md:hidden">
+          <Typography as="title" element="p" className="text-black-90">
+            {cart.attributes.display_item_total}
+          </Typography>
+        </div>
+        <div className="w-full md:w-full">
+          <OrderConfirmButton disabled={!canOrder} />
+        </div>
       </form>
     </>
   );

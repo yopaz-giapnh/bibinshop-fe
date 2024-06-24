@@ -11,24 +11,25 @@ type Props = {
 };
 
 export function AddressCard({ onEdit, onDelete, address }: Props) {
+  const { attributes } = address;
+
   return (
     <div className="flex w-full items-center rounded-[6px] border border-solid border-black-10 bg-white-base p-4 shadow-base">
       <div className="flex w-[calc(100%_-_93px)] flex-col justify-center gap-4">
         <div className="flex-none items-center justify-center gap-4">
           <Typography as="bold" element="p" className="text-text-90">
-            山田太郎
+            {attributes.lastname} {attributes.firstname}
           </Typography>
           <Typography as="caption" element="p" className="text-text-90">
-            071-1234-5678
+            {attributes.phone}
           </Typography>
         </div>
         <div className="w-2/3">
           <Typography as="body" element="p" className="text-text-90">
-            〒{address.attributes.zipcode}
+            〒{attributes.zipcode}
           </Typography>
           <Typography as="caption" element="p" className="text-text-90">
-            {address.attributes.state_name} {address.attributes.city} {address.attributes.address1}{' '}
-            {address.attributes.address2}
+            {attributes.state_name} {attributes.city} {attributes.address1} {attributes.address2}
           </Typography>
         </div>
       </div>

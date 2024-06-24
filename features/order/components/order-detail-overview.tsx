@@ -9,7 +9,7 @@ type Props = {
 export function OrderDetailOverview({ item }: Props) {
   return (
     <OrderDetailSection title="注文概要">
-      <div className="w-1/2">
+      <div className="w-full md:w-1/2">
         <div className="flex justify-between">
           <Typography as="caption" element="p" className="mt-[16px] text-[14px] text-black-90">
             {`商品金額(${item.attributes.item_count})`}

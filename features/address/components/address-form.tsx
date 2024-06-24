@@ -79,8 +79,8 @@ export function AddressForm({ buttonText = '保存する', address, onSaved }: P
 
   return (
     <Form {...form}>
-      <form action={action} className="flex flex-col items-center justify-center gap-4">
-        <div className="flex w-full gap-4">
+      <form action={action} className="flex flex-col gap-4 md:items-center md:justify-center">
+        <div className="w-full gap-4 md:flex">
           <FormField
             control={form.control}
             name="lastName"
@@ -109,7 +109,7 @@ export function AddressForm({ buttonText = '保存する', address, onSaved }: P
           />
         </div>
 
-        <div className="flex w-full gap-4">
+        <div className="w-full gap-4 md:flex">
           <FormField
             control={form.control}
             name="lastNameKana"
@@ -271,7 +271,7 @@ function SaveButton({ buttonText, disabled }: ButtonProps) {
   const { pending } = useFormStatus();
 
   return (
-    <Button size="lg" variant="lg" className="w-[392px]" disabled={pending || disabled}>
+    <Button size="lg" variant="lg" className="md:w-[392px]" disabled={pending || disabled}>
       {pending ? <LoadingSpinner /> : buttonText}
     </Button>
   );

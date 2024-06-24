@@ -27,7 +27,7 @@ export async function OrderDetail({ className, orderNumber }: Props) {
 
   return (
     <>
-      <div className={cn('w-5/6 overflow-y-auto', className)}>
+      <div className={cn('w-full overflow-y-auto', className)}>
         <OrderDetailSection title={getShipmentStateTitle(order)}>
           <Typography as="caption" element="p" className="mt-[16px] text-[16px] text-black-90">
             {`出荷日時：${formatDateString(order.shipment?.attributes.shipped_at)}`}

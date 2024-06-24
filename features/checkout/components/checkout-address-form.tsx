@@ -31,23 +31,25 @@ export function CheckoutAddressForm({ addresses }: Props) {
 
   return (
     <>
-      {hasAddress && (
-        <button
-          className="flex items-center"
-          onClick={() => {
-            addressFormModalRef.current?.open();
-          }}
-        >
-          <Typography as="linkSmall" element="h3" className="text-bibinBlue-100">
-            住所追加
-          </Typography>
-          <ChevronRight className="h-6 w-6 text-bibinBlue-100" />
-        </button>
-      )}
+      <div className="mb-2 flex justify-between ">
+        {hasAddress && (
+          <button
+            className="flex items-center"
+            onClick={() => {
+              addressFormModalRef.current?.open();
+            }}
+          >
+            <Typography as="linkSmall" element="h3" className="text-bibinBlue-100">
+              住所追加
+            </Typography>
+            <ChevronRight className="h-6 w-6 text-bibinBlue-100" />
+          </button>
+        )}
+      </div>
 
       {hasAddress ? (
         <>
-          <div className="w-[364px]">
+          <div className="w-full md:w-[364px]">
             <AddressCard
               onEdit={() => {
                 addressListModalRef.current?.open();

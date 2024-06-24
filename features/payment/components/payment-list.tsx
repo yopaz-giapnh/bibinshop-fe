@@ -28,11 +28,11 @@ export function PaymentList({ creditCards }: Props) {
         <label key={creditCard.id} className="flex cursor-pointer items-center">
           <div
             className={cn(
-              'flex w-[458px] items-center justify-between rounded-[6px] border border-solid border-black-10 p-4',
-              selectedValue === creditCard.id.toString() && 'border-bibinBlue-100'
+              'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
+              selectedValue === creditCard.id.toString() && 'border-bibinBlue-100 bg-[#F6FBFF]'
             )}
           >
-            <div className="flex items-center gap-4">
+            <div className="flex w-full items-center gap-4">
               <RadioGroupItem value={creditCard.id.toString()} />
               {getCreditCardBrandIcon(creditCard)}
               <Typography as="body" element="p" className="text-black-80">
@@ -45,7 +45,7 @@ export function PaymentList({ creditCards }: Props) {
             <ButtonWithIcon
               buttonProps={{
                 className:
-                  'w-[93px] h-10 flex justify-center px-2 py-4 border border-bibinBlue-100 rounded-[100px]',
+                  'w-[93px] h-10 flex justify-center mt-2 px-2 py-4 border border-bibinBlue-100 rounded-[100px]',
                 onClick: () => {
                   paymentDeleteModalRef.current?.open();
                 }

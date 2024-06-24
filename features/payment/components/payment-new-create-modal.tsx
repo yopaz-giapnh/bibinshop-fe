@@ -30,7 +30,7 @@ export const PaymentNewCreateModal = forwardRef<PaymentNewCreateModalRef>((_, re
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
-        <DialogContent className="flex w-[540px] flex-col items-center justify-center">
+        <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[540px]">
           <div className="flex flex-col items-center">
             <Typography as="bold" element="p" className="text-[20px] text-black-90">
               新しいカードを追加

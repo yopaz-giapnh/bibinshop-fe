@@ -52,12 +52,16 @@ export const PaymentDeleteModal = forwardRef<PaymentDeleteModalRef, PaymentDelet
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogDescription>
-          <DialogContent className="flex w-[540px] flex-col items-center justify-center">
+          <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[540px]">
             <div className="flex flex-col items-center">
-              <Typography as="bold" element="p" className="mb-[24px] text-[20px] text-black-90">
+              <Typography
+                as="bold"
+                element="p"
+                className="mb-[24px] text-center text-[20px] text-black-90"
+              >
                 このカードを削除してもよろしいですか？
               </Typography>
-              <div className="mb-[20px] flex w-[458px] items-center justify-between rounded-[6px] border border-solid border-black-10 p-4">
+              <div className="mb-[20px] flex w-full items-center justify-between rounded-[6px] border border-solid border-black-10 p-4 md:w-[458px]">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center">
                     {getCreditCardBrandIcon(creditCard)}

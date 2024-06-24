@@ -15,7 +15,7 @@ export default function OrderHistoryDetail({ order }: Props) {
         注文内容を表示
       </Typography>
       {!!order.attributes.number && (
-        <OrderDetail className="h-screen-calc" orderNumber={order.attributes.number} />
+        <OrderDetail className="h-screen-calc px-[36px]" orderNumber={order.attributes.number} />
       )}
       <OrderHistoryDetailBottomButton order={order} />
     </>

@@ -16,8 +16,8 @@ export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
     <RadioGroup defaultValue={addresses[0].id.toString()} className="flex flex-col">
       {addresses.map((address) => (
         <div key={address.id} className="flex items-center">
-          <div className="flex w-full items-center rounded-[6px] border border-solid border-black-10 p-4">
-            <div className="flex w-[calc(100%_-_194px)] items-center">
+          <div className="flex w-full flex-col items-center gap-2 rounded-[6px] border border-solid border-black-10 p-4 md:flex-row">
+            <div className="flex items-center md:w-[calc(100%_-_194px)]">
               <RadioGroupItem value={address.id.toString()} className="mr-4" />
               <div className="flex  flex-col justify-center gap-4">
                 <div className="flex-none items-center justify-center gap-4">

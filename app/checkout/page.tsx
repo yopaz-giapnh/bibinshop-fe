@@ -15,9 +15,9 @@ export default async function Page() {
 
   return (
     <div className="h-full w-full bg-paleFrostBlue">
-      <div className="mx-auto flex w-full flex-col items-center pb-[80px] pt-[128px]">
+      <div className="mx-auto flex w-full flex-col items-center pt-[128px] md:pb-[80px]">
         <div className="flex h-full w-full flex-col">
-          <Typography as="boldTitle" element="h1" className="mt-6 text-center text-text-80">
+          <Typography as="boldTitle" element="h1" className="text-center text-text-80 md:mt-6">
             購入手続き
           </Typography>
           <Suspense fallback={<LoadingSpinner />}>

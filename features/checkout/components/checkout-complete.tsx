@@ -16,7 +16,7 @@ export default async function CheckoutComplete() {
 
   return (
     <div className="h-full w-full bg-paleFrostBlue">
-      <div className="mx-auto flex w-full flex-col items-center pt-[24px]">
+      <div className="mx-auto flex w-full flex-col items-center px-2 pt-[24px] md:px-[272px]">
         <Typography as="boldTitle" element="h2" className="text-text-80">
           ご購入ありがとうございました
         </Typography>

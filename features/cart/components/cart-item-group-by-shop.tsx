@@ -7,7 +7,7 @@ import { findImageFromLineItem, getProductImageUrl } from '@/features/product/ut
 import Image from 'next/image';
 import { updateItemQuantity } from '../actions';
 import { LineItem, VendorTotal } from '../types';
-import { CartDeleteItemButton } from './cart-delete-item-button';
+import { CartDeleteItemButton, MobileCartDeleteItemButton } from './cart-delete-item-button';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
 
 type Shop = VendorTotal & {
@@ -60,7 +60,9 @@ export function CartItemGroupByShop({ shop }: Props) {
                 >
                   {lineItem.attributes.name}
                 </Typography>
-                <CartDeleteItemButton lineItemId={lineItem.id} className="md:hidden" />
+                <div className="md:hidden">
+                  <MobileCartDeleteItemButton lineItemId={lineItem.id} />
+                </div>
               </div>
               {/* TODO: プロパティ設定 */}
               {/* <Typography as="subCaption" element="h3" className="text-black-70">
@@ -83,8 +85,9 @@ export function CartItemGroupByShop({ shop }: Props) {
                       }}
                     />
                   )}
-
-                  <CartDeleteItemButton lineItemId={lineItem.id} className="hidden md:block" />
+                  <div className="hidden md:block">
+                    <CartDeleteItemButton lineItemId={lineItem.id} />
+                  </div>
                 </div>
               </div>
             </div>
