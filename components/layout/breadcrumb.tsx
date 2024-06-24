@@ -20,7 +20,7 @@ type Props = {
 
 export function Breadcrumb({ menus }: Props) {
   return (
-    <BreadcrumbComponent className="pb-[14px] pt-4">
+    <BreadcrumbComponent className="hidden pb-[14px] pt-4 md:block">
       <BreadcrumbList>
         {menus.map((menu, index) => {
           const isLast = index === menus.length - 1;

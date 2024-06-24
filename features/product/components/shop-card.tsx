@@ -13,7 +13,7 @@ export async function ShopCard({ vendorId }: Props) {
   const vendor = await getVendor(vendorId);
 
   return vendor ? (
-    <div className="flex w-fit gap-[10px] rounded-[6px] border border-black-10 bg-white-base p-4">
+    <div className="mt-[8px] flex w-full gap-[10px] rounded-[6px] border border-black-10 bg-white-base p-4 md:mt-0 md:w-fit">
       <div className="inline-flex items-center gap-[16px]">
         <Image
           className="h-[82px] w-[82px] object-cover"
@@ -23,7 +23,7 @@ export async function ShopCard({ vendorId }: Props) {
           src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
         />
         <div className="flex flex-col gap-[8px]">
-          <div className="inline-flex items-center justify-center gap-[8px] pr-7">
+          <div className="items-center justify-center gap-[8px] pr-7 md:inline-flex">
             <Typography as="bold" element="p" className="text-text-100">
               {vendor?.attributes.name}
             </Typography>

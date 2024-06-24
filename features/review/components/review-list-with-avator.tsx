@@ -9,7 +9,7 @@ type Props = {
 
 export function ReviewListWithAvator({ reviews }: Props) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-4 md:px-0">
       <div className="mt-4 flex flex-col gap-6">
         {reviews.map((review) => (
           <div key={review.id} className="flex w-full">
@@ -18,9 +18,18 @@ export function ReviewListWithAvator({ reviews }: Props) {
                 C
               </Typography>
             </div>
-            <div className="ml-6">
+            <div className="ml-3 md:ml-6">
               <div className="flex items-center gap-2">
-                <Typography as="boldSmall" element="p" className="text-charcoalGray">
+                <Typography
+                  as="boldSmall"
+                  element="p"
+                  className="max-w-[30px] overflow-hidden whitespace-normal break-words text-charcoalGray md:max-w-none"
+                  style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1
+                  }}
+                >
                   {review.user?.attributes.nickname ?? '匿名'}
                 </Typography>
                 <Typography as="small" element="p" className="text-charcoalGray">
@@ -41,7 +50,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
               <Typography
                 as="body"
                 element="p"
-                className="text-black-100 mt-4 max-w-[42vw] font-normal"
+                className="text-black-100 mt-4 max-w-[285px] font-normal md:max-w-[42vw]"
               >
                 {review.attributes.review}
               </Typography>

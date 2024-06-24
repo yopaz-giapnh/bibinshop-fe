@@ -8,8 +8,8 @@ type Props = {
 
 export function ProductDescription({ product }: Props) {
   return (
-    <div className="flex max-w-[46vw] flex-col">
-      <Typography as="boldTitle" element="h1">
+    <div className="flex flex-col px-4 md:max-w-[46vw] md:px-0">
+      <Typography as="boldTitle" element="h1" className="text-[20px] md:text-[24px]">
         商品情報
       </Typography>
 

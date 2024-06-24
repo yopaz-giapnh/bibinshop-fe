@@ -37,7 +37,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   ];
 
   return (
-    <div className="h-full w-full bg-white-base px-16 pb-6">
+    <div className="h-full w-full bg-white-base pb-6 md:px-16">
       <div className="pt-[128px]">
         <Breadcrumb menus={menus} />
         <ProductDetail product={product} />

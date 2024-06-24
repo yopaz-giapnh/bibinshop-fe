@@ -4,11 +4,14 @@ import { Share } from '@/components/icons/share';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { useToast } from '@/components/ui/use-toast';
 import { addItem, getCart } from '@/features/cart/actions';
 import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
 import Rating from '@/features/review/components/rating';
+import { useIsPc } from '@/hooks/use-is-pc';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
+import { Check, ShoppingCart } from 'lucide-react';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product } from '../types';
@@ -42,6 +45,8 @@ type Props = {
 export function ProductCartForm({ product, getCart }: Props) {
   // const isColorProperty = true;
   // const [selectedColor, setSelectedColor] = useState<Color>(colors[0]);
+  const isPc = useIsPc();
+  const { toast } = useToast();
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const [message, formAction] = useFormState(addItem, null);
@@ -51,10 +56,16 @@ export function ProductCartForm({ product, getCart }: Props) {
   });
 
   useEffect(() => {
-    if (message && message.success) {
+    if (message && message.success && isPc) {
       cartSheetRef.current?.open();
     }
-  }, [message]);
+    if (message && message.success && !isPc) {
+      toast({
+        title: 'カートに追加しました',
+        icon: <Check className="h-6 w-6" />
+      });
+    }
+  }, [message, isPc, toast]);
 
   const cartSheetRef = useRef<CartSheetRef>(null);
 
@@ -62,8 +73,17 @@ export function ProductCartForm({ product, getCart }: Props) {
     <>
       <form className="flex flex-col gap-5" action={action}>
         <div>
-          <div className="flex">
-            <Typography as="small" element="h1" className="text-text-80">
+          <div className="flex justify-between md:justify-normal">
+            <Typography
+              as="small"
+              element="h1"
+              className="max-w-[300px] overflow-hidden whitespace-normal break-words text-text-80 md:max-w-[500px]"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 3
+              }}
+            >
               {product.attributes.name}
             </Typography>
             <button className="ml-[17.5px]">
@@ -161,12 +181,22 @@ export function ProductCartForm({ product, getCart }: Props) {
           </div>
         </div>
 
-        <AddToCartButton />
+        <div className="hidden md:block">
+          <AddToCartButton />
+        </div>
       </form>
 
       <Suspense>
         <CartSheet ref={cartSheetRef} getCart={getCart} />
       </Suspense>
+
+      <form
+        className="fixed bottom-0 z-50 ml-[-16px] flex w-screen items-center justify-between border-t-[1px] bg-white-base px-4 py-2 md:hidden"
+        action={action}
+      >
+        <AddToCartButton />
+        <ShoppingCart className="h-8 w-8" />
+      </form>
     </>
   );
 }
@@ -175,7 +205,12 @@ function AddToCartButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button size="lg" variant="lg" className="w-[350px]" disabled={pending}>
+    <Button
+      size="lg"
+      variant="lg"
+      className="h-[45px] w-[calc(100vw-80px)] md:w-[350px]"
+      disabled={pending}
+    >
       {pending ? <LoadingSpinner /> : 'カートに追加'}
     </Button>
   );
