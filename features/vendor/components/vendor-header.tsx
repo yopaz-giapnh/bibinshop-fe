@@ -24,13 +24,13 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
           alt={vendor.attributes.name || ''}
         />
       </div>
-      <div className="flex w-full items-center rounded border-2 md:ml-4">
+      <div className="flex w-full items-center rounded border-2 md:border-none">
         <Image
           src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
           width={82}
           height={82}
           alt={vendor.attributes.name || ''}
-          className="m-4"
+          className="m-4 md:my-0 md:ml-0 md:mr-4"
         />
         <div className="my-4">
           <Typography as="title" element="h1" className="text-black-90">
