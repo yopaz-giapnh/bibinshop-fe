@@ -28,3 +28,7 @@ export function isPaymentSchema(includedObject: unknown): includedObject is Paym
 export function isShippmentSchema(includedObject: unknown): includedObject is ShippmentSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'shipment';
 }
+
+export function getDefaultCreditCard(creditCards: CreditCard[]): CreditCard {
+  return creditCards.find((creditCard) => !!creditCard.attributes.default) || creditCards[0];
+}

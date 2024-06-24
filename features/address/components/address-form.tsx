@@ -38,8 +38,8 @@ export function AddressForm({ buttonText = '保存する', address, onSaved }: P
     defaultValues: {
       lastName: address?.attributes.lastname || '',
       firstName: address?.attributes.firstname || '',
-      lastNameKana: address?.attributes.lastname || '',
-      firstNameKana: address?.attributes.firstname || '',
+      lastNameKana: address?.attributes.lastname_katakana || '',
+      firstNameKana: address?.attributes.firstname_katakana || '',
       postalCode: address?.attributes.zipcode || '',
       prefecture: address?.attributes.state_name || '',
       city: address?.attributes.city || '',

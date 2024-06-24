@@ -25,18 +25,18 @@ export function CartItemGroupByShop({ shop }: Props) {
 
   return (
     <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4 shadow-base">
-      <label key={shop.id.toString()} className="flex cursor-pointer items-center">
+      <div key={shop.id.toString()} className="flex cursor-pointer items-center">
         <Typography as="bold" element="h2" className="text-[14px] text-black-90 md:text-[18px]">
           {shop.attributes.name}
         </Typography>
-      </label>
+      </div>
 
       {shop.lineItems.map((lineItem) => {
         const key = `${shop.id}-${lineItem.id}`;
         const image = findImageFromLineItem({ lineItem, variants, images });
 
         return (
-          <label key={key} className="flex cursor-pointer items-center gap-4">
+          <div key={key} className="flex cursor-pointer items-center gap-4">
             <div className="relative h-[100px] w-[100px]">
               <Image
                 src={getProductImageUrl(image)}
@@ -91,7 +91,7 @@ export function CartItemGroupByShop({ shop }: Props) {
                 </div>
               </div>
             </div>
-          </label>
+          </div>
         );
       })}
     </div>

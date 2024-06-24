@@ -29,14 +29,14 @@ export async function CheckoutForm({ cart }: Props) {
             <Typography as="boldTitle" element="h2" className="text-text-80">
               1. お届け先住所
             </Typography>
-            {addresses && <CheckoutAddressForm addresses={addresses} />}
+            <CheckoutAddressForm addresses={addresses} />
           </div>
           <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
             <div className="flex flex-col justify-between gap-4">
               <Typography as="boldTitle" element="h2" className="text-text-80">
                 2. お支払い方法
               </Typography>
-              {hasAddress && creditCards && <CheckoutPaymentForm creditCards={creditCards} />}
+              {hasAddress && <CheckoutPaymentForm creditCards={creditCards} />}
             </div>
           </div>
           <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
@@ -51,12 +51,7 @@ export async function CheckoutForm({ cart }: Props) {
             <Typography as="title" element="p" className="text-text-100">
               注文概要
             </Typography>
-            <OrderOverview
-              cart={cart}
-              canOrder={canOrder}
-              address={addresses[0]}
-              creditCard={creditCards[0]}
-            />
+            <OrderOverview cart={cart} canOrder={canOrder} />
           </div>
           <div className="hidden md:flex">
             <PaymentMethod />

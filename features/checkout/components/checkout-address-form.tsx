@@ -1,6 +1,7 @@
 'use client';
 
 import { Typography } from '@/components/ui/typography';
+import { toast } from '@/components/ui/use-toast';
 import { AddressCard } from '@/features/address/components/address-card';
 import {
   AddressDeleteModal,
@@ -16,18 +17,28 @@ import {
   AddressListModalRef
 } from '@/features/address/components/address-list-modal';
 import { Address } from '@/features/address/types';
-import { ChevronRight } from 'lucide-react';
-import { useRef } from 'react';
+import { getDefaultAddress } from '@/features/address/utils';
+import { Check, ChevronRight } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { useCheckout } from './checkout-ctx';
 
 type Props = {
   addresses: Address[];
 };
 
 export function CheckoutAddressForm({ addresses }: Props) {
+  const { setActiveAddress, activeAddress } = useCheckout();
   const hasAddress = addresses.length > 0;
   const addressListModalRef = useRef<AddressListModalRef>(null);
   const addressFormModalRef = useRef<AddressFormModalRef>(null);
   const addressDeleteModalRef = useRef<AddressDeleteModalRef>(null);
+  const defaultAddress = getDefaultAddress(addresses);
+
+  useEffect(() => {
+    if (defaultAddress) {
+      setActiveAddress(defaultAddress);
+    }
+  }, [defaultAddress, setActiveAddress]);
 
   return (
     <>
@@ -47,18 +58,19 @@ export function CheckoutAddressForm({ addresses }: Props) {
         )}
       </div>
 
-      {hasAddress ? (
+      {hasAddress && activeAddress ? (
         <>
           <div className="w-full md:w-[364px]">
             <AddressCard
               onEdit={() => {
                 addressListModalRef.current?.open();
               }}
-              address={addresses[0]}
+              address={activeAddress}
             />
           </div>
           <AddressListModal
             ref={addressListModalRef}
+            activeAddress={activeAddress}
             addresses={addresses}
             onAdd={() => {
               addressFormModalRef.current?.open();
@@ -68,6 +80,13 @@ export function CheckoutAddressForm({ addresses }: Props) {
             }}
             onDelete={(values) => {
               addressDeleteModalRef.current?.open(values);
+            }}
+            onValueChange={(address) => {
+              setActiveAddress(address);
+              toast({
+                title: '住所が変更されました。',
+                icon: <Check className="h-6 w-6" />
+              });
             }}
           />
           <AddressFormModal ref={addressFormModalRef} />

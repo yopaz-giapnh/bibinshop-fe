@@ -36,7 +36,7 @@ export const PaymentNewCreateModal = forwardRef<PaymentNewCreateModalRef>((_, re
               新しいカードを追加
             </Typography>
           </div>
-          <PaymentForm onClose={() => setIsOpen(false)} />
+          <PaymentForm onClose={() => setIsOpen(false)} iconLayout="center" />
         </DialogContent>
       </DialogDescription>
     </Dialog>

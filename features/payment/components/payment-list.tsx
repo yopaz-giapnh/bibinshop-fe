@@ -3,24 +3,28 @@ import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { CreditCard } from '../types';
 import { getCreditCardBrandIcon } from '../utils';
 import { PaymentDeleteModal, PaymentDeleteModalRef } from './payment-delete-modal';
 
 type Props = {
+  activeCreditCard?: CreditCard | null;
   creditCards: CreditCard[];
+  onValueChange: (creditCard: CreditCard) => void;
 };
 
-export function PaymentList({ creditCards }: Props) {
-  const [selectedValue, setSelectedValue] = useState(creditCards[0].id.toString());
+export function PaymentList({ activeCreditCard, creditCards, onValueChange }: Props) {
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
 
   return (
     <RadioGroup
-      defaultValue={creditCards[0].id.toString()}
+      defaultValue={activeCreditCard?.id.toString()}
       onValueChange={(value) => {
-        setSelectedValue(value);
+        const creditCard = creditCards.find((creditCard) => creditCard.id === value);
+        if (creditCard) {
+          onValueChange(creditCard);
+        }
       }}
       className="flex flex-col"
     >
@@ -29,7 +33,7 @@ export function PaymentList({ creditCards }: Props) {
           <div
             className={cn(
               'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
-              selectedValue === creditCard.id.toString() && 'border-bibinBlue-100 bg-[#F6FBFF]'
+              activeCreditCard?.id === creditCard.id && 'border-bibinBlue-100 bg-[#F6FBFF]'
             )}
           >
             <div className="flex w-full items-center gap-4">

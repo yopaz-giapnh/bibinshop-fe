@@ -1,3 +1,5 @@
+'use client';
+
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -14,13 +16,15 @@ export type AddressListModalRef = {
 
 type Props = {
   onAdd: () => void;
-  onEdit: (values: Address) => void;
-  onDelete: (values: Address) => void;
+  onEdit: (address: Address) => void;
+  onDelete: (address: Address) => void;
+  onValueChange: (address: Address) => void;
+  activeAddress?: Address;
   addresses: Address[];
 };
 
 export const AddressListModal = forwardRef<AddressListModalRef, Props>(
-  ({ onAdd, onEdit, onDelete, addresses }, ref) => {
+  ({ onAdd, onEdit, onDelete, activeAddress, onValueChange, addresses }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -48,7 +52,16 @@ export const AddressListModal = forwardRef<AddressListModalRef, Props>(
 
           <ScrollArea>
             <div className="w-5/ max-h-[350px] md:w-[592px]">
-              <AddressSelection addresses={addresses} onEdit={onEdit} onDelete={onDelete} />
+              <AddressSelection
+                activeAddress={activeAddress}
+                addresses={addresses}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onValueChange={(address) => {
+                  onValueChange(address);
+                  setIsOpen(false);
+                }}
+              />
             </div>
           </ScrollArea>
         </DialogContent>

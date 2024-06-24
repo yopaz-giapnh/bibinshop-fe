@@ -3,22 +3,23 @@
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import { Address } from '@/features/address/types';
 import { Cart } from '@/features/cart/types';
-import { CreditCard } from '@/features/payment/types';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateCheckout } from '../actions';
+import { useCheckout } from './checkout-ctx';
 
 type Props = {
   cart: Cart;
   canOrder: boolean;
-  address: Address;
-  creditCard: CreditCard;
 };
 
-export function OrderOverview({ cart, canOrder, address, creditCard }: Props) {
-  const [state, formAction] = useFormState(updateCheckout, null);
-  const action = formAction.bind(null, { address, creditCard });
+export function OrderOverview({ cart, canOrder }: Props) {
+  const { activeAddress, activeCreditCard } = useCheckout();
+  const [, formAction] = useFormState(updateCheckout, null);
+  const action =
+    activeAddress && activeCreditCard
+      ? formAction.bind(null, { address: activeAddress, creditCard: activeCreditCard })
+      : undefined;
 
   return (
     <>

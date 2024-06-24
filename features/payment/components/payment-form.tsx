@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useState } from 'react';
@@ -23,9 +24,10 @@ import { FormValues, formSchema } from '../types';
 
 type Props = {
   onClose?: () => void;
+  iconLayout?: 'center' | 'left';
 };
 
-function Form({ onClose }: Props) {
+function Form({ onClose, iconLayout }: Props) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -73,12 +75,19 @@ function Form({ onClose }: Props) {
     }
 
     setIsLoading(false);
+    onClose?.();
   };
 
   return (
     <FormComponent {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="mx-auto w-full space-y-6">
-        <div className="mb-4 flex items-center justify-center space-x-4">
+        <div
+          className={cn(
+            'mb-4 flex items-center space-x-4',
+            iconLayout === 'center' && 'justify-center',
+            iconLayout === 'left' && 'justify-start'
+          )}
+        >
           <Visa />
           <MasterCard />
         </div>
@@ -109,8 +118,7 @@ function Form({ onClose }: Props) {
             size="lg"
             variant="lg"
             className="w-[392px]"
-            disabled={isLoading || !stripe}
-            onClick={onClose}
+            disabled={isLoading || !stripe || !form.formState.isValid}
           >
             {isLoading ? <LoadingSpinner /> : 'お支払い方法を保存する'}
           </Button>
@@ -120,10 +128,10 @@ function Form({ onClose }: Props) {
   );
 }
 
-export function PaymentForm({ onClose }: Props) {
+export function PaymentForm(props: Props) {
   return (
     <Elements stripe={stripePromise}>
-      <Form onClose={onClose} />
+      <Form {...props} />
     </Elements>
   );
 }

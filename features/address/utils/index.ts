@@ -9,3 +9,7 @@ export function isAddressSchema(includedObject: unknown): includedObject is Addr
 export function isShippmentSchema(includedObject: unknown): includedObject is ShippmentSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'shipment';
 }
+
+export function getDefaultAddress(addresses: Address[]): Address {
+  return addresses.find((address) => !!address.attributes.is_default) || addresses[0];
+}

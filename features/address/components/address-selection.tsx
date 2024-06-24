@@ -1,3 +1,5 @@
+'use client';
+
 import Edit from '@/assets/edit.svg';
 import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
@@ -6,14 +8,31 @@ import { Typography } from '@/components/ui/typography';
 import { Address } from '../types';
 
 type Props = {
+  activeAddress?: Address;
   addresses: Address[];
-  onEdit: (values: Address) => void;
-  onDelete: (values: Address) => void;
+  onEdit: (address: Address) => void;
+  onDelete: (address: Address) => void;
+  onValueChange: (address: Address) => void;
 };
 
-export function AddressSelection({ addresses, onEdit, onDelete }: Props) {
+export function AddressSelection({
+  activeAddress,
+  addresses,
+  onEdit,
+  onDelete,
+  onValueChange
+}: Props) {
   return (
-    <RadioGroup defaultValue={addresses[0].id.toString()} className="flex flex-col">
+    <RadioGroup
+      defaultValue={activeAddress?.id.toString()}
+      className="flex flex-col"
+      onValueChange={(value) => {
+        const address = addresses.find((address) => address.id === value);
+        if (address) {
+          onValueChange(address);
+        }
+      }}
+    >
       {addresses.map((address) => (
         <div key={address.id} className="flex items-center">
           <div className="flex w-full flex-col items-center gap-2 rounded-[6px] border border-solid border-black-10 p-4 md:flex-row">
