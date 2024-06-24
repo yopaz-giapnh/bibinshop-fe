@@ -13,12 +13,12 @@ export async function Cart() {
       <CartEmpty />
     </div>
   ) : (
-    <div className="mt-[22px] w-full px-20">
-      <div className="flex gap-6">
+    <div className="mt-[22px] w-full px-[8px] md:px-20">
+      <div className="gap-6 md:flex">
         <div className="flex-1">
           <CartItemList cart={cart} />
         </div>
-        <div className="flex w-[424px] flex-none flex-col gap-4">
+        <div className="flex flex-none flex-col gap-4 md:w-[424px]">
           <OrderOverview cart={cart} />
 
           {/* TODO: 本来は、支払い方法を取得できたほうがいい？ */}

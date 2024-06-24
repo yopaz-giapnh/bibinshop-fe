@@ -57,11 +57,12 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
       <NavigationMenu viewPortClassName="rounded-md border-black-20">
         <NavigationMenuList>
           <NavigationMenuItem>
+            {/* TODO:スタイル調整必要。そもそも MenuContent無くしたのであればリファクタ必要？ */}
             <NavigationMenuTrigger className="justify-start border-l border-r border-white-30 pl-[22px]">
               <div className="flex">
                 <UserRound className="h-6 w-6" />
                 <Link href="/account/profile">
-                  <Typography as="small" element="p" className="ml-1">
+                  <Typography as="small" element="p" className="ml-1 hidden md:block">
                     アカウント管理
                   </Typography>
                 </Link>
@@ -87,13 +88,11 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
       <Link href="/signup" passHref className="hidden md:block">
         <Button type="button">アカウント作成</Button>
       </Link>
-      <Link href="/login" passHref>
-        <div className="flex">
-          <UserRound className="h-6 w-6" />
-          <Typography as="small" element="p" className="ml-1 hidden md:block">
-            ログイン
-          </Typography>
-        </div>
+      <Link href="/login" passHref className="flex">
+        <UserRound className="h-6 w-6" />
+        <Typography as="small" element="p" className="ml-1 hidden md:block">
+          ログイン
+        </Typography>
       </Link>
     </>
   );

@@ -4,13 +4,14 @@ import { removeLineItem } from '../actions';
 
 type Props = {
   lineItemId: string;
+  className?: string;
 };
 
-export function CartDeleteItemButton({ lineItemId }: Props) {
+export function CartDeleteItemButton({ lineItemId, className }: Props) {
   const action = removeLineItem.bind(null, lineItemId);
 
   return (
-    <form action={action}>
+    <form action={action} className={className}>
       <ButtonWithIcon icon={<Trash />} text="削除" />
     </form>
   );

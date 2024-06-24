@@ -26,7 +26,7 @@ export function CartItemGroupByShop({ shop }: Props) {
   return (
     <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4 shadow-base">
       <label key={shop.id.toString()} className="flex cursor-pointer items-center">
-        <Typography as="bold" element="h2" className="text-black-90">
+        <Typography as="bold" element="h2" className="text-[14px] text-black-90 md:text-[18px]">
           {shop.attributes.name}
         </Typography>
       </label>
@@ -46,15 +46,27 @@ export function CartItemGroupByShop({ shop }: Props) {
                 alt={''}
               />
             </div>
-            <div className="flex flex-1 flex-col gap-1">
-              <Typography as="linkSmall" element="h3" className="text-black-90">
-                {lineItem.attributes.name}
-              </Typography>
+            <div className="flex h-[100px] flex-1 flex-col justify-between gap-1 md:justify-normal">
+              <div className="flex justify-between">
+                <Typography
+                  as="linkSmall"
+                  element="h3"
+                  className="max-w-[145px] overflow-hidden whitespace-normal  break-words text-black-90 md:max-w-none"
+                  style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2
+                  }}
+                >
+                  {lineItem.attributes.name}
+                </Typography>
+                <CartDeleteItemButton lineItemId={lineItem.id} className="md:hidden" />
+              </div>
               {/* TODO: プロパティ設定 */}
               {/* <Typography as="subCaption" element="h3" className="text-black-70">
                 色: vol. 6
               </Typography> */}
-              <div className="flex items-center justify-between">
+              <div className="mb-[10px] flex items-center justify-between md:mb-0">
                 <Typography as="linkSmall" element="h3" className="text-bibinBlue-100">
                   {lineItem.attributes.display_price}
                 </Typography>
@@ -72,7 +84,7 @@ export function CartItemGroupByShop({ shop }: Props) {
                     />
                   )}
 
-                  <CartDeleteItemButton lineItemId={lineItem.id} />
+                  <CartDeleteItemButton lineItemId={lineItem.id} className="hidden md:block" />
                 </div>
               </div>
             </div>

@@ -16,12 +16,16 @@ export function CartItemList({ cart }: Props) {
         key="all"
         className="flex cursor-pointer items-center rounded-[6px] bg-white-base px-[11px] py-[10px] shadow-base"
       >
-        <Typography as="boldTitle" element="h2" className="text-text-100">
+        <Typography
+          as="boldTitle"
+          element="h2"
+          className="text-[16px] text-text-100 md:text-[20px]"
+        >
           {`すべての商品 (${cart.attributes.item_count})`}
         </Typography>
       </label>
       <ScrollArea>
-        <div className="flex h-[calc(100vh_-_373px)] flex-col gap-4">
+        <div className="mb-[16px] flex flex-col gap-4 md:h-[calc(100vh_-_373px)]">
           {cart.vendorTotals.map((vendorTotal) => (
             <CartItemGroupByShop
               key={vendorTotal.id}
