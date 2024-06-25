@@ -29,10 +29,10 @@ import { Typography } from '@/components/ui/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PencilRuler } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { updateAccount } from '../actions';
+import { updateAccount, uploadAvatar } from '../actions';
 import { FormValues, User, UserSex, formSchema } from '../types';
 import { isUserSex } from '../utils';
 
@@ -82,18 +82,9 @@ export default function ProfileEditModal({ account }: Props) {
             <DialogHeader>
               <DialogTitle>プロフィール編集</DialogTitle>
             </DialogHeader>
-            <div className="relative flex">
-              <div className="relative h-[100px] w-[100px]">
-                <Image
-                  src={account.avatar?.url || '/placeholder-product-image.png'}
-                  className="rounded-[100px]"
-                  layout="fill"
-                  objectFit="cover"
-                  alt={''}
-                />
-              </div>
-              <RoundedWhiteCamera className="absolute bottom-0 right-0" />
-            </div>
+            <form className="relative flex" action={uploadAvatar}>
+              <AvatarUpload account={account} />
+            </form>
             <FormField
               control={form.control}
               name="nickname"
@@ -171,5 +162,50 @@ function SaveButton({ disabled }: { disabled: boolean }) {
     <Button type="submit" size="lg" variant="lg" className="w-full" disabled={pending || disabled}>
       {pending ? <LoadingSpinner /> : '保存'}
     </Button>
+  );
+}
+
+function AvatarUpload({ account }: { account: User }) {
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageFormButtonRef = useRef<HTMLButtonElement>(null);
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setAvatar(file);
+      imageFormButtonRef.current?.click();
+    }
+  };
+
+  return (
+    <>
+      <button className="relative h-[100px] w-[100px]" onClick={handleImageClick} type="button">
+        <Image
+          src={
+            avatar
+              ? URL.createObjectURL(avatar)
+              : account.avatar?.url || '/placeholder-product-image.png'
+          }
+          className="rounded-[100px]"
+          layout="fill"
+          objectFit="cover"
+          alt={''}
+        />
+      </button>
+      <RoundedWhiteCamera className="absolute bottom-0 right-0" />
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        className="hidden"
+        name="file"
+      />
+      <button ref={imageFormButtonRef} type="submit" className="hidden" />
+    </>
   );
 }

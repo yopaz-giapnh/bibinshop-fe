@@ -1,6 +1,7 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
+import { getAccessToken } from '@/features/auth/utils/session';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import { UserAvatarSchema, UserSex } from '../types';
@@ -73,3 +74,28 @@ const reshapeImage = (userAvatar: UserAvatarSchema | undefined) => {
     url: `${userAvatar.attributes?.styles?.[userAvatar.attributes?.styles?.length - 1]?.url}`
   };
 };
+
+export async function uploadAvatar(formData: FormData) {
+  try {
+    const file = formData.get('file');
+    if (!file) {
+      throw new Error('ファイルが選択されていません。');
+    }
+    const body = new FormData();
+    body.append('avatar', file);
+
+    // HACK: APIクライアントが正常に動作しないため、fetchを使って直接APIを呼び出す
+    const accessToken = await getAccessToken();
+    await fetch(process.env.NEXT_PUBLIC_API_URL + '/api/v2/storefront/account/avatars', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      method: 'POST',
+      body
+    });
+
+    revalidateTag(TAGS.account);
+  } catch (error) {
+    console.error('Avatar upload failed:', error);
+  }
+}
