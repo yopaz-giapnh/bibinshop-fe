@@ -1,6 +1,7 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
+import { getRootTaxons } from '@/features/taxon/actions';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
 import { ImageSchema, ProductIncludes, ProductSchema, ProductsListParameters } from '../types';
@@ -147,3 +148,9 @@ const reshapeImages = (imageProductIncluded: ImageSchema[] | undefined) => {
     url: `${image.attributes.styles?.[image.attributes.styles.length - 1].url}`
   }));
 };
+
+export async function getTaxonId(title: string) {
+  const taxons = await getRootTaxons(['name']);
+
+  return taxons.find((taxon) => taxon.attributes.name === title)?.id;
+}
