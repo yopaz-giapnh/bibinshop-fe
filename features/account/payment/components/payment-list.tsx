@@ -13,7 +13,7 @@ export default async function PaymentList() {
   const hasCreditCard = accountCreditCards.length > 0;
 
   return hasCreditCard ? (
-    <div className="mt-[24px] grid w-full grid-cols-2 gap-4 md:grid-cols-2">
+    <div className="mt-[16px] grid w-full gap-4 md:mt-[24px] md:grid-cols-2 ">
       {accountCreditCards.map((creditCard) => (
         <div key={creditCard.id}>
           <div className="relative flex w-full items-end rounded-[6px] border border-solid border-black-10 bg-white-base p-4 shadow-base">
@@ -28,7 +28,7 @@ export default async function PaymentList() {
                 {'末尾が****' + creditCard.attributes.last_digits + 'のクレジットカード'}
               </Typography>
             </div>
-            <div className="absolute bottom-4 right-4">
+            <div className="absolute right-4 top-4 md:bottom-4 md:top-auto">
               <PaymentDelete creditCard={creditCard} />
             </div>
           </div>

@@ -11,27 +11,51 @@ export function OrderDetailOverview({ item }: Props) {
     <OrderDetailSection title="注文概要">
       <div className="w-full md:w-1/2">
         <div className="flex justify-between">
-          <Typography as="caption" element="p" className="mt-[16px] text-[14px] text-black-90">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+          >
             {`商品金額(${item.attributes.item_count})`}
           </Typography>
-          <Typography as="caption" element="p" className="mt-[16px] text-[14px] text-black-90">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+          >
             {item.attributes.display_item_total}
           </Typography>
         </div>
         <div className="flex justify-between">
-          <Typography as="caption" element="p" className="mt-[16px] text-[14px] text-black-90">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+          >
             送料
           </Typography>
-          <Typography as="caption" element="p" className="mt-[16px] text-[14px] text-black-90">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+          >
             {item.attributes.display_ship_total}
           </Typography>
         </div>
-        <div className="mt-[16px] border-t-[1px]" />
+        <div className="mt-[8px] border-t-[1px] md:mt-[16px]" />
         <div className="flex items-center justify-between">
-          <Typography as="caption" element="p" className="mt-[16px] text-[14px] text-black-90">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+          >
             小計
           </Typography>
-          <Typography as="bold" element="p" className="mt-[16px] text-[20px] text-black-90">
+          <Typography
+            as="bold"
+            element="p"
+            className="mt-[8px] text-[20px] text-black-90 md:mt-[16px]"
+          >
             {item.attributes.display_total}
           </Typography>
         </div>

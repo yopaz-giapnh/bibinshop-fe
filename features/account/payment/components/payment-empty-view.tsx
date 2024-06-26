@@ -9,7 +9,11 @@ export default function PaymentEmptyView() {
   return (
     <div className="mt-[48px] flex flex-col items-center justify-center">
       <BibiVacantFace />
-      <Typography as="small" element="p" className="mt-[24px] text-[16px] text-black-90">
+      <Typography
+        as="small"
+        element="p"
+        className="mt-[24px] text-[14px] text-black-90 md:text-[16px]"
+      >
         カードが登録されていません
       </Typography>
     </div>

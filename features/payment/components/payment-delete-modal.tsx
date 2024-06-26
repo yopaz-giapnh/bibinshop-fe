@@ -53,22 +53,22 @@ export const PaymentDeleteModal = forwardRef<PaymentDeleteModalRef, PaymentDelet
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogDescription>
           <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[540px]">
-            <div className="flex flex-col items-center">
+            <div className="flex w-full flex-col items-center">
               <Typography
                 as="bold"
                 element="p"
-                className="mb-[24px] text-center text-[20px] text-black-90"
+                className="mb-[24px] text-center text-[16px] text-black-90 md:text-[20px] "
               >
                 このカードを削除してもよろしいですか？
               </Typography>
-              <div className="mb-[20px] flex w-full items-center justify-between rounded-[6px] border border-solid border-black-10 p-4 md:w-[458px]">
+              <div className="mb-[20px] flex  w-11/12 items-center justify-between rounded-[6px] border border-solid border-black-10 p-4 md:w-[458px]">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center">
                     {getCreditCardBrandIcon(creditCard)}
                     <Typography
                       as="bold"
                       element="p"
-                      className="ml-[8px] text-[20px] text-black-80"
+                      className="ml-[8px] text-[16px] text-black-80 md:text-[20px]"
                     >
                       {creditCard.attributes.cc_type + ' Card'}
                     </Typography>
@@ -78,11 +78,11 @@ export const PaymentDeleteModal = forwardRef<PaymentDeleteModalRef, PaymentDelet
                   </Typography>
                 </div>
               </div>
-              <div className="flex w-[348px] justify-between pt-[12px]">
+              <div className="flex w-full justify-around pt-[12px] md:w-[348px] md:justify-between">
                 <DialogClose asChild>
                   <button
                     type="submit"
-                    className="w-[170px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100"
+                    className="h-[48px] w-[136px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100 md:h-[55px] md:w-[170px]"
                   >
                     キャンセル
                   </button>
@@ -105,7 +105,12 @@ function DeleteButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button size="lg" variant="lg" className="w-[170px]" disabled={pending}>
+    <Button
+      size="lg"
+      variant="lg"
+      className="h-[48px] w-[150px] md:h-[55px] md:w-[170px]"
+      disabled={pending}
+    >
       {pending ? <LoadingSpinner /> : '削除'}
     </Button>
   );

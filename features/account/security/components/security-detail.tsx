@@ -1,6 +1,7 @@
 'use client';
 
 import Edit from '@/assets/edit.svg';
+import { BackButton } from '@/components/button/back-button';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
@@ -66,20 +67,36 @@ export default function SecurityDetail() {
 
   return (
     <>
-      <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
-        アカウントセキュリティ
-      </Typography>
-      <div className="w-full rounded-[6px] bg-white-base px-[48px] py-6 shadow-base">
-        <Typography as="bold" element="p" className="mb-[8px] text-[20px] text-black-90">
+      <div className="mb-[14px] flex w-full items-center justify-between md:mb-[24px] md:justify-center">
+        <BackButton />
+        <Typography
+          as="boldXLarge"
+          element="p"
+          className="text-[18px] text-black-90 md:text-[24px]"
+        >
+          アカウントセキュリティ
+        </Typography>
+        <div className="h-7 w-7" />
+      </div>
+      <div className="w-full rounded-[6px] bg-white-base px-[18px] py-3 shadow-base md:px-[48px] md:py-6">
+        <Typography
+          as="bold"
+          element="p"
+          className="mb-[8px] text-[16px] text-black-90 md:text-[20px]"
+        >
           メール
         </Typography>
-        <Typography as="small" element="p" className="text-[16px] text-black-90">
+        <Typography as="small" element="p" className="text-[14px] text-gray-700 md:text-[16px]">
           yamada_taro183@gmail.com
         </Typography>
         <div className="my-[16px] border-t-[1px]" />
         <div className="flex justify-between">
           <div>
-            <Typography as="bold" element="p" className="mb-[8px] text-[20px] text-black-90">
+            <Typography
+              as="bold"
+              element="p"
+              className="mb-[8px] text-[16px] text-black-90 md:text-[20px]"
+            >
               パスワードの変更
             </Typography>
             <Typography as="small" element="p" className="text-[16px] text-black-90">
@@ -102,7 +119,7 @@ export default function SecurityDetail() {
         {showEditPasswordForm && (
           <Form {...form}>
             <form action={action}>
-              <div className="mt-[16px] w-2/5">
+              <div className="mt-[16px] w-full md:w-2/5">
                 {/* TODO:BE側のRequest bodyに無いため一旦コメントアウト */}
                 {/* <TogglePasswordInput
                   label="古いパスワード"

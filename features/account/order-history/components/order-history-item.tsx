@@ -21,7 +21,7 @@ export default function OrderHistoryItem({ item, image, status }: OrderHistoryIt
 
   return (
     <div className="flex border-b-[1px] py-[16px]">
-      <div className="relative h-[100px] w-[100px]">
+      <div className="relative h-[80px] w-[80px] md:h-[100px] md:w-[100px]">
         <Image
           src={imageUrl || '/placeholder-product-image.png'}
           layout="fill"
@@ -31,7 +31,18 @@ export default function OrderHistoryItem({ item, image, status }: OrderHistoryIt
       </div>
       <div className="ml-[8px] flex flex-col justify-between">
         <div>
-          <Typography as="bold" element="p" className="text-[14px] text-black-90">
+          <Typography
+            as="bold"
+            element="p"
+            className="max-w-overflow-hidden max-w-[230px] whitespace-normal break-words text-[14px] text-black-90 md:max-w-full"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {item.attributes.name}
           </Typography>
           {/* TODO: /api/v2/storefront/account/ordersでdetail取得後追加 */}
@@ -42,8 +53,8 @@ export default function OrderHistoryItem({ item, image, status }: OrderHistoryIt
         {!isUnpaid && !!variantId && (
           <BuyAgainModal
             variantIds={[variantId]}
-            buttonStyle="w-[105px] h-[30px]"
-            buttonIconStyle="h-[16px] w-[16px]"
+            buttonStyle="md:w-[105px] md:h-[30px] w-[80px] h-[25px]"
+            buttonIconStyle="md:h-[16px] md:w-[16px] h-[12px] w-[12px]"
             buttonTextStyle="ml-[8px] text-[12px] text-white-base"
           />
         )}

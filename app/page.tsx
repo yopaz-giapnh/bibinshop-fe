@@ -1,14 +1,19 @@
+import { Menu } from '@/components/layout/navbar/menu';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { CarouselBanner } from '@/features/banner/components/carousel-banner';
 import { ProductOverviewByTaxon } from '@/features/product/components/product-overview-by-taxon';
+import { getTaxons } from '@/features/taxon/actions';
 import { TaxonList } from '@/features/taxon/components/taxon-list';
 import { Suspense } from 'react';
 
 export default async function Page() {
   return (
     <div className="h-full w-full">
-      <div className="mx-auto flex w-full flex-col pt-[126px]">
+      <div className="mx-auto flex w-full flex-col pt-[73px] md:pt-[126px]">
+        <div className="md:hidden">
+          <Menu getTaxons={getTaxons()} />
+        </div>
         <CarouselBanner />
         <Suspense fallback={<LoadingSpinner />}>
           <TaxonList />

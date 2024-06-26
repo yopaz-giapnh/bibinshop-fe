@@ -22,7 +22,12 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     //TODO: 横のサイズが大きいコンポーネントの影響で横スクロールが発生するため、overflow-x-hiddenを一旦入れてます
     <html lang="ja" suppressHydrationWarning className="overflow-x-hidden">
-      <head />
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </head>
       <body
         className={cn(
           'h-screen overflow-x-hidden bg-background font-sans antialiased md:min-h-screen',

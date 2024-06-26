@@ -12,8 +12,8 @@ export default async function ProfileDetail() {
   const reviewsCount = account.relationships.reviews?.data?.length || 0;
 
   return (
-    <div className="ml-[24px] flex items-center">
-      <div className="relative h-[100px] w-[100px]">
+    <div className="mr-[24px] flex items-center justify-between md:ml-[24px] md:mr-0 md:justify-normal">
+      <div className="relative h-[62px] w-[62px] md:h-[100px] md:w-[100px]">
         <Image
           src={account.avatar?.url || '/placeholder-product-image.png'}
           className="rounded-[100px]"
@@ -23,8 +23,19 @@ export default async function ProfileDetail() {
         />
       </div>
       <div className="ml-[24px]">
-        <Typography as="bold" element="p" className="text-[20px] text-black-90 ">
-          {account.attributes.nickname}
+        <Typography
+          as="bold"
+          element="p"
+          className="max-w-[110px] overflow-hidden whitespace-normal break-words text-[16px] text-black-90 md:max-w-full md:text-[20px]"
+          style={{
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 1,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+        >
+          {!account.attributes.nickname ? '名無し' : account.attributes.nickname}
         </Typography>
         <div className="flex items-baseline">
           <Typography as="bold" element="p" className="text-[16px] text-black-90">

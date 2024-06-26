@@ -11,6 +11,7 @@ import {
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
 import { useAuth } from '@/features/auth/hooks/use-auth';
+import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { NavigationMenuList } from '@radix-ui/react-navigation-menu';
 import { UserRound } from 'lucide-react';
@@ -22,54 +23,56 @@ type Props = {
   getAccount: ReturnType<typeof getAccount> | null;
 };
 
-const components: { title: string; href: string }[] = [
-  {
-    title: 'プロフィール',
-    href: '/account/profile'
-  },
-  {
-    title: '注文履歴',
-    href: '/account/order-history'
-  },
-  {
-    title: 'お届け先住所',
-    href: '/account/address'
-  },
-  {
-    title: 'お支払い方法',
-    href: '/account/payment'
-  },
-  {
-    title: 'アカウントセキュリティ',
-    href: '/account/security'
-  },
-  {
-    title: 'メッセージ',
-    href: '/account/message'
-  }
-];
-
 export function AccountMenu({ isSignedIn, getAccount }: Props) {
   const { signOut } = useAuth();
+  const isPc = useIsPc();
+
+  const components: { title: string; href: string }[] = [
+    {
+      title: 'プロフィール',
+      href: '/account/profile'
+    },
+    {
+      title: '注文履歴',
+      href: '/account/order-history'
+    },
+    {
+      title: 'お届け先住所',
+      href: '/account/address'
+    },
+    {
+      title: 'お支払い方法',
+      href: '/account/payment'
+    },
+    {
+      title: 'アカウントセキュリティ',
+      href: '/account/security'
+    },
+    {
+      title: 'メッセージ',
+      href: '/account/message'
+    }
+  ];
 
   return isSignedIn ? (
     <>
       <NavigationMenu viewPortClassName="rounded-md border-black-20">
         <NavigationMenuList>
           <NavigationMenuItem>
-            {/* TODO:スタイル調整必要。そもそも MenuContent無くしたのであればリファクタ必要？ */}
             <NavigationMenuTrigger className="justify-start border-l border-r border-white-30 pl-[22px]">
-              <div className="flex">
+              <Link
+                href={isPc ? '/account/profile' : '/account/sp-profile'}
+                className="flex"
+                passHref
+              >
                 <UserRound className="h-6 w-6" />
-                <Link href="/account/profile">
-                  <Typography as="small" element="p" className="ml-1 hidden md:block">
-                    アカウント管理
-                  </Typography>
-                </Link>
-              </div>
+                <Typography as="small" element="p" className="ml-1 hidden md:block">
+                  アカウント管理
+                </Typography>
+              </Link>
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[201px] md:grid-cols-1">
+              <ul className="hidden w-[201px] md:block md:grid-cols-1">
                 <UserName getAccount={getAccount} />
                 <Separator />
                 {components.map((component) => (

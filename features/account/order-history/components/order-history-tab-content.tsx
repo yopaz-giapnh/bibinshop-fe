@@ -19,11 +19,11 @@ export async function OrderHistoryTabContent({ status, currentPage }: OrderHisto
 
   return (
     <div>
-      <div className="h-screen-calc overflow-y-auto">
+      <div className="h-screen-calc overflow-y-auto overflow-x-hidden">
         {isEmpty ? (
           <OrderHistoryEmptyView status={status} />
         ) : (
-          <div>
+          <div className="w-full">
             {orders.data.map((order) => (
               <OrderHistoryList key={order.id} order={order} />
             ))}

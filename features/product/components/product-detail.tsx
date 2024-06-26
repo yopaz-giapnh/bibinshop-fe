@@ -1,3 +1,4 @@
+import { BackButton } from '@/components/button/back-button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
@@ -24,8 +25,9 @@ export async function ProductDetail({ product }: Props) {
       <div className="md:flex">
         <div className="flex flex-col gap-3 md:gap-6">
           <div className="flex items-center gap-2 px-4 md:hidden">
+            <BackButton />
             <Store className="h-[20px] w-[20px]" />
-            <Typography as="bold" element="p">
+            <Typography as="bold" element="p" className="text-[14px] md:text-[20px]">
               {product.vendor?.attributes.name}
             </Typography>
           </div>

@@ -78,9 +78,9 @@ export default function ProfileEditModal({ account }: Props) {
           </button>
         </DialogTrigger>
         <Form {...form}>
-          <DialogContent className="flex w-[640px] flex-col items-center justify-center">
+          <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[640px]">
             <DialogHeader>
-              <DialogTitle>プロフィール編集</DialogTitle>
+              <DialogTitle className="text-[16px] md:text-[20px]">プロフィール編集</DialogTitle>
             </DialogHeader>
             <form className="relative flex" action={uploadAvatar}>
               <AvatarUpload account={account} />
@@ -109,9 +109,9 @@ export default function ProfileEditModal({ account }: Props) {
                     setSelectedSex(value);
                   }
                 }}
-                className="mt-[4px] flex"
+                className="mt-[4px] flex justify-between md:justify-normal"
               >
-                <div className="mr-[40px] flex items-center">
+                <div className="flex items-center md:mr-[40px]">
                   <RadioGroupItem value="female" id="r1" className=" focus" />
                   <Typography
                     as="xSmall"
@@ -121,7 +121,7 @@ export default function ProfileEditModal({ account }: Props) {
                     女性
                   </Typography>
                 </div>
-                <div className="mr-[40px] flex items-center">
+                <div className="flex items-center md:mr-[40px]">
                   <RadioGroupItem value="male" id="r2" />
                   <Typography
                     as="xSmall"
@@ -159,7 +159,13 @@ function SaveButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" size="lg" variant="lg" className="w-full" disabled={pending || disabled}>
+    <Button
+      type="submit"
+      size="lg"
+      variant="lg"
+      className="h-[48px] w-full md:h-[55px]"
+      disabled={pending || disabled}
+    >
       {pending ? <LoadingSpinner /> : '保存'}
     </Button>
   );

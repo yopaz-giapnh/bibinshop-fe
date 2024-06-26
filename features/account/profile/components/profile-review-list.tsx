@@ -25,12 +25,12 @@ export default async function ProfileReviewList({ currentPage }: Props) {
   const totalPages = reviews.meta.total_pages;
 
   return (
-    <div className="mx-auto flex h-screen w-full flex-col p-[24px]">
+    <div className="mx-auto flex h-screen w-full flex-col pt-[16px] md:p-[24px] md:pt-0">
       {reviewsEmpty ? (
         <ProfileReviewEmptyView />
       ) : (
         <div>
-          <div className="max-h-[calc(100vh_-_240px)]  overflow-y-auto rounded-[6px] bg-white-base p-[24px]">
+          <div className="max-h-[calc(100vh_-_240px)] overflow-y-auto rounded-[6px] bg-white-base p-[16px] md:p-[24px]">
             <Typography as="bold" element="p" className="mb-[16px] text-[20px] text-black-90">
               レビュー
             </Typography>

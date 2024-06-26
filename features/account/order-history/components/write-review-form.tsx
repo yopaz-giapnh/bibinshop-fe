@@ -114,7 +114,7 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
     <Button
       type="submit"
       variant="lg"
-      className="mt-[24px] w-[392px]"
+      className="m-[16px] mt-[24px] w-full md:w-[392px]"
       disabled={disabled || pending}
     >
       {pending ? <LoadingSpinner /> : '提出'}

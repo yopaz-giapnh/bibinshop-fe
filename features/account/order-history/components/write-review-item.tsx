@@ -35,8 +35,19 @@ export default function WriteReviewItem({ product, review, onReviewStar, onRevie
             alt={''}
           />
         </div>
-        <div className="ml-[8px]">
-          <Typography as="bold" element="p" className="text-[14px] text-black-90">
+        <div className="ml-[16px] md:ml-[8px]">
+          <Typography
+            as="bold"
+            element="p"
+            className="max-w-[200px] overflow-hidden whitespace-normal break-words text-[14px] text-black-90 md:max-w-full"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 4,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {product?.attributes.name}
           </Typography>
           {/* TODO: 色は api が実装されてから */}
@@ -45,8 +56,12 @@ export default function WriteReviewItem({ product, review, onReviewStar, onRevie
           </Typography> */}
         </div>
       </div>
-      <div className="mt-[16px] flex items-center">
-        <Typography as="boldSmall" element="p" className="pr-[16px] text-[20px] text-black-90">
+      <div className="mt-[12px] flex items-center md:mt-[16px]">
+        <Typography
+          as="boldSmall"
+          element="p"
+          className="pr-[16px] text-[16px] text-black-90 md:text-[20px]"
+        >
           評価
         </Typography>
         <Rating
@@ -55,11 +70,15 @@ export default function WriteReviewItem({ product, review, onReviewStar, onRevie
           onClick={(star) => onReviewStar({ productId: product.id, star })}
         />
       </div>
-      <Typography as="small" element="p" className="mt-[14px] text-[14px] text-black-90">
+      <Typography
+        as="small"
+        element="p"
+        className="mt-[12px] text-[14px] text-black-90 md:mt-[14px]"
+      >
         レビュー
       </Typography>
       <Textarea
-        className="mt-[8px] h-[160px]"
+        className="mt-[8px] h-[160px] bg-gray-50"
         placeholder="レビュー"
         defaultValue={review?.attributes.review || ''}
         onChange={(event) => {

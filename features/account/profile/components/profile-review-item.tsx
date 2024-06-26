@@ -26,10 +26,14 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
       {/* <Typography as="bold" element="p" className="mt-[8px] text-[14px] text-black-90">
         色： TODO: プロパティ
       </Typography> */}
-      <Typography as="xSmall" element="p" className="mt-[16px] text-[16px] text-black-90">
+      <Typography
+        as="xSmall"
+        element="p"
+        className="mt-[16px] text-[14px] text-black-90 md:text-[16px]"
+      >
         {review.attributes.review}
       </Typography>
-      <div className="mt-[32px] flex items-center rounded-[4px] bg-paleFrostBlue p-[16px]">
+      <div className="mt-[8px] flex items-center rounded-[4px] bg-paleFrostBlue p-[16px] md:mt-[32px]">
         <div className="relative h-[100px] w-[100px]">
           <Image
             src={getProductImageUrl(review.images[0])}
@@ -40,7 +44,7 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
           />
         </div>
         <div className="pl-[16px]">
-          <Typography as="bold" element="p" className="text-[16px] text-black-90">
+          <Typography as="bold" element="p" className="text-[14px] text-black-90 md:text-[16px]">
             {review.product?.attributes.name}
           </Typography>
           <Typography as="bold" element="p" className="mt-[10px] text-[14px] text-bibinBlue-100">

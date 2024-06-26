@@ -20,10 +20,12 @@ export default function OrderHistoryDetailBottomButton({ order }: Props) {
   const isShipped = order.attributes.shipment_state === 'shipped';
 
   return (
-    <div className="mr-[20px] mt-[24px] flex items-center justify-between">
+    <div
+      className={`mb-[24px] mt-[16px] flex w-full items-center ${isShipped ? 'justify-between' : 'justify-center'} md:w-fit`}
+    >
       <BuyAgainModal
         variantIds={variantIds}
-        buttonStyle="w-[222px]"
+        buttonStyle="md:w-[222px] w-[160px]"
         buttonIconStyle="h-[18px] w-[18px]"
         buttonTextStyle="ml-[8px] text-[14px] text-white-base"
       />
@@ -34,7 +36,7 @@ export default function OrderHistoryDetailBottomButton({ order }: Props) {
         >
           <button
             type="button"
-            className="ml-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+            className="ml-[8px] flex w-[160px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px] md:w-[222px]"
           >
             <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
             <Typography as="bold" element="p" className="ml-[8px] text-[14px] text-bibinBlue-100">

@@ -32,13 +32,21 @@ export async function OrderDetail({ className, orderNumber }: Props) {
       <div className={cn('w-full overflow-y-auto', className)}>
         {shippedAt && (
           <OrderDetailSection title={getShipmentStateTitle(order)}>
-            <Typography as="caption" element="p" className="mt-[16px] text-[16px] text-black-90">
+            <Typography
+              as="caption"
+              element="p"
+              className="mt-[8px] text-[14px] text-black-90 md:mt-[16px] md:text-[16px]"
+            >
               {`出荷日時：${formatDateString(shippedAt)}`}
             </Typography>
           </OrderDetailSection>
         )}
         <OrderDetailSection title={`注文番号：${order.attributes.number}`}>
-          <Typography as="caption" element="p" className="mt-[16px] text-[16px] text-black-90">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px] md:text-[16px]"
+          >
             {`注文時間：${formatDateString(order.attributes.created_at)}`}
           </Typography>
         </OrderDetailSection>

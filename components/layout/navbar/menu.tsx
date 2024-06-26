@@ -28,7 +28,7 @@ export function Menu({ getTaxons }: Props) {
   const pathname = usePathname();
 
   return (
-    <div className="z-50 flex h-[44px] items-center bg-white-base md:h-[56px] md:bg-bibinBlue-100">
+    <div className="flex h-[44px] items-center bg-white-base md:h-[56px] md:bg-bibinBlue-100">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

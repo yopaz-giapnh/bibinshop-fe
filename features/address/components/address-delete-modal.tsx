@@ -44,14 +44,14 @@ export const AddressDeleteModal = forwardRef<AddressDeleteModalRef>((_, ref) => 
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
         <DialogContent className="flex w-11/12 flex-col items-center justify-center gap-6">
-          <Typography as="title" element="h2" className="text-center">
+          <Typography as="title" element="h2" className="text-center text-[16px] md:text-[24px]">
             この住所を削除してもよろしいですか?
           </Typography>
           {values && <AddressCard address={values} />}
 
           <div className="flex gap-2">
             <Button
-              className="w-[150px] border border-bibinBlue-100 bg-white-base md:w-[200px]"
+              className="h-[48px] w-[150px] border border-bibinBlue-100 bg-white-base md:h-[55px] md:w-[200px]"
               size="lg"
               variant="lg"
               onClick={onClose}
@@ -77,7 +77,12 @@ function DeleteButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button size="lg" variant="lg" className="w-[150px] md:w-[200px]" disabled={pending}>
+    <Button
+      size="lg"
+      variant="lg"
+      className="h-[48px] w-[150px] md:h-[55px] md:w-[200px]"
+      disabled={pending}
+    >
       {pending ? <LoadingSpinner /> : '削除'}
     </Button>
   );

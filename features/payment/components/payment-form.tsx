@@ -14,6 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { createCart, getCart } from '@/features/cart/actions';
+import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -31,6 +32,7 @@ type Props = {
 function Form({ onClose, iconLayout }: Props) {
   const stripe = useStripe();
   const elements = useElements();
+  const isPc = useIsPc();
 
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -119,15 +121,23 @@ function Form({ onClose, iconLayout }: Props) {
           {message && <p className="mt-2 text-sm font-medium text-destructive">{message}</p>}
         </div>
 
-        <div className="flex w-full justify-center">
+        <div className="flex w-full justify-between md:justify-center">
+          <button
+            type="submit"
+            onClick={onClose}
+            className="h-[48px] w-[150px] rounded-[100px] border-[1px] border-bibinBlue-100 font-semibold text-bibinBlue-100 md:hidden md:w-[170px]"
+          >
+            キャンセル
+          </button>
           <Button
             type="submit"
             size="lg"
             variant="lg"
-            className="w-[392px]"
             disabled={isLoading || !stripe || !form.formState.isValid}
+            className="h-[48px] w-[150px] md:h-[55px] md:w-[392px]"
+            onClick={onClose}
           >
-            {isLoading ? <LoadingSpinner /> : 'お支払い方法を保存する'}
+            {isLoading ? <LoadingSpinner /> : isPc ? 'お支払い方法を保存する' : '保存'}
           </Button>
         </div>
       </form>

@@ -1,3 +1,4 @@
+import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
 import WriteReview from '@/features/account/order-history/components/write-review';
 import { Suspense } from 'react';
@@ -16,10 +17,18 @@ export default async function Page({
     : [searchParams?.slug || ''].filter(Boolean);
 
   return (
-    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
-      <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
-        レビューを書く
-      </Typography>
+    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">
+      <div className="mb-[16px] flex w-full items-center justify-between md:mb-[24px] md:justify-center ">
+        <BackButton />
+        <Typography
+          as="boldXLarge"
+          element="p"
+          className="text-[16px] text-black-90 md:text-[24px]"
+        >
+          レビューを書く
+        </Typography>
+        <div className="h-7 w-7" />
+      </div>
       <Suspense>
         <WriteReview slugs={slugs} />
       </Suspense>

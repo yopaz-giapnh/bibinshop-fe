@@ -1,5 +1,6 @@
 import { Typography } from '@/components/ui/typography';
 
+import { BackButton } from '@/components/button/back-button';
 import { Order } from '@/features/order/types';
 import { OrderDetail } from '../../../order/components/order-detail';
 import OrderHistoryDetailBottomButton from './order-history-detail-bottom-button';
@@ -11,11 +12,19 @@ type Props = {
 export default function OrderHistoryDetail({ order }: Props) {
   return (
     <>
-      <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
-        注文内容を表示
-      </Typography>
+      <div className="mb-[24px] flex w-full items-center justify-between md:justify-center">
+        <BackButton />
+        <Typography
+          as="boldXLarge"
+          element="p"
+          className="text-[16px] text-black-90 md:text-[24px]"
+        >
+          注文内容を表示
+        </Typography>
+        <div className="h-7 w-7" />
+      </div>
       {!!order.attributes.number && (
-        <OrderDetail className="h-screen-calc px-[36px]" orderNumber={order.attributes.number} />
+        <OrderDetail className="h-screen-calc md:px-[36px]" orderNumber={order.attributes.number} />
       )}
       <OrderHistoryDetailBottomButton order={order} />
     </>

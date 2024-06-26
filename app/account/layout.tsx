@@ -66,12 +66,14 @@ export default function RootLayout({ children }: PropsWithChildren) {
   }, [pathname]);
 
   return (
-    <div className="h-full w-full pt-[128px]">
+    <div className="h-full w-full pt-[73px] md:pt-[128px]">
       <div className="bg-paleFrostBlue px-[24px]">
         <Breadcrumb menus={breadcrumbMenus} />
       </div>
-      <div className="flex">
-        <AccountSideBar />
+      <div className="flex bg-paleFrostBlue">
+        <div className="hidden md:block">
+          <AccountSideBar />
+        </div>
         {children}
       </div>
     </div>

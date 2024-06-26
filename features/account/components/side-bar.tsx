@@ -61,7 +61,7 @@ export default function AccountSideBar() {
         <button
           type="button"
           className={clsx(
-            'mt-[16px] flex w-[275px] items-center rounded-[6px] p-[24px]',
+            'mt-[16px] flex w-full items-center rounded-[6px] bg-white-base p-[24px] md:w-[275px]',
             isActive
               ? 'border-[2px] border-bibinBlue-100 bg-bibinBlue-10'
               : 'border-[1px] border-gray-300'
@@ -77,7 +77,7 @@ export default function AccountSideBar() {
   };
 
   return (
-    <div className="flex w-[400px] flex-col items-center bg-paleFrostBlue pl-[24px]">
+    <div className="w-full flex-col items-center bg-paleFrostBlue md:w-[400px] md:pl-[24px]">
       {sideNavButtons.map((button) => (
         <SideNavButton
           key={button.label}

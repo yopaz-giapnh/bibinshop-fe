@@ -15,7 +15,7 @@ type Props = Pick<ComponentProps<typeof AccountMenu>, 'isSignedIn'> & {
 
 export function Header({ isSignedIn, getTaxons }: Props) {
   return (
-    <div className="z-50 flex h-[72px] items-center justify-between bg-white-base px-[8px] py-3">
+    <div className="z-50 flex h-[72px] items-center justify-between border-b-[1px] bg-white-base px-[8px] py-3">
       <SpSideBar getTaxons={getTaxons} isSignedIn={isSignedIn} />
       <Link href="/" className="md:absolute md:left-[51px]" passHref>
         <Logo />
@@ -23,7 +23,7 @@ export function Header({ isSignedIn, getTaxons }: Props) {
       <div className="flex justify-center md:flex-1">
         <Search />
       </div>
-      <div className="right-6 flex items-center justify-center gap-4 md:absolute">
+      <div className="right-6 z-50 flex items-center justify-center gap-4 md:absolute">
         <AccountMenu isSignedIn={isSignedIn} getAccount={isSignedIn ? getAccount() : null} />
         <Suspense fallback={<LoadingSpinner />}>
           <CartMenu />

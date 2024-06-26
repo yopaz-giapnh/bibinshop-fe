@@ -12,7 +12,7 @@ type SectionProps = {
 export default function OrderDetailSection({ title, children }: SectionProps) {
   return (
     <div className="mt-[16px] items-center justify-between rounded-[6px] border-b-[1px] bg-white-base px-[24px] py-[16px] shadow-base">
-      <Typography as="bold" element="p" className="text-[20px] text-black-90">
+      <Typography as="bold" element="p" className="text-[16px] text-black-90 md:text-[20px]">
         {title}
       </Typography>
       {children}

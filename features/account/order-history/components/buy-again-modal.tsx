@@ -64,22 +64,31 @@ export default function BuyAgainModal({
             </Typography>
           </Button>
         </DialogTrigger>
-        <DialogContent className="flex w-[640px] flex-col items-center justify-center">
-          <DialogHeader className="flex flex-col items-center">
-            <DialogTitle>買い物かごにもう一度この注文からのアイテムを</DialogTitle>
-            <DialogTitle className="pt-[4px]">を追加してもよろしいですか？</DialogTitle>
+        <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[640px]">
+          <DialogHeader className="mt-[8px] flex flex-col items-center md:pt-0">
+            <DialogTitle className="text-center text-[14px] md:text-[18px]">
+              買い物かごにもう一度この注文からのアイテムを
+            </DialogTitle>
+            <DialogTitle className="text-center text-[14px] md:pt-[2px] md:text-[18px]">
+              を追加してもよろしいですか？
+            </DialogTitle>
           </DialogHeader>
-          <div className="flex w-[348px] justify-between pt-[12px]">
+          <div className="flex w-full justify-around pt-[12px] md:w-[348px]">
             <DialogClose asChild>
               <button
                 type="submit"
-                className="w-[170px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100"
+                className="w-[150px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100 md:w-[170px]"
               >
                 キャンセル
               </button>
             </DialogClose>
             <DialogClose asChild>
-              <Button type="submit" variant="lg" className="w-[170px]" onClick={addToCart}>
+              <Button
+                type="submit"
+                variant="lg"
+                className="w-[150px] md:w-[170px]"
+                onClick={addToCart}
+              >
                 確認
               </Button>
             </DialogClose>

@@ -1,5 +1,6 @@
 'use client';
 
+import { BackButton } from '@/components/button/back-button';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
@@ -38,9 +39,17 @@ export default function Address({ getAccountAddresses }: Props) {
 
   return (
     <>
-      <Typography as="boldXLarge" element="p" className="mb-[24px] text-[24px] text-black-90">
-        お届け先住所
-      </Typography>
+      <div className="mb-[24px] flex w-full items-center justify-between md:justify-center">
+        <BackButton />
+        <Typography
+          as="boldXLarge"
+          element="p"
+          className="text-[16px] text-black-90 md:text-[24px]"
+        >
+          お届け先住所
+        </Typography>
+        <div className="h-7 w-7" />
+      </div>
       <ButtonWithIcon
         buttonProps={{
           className:
@@ -54,9 +63,9 @@ export default function Address({ getAccountAddresses }: Props) {
         textProps={{ className: 'text-bibinBlue-100' }}
       />
       {hasAddress ? (
-        <div className="mt-[24px] h-screen-calc overflow-y-auto">
+        <div className="mt-[24px] h-screen-calc w-full overflow-y-auto md:w-[592px]">
           {addresses.map((address) => (
-            <div key={address.id} className="mt-[24px] w-[592px]">
+            <div key={address.id} className="mt-[24px]">
               <AddressCard
                 onEdit={() => handleEdit(address)}
                 onDelete={() => handleDelete(address)}

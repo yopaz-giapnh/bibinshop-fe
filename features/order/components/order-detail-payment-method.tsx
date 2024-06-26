@@ -10,7 +10,7 @@ type Props = {
 export function OrderDetailPaymentMethod({ creditCard }: Props) {
   return (
     <OrderDetailSection title="お支払い方法">
-      <div className="mt-[16px] flex items-center">
+      <div className="mt-[8px] flex items-center md:mt-[16px]">
         {getCreditCardBrandIcon(creditCard)}
         <Typography as="caption" element="p" className="ml-[16px] text-[14px] text-black-90">
           {`${creditCard.attributes.cc_type} ...${creditCard.attributes.last_digits}`}

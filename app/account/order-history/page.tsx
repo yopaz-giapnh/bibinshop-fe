@@ -15,7 +15,7 @@ export default function Page({
   const currentPage = Number(searchParams?.page) || 1;
 
   return (
-    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[24px]">
+    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[14px] md:p-[24px]">
       <OrderHistoryTabs currentPage={currentPage} tabState={tabState} />
     </div>
   );

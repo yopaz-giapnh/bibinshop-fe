@@ -20,7 +20,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const productSlugs = order.products.map((product) => product.attributes.slug);
 
   return (
-    <div className="mt-[24px] rounded-[6px] border-[1px] bg-white-base shadow-sm">
+    <div className="mb:mt-[24px] mt-[16px] rounded-[6px] border-[1px] bg-white-base shadow-sm">
       <OrderHistoryListInfo order={order} />
       <div className="flex justify-between px-[16px]">
         <div className="flex flex-col">
@@ -40,7 +40,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
             );
           })}
         </div>
-        <div className="mr-[20px] mt-[12px]">
+        <div className="mr-[20px] mt-[12px] hidden md:block">
           {isShipped && (
             <Link
               href={`/account/orders/write-review?${productSlugs.map((slug) => `slug=${slug}`).join('&')}`}

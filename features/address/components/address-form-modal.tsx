@@ -34,18 +34,23 @@ export const AddressFormModal = forwardRef<AddressFormModalRef>((_, ref) => {
       <DialogDescription>
         <DialogContent
           hideCloseButton
-          className="flex h-modal-screen-calc w-11/12 flex-col items-center gap-6 overflow-y-auto "
+          className="flex h-[calc(150vw-80px)] w-11/12 flex-col items-center overflow-y-auto md:h-modal-screen-calc"
         >
-          <div className="sticky top-0 w-full bg-white-base">
-            <Typography as="title" element="h2">
-              {address ? '住所を編集する' : '新しい住所を追加する'}
-            </Typography>
-            <DialogClose className="absolute right-6 top-2 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-              <X />
-              <span className="sr-only">Close</span>
-            </DialogClose>
-          </div>
-          <div className="w-full">
+          <div className="w-full justify-center">
+            <div className="flex w-full items-center justify-between pb-[24px]">
+              <div className="h-7 w-7 md:hidden" />
+              <Typography
+                as="title"
+                element="h2"
+                className="text-center text-[16px] md:text-left md:text-[24px]"
+              >
+                {address ? '住所を編集する' : '新しい住所を追加する'}
+              </Typography>
+              <DialogClose className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                <X />
+                <span className="sr-only">Close</span>
+              </DialogClose>
+            </div>
             <AddressForm address={address} onSaved={onClose} />
           </div>
         </DialogContent>
