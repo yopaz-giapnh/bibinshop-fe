@@ -61,8 +61,7 @@ export function ProductCard({ product, imageSize }: Props) {
       </Typography>
       <div className="items-center gap-2 md:flex">
         <Typography as="xSmall" element="p" className="text-black-70 md:hidden">
-          {/* TODO: 販売個数 */}
-          2,561 個販売
+          {`${product.attributes.order_count} 個販売`}
         </Typography>
 
         <Typography as="bold" element="p" className="text-bibinBlue-100">
@@ -89,8 +88,7 @@ export function ProductCard({ product, imageSize }: Props) {
         )}
 
         <Typography as="xSmall" element="p" className="hidden text-black-70 md:flex">
-          {/* TODO: 販売個数 */}
-          2,561 個販売
+          {`${product.attributes.order_count} 個販売`}
         </Typography>
       </div>
       <div className="mt-[2px] flex items-center">

@@ -9,6 +9,16 @@ export type TaxonSchema = components['schemas']['Taxon'];
 
 export type VariantSchema = components['schemas']['Variant'];
 
+export type ShippingMethodSchema = components['schemas']['ShippingMethod'];
+
+export type ShippingMethod = ShippingMethodSchema & {
+  calculator?: CalculatorSchema;
+};
+
+export type ShippingMethodIncludes = components['schemas']['ShippingMethodIncludes'];
+
+export type CalculatorSchema = components['schemas']['Calculator'];
+
 export type ProductIncludes = components['schemas']['ProductIncludes'];
 
 export type Products =

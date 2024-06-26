@@ -13,3 +13,10 @@ export type AddressState = {
   message: string;
   description?: string;
 } | null;
+
+export type SearchAddressByPostcodeResponse = {
+  prefecture: string;
+  city: string;
+  suburb: string;
+  error?: string;
+};

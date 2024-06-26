@@ -1,13 +1,15 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
+import { isTaxonImageSchema } from '@/features/product/utils';
 import { TAGS } from '../constans';
-import { TaxonsListParameters } from '../types';
+import { TaxonIncludes, TaxonSchema, TaxonsListParameters } from '../types';
 
 export async function getTaxons(params?: TaxonsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/taxons', {
     params: {
       query: {
+        include: 'image',
         ...params?.query
       }
     },
@@ -17,10 +19,15 @@ export async function getTaxons(params?: TaxonsListParameters) {
   });
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
-  return data.data;
+  const { data: taxons, included: taxonIncluded } = data;
+
+  return reshapeTaxons({
+    taxons,
+    taxonIncluded
+  });
 }
 
 export async function getRootTaxons(fields: string[] = ['']) {
@@ -37,8 +44,29 @@ export async function getRootTaxons(fields: string[] = ['']) {
   });
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return data.data;
+}
+
+function reshapeTaxons({
+  taxons,
+  taxonIncluded
+}: {
+  taxons: TaxonSchema[];
+  taxonIncluded?: TaxonIncludes[];
+}) {
+  const allTaxonImages = taxonIncluded?.filter(isTaxonImageSchema) || [];
+
+  return taxons.map((taxon) => {
+    const taxonImage = allTaxonImages.find(
+      (image) => image.id === taxon.relationships.image?.data?.id
+    );
+
+    return {
+      ...taxon,
+      taxonImage
+    };
+  });
 }

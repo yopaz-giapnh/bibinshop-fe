@@ -35,9 +35,11 @@ export async function ProductDetail({ product }: Props) {
             <Suspense fallback={<LoadingSpinner />}>
               {product.vendor && <ShopCard vendorId={product.vendor.id} />}
             </Suspense>
-            <div className="mt-2">
-              <Supplementary />
-            </div>
+            <Suspense fallback={<LoadingSpinner />}>
+              <div className="mt-2">
+                <Supplementary product={product} />
+              </div>
+            </Suspense>
           </div>
           <div className="mt-[12px] px-4 md:mt-0 md:px-0">
             <Typography as="boldTitle" element="h1" className="text-[20px] md:text-[24px]">
@@ -76,9 +78,11 @@ export async function ProductDetail({ product }: Props) {
             <Suspense fallback={<LoadingSpinner />}>
               {product.vendor && <ShopCard vendorId={product.vendor.id} />}
             </Suspense>
-            <div className="mt-5">
-              <Supplementary />
-            </div>
+            <Suspense fallback={<LoadingSpinner />}>
+              <div className="mt-5">
+                <Supplementary product={product} />
+              </div>
+            </Suspense>
           </div>
         </div>
       </div>

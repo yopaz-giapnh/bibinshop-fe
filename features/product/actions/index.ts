@@ -4,8 +4,20 @@ import { apiClient } from '@/config/api-client';
 import { getRootTaxons } from '@/features/taxon/actions';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
-import { ImageSchema, ProductIncludes, ProductSchema, ProductsListParameters } from '../types';
-import { isImageSchema, isProductPropertySchema, isTaxonSchema } from '../utils';
+import {
+  ImageSchema,
+  ProductIncludes,
+  ProductSchema,
+  ProductsListParameters,
+  ShippingMethodIncludes,
+  ShippingMethodSchema
+} from '../types';
+import {
+  isCalculatorSchema,
+  isImageSchema,
+  isProductPropertySchema,
+  isTaxonSchema
+} from '../utils';
 
 export async function getProducts(params?: ProductsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
@@ -17,7 +29,7 @@ export async function getProducts(params?: ProductsListParameters) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 5, tags: [TAGS.products] } });
+      return fetch(request, { next: { revalidate: 3600, tags: [TAGS.products] } });
     }
   });
 
@@ -48,7 +60,7 @@ export async function getProduct(product_slug: string) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 5, tags: [TAGS.products] } });
+      return fetch(request, { next: { revalidate: 3600, tags: [TAGS.products] } });
     }
   });
 
@@ -153,4 +165,49 @@ export async function getTaxonId(title: string) {
   const taxons = await getRootTaxons(['name']);
 
   return taxons.find((taxon) => taxon.attributes.name === title)?.id;
+}
+
+export async function getShippingMethods() {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/shipping_methods', {
+    params: {
+      query: {
+        include: 'calculator'
+      }
+    },
+    fetch: (request) => {
+      return fetch(request, { next: { revalidate: 5, tags: [TAGS.shippingMethods] } });
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data: shippingMethods, included: shippingMethodIncluded } = data;
+
+  return reshapeShippingMethods({
+    shippingMethods,
+    included: shippingMethodIncluded
+  });
+}
+
+function reshapeShippingMethods({
+  shippingMethods,
+  included
+}: {
+  shippingMethods: ShippingMethodSchema[];
+  included?: ShippingMethodIncludes[];
+}) {
+  const allCalculators = included?.filter(isCalculatorSchema) || [];
+
+  return shippingMethods.map((shippingMethod) => {
+    const calculator = allCalculators.find(
+      (c) => c.id === shippingMethod.relationships.calculator?.data?.id
+    );
+
+    return {
+      ...shippingMethod,
+      calculator
+    };
+  });
 }

@@ -1,11 +1,15 @@
 import { LineItem } from '@/features/cart/types';
 import {
+  CalculatorSchema,
   ImageSchema,
   ProductPropertySchema,
   ProductSchema,
+  ShippingMethod,
   TaxonSchema,
   VariantSchema
 } from '@/features/product/types';
+import { TaxonImageSchema } from '@/features/taxon/types';
+import { VendorSchema } from '@/features/vendor/types';
 import { hasProperty } from '@/utils/type';
 
 export function isImageSchema(includedObject: unknown): includedObject is ImageSchema {
@@ -20,6 +24,10 @@ export function isTaxonSchema(includedObject: unknown): includedObject is TaxonS
   return hasProperty(includedObject, 'type') && includedObject.type === 'taxon';
 }
 
+export function isTaxonImageSchema(includedObject: unknown): includedObject is TaxonImageSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'taxon_image';
+}
+
 export function isVariantSchema(includedObject: unknown): includedObject is VariantSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'variant';
 }
@@ -28,6 +36,10 @@ export function isProductPropertySchema(
   includedObject: unknown
 ): includedObject is ProductPropertySchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'product_property';
+}
+
+export function isCalculatorSchema(includedObject: unknown): includedObject is CalculatorSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'calculator';
 }
 
 export function findImageFromLineItem({
@@ -47,6 +59,33 @@ export function findImageFromLineItem({
 }
 
 export function getProductImageUrl(image: ImageSchema | undefined) {
+  if (!image) {
+    return '/placeholder-product-image.png';
+  }
+
+  return `${image.attributes?.styles?.[image.attributes?.styles?.length - 1]?.url}`;
+}
+
+export function getDisplayShippingCost({
+  shippingMethods,
+  vendor
+}: {
+  shippingMethods: ShippingMethod[];
+  vendor: VendorSchema;
+}) {
+  const shippingMethod = shippingMethods.find(
+    (shippingMethod) => shippingMethod.relationships.vendor?.data?.id === vendor?.id
+  );
+
+  const cost = shippingMethod?.calculator?.attributes.preferences?.amount;
+  if (!cost) {
+    return null;
+  }
+
+  return cost.toLocaleString() + '円';
+}
+
+export function getTaxonImageUrl(image: TaxonImageSchema | undefined) {
   if (!image) {
     return '/placeholder-product-image.png';
   }

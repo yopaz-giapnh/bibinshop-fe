@@ -1,5 +1,6 @@
 export const TAGS = {
-  products: 'products'
+  products: 'products',
+  shippingMethods: 'shippingMethods'
 };
 
 export const PRODUCT_PROPERTY_MAP = {

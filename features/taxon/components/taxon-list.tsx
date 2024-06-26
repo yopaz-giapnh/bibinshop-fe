@@ -1,5 +1,6 @@
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
+import { getTaxonImageUrl } from '@/features/product/utils';
 import { getTaxons } from '@/features/taxon/actions';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
@@ -18,8 +19,7 @@ export const TaxonList = async () => {
               key={category.id}
               title={category.attributes.name || ''}
               href={`/search?taxons=${category.id}`}
-              // imageUrl={category.attributes.imageUrl || ''}
-              imageUrl="/placeholder-product-image.png"
+              imageUrl={getTaxonImageUrl(category.taxonImage)}
             />
           ))}
         </ul>
@@ -29,8 +29,7 @@ export const TaxonList = async () => {
               key={category.id}
               title={category.attributes.name || ''}
               href={`/search?taxons=${category.id}`}
-              // imageUrl={category.attributes.imageUrl || ''} //TODO: 画像URLをtaxonsに追加しないといけない？
-              imageUrl="/placeholder-product-image.png"
+              imageUrl={getTaxonImageUrl(category.taxonImage)}
             />
           ))}
         </ul>

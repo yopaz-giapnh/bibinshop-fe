@@ -586,6 +586,13 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/shipping_methods': {
+    /**
+     * Return a list of Shipping Methods
+     * @description Returns a list of Shipping Methods
+     */
+    get: operations['shipping-methods-list'];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -1365,6 +1372,7 @@ export interface components {
         localized_slugs?: Record<string, never>;
         stars?: number;
         reviews_count?: number;
+        order_count?: number;
       };
       relationships: {
         /** @description List of Product Variants, excluding Master Variant */
@@ -2118,6 +2126,46 @@ export interface components {
         styles?: components['schemas']['ImageStyle'][];
       };
     };
+    /**
+     * ShippingMethod
+     * @description The ShippingMethod model.
+     */
+    ShippingMethod: {
+      /** @example 1 */
+      id: string;
+      /** @default review */
+      type: string;
+      attributes: {
+        /** @example 定額送料(韓国企業) */
+        name?: string;
+      };
+      relationships: {
+        vendor?: {
+          data?: components['schemas']['Relation'];
+        };
+        calculator?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
+    /**
+     * Calculator
+     * @description The Calculator model.
+     */
+    Calculator: {
+      /** @example 1 */
+      id: string;
+      /** @default calculator */
+      type: string;
+      attributes: {
+        preferences?: {
+          currency?: string;
+          amount?: number;
+        };
+      };
+    };
+    /** ShippingMethod Includes */
+    ShippingMethodIncludes: components['schemas']['Vendor'] | components['schemas']['Calculator'];
   };
   responses: {
     /** @description 404 Not Found - Resource not found. */
@@ -2438,6 +2486,17 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns an array of `shipping_method` objects. */
+    ShippingMethodList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['ShippingMethod'][];
+          included?: components['schemas']['ShippingMethodIncludes'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
   };
   parameters: {
     /**
@@ -2664,6 +2723,8 @@ export interface components {
     NotificationId: string;
     /** @example vendor,user */
     NotificationIncludeParam?: string;
+    /** @example calculator */
+    ShippingMethodIncludeParam?: string;
   };
   requestBodies: never;
   headers: never;
@@ -4226,6 +4287,22 @@ export interface operations {
     responses: {
       200: components['responses']['Review'];
       403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Return a list of Shipping Methods
+   * @description Returns a list of Shipping Methods
+   */
+  'shipping-methods-list': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['ShippingMethodIncludeParam'];
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+    };
+    responses: {
+      200: components['responses']['ShippingMethodList'];
     };
   };
 }

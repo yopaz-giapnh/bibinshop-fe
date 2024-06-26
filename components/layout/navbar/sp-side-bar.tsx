@@ -13,6 +13,7 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet';
 import { Typography } from '@/components/ui/typography';
+import { getTaxonImageUrl } from '@/features/product/utils';
 import { getTaxons } from '@/features/taxon/actions';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { cn } from '@/lib/utils';
@@ -94,8 +95,7 @@ export function SpSideBar({ isSignedIn, getTaxons }: Props) {
                 <ListItem
                   title={category.attributes.name || ''}
                   href={`/search?taxons=${category.id}`}
-                  // imageUrl={category.attributes.imageUrl || ''} //TODO: 画像URLをtaxonsに追加しないといけない？
-                  imageUrl="/placeholder-product-image.png"
+                  imageUrl={getTaxonImageUrl(category.taxonImage)}
                 />
               </SheetClose>
             ))}

@@ -14,12 +14,13 @@ import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BadgeAlert, Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { useForm } from 'react-hook-form';
-import { addAccountAddress, updateAccountAddress } from '../actions';
+import { UseFormReturn, useForm } from 'react-hook-form';
+import { addAccountAddress, searchAddressByPostcode, updateAccountAddress } from '../actions';
 import { Address } from '../types';
 import { FormValues, formSchema } from '../types/address-form';
 
@@ -152,11 +153,7 @@ export function AddressForm({ buttonText = '保存する', address, onSaved }: P
               </FormItem>
             )}
           />
-          <button className="mt-[28px] flex flex-1 items-center" type="button">
-            <Typography as="linkSmall" element="p" className="text-left text-bibinBlue-100">
-              郵便番号から住所入力
-            </Typography>
-          </button>
+          <SearchAddressByPostcodeButton form={form} />
         </div>
 
         <div className="flex w-full gap-4">
@@ -274,5 +271,39 @@ function SaveButton({ buttonText, disabled }: ButtonProps) {
     <Button size="lg" variant="lg" className="md:w-[392px]" disabled={pending || disabled}>
       {pending ? <LoadingSpinner /> : buttonText}
     </Button>
+  );
+}
+
+function SearchAddressByPostcodeButton({ form }: { form: UseFormReturn<FormValues> }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const postalCode = form.getValues('postalCode');
+  const isValid = postalCode.length === 7;
+  const searchAddress = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    setIsLoading(true);
+    const searchAddressResult = await searchAddressByPostcode(postalCode);
+    if (searchAddressResult) {
+      form.setValue('prefecture', searchAddressResult.prefecture);
+      form.setValue('city', searchAddressResult.city);
+      form.setValue('address1', searchAddressResult.suburb);
+    }
+    setIsLoading(false);
+  };
+
+  return (
+    <button
+      className={cn(
+        'mt-[28px] flex flex-1 items-center',
+        !isValid && 'cursor-not-allowed opacity-50'
+      )}
+      type="button"
+      onClick={searchAddress}
+      disabled={!isValid}
+    >
+      <Typography as="linkSmall" element="p" className="text-left text-bibinBlue-100">
+        {isLoading ? <LoadingSpinner /> : '郵便番号から住所入力'}
+      </Typography>
+    </button>
   );
 }

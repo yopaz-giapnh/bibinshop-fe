@@ -25,14 +25,18 @@ export async function OrderDetail({ className, orderNumber }: Props) {
     return;
   }
 
+  const shippedAt = order.shipment?.attributes.shipped_at;
+
   return (
     <>
       <div className={cn('w-full overflow-y-auto', className)}>
-        <OrderDetailSection title={getShipmentStateTitle(order)}>
-          <Typography as="caption" element="p" className="mt-[16px] text-[16px] text-black-90">
-            {`出荷日時：${formatDateString(order.shipment?.attributes.shipped_at)}`}
-          </Typography>
-        </OrderDetailSection>
+        {shippedAt && (
+          <OrderDetailSection title={getShipmentStateTitle(order)}>
+            <Typography as="caption" element="p" className="mt-[16px] text-[16px] text-black-90">
+              {`出荷日時：${formatDateString(shippedAt)}`}
+            </Typography>
+          </OrderDetailSection>
+        )}
         <OrderDetailSection title={`注文番号：${order.attributes.number}`}>
           <Typography as="caption" element="p" className="mt-[16px] text-[16px] text-black-90">
             {`注文時間：${formatDateString(order.attributes.created_at)}`}

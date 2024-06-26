@@ -3,7 +3,7 @@
 import { apiClient } from '@/config/api-client';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
-import { AddressFormData, AddressState } from '../types';
+import { AddressFormData, AddressState, SearchAddressByPostcodeResponse } from '../types';
 
 export async function getAccountAddresses() {
   const { data, error } = await apiClient.GET('/api/v2/storefront/account/addresses', {
@@ -126,4 +126,15 @@ export async function updateAccountAddress(prevState: AddressState, formData: Ad
       description: 'もう一度お試しください。'
     };
   }
+}
+
+export async function searchAddressByPostcode(postcode: string) {
+  const response = await fetch(`https://postcode.teraren.com/postcodes/${postcode}.json`);
+  const searchAddress: SearchAddressByPostcodeResponse = await response.json();
+
+  if (searchAddress.error) {
+    return;
+  }
+
+  return searchAddress;
 }
