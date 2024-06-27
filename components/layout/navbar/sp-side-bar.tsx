@@ -1,7 +1,5 @@
 'use client';
 
-import AppStoreDonwloadButton from '@/assets/app-store-download-button.svg';
-import GooglePlayDonwloadButton from '@/assets/google-play-download-button.svg';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -51,11 +49,14 @@ const CategoryLink = ({
   </SheetClose>
 );
 
-const DownloadButton = ({ children }: { children: React.ReactNode }) => (
-  <SheetClose asChild>
-    <button type="button">{children}</button>
-  </SheetClose>
-);
+{
+  /* TODO: アプリができたら表示、追加実装 */
+}
+// const DownloadButton = ({ children }: { children: React.ReactNode }) => (
+//   <SheetClose asChild>
+//     <button type="button">{children}</button>
+//   </SheetClose>
+// );
 
 export function SpSideBar({ isSignedIn, getTaxons }: Props) {
   const categoriesList = React.use(getTaxons);
@@ -87,8 +88,10 @@ export function SpSideBar({ isSignedIn, getTaxons }: Props) {
         </div>
         <ScrollArea>
           <ul
-            style={{ maxHeight: isSignedIn ? height - 260 : height - 350 }}
-            className="grid grid-cols-3 px-[8px]"
+            style={{
+              maxHeight: !isSignedIn ? `calc(${height}px - 240px)` : `calc(${height}px - 160px)`
+            }}
+            className={`grid grid-cols-3 px-[8px]`}
           >
             {categoriesList.map((category) => (
               <SheetClose asChild key={category.id}>
@@ -121,23 +124,21 @@ export function SpSideBar({ isSignedIn, getTaxons }: Props) {
             </SheetClose>
           </div>
         )}
-        {/* TODO: アプリができたら表示する。タイミングでコメントアウトする */}
-        <div className="border-b-[1px]" />
+        {/* TODO: アプリができたら表示、追加実装 */}
+        {/* <div className="border-b-[1px]" />
         <div className="mt-[16px] flex flex-col justify-center px-[8px]">
           <Typography as="boldSmall" element="p" className="text-center">
             アプリをダウンロード
           </Typography>
           <div className="mt-[8px] flex justify-between">
             <DownloadButton>
-              {/* TODO: app storeへの遷移 */}
               <AppStoreDonwloadButton />
             </DownloadButton>
             <DownloadButton>
-              {/* TODO: google playへの遷移 */}
               <GooglePlayDonwloadButton />
             </DownloadButton>
           </div>
-        </div>
+        </div> */}
       </SheetContent>
     </Sheet>
   );

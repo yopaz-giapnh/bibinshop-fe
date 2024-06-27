@@ -28,7 +28,7 @@ export function Menu({ getTaxons }: Props) {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-[44px] items-center bg-white-base md:h-[56px] md:bg-bibinBlue-100">
+    <div className="flex h-[44px] items-center justify-center bg-white-base md:h-[56px] md:justify-normal md:bg-bibinBlue-100 md:pl-[190px] ">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -62,7 +62,7 @@ export function Menu({ getTaxons }: Props) {
                   'md:no-underline': pathname === '/'
                 })}
               >
-                <Typography as="linkSmall" element="p" className="ml-0.5 text-black-90">
+                <Typography as="linkSmall" element="p" className="text-black-90">
                   ホーム
                 </Typography>
               </NavigationMenuLink>

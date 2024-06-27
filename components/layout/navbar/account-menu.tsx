@@ -59,7 +59,7 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
       <NavigationMenu viewPortClassName="rounded-md border-black-20">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="justify-start border-l border-r border-white-30 pl-[22px]">
+            <NavigationMenuTrigger className="px-[-8px]">
               <Link
                 href={isPc ? '/account/profile' : '/account/sp-profile'}
                 className="flex"
@@ -71,8 +71,8 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
                 </Typography>
               </Link>
             </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="hidden w-[201px] md:block md:grid-cols-1">
+            <NavigationMenuContent className="hidden md:block">
+              <ul className="w-[201px] md:grid-cols-1">
                 <UserName getAccount={getAccount} />
                 <Separator />
                 {components.map((component) => (
@@ -88,7 +88,7 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
     </>
   ) : (
     <>
-      <Link href="/signup" passHref className="hidden md:block">
+      <Link href="/signup" passHref className="mr-[20px] hidden md:block">
         <Button type="button">アカウント作成</Button>
       </Link>
       <Link href="/login" passHref className="flex">

@@ -117,7 +117,7 @@ export default function LoginForm() {
         </form>
       </Form>
 
-      <div className="mt-6 flex hidden items-center justify-center gap-6 md:flex">
+      <div className="mt-6 hidden items-center justify-center gap-6 md:flex">
         <Separator />
         <Typography as="body" element="p">
           初めてbibinをご利用する方

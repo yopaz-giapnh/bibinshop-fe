@@ -8,7 +8,7 @@ export async function CartMenu() {
   const cartIetmCount = cart?.attributes.item_count;
 
   return (
-    <Link href="/cart" passHref>
+    <Link href="/cart" passHref className="ml-[12px] md:ml-[20px]">
       <div className="flex">
         <div className="relative flex">
           <ShoppingCart className="h-6 w-6" />

@@ -1,8 +1,10 @@
 'use client';
 
 import { Typography } from '@/components/ui/typography';
+import { useAuth } from '@/features/auth/hooks/use-auth';
+import { useIsPc } from '@/hooks/use-is-pc';
 import clsx from 'clsx';
-import { Bell, CreditCard, FileText, MapPin, ShieldPlus, UserRound } from 'lucide-react';
+import { Bell, CreditCard, FileText, LogOut, MapPin, ShieldPlus, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -19,6 +21,8 @@ interface SideNavButtonProps {
  */
 export default function AccountSideBar() {
   const pathname = usePathname();
+  const isPc = useIsPc();
+  const { signOut } = useAuth();
 
   const sideNavButtons: SideNavButtonProps[] = [
     {
@@ -86,6 +90,20 @@ export default function AccountSideBar() {
           label={button.label}
         />
       ))}
+      {!isPc && (
+        <button
+          type="button"
+          className={clsx(
+            'mt-[16px] flex w-full items-center rounded-[6px] border-[1px] border-gray-300 bg-white-base p-[24px] md:w-[275px]'
+          )}
+          onClick={signOut}
+        >
+          <LogOut className="h-6 w-6" color="black" />
+          <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
+            サインアウト
+          </Typography>
+        </button>
+      )}
     </div>
   );
 }
