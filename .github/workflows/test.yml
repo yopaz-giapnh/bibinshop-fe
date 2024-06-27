@@ -1,12 +1,10 @@
 name: test
 on: pull_request
-
 # Cancel in progress workflows on pull_requests.
 # https://docs.github.com/en/actions/using-jobs/using-concurrency#example-using-a-fallback-value
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -31,5 +29,7 @@ jobs:
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: pnpm install --no-frozen-lockfile
+      - name: Run build
+        run: pnpm build
       - name: Run tests
         run: pnpm test
