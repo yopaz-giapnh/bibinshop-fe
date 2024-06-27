@@ -120,6 +120,20 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/account_confirmations': {
+    /**
+     * Send Account Confirmation Instructions
+     * @description Sends confirmation instructions to the given email address.
+     */
+    post: operations['account-confirmation-instructions'];
+  };
+  '/api/v2/storefront/account_confirmations/{id}': {
+    /**
+     * Confirm Account
+     * @description Confirms an account using the provided token.
+     */
+    get: operations['account-confirmation'];
+  };
   '/api/v2/storefront/order_status/{order_number}': {
     /**
      * Retrieve an Order Status
@@ -2166,6 +2180,13 @@ export interface components {
     };
     /** ShippingMethod Includes */
     ShippingMethodIncludes: components['schemas']['Vendor'] | components['schemas']['Calculator'];
+    OAuthToken: {
+      access_token?: string;
+      token_type?: string;
+      expires_in?: number;
+      refresh_token?: string;
+      created_at?: components['schemas']['Timestamp'];
+    };
   };
   responses: {
     /** @description 404 Not Found - Resource not found. */
@@ -2725,6 +2746,8 @@ export interface components {
     NotificationIncludeParam?: string;
     /** @example calculator */
     ShippingMethodIncludeParam?: string;
+    /** @description The confirmation token received in the email. */
+    ConfirmationToken: string;
   };
   requestBodies: never;
   headers: never;
@@ -3008,6 +3031,49 @@ export interface operations {
     responses: {
       200: components['responses']['Cart'];
       403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Send Account Confirmation Instructions
+   * @description Sends confirmation instructions to the given email address.
+   */
+  'account-confirmation-instructions': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          account_confirmation?: {
+            /** @example john@snow.org */
+            email?: string;
+          };
+        };
+      };
+    };
+    responses: {
+      /** @description Email with confirmation instructions was sent successfully. */
+      200: {
+        content: never;
+      };
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * Confirm Account
+   * @description Confirms an account using the provided token.
+   */
+  'account-confirmation': {
+    parameters: {
+      path: {
+        id: components['parameters']['ConfirmationToken'];
+      };
+    };
+    responses: {
+      /** @description Account successfully confirmed. */
+      200: {
+        content: {
+          'application/vnd.api+json': components['schemas']['OAuthToken'];
+        };
+      };
+      422: components['responses']['UnprocessableEntity'];
     };
   };
   /**

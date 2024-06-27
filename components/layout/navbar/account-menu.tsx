@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,13 +11,14 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
-import { useAuth } from '@/features/auth/hooks/use-auth';
+import { logout } from '@/features/auth/actions';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { NavigationMenuList } from '@radix-ui/react-navigation-menu';
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
 import React, { use } from 'react';
+import { useFormStatus } from 'react-dom';
 
 type Props = {
   isSignedIn: boolean;
@@ -24,9 +26,6 @@ type Props = {
 };
 
 export function AccountMenu({ isSignedIn, getAccount }: Props) {
-  const { signOut } = useAuth();
-  const isPc = useIsPc();
-
   const components: { title: string; href: string }[] = [
     {
       title: 'プロフィール',
@@ -55,21 +54,12 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
   ];
 
   return isSignedIn ? (
-    <>
+    <form action={logout}>
       <NavigationMenu viewPortClassName="rounded-md border-black-20">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="px-[-8px]">
-              <Link
-                href={isPc ? '/account/profile' : '/account/sp-profile'}
-                className="flex"
-                passHref
-              >
-                <UserRound className="h-6 w-6" />
-                <Typography as="small" element="p" className="ml-1 hidden md:block">
-                  アカウント管理
-                </Typography>
-              </Link>
+              <AccountLink />
             </NavigationMenuTrigger>
             <NavigationMenuContent className="hidden md:block">
               <ul className="w-[201px] md:grid-cols-1">
@@ -79,13 +69,14 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
                   <ListItem key={component.title} title={component.title} href={component.href} />
                 ))}
                 <Separator />
-                <SignOut onClick={signOut} />
+
+                <SignOut />
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-    </>
+    </form>
   ) : (
     <>
       <Link href="/signup" passHref className="mr-[20px] hidden md:block">
@@ -100,6 +91,26 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
     </>
   );
 }
+
+const AccountLink = () => {
+  const isPc = useIsPc();
+  const { pending } = useFormStatus();
+
+  return (
+    <Link href={isPc ? '/account/profile' : '/account/sp-profile'} className="flex" passHref>
+      {pending ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <UserRound className="h-6 w-6" />
+          <Typography as="small" element="p" className="ml-1 hidden md:block">
+            アカウント管理
+          </Typography>
+        </>
+      )}
+    </Link>
+  );
+};
 
 const UserName = React.forwardRef<
   React.ElementRef<'div'>,

@@ -4,12 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import { associateCart } from '@/features/cart/actions';
+import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BadgeAlert } from 'lucide-react';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { useAuth } from '../hooks/use-auth';
+import { authenticate } from '../actions';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
 import { ForgotPasswordModal, ForgotPasswordModalRef } from './forgot-password-modal';
@@ -22,7 +24,6 @@ import {
 import { Separator } from './separator';
 
 export default function LoginForm() {
-  const { signInByEmailAndPassword } = useAuth();
   const PasswordReserSendLinkModalRef = useRef<PasswordReserSendLinkModalRef>(null);
   const ForfgotPasswordModalRef = useRef<ForgotPasswordModalRef>(null);
 
@@ -33,6 +34,22 @@ export default function LoginForm() {
       password: ''
     }
   });
+  const [state, formAction] = useFormState(authenticate, undefined);
+  const action = formAction.bind(null, form.getValues());
+
+  useEffect(() => {
+    if (!state) {
+      return;
+    }
+
+    if (!state.success) {
+      toast({
+        title: 'ログインに失敗しました',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
+  }, [state]);
 
   return (
     <div>
@@ -59,10 +76,7 @@ export default function LoginForm() {
 
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(async () => {
-            await signInByEmailAndPassword(form.getValues());
-            await associateCart();
-          })}
+          action={action}
           className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 md:shadow-base"
         >
           <Typography as="title" element="h1" className="text-center  text-gray-800/80">
@@ -90,15 +104,7 @@ export default function LoginForm() {
             </div>
           </div>
 
-          <Button
-            type="submit"
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
-            className="w-full"
-            size="lg"
-            variant="lg"
-          >
-            {form.formState.isSubmitting ? <LoadingSpinner /> : 'ログイン'}
-          </Button>
+          <LoginButton disabled={!form.formState.isValid} />
 
           <div className="flex items-center justify-center gap-6">
             <Separator />
@@ -150,5 +156,15 @@ export default function LoginForm() {
         ref={PasswordReserSendLinkModalRef}
       />
     </div>
+  );
+}
+
+function LoginButton({ disabled }: { disabled: boolean }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" disabled={disabled || pending} className="w-full" size="lg" variant="lg">
+      {pending ? <LoadingSpinner /> : 'ログイン'}
+    </Button>
   );
 }

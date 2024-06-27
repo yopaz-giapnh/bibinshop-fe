@@ -1,7 +1,8 @@
-export { default } from 'next-auth/middleware';
+export { auth as middleware } from '@/auth';
 
 export const config = {
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
   matcher: [
-    '/((?!api|$|password-reset|login|signup|cart|privacy-policy|terms-of-service|products/.*|search|vendors/.*|_next/static|_next/image|.*\\.png$).*)'
+    '/((?!api|$|password-reset|login|signup|confirm|cart|privacy-policy|terms-of-service|products/.*|search|vendors/.*|_next/static|_next/image|.*\\.png$).*)'
   ]
 };
