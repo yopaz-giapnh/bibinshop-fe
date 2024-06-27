@@ -70,9 +70,27 @@ export function ProductCartForm({ product, getCart }: Props) {
 
   const cartSheetRef = useRef<CartSheetRef>(null);
 
+  const onPressShare = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        toast({
+          title: 'リンクをコピーしました',
+          icon: <Check className="h-6 w-6" />
+        });
+      })
+      .catch(() => {
+        toast({
+          title: 'リンクのコピーに失敗しました',
+          icon: <Check className="h-6 w-6" />
+        });
+      });
+  };
+
   return (
     <>
-      <form className="flex flex-col gap-5" action={action}>
+      <div className="flex flex-col gap-5">
         <div>
           <div className="flex justify-between md:justify-normal">
             <Typography
@@ -87,7 +105,7 @@ export function ProductCartForm({ product, getCart }: Props) {
             >
               {product.attributes.name}
             </Typography>
-            <button className="ml-[17.5px]">
+            <button className="ml-[17.5px]" onClick={onPressShare}>
               <Share className="h-6 w-6" />
             </button>
           </div>
@@ -182,10 +200,10 @@ export function ProductCartForm({ product, getCart }: Props) {
           </div>
         </div>
 
-        <div className="hidden md:block">
+        <form className="hidden md:block" action={action}>
           <AddToCartButton />
-        </div>
-      </form>
+        </form>
+      </div>
 
       <Suspense>
         <CartSheet ref={cartSheetRef} getCart={getCart} />
