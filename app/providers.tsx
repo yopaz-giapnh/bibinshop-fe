@@ -1,11 +1,9 @@
 'use client';
 
+import RegistrationCompleteModal from '@/features/auth/components/registration-complete-modal';
 import { useIsPc } from '@/hooks/use-is-pc';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
 import { PropsWithChildren, useEffect } from 'react';
-
-const queryClient = new QueryClient();
 
 export function Providers({ children }: PropsWithChildren) {
   const isPc = useIsPc();
@@ -26,7 +24,10 @@ export function Providers({ children }: PropsWithChildren) {
 
   return (
     <SessionProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <>
+        {children}
+        <RegistrationCompleteModal />
+      </>
     </SessionProvider>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import Edit from '@/assets/edit.svg';
-import { BackButton } from '@/components/button/back-button';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
@@ -10,18 +9,24 @@ import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BadgeAlert, Check } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
+import { getAccount } from '../../profile/actions';
 import { updateAccountSecurity } from '../actions';
 import { FormValues, formSchema } from '../types/security-detail';
 import TogglePasswordInput from './toggle-password-input';
+
+type Props = {
+  getAccount: ReturnType<typeof getAccount>;
+};
 
 /**
  * アカウントセキュリティ画面
  * @returns JSX.Element
  */
-export default function SecurityDetail() {
+export default function SecurityDetail({ getAccount }: Props) {
+  const account = use(getAccount);
   const [showEditPasswordForm, setShowEditPasswordForm] = useState(false);
   // TODO:BE側のRequest bodyに無いため一旦コメントアウト
   // const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -66,100 +71,87 @@ export default function SecurityDetail() {
   }, [form, state, toast]);
 
   return (
-    <>
-      <div className="mb-[14px] flex w-full items-center justify-between md:mb-[24px] md:justify-center">
-        <BackButton />
-        <Typography
-          as="boldXLarge"
-          element="p"
-          className="text-[18px] text-black-90 md:text-[24px]"
-        >
-          アカウントセキュリティ
-        </Typography>
-        <div className="h-7 w-7" />
-      </div>
-      <div className="w-full rounded-[6px] bg-white-base px-[18px] py-3 shadow-base md:px-[48px] md:py-6">
-        <Typography
-          as="bold"
-          element="p"
-          className="mb-[8px] text-[16px] text-black-90 md:text-[20px]"
-        >
-          メール
-        </Typography>
-        <Typography as="small" element="p" className="text-[14px] text-gray-700 md:text-[16px]">
-          yamada_taro183@gmail.com
-        </Typography>
-        <div className="my-[16px] border-t-[1px]" />
-        <div className="flex justify-between">
-          <div>
-            <Typography
-              as="bold"
-              element="p"
-              className="mb-[8px] text-[16px] text-black-90 md:text-[20px]"
-            >
-              パスワードの変更
-            </Typography>
-            <Typography as="small" element="p" className="text-[16px] text-black-90">
-              ***********
-            </Typography>
-          </div>
-          {!showEditPasswordForm && (
-            <ButtonWithIcon
-              buttonProps={{
-                className:
-                  'h-10 flex justify-center px-5 py-4 border border-bibinBlue-100 rounded-[100px]',
-                onClick: () => setShowEditPasswordForm(true)
-              }}
-              icon={<Edit />}
-              text="編集"
-              textProps={{ className: 'text-bibinBlue-100' }}
-            />
-          )}
+    <div className="w-full rounded-[6px] bg-white-base px-[18px] py-3 shadow-base md:px-[48px] md:py-6">
+      <Typography
+        as="bold"
+        element="p"
+        className="mb-[8px] text-[16px] text-black-90 md:text-[20px]"
+      >
+        メール
+      </Typography>
+      <Typography as="small" element="p" className="text-[14px] text-gray-700 md:text-[16px]">
+        {account.attributes.email}
+      </Typography>
+      <div className="my-[16px] border-t-[1px]" />
+      <div className="flex justify-between">
+        <div>
+          <Typography
+            as="bold"
+            element="p"
+            className="mb-[8px] text-[16px] text-black-90 md:text-[20px]"
+          >
+            パスワードの変更
+          </Typography>
+          <Typography as="small" element="p" className="text-[16px] text-black-90">
+            ***********
+          </Typography>
         </div>
-        {showEditPasswordForm && (
-          <Form {...form}>
-            <form action={action}>
-              <div className="mt-[16px] w-full md:w-2/5">
-                {/* TODO:BE側のRequest bodyに無いため一旦コメントアウト */}
-                {/* <TogglePasswordInput
+        {!showEditPasswordForm && (
+          <ButtonWithIcon
+            buttonProps={{
+              className:
+                'h-10 flex justify-center px-5 py-4 border border-bibinBlue-100 rounded-[100px]',
+              onClick: () => setShowEditPasswordForm(true)
+            }}
+            icon={<Edit />}
+            text="編集"
+            textProps={{ className: 'text-bibinBlue-100' }}
+          />
+        )}
+      </div>
+      {showEditPasswordForm && (
+        <Form {...form}>
+          <form action={action}>
+            <div className="mt-[16px] w-full md:w-2/5">
+              {/* TODO:BE側のRequest bodyに無いため一旦コメントアウト */}
+              {/* <TogglePasswordInput
                   label="古いパスワード"
                   showPassword={showCurrentPassword}
                   toggleShowPassword={() => setShowCurrentPassword((prev) => !prev)}
                   control={control}
                   name="password"
                 /> */}
-                <TogglePasswordInput
-                  label="新しいパスワード"
-                  showPassword={showNewPassword}
-                  toggleShowPassword={() => setShowNewPassword((prev) => !prev)}
-                  control={control}
-                  name="newPassword"
-                />
+              <TogglePasswordInput
+                label="新しいパスワード"
+                showPassword={showNewPassword}
+                toggleShowPassword={() => setShowNewPassword((prev) => !prev)}
+                control={control}
+                name="newPassword"
+              />
 
-                <TogglePasswordInput
-                  label="新しいパスワードの再入力"
-                  showPassword={showNewPasswordConfirm}
-                  toggleShowPassword={() => setShowNewPasswordConfirm((prev) => !prev)}
-                  control={control}
-                  name="newConfirmPassword"
-                />
-              </div>
-              <div className="mt-[16px] flex gap-2">
-                <Button
-                  className="w-[200px] border border-bibinBlue-100 bg-white-base"
-                  onClick={() => setShowEditPasswordForm(false)}
-                >
-                  <Typography as="bold" element="p" className="text-bibinBlue-100">
-                    キャンセル
-                  </Typography>
-                </Button>
-                <SaveButton disabled={false} />
-              </div>
-            </form>
-          </Form>
-        )}
-      </div>
-    </>
+              <TogglePasswordInput
+                label="新しいパスワードの再入力"
+                showPassword={showNewPasswordConfirm}
+                toggleShowPassword={() => setShowNewPasswordConfirm((prev) => !prev)}
+                control={control}
+                name="newConfirmPassword"
+              />
+            </div>
+            <div className="mt-[16px] flex gap-2">
+              <Button
+                className="w-[200px] border border-bibinBlue-100 bg-white-base"
+                onClick={() => setShowEditPasswordForm(false)}
+              >
+                <Typography as="bold" element="p" className="text-bibinBlue-100">
+                  キャンセル
+                </Typography>
+              </Button>
+              <SaveButton disabled={false} />
+            </div>
+          </form>
+        </Form>
+      )}
+    </div>
   );
 }
 

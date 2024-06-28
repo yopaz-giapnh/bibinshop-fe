@@ -2181,11 +2181,11 @@ export interface components {
     /** ShippingMethod Includes */
     ShippingMethodIncludes: components['schemas']['Vendor'] | components['schemas']['Calculator'];
     OAuthToken: {
-      access_token?: string;
-      token_type?: string;
-      expires_in?: number;
-      refresh_token?: string;
-      created_at?: components['schemas']['Timestamp'];
+      access_token: string;
+      token_type: string;
+      expires_in: number;
+      refresh_token: string;
+      created_at: number;
     };
   };
   responses: {

@@ -1,12 +1,12 @@
 'use client';
 
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { signOut } from 'next-auth/react';
+import { logout } from '@/features/auth/actions';
 import { useEffect } from 'react';
 
 export default function Page() {
   useEffect(() => {
-    signOut();
+    logout();
   }, []);
 
   return (

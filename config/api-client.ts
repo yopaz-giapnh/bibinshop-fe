@@ -1,9 +1,9 @@
-import { logout } from '@/features/auth/actions';
 import { getAccessToken } from '@/features/auth/utils/session';
 import { COOKIES } from '@/features/cart/constants';
 import type { paths as oauthPaths } from '@/lib/api/oauth';
 import type { paths as storefrontPaths } from '@/lib/api/storefront';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import createClient, { type Middleware } from 'openapi-fetch';
 
 type paths = oauthPaths & storefrontPaths;
@@ -33,7 +33,7 @@ const throwOnError: Middleware = {
   },
   async onResponse(res) {
     if (res.status === 401) {
-      await logout();
+      redirect('/auth/signout');
     }
 
     return res;

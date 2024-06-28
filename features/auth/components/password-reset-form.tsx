@@ -4,15 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import { updateAccountSecurity } from '@/features/account/security/actions';
-import TogglePasswordInput from '@/features/account/security/components/toggle-password-input';
-import { FormValues, formSchema } from '@/features/account/security/types/security-detail';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
+import { resetPassword } from '../actions';
+import { FormValues, formSchema } from '../types/password-reset-form';
 import CompleteModal from './complete-modal';
+import TogglePasswordInput from './toggle-password-input';
 
 /**
  * 新しいパスワードを設定フォーム
@@ -28,12 +28,11 @@ export default function PasswordResetForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       password: '',
-      newPassword: '',
-      newConfirmPassword: ''
+      confirmPassword: ''
     }
   });
 
-  const [formState, formAction] = useFormState(updateAccountSecurity, null);
+  const [formState, formAction] = useFormState(resetPassword, null);
   const dispatch = formAction.bind(null, form.getValues());
 
   useEffect(() => {
@@ -63,14 +62,14 @@ export default function PasswordResetForm() {
               showPassword={showNewPassword}
               toggleShowPassword={() => setShowNewPassword((prev) => !prev)}
               control={form.control}
-              name="newPassword"
+              name="password"
             />
             <TogglePasswordInput
               label="新しいパスワードの再入力"
               showPassword={showNewPasswordConfirm}
               toggleShowPassword={() => setShowNewPasswordConfirm((prev) => !prev)}
               control={form.control}
-              name="newConfirmPassword"
+              name="confirmPassword"
             />
             <div className="mt-[16px] flex gap-2">
               <SaveButton
