@@ -28,7 +28,7 @@ export async function getCart({ cache = 'no-store' }: { cache?: RequestCache } =
   }
 
   if (error) {
-    throw new Error(error.error);
+    throw error;
   }
 
   const { data: cart, included } = data;

@@ -14,7 +14,7 @@ export async function getAccountCreditCards() {
   });
 
   if (error) {
-    throw new Error(error.error);
+    throw error;
   }
 
   const { data: accountCreditCards } = data;

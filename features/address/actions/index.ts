@@ -13,7 +13,7 @@ export async function getAccountAddresses() {
   });
 
   if (error) {
-    throw new Error(error.error);
+    throw error;
   }
 
   const { data: addresses } = data;

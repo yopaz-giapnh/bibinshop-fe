@@ -24,7 +24,7 @@ export async function getVendor(vendorId: string) {
   }
 
   if (error) {
-    throw new Error(error.error);
+    throw error;
   }
 
   const { data: vendor, included } = data;
