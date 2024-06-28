@@ -15,10 +15,8 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { signUp } from '../actions';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
-import { GoogleAuthButton } from './google-auth-button';
 import { PasswordFormField } from './password-form-field';
 import { SentEmailModal, SentEmailModalRef } from './sent-email-modal';
-import { Separator } from './separator';
 
 export default function SignupForm() {
   const SentEmailModalRef = useRef<SentEmailModalRef>(null);
@@ -70,7 +68,8 @@ export default function SignupForm() {
 
           <SubmitButton disabled={!form.formState.isValid} />
 
-          <div className="flex items-center justify-center gap-6">
+          {/* TODO: Google SignIn審査通過するまでコメントアウト */}
+          {/* <div className="flex items-center justify-center gap-6">
             <Separator />
             <Typography as="body" element="p">
               または
@@ -83,7 +82,7 @@ export default function SignupForm() {
               alert('TODO: Google アカウントで作成');
             }}
             title="Google アカウントで作成"
-          />
+          /> */}
 
           <Typography as="caption" element="p" className="text-center text-black-base">
             次に進むことで、当社の

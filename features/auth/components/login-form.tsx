@@ -15,7 +15,6 @@ import { authenticate } from '../actions';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
 import { ForgotPasswordModal, ForgotPasswordModalRef } from './forgot-password-modal';
-import { GoogleAuthButton } from './google-auth-button';
 import { PasswordFormField } from './password-form-field';
 import {
   PasswordReserSendLinkModal,
@@ -106,7 +105,8 @@ export default function LoginForm() {
 
           <LoginButton disabled={!form.formState.isValid} />
 
-          <div className="flex items-center justify-center gap-6">
+          {/* TODO: Google SignIn審査通過するまでコメントアウト */}
+          {/* <div className="flex items-center justify-center gap-6">
             <Separator />
             <Typography as="body" element="p">
               または
@@ -119,7 +119,7 @@ export default function LoginForm() {
               alert('TODO: Google アカウントでログイン');
             }}
             title="Google アカウントでログイン"
-          />
+          /> */}
         </form>
       </Form>
 
