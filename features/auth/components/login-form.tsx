@@ -142,8 +142,8 @@ export default function LoginForm() {
         </Button>
       </Link>
       <ForgotPasswordModal
-        handleNextModalOpen={() => {
-          PasswordReserSendLinkModalRef.current?.open();
+        handleNextModalOpen={(email) => {
+          PasswordReserSendLinkModalRef.current?.open(email);
           ForfgotPasswordModalRef.current?.close();
         }}
         ref={ForfgotPasswordModalRef}

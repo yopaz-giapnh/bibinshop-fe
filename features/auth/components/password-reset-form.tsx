@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BadgeAlert } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -14,11 +16,15 @@ import { FormValues, formSchema } from '../types/password-reset-form';
 import CompleteModal from './complete-modal';
 import TogglePasswordInput from './toggle-password-input';
 
+type Props = {
+  resetPasswordToken: string;
+};
+
 /**
  * 新しいパスワードを設定フォーム
  * @returns JSX.Element
  */
-export default function PasswordResetForm() {
+export default function PasswordResetForm({ resetPasswordToken }: Props) {
   const router = useRouter();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showNewPasswordConfirm, setShowNewPasswordConfirm] = useState(false);
@@ -32,22 +38,44 @@ export default function PasswordResetForm() {
     }
   });
 
-  const [formState, formAction] = useFormState(resetPassword, null);
-  const dispatch = formAction.bind(null, form.getValues());
+  const [state, formAction] = useFormState(resetPassword, null);
+  const payload = {
+    ...form.getValues(),
+    resetPasswordToken
+  };
+  const action = formAction.bind(null, payload);
 
   useEffect(() => {
-    if (formState?.success) {
-      form.reset();
+    if (!state) {
+      return;
     }
-  }, [form, formState]);
+
+    if (state.success) {
+      setShowCompleteModal(true);
+    } else {
+      toast({
+        title: state.message,
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
+  }, [state]);
 
   const handleGotoHome = () => {
     setShowCompleteModal(false);
     router.push('/');
   };
 
+  const onCompleteModalOpen = () => {
+    setShowCompleteModal(true);
+  };
+  const handleCompleteModalClose = () => {
+    setShowCompleteModal(false);
+    router.replace('/login');
+  };
+
   return (
-    <div className="flex w-full flex-col items-center justify-center">
+    <div className="flex w-[calc(100vw-32px)] flex-col items-center justify-center rounded-[6px] bg-white-base p-6 shadow-base md:w-full">
       <Typography as="boldXLarge" element="p" className="mb-[16px] text-[24px] text-black-90">
         新しいパスワードを設定
       </Typography>
@@ -56,7 +84,7 @@ export default function PasswordResetForm() {
       </Typography>
       <div className="w-full">
         <Form {...form}>
-          <form action={dispatch}>
+          <form action={action}>
             <TogglePasswordInput
               label="パスワード"
               showPassword={showNewPassword}
@@ -72,43 +100,32 @@ export default function PasswordResetForm() {
               name="confirmPassword"
             />
             <div className="mt-[16px] flex gap-2">
-              <SaveButton
-                disabled={!form.formState.isValid}
-                onClick={() => {
-                  setShowCompleteModal(true);
-                }}
-              />
+              <SaveButton disabled={!form.formState.isValid} />
             </div>
           </form>
         </Form>
       </div>
       <CompleteModal
         open={showCompleteModal}
-        setOpen={setShowCompleteModal}
+        setOpen={(open) => {
+          if (open) {
+            onCompleteModalOpen();
+          } else {
+            handleCompleteModalClose();
+          }
+        }}
         title="パスワードは更新されました"
-        onClick={handleGotoHome}
+        onClick={handleCompleteModalClose}
       />
     </div>
   );
 }
 
-type SaveButtonProps = {
-  disabled: boolean;
-  onClick: () => void;
-};
-
-function SaveButton({ disabled, onClick }: SaveButtonProps) {
+function SaveButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <Button
-      size="lg"
-      variant="lg"
-      type="submit"
-      className="w-full"
-      disabled={disabled || pending}
-      onClick={onClick}
-    >
+    <Button size="lg" variant="lg" className="w-full" disabled={disabled || pending}>
       {pending ? <LoadingSpinner /> : '保存'}
     </Button>
   );

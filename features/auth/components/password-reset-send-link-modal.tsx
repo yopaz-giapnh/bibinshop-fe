@@ -2,14 +2,17 @@
 
 import BibiBubbleEmail from '@/assets/bibincban/bubble-email.svg';
 import { DialogContent, DialogDescription } from '@/components/ui/dialog';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Dialog } from '@radix-ui/react-dialog';
 import { ChevronLeft } from 'lucide-react';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useCountdown } from 'usehooks-ts';
+import { sendResetPasswordEmail } from '../actions';
 
 export type PasswordReserSendLinkModalRef = {
-  open: () => void;
+  open: (email: string) => void;
   close: () => void;
 };
 
@@ -21,6 +24,7 @@ export const PasswordReserSendLinkModal = forwardRef<
   PasswordReserSendLinkModalRef,
   { handleGoBack: () => void }
 >(({ handleGoBack }, ref) => {
+  const [email, setEmail] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [buttonText, setButtonText] = useState('メールを再送する');
@@ -36,7 +40,7 @@ export const PasswordReserSendLinkModal = forwardRef<
     resetCountdown();
   };
 
-  const handleResendClick = () => {
+  const handleResend = () => {
     setIsButtonDisabled(true);
     setButtonText('メールを再送しました！');
     startCountdown();
@@ -52,14 +56,27 @@ export const PasswordReserSendLinkModal = forwardRef<
   };
 
   useImperativeHandle(ref, () => ({
-    open: () => {
+    open: (email: string) => {
       setIsOpen(true);
+      setEmail(email);
     },
     close: () => {
       setIsOpen(false);
       handleTimerReset();
     }
   }));
+
+  const [state, formAction] = useFormState(sendResetPasswordEmail, undefined);
+  const action = formAction.bind(null, email);
+
+  useEffect(() => {
+    if (!state) {
+      return;
+    }
+
+    handleResend();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -87,15 +104,9 @@ export const PasswordReserSendLinkModal = forwardRef<
           <Typography as="caption" element="p" className="text-[14px] text-black-90">
             メールが届いていない場合は、迷惑メールフォルダをご確認ください。
           </Typography>
-          <button
-            type="button"
-            className={`text-[14px] font-bold ${isButtonDisabled ? 'text-gray-500' : 'text-bibinBlue-100'}`}
-            onClick={handleResendClick}
-            disabled={isButtonDisabled}
-          >
-            {buttonText}{' '}
-            {isButtonDisabled && <span className="text-bibinBlue-100">{`${count}s`}</span>}
-          </button>
+          <form action={action}>
+            <ResendButton disabled={isButtonDisabled} text={buttonText} count={count} />
+          </form>
         </DialogContent>
       </DialogDescription>
     </Dialog>
@@ -103,3 +114,25 @@ export const PasswordReserSendLinkModal = forwardRef<
 });
 
 PasswordReserSendLinkModal.displayName = 'PasswordReserSendLinkModal';
+
+function ResendButton({
+  disabled,
+  text,
+  count
+}: {
+  disabled: boolean;
+  text: string;
+  count: number;
+}) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className={`text-[14px] font-bold ${disabled ? 'text-gray-500' : 'text-bibinBlue-100'}`}
+      disabled={disabled || pending}
+    >
+      {pending ? <LoadingSpinner /> : text}
+      {disabled && <span className="text-bibinBlue-100">{`${count}s`}</span>}
+    </button>
+  );
+}

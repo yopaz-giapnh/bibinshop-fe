@@ -138,7 +138,7 @@ function ResendButton({ disabled, text }: { disabled: boolean; text: string }) {
       size="lg"
       variant="lg"
       className={`w-full ${disabled ? 'bg-gray-400' : ''}`}
-      disabled={disabled}
+      disabled={disabled || pending}
     >
       {pending ? <LoadingSpinner /> : text}
     </Button>

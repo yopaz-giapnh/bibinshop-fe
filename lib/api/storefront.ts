@@ -134,6 +134,12 @@ export interface paths {
      */
     get: operations['account-confirmation'];
   };
+  '/api/v2/storefront/passwords': {
+    post: operations['create-passwords'];
+  };
+  '/api/v2/storefront/passwords/{id}': {
+    patch: operations['update-passwords'];
+  };
   '/api/v2/storefront/order_status/{order_number}': {
     /**
      * Retrieve an Order Status
@@ -2748,6 +2754,8 @@ export interface components {
     ShippingMethodIncludeParam?: string;
     /** @description The confirmation token received in the email. */
     ConfirmationToken: string;
+    /** @description The confirmation token received in the email. */
+    ResetPasswordToken: string;
   };
   requestBodies: never;
   headers: never;
@@ -3072,6 +3080,51 @@ export interface operations {
         content: {
           'application/vnd.api+json': components['schemas']['OAuthToken'];
         };
+      };
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  'create-passwords': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          user?: {
+            /** @example john@snow.org */
+            email?: string;
+          };
+        };
+      };
+    };
+    responses: {
+      /** @description Head ok */
+      200: {
+        content: never;
+      };
+      404: components['responses']['NotFound'];
+    };
+  };
+  'update-passwords': {
+    parameters: {
+      path: {
+        id: components['parameters']['ResetPasswordToken'];
+      };
+    };
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          user?: {
+            /** @example password */
+            password?: string;
+            /** @example password */
+            password_confirmation?: string;
+          };
+        };
+      };
+    };
+    responses: {
+      /** @description Head ok */
+      200: {
+        content: never;
       };
       422: components['responses']['UnprocessableEntity'];
     };

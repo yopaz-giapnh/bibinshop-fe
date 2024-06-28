@@ -159,22 +159,28 @@ export async function authenticateFromToken(confirmationToken: string) {
   }
 }
 
-export async function resetPassword(prevState: State | null, formData: FormValues) {
+export async function resetPassword(
+  prevState: State | null,
+  formData: FormValues & { resetPasswordToken: string }
+) {
   try {
-    console.log('formData', formData);
-    // const { error } = await apiClient.PATCH('/api/v2/storefront/account', {
-    //   body: {
-    //     user: {
-    //       // TODO:BE側のRequest body古いパスワード追加後に追記
-    //       password: formData.newPassword,
-    //       password_confirmation: formData.newConfirmPassword
-    //     }
-    //   }
-    // });
+    const { error } = await apiClient.PATCH('/api/v2/storefront/passwords/{id}', {
+      params: {
+        path: {
+          id: formData.resetPasswordToken
+        }
+      },
+      body: {
+        user: {
+          password: formData.password,
+          password_confirmation: formData.confirmPassword
+        }
+      }
+    });
 
-    // if (error) {
-    //   throw error;
-    // }
+    if (error) {
+      throw error;
+    }
 
     return {
       success: true,
@@ -185,6 +191,34 @@ export async function resetPassword(prevState: State | null, formData: FormValue
       success: false,
       message: 'パスワードの更新に失敗しました。',
       description: isClientError(e) ? e.error : 'エラーが発生しました。もう一度お試しください。'
+    };
+  }
+}
+
+export async function sendResetPasswordEmail(prevState: State, email: string) {
+  try {
+    const { error } = await apiClient.POST('/api/v2/storefront/passwords', {
+      body: {
+        user: {
+          email
+        }
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      success: true,
+      message: '入力したアドレスにメールを送信しました'
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: isClientError(error) ? error.error : 'エラーが発生しました'
     };
   }
 }
