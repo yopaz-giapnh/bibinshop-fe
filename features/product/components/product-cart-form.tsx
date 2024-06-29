@@ -3,6 +3,7 @@
 import { Share } from '@/components/icons/share';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { addItem, getCart } from '@/features/cart/actions';
@@ -10,8 +11,9 @@ import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
 import Rating from '@/features/review/components/rating';
 import { useIsPc } from '@/hooks/use-is-pc';
+import { cn } from '@/lib/utils';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
-import { Check, ShoppingCart } from 'lucide-react';
+import { BadgeAlert, Check, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -22,51 +24,42 @@ type Props = {
   getCart: ReturnType<typeof getCart>;
 };
 
-// type Color = {
-//   name: string;
-//   value: string;
-// };
-
-// TODO: color
-// const colors: Color[] = [
-//   {
-//     name: '赤',
-//     value: '#FF0000'
-//   },
-//   {
-//     name: '黒',
-//     value: '#000000'
-//   },
-//   {
-//     name: '青',
-//     value: '#0000FF'
-//   }
-// ];
-
 export function ProductCartForm({ product, getCart }: Props) {
-  // const isColorProperty = true;
-  // const [selectedColor, setSelectedColor] = useState<Color>(colors[0]);
   const isPc = useIsPc();
   const { toast } = useToast();
+
+  const { defaultVariant } = product;
+  const [selectedVariant, setSelectedVariant] = useState(defaultVariant);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-  const [message, formAction] = useFormState(addItem, null);
+  const [state, formAction] = useFormState(addItem, null);
   const action = formAction.bind(null, {
-    productId: product.id,
+    variantId: selectedVariant?.id || '',
     quantity: selectedQuantity
   });
 
   useEffect(() => {
-    if (message && message.success && isPc) {
-      cartSheetRef.current?.open();
+    if (!state) {
+      return;
     }
-    if (message && message.success && !isPc) {
+
+    if (state.success) {
+      if (isPc) {
+        cartSheetRef.current?.open();
+      } else {
+        toast({
+          title: 'カートに追加しました',
+          icon: <Check className="h-6 w-6" />
+        });
+      }
+    } else {
       toast({
-        title: 'カートに追加しました',
-        icon: <Check className="h-6 w-6" />
+        title: state.message,
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
       });
     }
-  }, [message, isPc, toast]);
+  }, [state, isPc, toast]);
 
   const cartSheetRef = useRef<CartSheetRef>(null);
 
@@ -122,7 +115,7 @@ export function ProductCartForm({ product, getCart }: Props) {
 
         <div className="flex gap-2">
           <Typography as="boldXLarge" element="p" className="text-bibinBlue-100">
-            {formatedPrice(product.attributes.price)}
+            {formatedPrice(selectedVariant?.attributes.price)}
           </Typography>
 
           {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (
@@ -145,42 +138,31 @@ export function ProductCartForm({ product, getCart }: Props) {
           )}
         </div>
 
-        {/* TODO: api 実装されてから */}
-        {/* <div>
-          {isColorProperty ? (
-            <div className="flex flex-col py-2">
-              <Typography as="boldSmall" element="p" className="text-black-70">
-                色: {selectedColor?.name}
-              </Typography>
-              <div className="mt-2 flex gap-4">
-                {colors.map((color) => {
-                  return (
-                    <button
-                      key={color.name}
-                      type="button"
-                      onClick={() => setSelectedColor(color)}
-                      className={clsx(
-                        'flex h-8 w-8 items-center justify-center rounded-[16px] ',
-                        selectedColor?.name === color.name
-                          ? 'border-2 border-bibinBlue-100'
-                          : 'border border-black-30'
-                      )}
-                    >
-                      <div
-                        className="h-6 w-6 rounded-[12px]"
-                        style={{
-                          backgroundColor: color.value
-                        }}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div> */}
+        <ScrollArea className="whitespace-nowrap md:w-[40vw]">
+          <div className="flex gap-1">
+            {product.variants.map((variant) => {
+              const isSelected = variant.id === selectedVariant?.id;
+
+              return (
+                <button
+                  key={variant.id}
+                  className={cn(
+                    'flex rounded-[6px] border border-black-10 bg-white-base p-4 md:mt-0 md:w-fit',
+                    isSelected && 'border-2 border-bibinBlue-100'
+                  )}
+                  onClick={() => {
+                    setSelectedVariant(variant);
+                  }}
+                >
+                  <Typography as="boldSmall" element="p" className="text-black-70">
+                    {variant.attributes.options_text}
+                  </Typography>
+                </button>
+              );
+            })}
+          </div>
+          <ScrollBar orientation="horizontal" className="pt-[8px]" />
+        </ScrollArea>
 
         <div className="flex items-center py-2">
           <Typography as="boldSmall" element="p" className="text-black-70">

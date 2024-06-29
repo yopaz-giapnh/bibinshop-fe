@@ -17,9 +17,11 @@ type Props = {
 export function ProductCard({ product, imageSize }: Props) {
   const { toast } = useToast();
 
+  const { defaultVariant } = product;
+
   const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const result = await addItem(null, { productId: product.id, quantity: 1 });
+    const result = await addItem(null, { variantId: defaultVariant?.id || '', quantity: 1 });
     if (result.success) {
       toast({
         title: 'カートに追加しました',

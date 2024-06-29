@@ -36,7 +36,7 @@ export default function BuyAgainModal({
 
   const addToCart = async () => {
     const results = await Promise.all(
-      variantIds.map((variantId) => addItem(null, { productId: variantId, quantity: 1 }))
+      variantIds.map((variantId) => addItem(null, { variantId, quantity: 1 }))
     );
 
     if (results.some((result) => result.success)) {

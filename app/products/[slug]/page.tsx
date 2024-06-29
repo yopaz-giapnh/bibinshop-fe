@@ -4,7 +4,6 @@ import { ProductDetail } from '@/features/product/components/product-detail';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-// TODO: メタデータ設定する
 export async function generateMetadata({
   params
 }: {
@@ -15,8 +14,9 @@ export async function generateMetadata({
   if (!product) return notFound();
 
   return {
-    title: product.attributes.name,
-    description: product.attributes.description
+    title: product.attributes.meta_title || product.attributes.name,
+    description: product.attributes.meta_description || product.attributes.description,
+    keywords: product.attributes.meta_keywords || product.attributes.name
   };
 }
 

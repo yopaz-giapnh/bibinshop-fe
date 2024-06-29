@@ -1380,6 +1380,8 @@ export interface components {
         meta_description?: string | null;
         /** @example example, product */
         meta_keywords?: string | null;
+        /** @example example, product */
+        meta_title?: string | null;
         updated_at?: components['schemas']['Timestamp'];
         /** @example 9238-WS */
         sku?: string;
@@ -2180,7 +2182,7 @@ export interface components {
       attributes: {
         preferences?: {
           currency?: string;
-          amount?: number;
+          amount?: string;
         };
       };
     };

@@ -82,7 +82,7 @@ export function getDisplayShippingCost({
     return null;
   }
 
-  return cost.toLocaleString() + '円';
+  return parseInt(cost).toLocaleString() + '円';
 }
 
 export function getTaxonImageUrl(image: TaxonImageSchema | undefined) {

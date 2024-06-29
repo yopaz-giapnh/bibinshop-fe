@@ -5,13 +5,14 @@ type ItemProps = {
   imageSrc: string;
   title: string;
   price: string;
+  optionsText?: string;
 };
 
 /**
  * 注文内容カードコンポーネント
  * @returns JSX.Element
  */
-export default function OrderDetailListItem({ imageSrc, title, price }: ItemProps) {
+export default function OrderDetailListItem({ imageSrc, title, price, optionsText }: ItemProps) {
   return (
     <div className="mt-[16px] flex items-center">
       <div className="relative h-[100px] w-[100px]">
@@ -21,10 +22,11 @@ export default function OrderDetailListItem({ imageSrc, title, price }: ItemProp
         <Typography as="boldSmall" element="p" className="text-[14px] text-black-90">
           {title}
         </Typography>
-        {/* TODO: プロパティ設定するまでコメントアウト */}
-        {/* <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
-          色: {color}
-        </Typography> */}
+        {!!optionsText && (
+          <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
+            {optionsText}
+          </Typography>
+        )}
         <Typography as="boldSmall" element="p" className="mt-[4px] text-[14px] text-bibinBlue-100">
           {price}
         </Typography>

@@ -37,6 +37,9 @@ export function OrderDetailInfo({ lineItems, vendorTotals, variants, images }: P
             </div>
             {lineItemsByVendor.map((lineItem) => {
               const image = findImageFromLineItem({ lineItem, variants, images });
+              const variant = variants.find(
+                (variant) => variant.id === lineItem.relationships.variant?.data?.id
+              );
 
               return (
                 <OrderDetailListItem
@@ -44,6 +47,7 @@ export function OrderDetailInfo({ lineItems, vendorTotals, variants, images }: P
                   imageSrc={getProductImageUrl(image)}
                   title={lineItem.attributes.name ?? ''}
                   price={lineItem.attributes.display_price ?? ''}
+                  optionsText={variant?.attributes.options_text}
                 />
               );
             })}

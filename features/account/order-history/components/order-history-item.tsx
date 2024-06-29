@@ -8,13 +8,19 @@ type OrderHistoryItemProps = {
   item: LineItem;
   image: ImageSchema | undefined;
   status: string;
+  optionsText?: string;
 };
 
 /**
  * 注文履歴アイテムの詳細コンポーネント
  * @returns JSX.Element
  */
-export default function OrderHistoryItem({ item, image, status }: OrderHistoryItemProps) {
+export default function OrderHistoryItem({
+  item,
+  image,
+  status,
+  optionsText
+}: OrderHistoryItemProps) {
   const isUnpaid = status === '未払い';
   const variantId = item.relationships.variant?.data?.id;
   const imageUrl = image?.attributes.styles?.[image?.attributes.styles?.length - 1].url;
@@ -45,10 +51,16 @@ export default function OrderHistoryItem({ item, image, status }: OrderHistoryIt
           >
             {item.attributes.name}
           </Typography>
-          {/* TODO: /api/v2/storefront/account/ordersでdetail取得後追加 */}
-          {/* <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
-            色：vol. 6
-          </Typography> */}
+
+          {!!optionsText && (
+            <Typography
+              as="small"
+              element="p"
+              className="mb-2 mt-[4px] text-[12px] text-black-70 md:mb-0"
+            >
+              {optionsText}
+            </Typography>
+          )}
         </div>
         {!isUnpaid && !!variantId && (
           <BuyAgainModal

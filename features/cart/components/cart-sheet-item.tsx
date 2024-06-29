@@ -19,6 +19,9 @@ export function CartSheetItem({ cart, lineItem }: Props) {
     variants,
     images
   });
+  const variant = variants.find(
+    (variant) => variant.id === lineItem.relationships.variant?.data?.id
+  );
 
   return (
     <div className="relative inline-flex items-center gap-[16px]">
@@ -31,14 +34,15 @@ export function CartSheetItem({ cart, lineItem }: Props) {
           alt={''}
         />
       </div>
-      <div className="relative inline-flex flex-[0_0_auto] flex-col items-start gap-[4px]">
+      <div className="relative inline-flex w-[250px] flex-[0_0_auto] flex-col items-start gap-[4px]">
         <Typography as="linkSmall" element="p" className="text-black-90">
           {lineItem.attributes.name}
         </Typography>
-        {/* TODO: プロパティ設定 */}
-        {/* <Typography as="subCaption" element="p" className="text-black-70">
-          色: vol. 6
-        </Typography> */}
+        {!!variant?.attributes.options_text && (
+          <Typography as="subCaption" element="p" className="text-black-70">
+            {variant.attributes.options_text}
+          </Typography>
+        )}
         <Typography as="linkSmall" element="p" className="text-bibinBlue-100">
           {lineItem.attributes.display_price}
         </Typography>

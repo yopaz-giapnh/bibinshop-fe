@@ -28,7 +28,7 @@ export async function ProductOverview({ title, seeMoreUrl, products, columns, to
       )}
       <ProductGrid products={products} columns={columns} />
       {seeMoreUrl && <SeeMoreButton href={seeMoreUrl} arrow="right" />}
-      {totalPages && <Pagination totalPages={totalPages} />}
+      {!!totalPages && <Pagination totalPages={totalPages} />}
       {!isSignedIn && (
         <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-between bg-black-30 p-[8px] md:hidden">
           <Typography as="small" element="p" className="ml-1 w-[190px] text-white-base">

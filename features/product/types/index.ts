@@ -35,4 +35,6 @@ export type Product = ProductSchema & {
   vendor?: VendorSchema;
   taxons: TaxonSchema[];
   productProperties: ProductPropertySchema[];
+  variants: VariantSchema[];
+  defaultVariant?: VariantSchema;
 };

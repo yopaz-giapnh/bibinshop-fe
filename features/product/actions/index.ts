@@ -16,7 +16,8 @@ import {
   isCalculatorSchema,
   isImageSchema,
   isProductPropertySchema,
-  isTaxonSchema
+  isTaxonSchema,
+  isVariantSchema
 } from '../utils';
 
 export async function getProducts(params?: ProductsListParameters) {
@@ -55,7 +56,7 @@ export async function getProduct(product_slug: string) {
         product_slug
       },
       query: {
-        include: 'images,product_properties,vendor,taxons',
+        include: 'images,product_properties,vendor,taxons,variants,default_variant',
         'filter[in_stock]': true
       }
     },
@@ -87,13 +88,23 @@ const reshapeProduct = ({
   const vendorIncluded = productIncluded?.filter(isVendorSchema)?.[0];
   const taxons = productIncluded?.filter(isTaxonSchema) || [];
   const productProperties = productIncluded?.filter(isProductPropertySchema) || [];
+  const allVariants = productIncluded?.filter(isVariantSchema) || [];
+  // TODO: 購入不可な場合は表示するかどうか
+  const variants = allVariants.filter(
+    (variant) => !variant.attributes.is_master && variant.attributes.purchasable
+  );
+  const defaultVariant = allVariants.find(
+    (variant) => variant.id === product.relationships.default_variant?.data?.id
+  );
 
   return {
     ...product,
     images: reshapeImages(imageIncluded),
     vendor: vendorIncluded,
     taxons,
-    productProperties
+    productProperties,
+    variants,
+    defaultVariant
   };
 };
 

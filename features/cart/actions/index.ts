@@ -5,6 +5,7 @@ import { isAddressSchema } from '@/features/address/utils';
 import { isCreditCardSchema } from '@/features/payment/utils';
 import { isImageSchema, isVariantSchema } from '@/features/product/utils';
 import { isNotFound } from '@/utils/api';
+import { isClientError } from '@/utils/error';
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { COOKIES, TAGS } from '../constants';
@@ -57,8 +58,9 @@ export async function createCart() {
 export async function addItem(
   prevState: {
     success: boolean;
+    message: string;
   } | null,
-  { productId, quantity }: { productId: string; quantity: number }
+  { variantId, quantity }: { variantId: string; quantity: number }
 ) {
   let cart = await getCart();
   if (!cart) {
@@ -70,21 +72,29 @@ export async function addItem(
   }
 
   try {
-    await apiClient.POST('/api/v2/storefront/cart/add_item', {
+    const { error } = await apiClient.POST('/api/v2/storefront/cart/add_item', {
       body: {
-        variant_id: productId,
+        variant_id: variantId,
         quantity
       }
     });
+
+    if (error) {
+      throw error;
+    }
+
     revalidateTag(TAGS.cart);
 
     return {
-      success: true
+      success: true,
+      message: 'カートに追加しました'
     };
   } catch (e) {
     console.error(e);
+
     return {
-      success: false
+      success: false,
+      message: isClientError(e) ? e.error : 'カートに追加に失敗しました'
     };
   }
 }

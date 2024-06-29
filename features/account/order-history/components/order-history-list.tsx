@@ -18,18 +18,23 @@ type OrderHistoryListProps = {
 export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const isShipped = order.attributes.shipment_state === 'shipped';
   const productSlugs = order.products.map((product) => product.attributes.slug);
+  const { variants, lineItems } = order;
 
   return (
     <div className="mb:mt-[24px] mt-[16px] rounded-[6px] border-[1px] bg-white-base shadow-sm">
       <OrderHistoryListInfo order={order} />
       <div className="flex w-full justify-between px-[16px]">
         <div className="flex w-full flex-col">
-          {order.lineItems.map((item, index) => {
+          {lineItems.map((item, index) => {
             const image = findImageFromLineItem({
               lineItem: item,
               variants: order.variants,
               images: order.images
             });
+            const variant = variants.find(
+              (variant) => variant.id === item.relationships.variant?.data?.id
+            );
+
             return (
               <>
                 <OrderHistoryItem
@@ -37,6 +42,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
                   item={item}
                   image={image}
                   status={getShipmentStateTitle(order)}
+                  optionsText={variant?.attributes.options_text}
                 />
                 {index !== order.lineItems.length - 1 && <div className="border-[1px]" />}
               </>

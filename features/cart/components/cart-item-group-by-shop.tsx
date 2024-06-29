@@ -39,6 +39,9 @@ export function CartItemGroupByShop({ shop }: Props) {
       {shop.lineItems.map((lineItem) => {
         const key = `${shop.id}-${lineItem.id}`;
         const image = findImageFromLineItem({ lineItem, variants, images });
+        const variant = variants.find(
+          (variant) => variant.id === lineItem.relationships.variant?.data?.id
+        );
 
         return (
           <div key={key} className="flex cursor-pointer items-center gap-4">
@@ -69,10 +72,11 @@ export function CartItemGroupByShop({ shop }: Props) {
                   <MobileCartDeleteItemButton lineItemId={lineItem.id} />
                 </div>
               </div>
-              {/* TODO: プロパティ設定 */}
-              {/* <Typography as="subCaption" element="h3" className="text-black-70">
-      色: vol. 6
-    </Typography> */}
+              {!!variant?.attributes.options_text && (
+                <Typography as="subCaption" element="h3" className="text-black-70">
+                  {variant.attributes.options_text}
+                </Typography>
+              )}
               <div className="mb-[10px] flex items-center justify-between md:mb-0">
                 <Typography
                   as="linkSmall"
