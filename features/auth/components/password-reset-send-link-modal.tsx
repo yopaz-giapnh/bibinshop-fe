@@ -81,7 +81,7 @@ export const PasswordReserSendLinkModal = forwardRef<
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
-        <DialogContent className="flex w-[540px] flex-col items-center justify-center">
+        <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[540px]">
           <button
             type="button"
             className="absolute left-6 top-4 flex items-center"
@@ -92,7 +92,7 @@ export const PasswordReserSendLinkModal = forwardRef<
               戻る
             </Typography>
           </button>
-          <div className="flex flex-col items-center">
+          <div className="mt-[16px] flex flex-col items-center">
             <Typography as="bold" element="p" className="text-[20px] text-black-90">
               パスワード再設定のリンクを
             </Typography>

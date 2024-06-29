@@ -63,7 +63,7 @@ export default function Address({ getAccountAddresses }: Props) {
         textProps={{ className: 'text-bibinBlue-100' }}
       />
       {hasAddress ? (
-        <div className="mt-[24px] h-screen-calc w-full overflow-y-auto md:w-[592px]">
+        <div className="w-full overflow-y-auto md:mt-[24px] md:w-[592px]">
           {addresses.map((address) => (
             <div key={address.id} className="mt-[24px]">
               <AddressCard

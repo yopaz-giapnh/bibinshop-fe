@@ -39,7 +39,7 @@ export function Copyright() {
   );
 
   return (
-    <div className="flex flex-col items-center justify-center md:flex-row md:justify-between">
+    <div className="mb-[55px] flex flex-col items-center justify-center md:flex-row md:justify-between">
       <div className="flex flex-col items-center justify-center md:flex  md:flex-row">
         <Logo />
         <div className="mt-[16px] flex gap-5 md:hidden">

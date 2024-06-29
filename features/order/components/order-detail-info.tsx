@@ -16,7 +16,7 @@ type Props = {
 export function OrderDetailInfo({ lineItems, vendorTotals, variants, images }: Props) {
   return (
     <OrderDetailSection title="注文情報">
-      {vendorTotals.map((vendorTotal) => {
+      {vendorTotals.map((vendorTotal, index) => {
         const lineItemsByVendor = lineItems.filter(
           (lineItem) => lineItem.relationships.vendor?.data?.id === vendorTotal.id
         );
@@ -47,7 +47,7 @@ export function OrderDetailInfo({ lineItems, vendorTotals, variants, images }: P
                 />
               );
             })}
-            <div className="mt-[16px] border-[1px]" />
+            {index !== vendorTotals.length - 1 && <div className="mt-[16px] border-[1px]" />}
           </div>
         );
       })}

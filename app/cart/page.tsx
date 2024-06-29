@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 export default async function Page() {
   return (
     <div className="h-full w-full bg-paleFrostBlue">
-      <div className="mx-auto flex w-full flex-col items-center pt-[128px] md:h-screen">
+      <div className="mx-auto flex w-full flex-col items-center pt-[73px] md:h-screen md:pt-[128px]">
         <div className="flex h-full  w-full flex-col">
           <div className="mx-3 mt-3 flex justify-between md:block">
             <BackButton />

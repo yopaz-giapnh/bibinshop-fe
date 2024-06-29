@@ -4,6 +4,7 @@ import Shop from '@/assets/cart/shop.svg';
 import { Typography } from '@/components/ui/typography';
 import { ImageSchema, VariantSchema } from '@/features/product/types';
 import { findImageFromLineItem, getProductImageUrl } from '@/features/product/utils';
+import { Store } from 'lucide-react';
 import Image from 'next/image';
 import { updateItemQuantity } from '../actions';
 import { LineItem, VendorTotal } from '../types';
@@ -24,8 +25,12 @@ export function CartItemGroupByShop({ shop }: Props) {
   const { variants, images } = shop;
 
   return (
-    <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4 shadow-base">
-      <div key={shop.id.toString()} className="flex cursor-pointer items-center">
+    <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
+      <div
+        key={shop.id.toString()}
+        className="mt-[4px] flex cursor-pointer items-center md:mt-[0px]"
+      >
+        <Store className="mr-[4px] h-[18px] w-[18px]" />
         <Typography as="bold" element="h2" className="text-[14px] text-black-90 md:text-[18px]">
           {shop.attributes.name}
         </Typography>
@@ -51,7 +56,7 @@ export function CartItemGroupByShop({ shop }: Props) {
                 <Typography
                   as="linkSmall"
                   element="h3"
-                  className="max-w-[145px] overflow-hidden whitespace-normal  break-words text-black-90 md:max-w-none"
+                  className="max-w-[145px] overflow-hidden whitespace-normal break-words text-[12px] text-black-90  md:max-w-none md:text-[14px]"
                   style={{
                     display: '-webkit-box',
                     WebkitBoxOrient: 'vertical',
@@ -66,10 +71,14 @@ export function CartItemGroupByShop({ shop }: Props) {
               </div>
               {/* TODO: プロパティ設定 */}
               {/* <Typography as="subCaption" element="h3" className="text-black-70">
-                色: vol. 6
-              </Typography> */}
+      色: vol. 6
+    </Typography> */}
               <div className="mb-[10px] flex items-center justify-between md:mb-0">
-                <Typography as="linkSmall" element="h3" className="text-bibinBlue-100">
+                <Typography
+                  as="linkSmall"
+                  element="h3"
+                  className="text-[14px] text-bibinBlue-100 md:text-[16px]"
+                >
                   {lineItem.attributes.display_price}
                 </Typography>
 

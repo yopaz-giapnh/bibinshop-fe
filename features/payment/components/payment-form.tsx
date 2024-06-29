@@ -121,11 +121,11 @@ function Form({ onClose, iconLayout }: Props) {
           {message && <p className="mt-2 text-sm font-medium text-destructive">{message}</p>}
         </div>
 
-        <div className="flex w-full justify-between md:justify-center">
+        <div className="flex w-full justify-around md:justify-center">
           <button
             type="submit"
             onClick={onClose}
-            className="h-[48px] w-[150px] rounded-[100px] border-[1px] border-bibinBlue-100 font-semibold text-bibinBlue-100 md:hidden md:w-[170px]"
+            className="hidden h-[48px] w-[140px] rounded-[100px] border-[1px] border-bibinBlue-100 font-semibold text-bibinBlue-100 md:block md:hidden md:w-[170px]"
           >
             キャンセル
           </button>
@@ -134,7 +134,7 @@ function Form({ onClose, iconLayout }: Props) {
             size="lg"
             variant="lg"
             disabled={isLoading || !stripe || !form.formState.isValid}
-            className="h-[48px] w-[150px] md:h-[55px] md:w-[392px]"
+            className="h-[48px] w-full md:h-[55px] md:w-[392px]"
             onClick={onClose}
           >
             {isLoading ? <LoadingSpinner /> : isPc ? 'お支払い方法を保存する' : '保存'}

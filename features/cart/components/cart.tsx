@@ -13,7 +13,7 @@ export async function Cart() {
       <CartEmpty />
     </div>
   ) : (
-    <div className="mt-[22px] w-full px-[8px] md:px-20">
+    <div className="mt-[22px] h-full  px-[8px] md:px-20">
       <div className="gap-6 md:flex">
         <div className="flex-1">
           <CartItemList cart={cart} />

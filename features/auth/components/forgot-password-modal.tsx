@@ -37,6 +37,9 @@ export const ForgotPasswordModal = forwardRef<
   { handleNextModalOpen: (email: string) => void }
 >(({ handleNextModalOpen }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useImperativeHandle(ref, () => ({
     open: () => {

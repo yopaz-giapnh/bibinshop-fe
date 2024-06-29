@@ -22,21 +22,24 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   return (
     <div className="mb:mt-[24px] mt-[16px] rounded-[6px] border-[1px] bg-white-base shadow-sm">
       <OrderHistoryListInfo order={order} />
-      <div className="flex justify-between px-[16px]">
-        <div className="flex flex-col">
-          {order.lineItems.map((item) => {
+      <div className="flex w-full justify-between px-[16px]">
+        <div className="flex w-full flex-col">
+          {order.lineItems.map((item, index) => {
             const image = findImageFromLineItem({
               lineItem: item,
               variants: order.variants,
               images: order.images
             });
             return (
-              <OrderHistoryItem
-                key={item.id}
-                item={item}
-                image={image}
-                status={getShipmentStateTitle(order)}
-              />
+              <>
+                <OrderHistoryItem
+                  key={item.id}
+                  item={item}
+                  image={image}
+                  status={getShipmentStateTitle(order)}
+                />
+                {index !== order.lineItems.length - 1 && <div className="border-[1px]" />}
+              </>
             );
           })}
         </div>

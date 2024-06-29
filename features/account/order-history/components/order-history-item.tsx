@@ -20,7 +20,7 @@ export default function OrderHistoryItem({ item, image, status }: OrderHistoryIt
   const imageUrl = image?.attributes.styles?.[image?.attributes.styles?.length - 1].url;
 
   return (
-    <div className="flex border-b-[1px] py-[16px]">
+    <div className="flex py-[16px]">
       <div className="relative h-[80px] w-[80px] md:h-[100px] md:w-[100px]">
         <Image
           src={imageUrl || '/placeholder-product-image.png'}

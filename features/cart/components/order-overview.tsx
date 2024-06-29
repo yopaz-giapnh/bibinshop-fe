@@ -52,7 +52,7 @@ export function OrderOverview({ cart }: Props) {
           </Typography>
         </div>
         <Link href="/checkout" passHref>
-          <Button size="default" variant="lg" className="h-[45px] w-[202px]">
+          <Button size="default" variant="lg" className="h-[45px] w-[160px] md:w-[202px]">
             購入する
           </Button>
         </Link>

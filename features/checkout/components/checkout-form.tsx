@@ -22,33 +22,38 @@ export async function CheckoutForm({ cart }: Props) {
   const canOrder = hasAddress && hasCreditCard;
 
   return (
-    <div className="mt-[22px] w-full md:px-20">
+    <div className="mt-[16px] w-full md:mt-[22px] md:px-20">
       <div className="gap-6 md:flex">
-        <div className="flex-1 flex-col gap-4 px-2 md:flex">
-          <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
-            <Typography as="boldTitle" element="h2" className="text-text-80">
-              1. お届け先住所
-            </Typography>
+        <div className="flex-1 flex-col gap-4 md:flex md:px-2">
+          <div className="mt-2 flex flex-col rounded-[6px] bg-white-base p-4 md:gap-4">
             <CheckoutAddressForm addresses={addresses} />
           </div>
           <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
             <div className="flex flex-col justify-between gap-4">
-              <Typography as="boldTitle" element="h2" className="text-text-80">
+              <Typography
+                as="boldTitle"
+                element="h2"
+                className="text-[16px] text-text-100 md:text-[24px]"
+              >
                 2. お支払い方法
               </Typography>
               {hasAddress && <CheckoutPaymentForm creditCards={creditCards} />}
             </div>
           </div>
-          <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
-            <Typography as="boldTitle" element="h2" className="text-text-80">
+          <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base">
+            <Typography
+              as="boldTitle"
+              element="h2"
+              className="mb-[-18px] px-4 pt-4 text-[16px] text-text-100 md:mb-[-12px] md:text-[24px]"
+            >
               3. 注文情報
             </Typography>
             {canOrder && <CheckoutCartForm cart={cart} />}
           </div>
         </div>
-        <div className="my-2 flex w-full flex-col gap-4 px-2 md:w-[424px]">
+        <div className="my-2 flex w-full flex-col gap-4 md:w-[424px] md:px-2">
           <div className="w-full rounded-[6px] bg-white-base px-4 py-[19px] shadow-base">
-            <Typography as="title" element="p" className="text-text-100">
+            <Typography as="title" element="p" className="text-[16px] text-text-100 md:text-[24px]">
               注文概要
             </Typography>
             <OrderOverview cart={cart} canOrder={canOrder} />

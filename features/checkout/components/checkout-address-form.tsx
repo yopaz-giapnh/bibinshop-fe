@@ -42,7 +42,14 @@ export function CheckoutAddressForm({ addresses }: Props) {
 
   return (
     <>
-      <div className="mb-2 flex justify-between ">
+      <div className="flex justify-between md:mb-2">
+        <Typography
+          as="boldTitle"
+          element="h2"
+          className="text-[16px] text-text-100 md:text-[24px]"
+        >
+          1. お届け先住所
+        </Typography>
         {hasAddress && (
           <button
             className="flex items-center"

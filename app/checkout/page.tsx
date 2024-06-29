@@ -1,3 +1,4 @@
+import { BackButton } from '@/components/button/back-button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
@@ -14,12 +15,20 @@ export default async function Page() {
   }
 
   return (
-    <div className="h-full w-full bg-paleFrostBlue">
-      <div className="mx-auto flex w-full flex-col items-center pt-[128px] md:pb-[80px]">
+    <div className="h-full w-full bg-paleFrostBlue px-[8px] md:px-0">
+      <div className="mx-auto flex w-full flex-col items-center pt-[73px] md:pb-[80px] md:pt-[128px]">
         <div className="flex h-full w-full flex-col">
-          <Typography as="boldTitle" element="h1" className="text-center text-text-80 md:mt-6">
-            購入手続き
-          </Typography>
+          <div className="mt-[16px] flex w-full items-center justify-between md:mt-6 md:justify-center">
+            <BackButton />
+            <Typography
+              as="boldTitle"
+              element="h1"
+              className="text-center text-[16px] text-text-100  md:text-[24px]"
+            >
+              購入手続き
+            </Typography>
+            <div className="h-7 w-7" />
+          </div>
           <Suspense fallback={<LoadingSpinner />}>
             <CheckoutForm cart={cart} />
           </Suspense>

@@ -35,14 +35,14 @@ export const AddressListModal = forwardRef<AddressListModalRef, Props>(
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="flex w-11/12 flex-col items-center justify-center gap-6">
-          <Typography as="title" element="h2">
+          <Typography as="title" element="h2" className="text-[16px] md:text-[24px]">
             お届け先住所
           </Typography>
 
           <ButtonWithIcon
             buttonProps={{
               className:
-                'w-11/12 md:w-[208] h-10 flex justify-center px-4 py-2 flex-1 border border-bibinBlue-100 rounded-[100px]',
+                'w-fit md:w-[208] h-10 flex justify-center px-4 py-2 flex-1 border border-bibinBlue-100 rounded-[100px]',
               onClick: onAdd
             }}
             icon={<CirclePlus className="h-6 w-6 text-bibinBlue-100" />}
@@ -51,7 +51,7 @@ export const AddressListModal = forwardRef<AddressListModalRef, Props>(
           />
 
           <ScrollArea>
-            <div className="w-5/ max-h-[350px] md:w-[592px]">
+            <div className="max-h-72 md:w-[592px]">
               <AddressSelection
                 activeAddress={activeAddress}
                 addresses={addresses}
