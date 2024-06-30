@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
+import { displayPromoTotal } from '@/features/cart/utils';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateCheckout } from '../actions';
@@ -22,6 +23,7 @@ export function OrderOverview({ cart, canOrder }: Props) {
     activeAddress && activeCreditCard
       ? formAction.bind(null, { address: activeAddress, creditCard: activeCreditCard })
       : undefined;
+  const promoTotal = displayPromoTotal(cart);
 
   return (
     <>
@@ -34,12 +36,23 @@ export function OrderOverview({ cart, canOrder }: Props) {
         </Typography>
       </div>
 
+      {!!promoTotal && (
+        <div className="mt-4 flex justify-between">
+          <Typography as="caption" element="p" className="text-black-90">
+            {`割引金額`}
+          </Typography>
+          <Typography as="caption" element="p" className="text-black-90">
+            {promoTotal}
+          </Typography>
+        </div>
+      )}
+
       <div className="mt-4 flex items-center justify-between border-t border-t-black-10 pt-2 md:py-2 md:pt-0">
         <Typography as="caption" element="p" className="text-black-90">
           小計
         </Typography>
         <Typography as="title" element="p" className="text-black-90">
-          {cart.attributes.display_item_total}
+          {cart.attributes.display_total}
         </Typography>
       </div>
       {!isPc && canOrder && (

@@ -25,7 +25,7 @@ export default async function ProfileReviewList({ currentPage }: Props) {
   const totalPages = reviews.meta.total_pages;
 
   return (
-    <div className="mx-auto flex w-full flex-col pt-[16px] md:h-screen md:p-[24px] md:pt-0">
+    <div className="mx-auto flex w-full flex-col pt-[16px] md:h-screen md:p-[24px]">
       {reviewsEmpty ? (
         <ProfileReviewEmptyView />
       ) : (

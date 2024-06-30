@@ -67,7 +67,7 @@ export default function OrderHistoryListInfo({ order }: OrderHistoryListInfoProp
           />
           <OrderHistoryInfoDetail
             label="支払い金額:"
-            value={order.attributes.display_item_total || ''}
+            value={order.attributes.display_total || ''}
           />
         </div>
         <OrderHistoryInfoDetail label="注文番号:" value={order.attributes.number || ''} />

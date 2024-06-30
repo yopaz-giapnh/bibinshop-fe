@@ -1,5 +1,6 @@
 import { Typography } from '@/components/ui/typography';
 import { CartSchema } from '@/features/cart/types';
+import { displayPromoTotal } from '@/features/cart/utils';
 import OrderDetailSection from './order-detail-section';
 
 type Props = {
@@ -7,6 +8,8 @@ type Props = {
 };
 
 export function OrderDetailOverview({ item }: Props) {
+  const promoTotal = displayPromoTotal(item);
+
   return (
     <OrderDetailSection title="注文概要">
       <div className="w-full md:w-1/2">
@@ -26,6 +29,24 @@ export function OrderDetailOverview({ item }: Props) {
             {item.attributes.display_item_total}
           </Typography>
         </div>
+        {!!promoTotal && (
+          <div className="flex justify-between">
+            <Typography
+              as="caption"
+              element="p"
+              className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+            >
+              {`割引金額`}
+            </Typography>
+            <Typography
+              as="caption"
+              element="p"
+              className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+            >
+              {promoTotal}
+            </Typography>
+          </div>
+        )}
         <div className="flex justify-between">
           <Typography
             as="caption"

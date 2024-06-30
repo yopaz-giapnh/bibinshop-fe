@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
 import { Cart } from '../types';
+import { displayPromoTotal } from '../utils';
 
 type Props = {
   cart: Cart;
 };
 
 export function OrderOverview({ cart }: Props) {
+  const promoTotal = displayPromoTotal(cart);
+
   return (
     <>
       <div className="w-full rounded-[6px] bg-white-base px-4 py-[19px] shadow-base">
@@ -26,15 +29,25 @@ export function OrderOverview({ cart }: Props) {
           </Typography>
         </div>
 
+        {!!promoTotal && (
+          <div className="mt-4 flex justify-between">
+            <Typography as="caption" element="p" className="text-black-90">
+              {`割引金額`}
+            </Typography>
+            <Typography as="caption" element="p" className="text-black-90">
+              {promoTotal}
+            </Typography>
+          </div>
+        )}
+
         <div className="mt-4 flex items-center justify-between border-t border-t-black-10 pt-4 md:py-4 md:pt-0">
           <Typography as="caption" element="p" className="text-black-90">
             小計
           </Typography>
           <Typography as="title" element="p" className="text-black-90">
-            {cart.attributes.display_item_total}
+            {cart.attributes.display_total}
           </Typography>
         </div>
-
         <Link href="/checkout" passHref className="hidden md:block">
           <Button size="lg" variant="lg" className="w-full">
             次へ進む
