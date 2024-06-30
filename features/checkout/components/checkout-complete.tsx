@@ -17,16 +17,28 @@ export default async function CheckoutComplete() {
   return (
     <div className="h-full w-full bg-paleFrostBlue">
       <div className="mx-auto flex w-full flex-col items-center px-2 md:px-[272px] md:pt-[24px] ">
-        <Typography as="boldTitle" element="h2" className="text-text-80">
+        <Typography
+          as="boldTitle"
+          element="h2"
+          className="mt-[16px] text-[16px] text-text-100 md:mt-0 md:text-[24px]"
+        >
           ご購入ありがとうございました
         </Typography>
-        <Typography as="caption" element="p" className="pb-[24px] pt-[16px] text-text-80">
+        <Typography
+          as="caption"
+          element="p"
+          className="pb-[16px] pt-[16px] text-text-80 md:pb-[24px]"
+        >
           ご注文を承りました。
         </Typography>
         <Suspense fallback={<LoadingSpinner />}>
           <OrderDetail orderNumber={orderNumber} />
           <Link href="/" passHref>
-            <Button size="lg" variant="lg" className="mt-[24px] w-[392px]">
+            <Button
+              size="lg"
+              variant="lg"
+              className="mt-[24px] h-[48px] w-[350px] md:h-[55px] md:w-[392px] "
+            >
               お買い物を続ける
             </Button>
           </Link>

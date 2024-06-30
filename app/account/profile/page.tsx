@@ -19,7 +19,7 @@ export default async function Page({
   const currentPage = Number(searchParams?.page) || 1;
 
   return (
-    <div className="mx-auto flex h-screen w-full flex-col justify-center bg-paleFrostBlue p-[16px] md:p-[24px]">
+    <div className="mx-auto mb-[200px] flex w-full flex-col justify-center bg-paleFrostBlue p-[16px] md:mb-0 md:h-screen md:p-[24px]">
       <div className="mb-[24px] flex w-full items-center justify-between md:hidden">
         <BackButton />
         <Typography as="bold" element="p" className="text-[16px]">

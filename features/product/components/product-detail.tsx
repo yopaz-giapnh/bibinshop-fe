@@ -24,7 +24,7 @@ export async function ProductDetail({ product }: Props) {
     <div className="flex flex-col ">
       <div className="md:flex">
         <div className="flex flex-col gap-3 md:gap-6">
-          <div className="flex items-center gap-2 px-4 md:hidden">
+          <div className="flex items-center gap-2 px-[8px] md:hidden">
             <BackButton />
             <Store className="h-[20px] w-[20px]" />
             <Typography as="bold" element="p" className="text-[14px] md:text-[20px]">

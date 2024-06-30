@@ -25,7 +25,7 @@ export async function VendorProducts({ vendorId, searchParams }: Props) {
           <FilterForm getTaxons={getTaxons()} />
           <PriceSlider />
         </div>
-        <div className="sticky top-28 mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:hidden">
+        <div className="sticky top-[72px] mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:hidden">
           <Button className="mx-1 w-3/5 border-2 border-bibinBlue-100 bg-white-base text-xs font-bold text-bibinBlue-100">
             <IconFunnel />
             絞り込み

@@ -15,7 +15,7 @@ export default async function Page({
 }) {
   return (
     <div className="mb-6 mt-2 h-full w-full bg-white-base md:px-16">
-      <div className="pt-[128px]">
+      <div className="pt-[64px] md:pt-[128px]">
         <div className="flex flex-col md:flex-row">
           <div className="flex flex-row gap-6 bg-[#F5F6FA] md:flex-col md:bg-inherit">
             <Suspense fallback={<LoadingSpinner />}>

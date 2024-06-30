@@ -48,7 +48,7 @@ export async function CheckoutForm({ cart }: Props) {
             >
               3. 注文情報
             </Typography>
-            {canOrder && <CheckoutCartForm cart={cart} />}
+            <CheckoutCartForm cart={cart} />
           </div>
         </div>
         <div className="my-2 flex w-full flex-col gap-4 md:w-[424px] md:px-2">

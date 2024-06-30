@@ -12,7 +12,7 @@ type Props = {
 export default function OrderHistoryDetail({ order }: Props) {
   return (
     <>
-      <div className="mb-[24px] flex w-full items-center justify-between md:justify-center">
+      <div className="mb-[16px] flex w-full items-center justify-between md:mb-[24px] md:justify-center">
         <BackButton />
         <Typography
           as="boldXLarge"
@@ -24,7 +24,10 @@ export default function OrderHistoryDetail({ order }: Props) {
         <div className="h-7 w-7" />
       </div>
       {!!order.attributes.number && (
-        <OrderDetail className="h-screen-calc md:px-[36px]" orderNumber={order.attributes.number} />
+        <OrderDetail
+          className="md:h-screen-calc md:px-[36px]"
+          orderNumber={order.attributes.number}
+        />
       )}
       <OrderHistoryDetailBottomButton order={order} />
     </>

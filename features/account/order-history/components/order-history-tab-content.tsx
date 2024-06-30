@@ -19,7 +19,7 @@ export async function OrderHistoryTabContent({ status, currentPage }: OrderHisto
 
   return (
     <div>
-      <div className="h-screen-calc overflow-y-auto overflow-x-hidden">
+      <div className="overflow-y-auto overflow-x-hidden md:h-screen-calc">
         {isEmpty ? (
           <OrderHistoryEmptyView status={status} />
         ) : (

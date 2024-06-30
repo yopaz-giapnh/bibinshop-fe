@@ -77,7 +77,7 @@ export default function BuyAgainModal({
             <DialogClose asChild>
               <button
                 type="submit"
-                className="w-[150px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100 md:w-[170px]"
+                className="w-[140px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100 md:w-[170px]"
               >
                 キャンセル
               </button>
@@ -86,7 +86,7 @@ export default function BuyAgainModal({
               <Button
                 type="submit"
                 variant="lg"
-                className="w-[150px] md:w-[170px]"
+                className="w-[140px] md:w-[170px]"
                 onClick={addToCart}
               >
                 確認

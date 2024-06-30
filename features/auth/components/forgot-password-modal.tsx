@@ -37,9 +37,6 @@ export const ForgotPasswordModal = forwardRef<
   { handleNextModalOpen: (email: string) => void }
 >(({ handleNextModalOpen }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -80,9 +77,9 @@ export const ForgotPasswordModal = forwardRef<
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
-        <DialogContent className="flex w-[640px] flex-col items-center justify-center">
+        <DialogContent className="flex flex-col items-center justify-center md:w-[640px]">
           <Form {...form}>
-            <form action={action}>
+            <form action={action} className="w-full">
               <Typography
                 as="bold"
                 element="p"
@@ -117,11 +114,11 @@ export const ForgotPasswordModal = forwardRef<
                   )}
                 />
               </div>
-              <div className="mx-auto flex w-[348px] justify-between pt-[12px]">
+              <div className="mx-auto flex justify-around pt-[12px] md:w-[348px] md:justify-between">
                 <DialogClose asChild>
                   <button
                     type="button"
-                    className="w-[170px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100"
+                    className="w-[140px] rounded-[100px] border-[1px] border-bibinBlue-100 text-bibinBlue-100 md:w-[170px]"
                   >
                     キャンセル
                   </button>
@@ -143,7 +140,7 @@ function ForgotPasswordButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <Button variant="lg" className="w-[170px]" disabled={pending || disabled}>
+    <Button variant="lg" className="w-[140px] md:w-[170px]" disabled={pending || disabled}>
       {pending ? (
         <LoadingSpinner />
       ) : (

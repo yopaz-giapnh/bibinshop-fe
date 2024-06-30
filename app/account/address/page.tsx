@@ -9,7 +9,7 @@ import { Suspense } from 'react';
  */
 export default async function Page() {
   return (
-    <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">
+    <div className="mx-auto mb-[200px] flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:mb-0 md:h-screen md:p-[24px]">
       <Suspense fallback={<LoadingSpinner />}>
         <Address getAccountAddresses={getAccountAddresses()} />
       </Suspense>

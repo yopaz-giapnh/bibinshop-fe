@@ -122,13 +122,6 @@ function Form({ onClose, iconLayout }: Props) {
         </div>
 
         <div className="flex w-full justify-around md:justify-center">
-          <button
-            type="submit"
-            onClick={onClose}
-            className="hidden h-[48px] w-[140px] rounded-[100px] border-[1px] border-bibinBlue-100 font-semibold text-bibinBlue-100 md:block md:hidden md:w-[170px]"
-          >
-            キャンセル
-          </button>
           <Button
             type="submit"
             size="lg"

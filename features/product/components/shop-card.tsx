@@ -13,8 +13,8 @@ export async function ShopCard({ vendorId }: Props) {
   const vendor = await getVendor(vendorId);
 
   return vendor ? (
-    <div className="mt-[8px] flex w-full gap-[10px] rounded-[6px] border border-black-10 bg-white-base p-4 md:mt-0 md:w-fit">
-      <div className="inline-flex items-center gap-[16px]">
+    <div className="mt-[8px] flex w-full flex-col gap-[10px] rounded-[6px] border border-black-10 bg-white-base p-4 md:mt-0 md:w-fit">
+      <div className="inline-flex w-full items-center gap-[16px]">
         <Image
           className="h-[82px] w-[82px] object-cover"
           alt={vendor.attributes.name || ''}
@@ -35,7 +35,7 @@ export async function ShopCard({ vendorId }: Props) {
             </Typography>
           </div>
           <Link href={`/vendors/${vendor.id}`}>
-            <Button className="flex h-[40px] w-[211px] items-center border border-bibinBlue-100 bg-white-base p-[8px]">
+            <Button className="hidden h-[40px] w-[211px] items-center border border-bibinBlue-100 bg-white-base p-[8px] md:block">
               <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
                 全ての商品を見る({vendor.relationships.products?.data?.length})
               </Typography>
@@ -43,6 +43,13 @@ export async function ShopCard({ vendorId }: Props) {
           </Link>
         </div>
       </div>
+      <Link href={`/vendors/${vendor.id}`}>
+        <Button className="flex h-[40px] w-full items-center border border-bibinBlue-100 bg-white-base p-[8px] md:hidden">
+          <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
+            全ての商品を見る({vendor.relationships.products?.data?.length})
+          </Typography>
+        </Button>
+      </Link>
     </div>
   ) : null;
 }

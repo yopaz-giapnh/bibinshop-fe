@@ -28,15 +28,15 @@ export default async function VendorTabs({ vendor, searchParams }: VendorTabsPro
   ];
 
   return (
-    <Tabs defaultValue={tabs[0].value} className="justify-center">
-      <TabsList className="bg-color-white my-2 w-full">
+    <Tabs defaultValue={tabs[0].value} className="flex flex-col">
+      <TabsList className="z-0 my-2 w-full bg-white-base">
         {tabs.map((tab) => (
-          <TabsTrigger key={tab.value} value={tab.value}>
+          <TabsTrigger key={tab.value} value={tab.value} className="text-[14px] md:text-[16px]">
             {tab.label}
           </TabsTrigger>
         ))}
       </TabsList>
-      <div className="relative top-[-2px] border-[1px]" />
+      <div className="relative top-[-5px] mx-[-16px] border-[1px] md:top-[-2px] md:mx-[0]" />
       <TabsContent value="products">
         <VendorProducts vendorId={vendor.id} searchParams={searchParams} />
       </TabsContent>
