@@ -8,7 +8,7 @@ export const cardOptions: StripeCardElementOptions = {
   style: {
     base: {
       lineHeight: '48px',
-      fontSize: '14px',
+      fontSize: '16px',
       fontFamily: 'Noto Sans JP',
       fontWeight: '400',
       color: '#202224',

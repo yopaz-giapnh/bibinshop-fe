@@ -13,11 +13,21 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useToast } from '@/components/ui/use-toast';
 import { createCart, getCart } from '@/features/cart/actions';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  Elements,
+  useElements,
+  useStripe
+} from '@stripe/react-stripe-js';
+import { StripeElementChangeEvent } from '@stripe/stripe-js';
+import { BadgeAlert, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createPayment, getPaymentMethods } from '../actions';
@@ -33,8 +43,18 @@ function Form({ onClose, iconLayout }: Props) {
   const stripe = useStripe();
   const elements = useElements();
   const isPc = useIsPc();
+  const { toast } = useToast();
 
-  const [message, setMessage] = useState<string | null>(null);
+  const [cardErrors, setCardErrors] = useState({
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvc: ''
+  });
+  const [cardComplete, setCardComplete] = useState({
+    cardNumber: false,
+    cardExpiry: false,
+    cardCvc: false
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormValues>({
@@ -51,29 +71,36 @@ function Form({ onClose, iconLayout }: Props) {
     }
 
     setIsLoading(true);
-    setMessage(null);
 
-    const cardElement = elements.getElement(CardElement);
+    const cardNumber = elements.getElement(CardNumberElement);
+    const cardExpiry = elements.getElement(CardExpiryElement);
+    const cardCvc = elements.getElement(CardCvcElement);
 
-    if (!cardElement) {
+    if (!cardNumber || !cardExpiry || !cardCvc) {
       setIsLoading(false);
       return;
     }
 
-    const { error, token } = await stripe.createToken(cardElement, {
+    const { error, token } = await stripe.createToken(cardNumber, {
       name: data.cardHolderName
     });
 
     if (error) {
-      setMessage(error.message ?? null);
+      setCardErrors({
+        ...cardErrors,
+        cardNumber: error.message || ''
+      });
+      toast({
+        title: 'カードの追加に失敗しました',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
     } else {
-      // HACK: カートがない場合、支払い方法が取得できない
       const cart = await getCart();
       if (!cart) {
         await createCart();
       }
 
-      // NOTE: 支払い方法は、Stripeの1種類のみ
       const paymentMethods = await getPaymentMethods();
       const paymentMethodId = paymentMethods?.[0].id;
       if (!paymentMethodId) {
@@ -82,11 +109,39 @@ function Form({ onClose, iconLayout }: Props) {
       }
 
       await createPayment({ token, cardHolderName: data.cardHolderName, paymentMethodId });
+      onClose?.();
+
+      toast({
+        title: '新しいカードを追加しました',
+        icon: <Check className="h-6 w-6" />
+      });
     }
 
     setIsLoading(false);
-    onClose?.();
   };
+
+  const handleCardChange = (
+    event: StripeElementChangeEvent,
+    fieldName: 'cardNumber' | 'cardExpiry' | 'cardCvc'
+  ) => {
+    setCardErrors((prev) => ({
+      ...prev,
+      [fieldName]: event.error?.message || ''
+    }));
+    setCardComplete((prev) => ({
+      ...prev,
+      [fieldName]: event.complete
+    }));
+  };
+
+  const isFormValid =
+    form.formState.isValid &&
+    cardComplete.cardNumber &&
+    cardComplete.cardExpiry &&
+    cardComplete.cardCvc &&
+    !cardErrors.cardNumber &&
+    !cardErrors.cardExpiry &&
+    !cardErrors.cardCvc;
 
   return (
     <FormComponent {...form}>
@@ -117,9 +172,43 @@ function Form({ onClose, iconLayout }: Props) {
         />
 
         <div>
-          <FormLabel>クレジットカード</FormLabel>
-          <CardElement options={cardOptions} className="mt-2 rounded-md border border-input px-4" />
-          {message && <p className="mt-2 text-sm font-medium text-destructive">{message}</p>}
+          <FormLabel>カード番号</FormLabel>
+          <div className="mt-2 rounded-md border border-input px-4">
+            <CardNumberElement
+              options={cardOptions}
+              onChange={(event) => handleCardChange(event, 'cardNumber')}
+            />
+          </div>
+          {cardErrors.cardNumber && (
+            <p className="mt-2 text-sm font-medium text-destructive">{cardErrors.cardNumber}</p>
+          )}
+        </div>
+
+        <div className="flex space-x-4">
+          <div className="flex-1">
+            <FormLabel>有効期限</FormLabel>
+            <div className="mt-2 rounded-md border border-input px-4">
+              <CardExpiryElement
+                options={cardOptions}
+                onChange={(event) => handleCardChange(event, 'cardExpiry')}
+              />
+            </div>
+            {cardErrors.cardExpiry && (
+              <p className="mt-2 text-sm font-medium text-destructive">{cardErrors.cardExpiry}</p>
+            )}
+          </div>
+          <div className="flex-1">
+            <FormLabel>セキュリティコード</FormLabel>
+            <div className="mt-2 rounded-md border border-input px-4">
+              <CardCvcElement
+                options={cardOptions}
+                onChange={(event) => handleCardChange(event, 'cardCvc')}
+              />
+            </div>
+            {cardErrors.cardCvc && (
+              <p className="mt-2 text-sm font-medium text-destructive">{cardErrors.cardCvc}</p>
+            )}
+          </div>
         </div>
 
         <div className="flex w-full justify-around md:justify-center">
@@ -127,9 +216,8 @@ function Form({ onClose, iconLayout }: Props) {
             type="submit"
             size="lg"
             variant="lg"
-            disabled={isLoading || !stripe || !form.formState.isValid}
+            disabled={isLoading || !stripe || !isFormValid}
             className="h-[48px] w-full md:h-[55px] md:w-[392px]"
-            onClick={onClose}
           >
             {isLoading ? <LoadingSpinner /> : isPc ? 'お支払い方法を保存する' : '保存'}
           </Button>
