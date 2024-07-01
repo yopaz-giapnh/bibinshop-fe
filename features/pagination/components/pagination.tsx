@@ -44,7 +44,11 @@ export default function CustomPagination({ totalPages }: Props) {
         {Array.from({ length: endPageToShow - startPage + 1 }, (_, i) => startPage + i).map(
           (page) => (
             <PaginationItem key={page}>
-              <PaginationLink href={getPageLink(page)} isActive={page === currentPage}>
+              <PaginationLink
+                href={getPageLink(page)}
+                isActive={page === currentPage}
+                disable={page === currentPage}
+              >
                 {page}
               </PaginationLink>
             </PaginationItem>
