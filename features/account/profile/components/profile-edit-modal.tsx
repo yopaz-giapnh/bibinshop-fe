@@ -49,7 +49,8 @@ export default function ProfileEditModal({ account }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       nickname: nickname || ''
-    }
+    },
+    mode: 'onBlur'
   });
 
   const [selectedSex, setSelectedSex] = useState<UserSex>(sex);

@@ -47,7 +47,8 @@ export function AddressForm({ buttonText = '保存する', address, onSaved }: P
       address1: address?.attributes.address1 || '',
       address2: address?.attributes.address2 || '',
       phoneNumber: address?.attributes.phone || ''
-    }
+    },
+    mode: 'onBlur'
   });
 
   const [state, formAction] = useFormState(isEdit ? updateAccountAddress : addAccountAddress, null);

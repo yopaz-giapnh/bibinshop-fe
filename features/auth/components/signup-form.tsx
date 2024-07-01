@@ -26,7 +26,8 @@ export default function SignupForm() {
     defaultValues: {
       email: '',
       password: ''
-    }
+    },
+    mode: 'onBlur'
   });
 
   const email = form.watch('email');

@@ -51,7 +51,8 @@ export const ForgotPasswordModal = forwardRef<
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: ''
-    }
+    },
+    mode: 'onBlur'
   });
 
   const [state, formAction] = useFormState(sendResetPasswordEmail, undefined);

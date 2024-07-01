@@ -39,7 +39,8 @@ export default function SecurityDetail({ getAccount }: Props) {
       password: '',
       newPassword: '',
       newConfirmPassword: ''
-    }
+    },
+    mode: 'onBlur'
   });
 
   const { control } = form;

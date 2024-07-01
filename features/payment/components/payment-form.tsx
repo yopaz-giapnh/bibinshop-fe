@@ -41,7 +41,8 @@ function Form({ onClose, iconLayout }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       cardHolderName: ''
-    }
+    },
+    mode: 'onBlur'
   });
 
   const handleSubmit = async (data: FormValues) => {

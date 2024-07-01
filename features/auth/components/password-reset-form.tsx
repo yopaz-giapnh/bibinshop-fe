@@ -35,7 +35,8 @@ export default function PasswordResetForm({ resetPasswordToken }: Props) {
     defaultValues: {
       password: '',
       confirmPassword: ''
-    }
+    },
+    mode: 'onBlur'
   });
 
   const [state, formAction] = useFormState(resetPassword, null);
@@ -60,11 +61,6 @@ export default function PasswordResetForm({ resetPasswordToken }: Props) {
       });
     }
   }, [state]);
-
-  const handleGotoHome = () => {
-    setShowCompleteModal(false);
-    router.push('/');
-  };
 
   const onCompleteModalOpen = () => {
     setShowCompleteModal(true);

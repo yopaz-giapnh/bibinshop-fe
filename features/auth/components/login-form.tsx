@@ -31,7 +31,8 @@ export default function LoginForm() {
     defaultValues: {
       email: '',
       password: ''
-    }
+    },
+    mode: 'onBlur'
   });
   const [state, formAction] = useFormState(authenticate, undefined);
   const action = formAction.bind(null, form.getValues());
