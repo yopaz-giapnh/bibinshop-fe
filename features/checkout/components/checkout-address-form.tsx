@@ -18,7 +18,7 @@ import {
 } from '@/features/address/components/address-list-modal';
 import { Address } from '@/features/address/types';
 import { getDefaultAddress } from '@/features/address/utils';
-import { Check, ChevronRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useCheckout } from './checkout-ctx';
 
@@ -42,28 +42,13 @@ export function CheckoutAddressForm({ addresses }: Props) {
 
   return (
     <>
-      <div className="flex justify-between md:mb-2">
-        <Typography
-          as="boldTitle"
-          element="h2"
-          className="text-[16px] text-text-100 md:text-[24px]"
-        >
-          1. お届け先住所
-        </Typography>
-        {hasAddress && (
-          <button
-            className="flex items-center"
-            onClick={() => {
-              addressFormModalRef.current?.open();
-            }}
-          >
-            <Typography as="linkSmall" element="h3" className="text-bibinBlue-100">
-              住所追加
-            </Typography>
-            <ChevronRight className="h-6 w-6 text-bibinBlue-100" />
-          </button>
-        )}
-      </div>
+      <Typography
+        as="boldTitle"
+        element="h2"
+        className="text-[16px] text-text-100 md:mb-2 md:text-[24px]"
+      >
+        1. お届け先住所
+      </Typography>
 
       {hasAddress && activeAddress ? (
         <>
@@ -73,6 +58,7 @@ export function CheckoutAddressForm({ addresses }: Props) {
                 addressListModalRef.current?.open();
               }}
               address={activeAddress}
+              editButtonText="住所を変更する"
             />
           </div>
           <AddressListModal

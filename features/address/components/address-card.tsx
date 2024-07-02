@@ -8,9 +8,10 @@ type Props = {
   onEdit?: () => void;
   onDelete?: () => void;
   address: Address;
+  editButtonText?: string;
 };
 
-export function AddressCard({ onEdit, onDelete, address }: Props) {
+export function AddressCard({ onEdit, onDelete, address, editButtonText = '編集' }: Props) {
   const { attributes } = address;
 
   return (
@@ -41,7 +42,7 @@ export function AddressCard({ onEdit, onDelete, address }: Props) {
                 onClick: onEdit
               }}
               icon={<Edit />}
-              text="編集"
+              text={editButtonText}
               textProps={{ className: 'text-bibinBlue-100' }}
             />
           )}
