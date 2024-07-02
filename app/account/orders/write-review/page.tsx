@@ -17,7 +17,7 @@ export default async function Page({
     : [searchParams?.slug || ''].filter(Boolean);
 
   return (
-    <div className="mx-auto flex h-screen w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">
+    <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:h-screen md:p-[24px]">
       <div className="mb-[16px] flex w-full items-center justify-between md:mb-[24px] md:justify-center ">
         <BackButton />
         <Typography
