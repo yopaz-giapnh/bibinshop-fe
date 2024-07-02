@@ -10,9 +10,11 @@ import {
 } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import Rating from '@/features/review/components/rating';
+import { getVendor } from '@/features/vendor/actions';
 import { getVendorImageUrl } from '@/features/vendor/utils';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getAccountMessageDetail } from '../actions';
 import { Message } from '../types';
 
@@ -24,10 +26,13 @@ type Props = {
  * メッセージ詳細モーダルコンポーネント
  * @returns JSX.Element
  */
-export default function MessageSeeMoreModal({ message }: Props) {
+export default async function MessageSeeMoreModal({ message }: Props) {
   const action = getAccountMessageDetail.bind(null, { id: message.id });
 
-  const vendorImageUrl = getVendorImageUrl(message.vendorImage);
+  const vendorId = message.attributes.notificationable?.vendor_id;
+
+  const vendor = vendorId ? await getVendor(vendorId) : undefined;
+  const vendorImageUrl = getVendorImageUrl(vendor?.vendorImage);
   const date = formatDateString(message.attributes.created_at, 'yyyy年MM月dd日');
 
   return (
@@ -49,26 +54,32 @@ export default function MessageSeeMoreModal({ message }: Props) {
           <Typography as="caption" element="p" className="mb-[4px] text-[12px] text-charcoalGray">
             {date}
           </Typography>
-          <div className="flex items-center rounded-[6px] border-[1px] p-[16px]">
-            <Image
-              alt=""
-              src={vendorImageUrl}
-              width={40}
-              height={40}
-              className="relative rounded-[4px]"
-            />
-            <Typography
-              as="boldSmall"
-              element="p"
-              className="ml-[16px] mr-[8px] text-[12px] text-black-90"
+          {vendor && vendor.attributes.stars != null && (
+            <Link
+              href={`/vendors/${vendor.id}`}
+              passHref
+              className="flex items-center rounded-[6px] border-[1px] p-[16px]"
             >
-              {message.attributes.title}
-            </Typography>
-            <Rating star={4.1} size={16} readOnly />
-            <Typography as="small" element="p" className="ml-[5px] text-[12px] text-black-90">
-              4.1
-            </Typography>
-          </div>
+              <Image
+                alt=""
+                src={vendorImageUrl}
+                width={40}
+                height={40}
+                className="relative rounded-[4px]"
+              />
+              <Typography
+                as="boldSmall"
+                element="p"
+                className="ml-[16px] mr-[8px] text-[12px] text-black-90"
+              >
+                {message.attributes.title}
+              </Typography>
+              <Rating star={vendor.attributes.stars} size={16} readOnly />
+              <Typography as="small" element="p" className="ml-[5px] text-[12px] text-black-90">
+                {vendor.attributes.stars}
+              </Typography>
+            </Link>
+          )}
           <Typography as="small" element="p" className="ml-[5px] text-[12px] text-black-90">
             {message.attributes.content}
           </Typography>

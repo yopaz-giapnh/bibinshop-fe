@@ -2122,7 +2122,11 @@ export interface components {
         content: string;
         /** @example false */
         read: boolean;
+        image_url: string;
         created_at: components['schemas']['Timestamp'];
+        notificationable?: {
+          vendor_id?: string;
+        };
       };
       relationships: {
         user?: {
@@ -2750,7 +2754,7 @@ export interface components {
      * @example 3
      */
     NotificationId: string;
-    /** @example vendor,user */
+    /** @example */
     NotificationIncludeParam?: string;
     /** @example calculator */
     ShippingMethodIncludeParam?: string;

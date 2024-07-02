@@ -1,9 +1,9 @@
 import { Typography } from '@/components/ui/typography';
-import { getVendorImageUrl } from '@/features/vendor/utils';
 import { cn } from '@/lib/utils';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
 import { Message } from '../types';
+import { getMessageImageUrl } from '../utils';
 import MessageSeeMoreModal from './message-see-more-modal';
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
  * @returns JSX.Element
  */
 export default function MessageListItem({ message }: Props) {
-  const vendorImageUrl = getVendorImageUrl(message.vendorImage);
+  const messageImageUrl = getMessageImageUrl(message);
   const date = formatDateString(message.attributes.created_at, 'yyyy年MM月dd日');
 
   return (
@@ -23,7 +23,7 @@ export default function MessageListItem({ message }: Props) {
       <div className="flex items-center justify-between">
         <Image
           alt=""
-          src={vendorImageUrl}
+          src={messageImageUrl}
           width={40}
           height={40}
           className="relative rounded-[4px]"

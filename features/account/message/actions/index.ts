@@ -10,7 +10,6 @@ export async function getAccountMessages({ page }: { page?: number } = {}) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/notifications', {
     params: {
       query: {
-        include: 'vendor.image',
         page
       }
     },
@@ -34,9 +33,7 @@ export async function getAccountMessages({ page }: { page?: number } = {}) {
 export async function getAccountMessageDetail({ id }: { id: string }) {
   const { data, error } = await apiClient.GET(`/api/v2/storefront/notifications/{id}`, {
     params: {
-      query: {
-        include: 'vendor.image'
-      },
+      query: {},
       path: { id }
     }
   });
