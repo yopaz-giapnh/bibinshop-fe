@@ -44,10 +44,13 @@ const CommandInput = React.forwardRef<
     onHandleClick?: () => void;
   }
 >(({ className, onHandleClick, disableButton, ...props }, ref) => (
-  <div className={cn('flex items-center border-b pl-3 pr-0.5', className)} cmdk-input-wrapper="">
+  <div className="flex items-center border-b pl-3 pr-0.5" cmdk-input-wrapper="">
     <CommandPrimitive.Input
       ref={ref}
-      className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-black-30 disabled:cursor-not-allowed disabled:opacity-50"
+      className={cn(
+        'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-black-30 disabled:cursor-not-allowed disabled:opacity-50',
+        className
+      )}
       {...props}
     />
     <button

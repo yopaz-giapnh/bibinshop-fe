@@ -1,70 +1,85 @@
 'use client';
-import { Command, CommandInput, CommandList } from '@/components/ui/command';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut
+} from '@/components/ui/command';
 import { useIsPc } from '@/hooks/use-is-pc';
-import { ChevronLeft } from 'lucide-react';
+import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { PopularSearch } from './popular-search';
-import { RecentSearch } from './recent-search';
-import { SearchResuts } from './search-results';
-import { useRecentSearches } from './use-recent-search';
 
 export function Search() {
   const [searchValue, setSearchValue] = useState('');
-  const { search } = useRecentSearches();
+  const route = useRouter();
+  const searchParams = useSearchParams();
 
+  const handleSearch = () => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set('key', searchValue);
+    const newQueryString = `?${currentQuery.toString()}`;
+    route.push(`/search${newQueryString}`);
+  };
   const isPc = useIsPc();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <Command
-      className={
-        (isOpen
-          ? 'fixed left-0 top-0 h-screen w-screen md:h-fit md:max-h-[300px]'
-          : 'absolute left-[35vw] top-3 h-[48px] w-[171px]') +
-        ' md:static md:left-auto md:top-auto md:flex md:w-[456px]'
-      }
+      className="h-[48px] w-[171px] rounded-[44px] border-2 border-bibinBlue-100 md:w-[456px]"
       value={searchValue}
     >
-      <div className="flex">
-        <button
-          className={(isOpen ? 'm-2' : 'hidden') + ' md:hidden'}
-          onClick={() => {
-            setSearchValue('');
-            setIsOpen(false);
-          }}
-        >
-          <ChevronLeft size={32} />
-        </button>
-        <CommandInput
-          placeholder={isPc ? 'アゼライン酸10美容液' : 'アゼライン酸10...'}
-          className={
-            (isOpen ? 'rounded-[22px]' : 'rounded-[44px]') +
-            ' w-full border-2 border-bibinBlue-100 '
+      <CommandInput
+        placeholder={isPc ? 'アゼライン酸10美容液' : 'アゼライン酸10...'}
+        onValueChange={(v) => {
+          setSearchValue(v);
+        }}
+        disableButton={searchValue === ''}
+        onHandleClick={handleSearch}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && searchValue !== '') {
+            handleSearch();
           }
-          onFocus={() => setIsOpen(true)}
-          onBlur={() => setTimeout(() => setIsOpen(false), 150)}
-          onValueChange={(v) => {
-            setSearchValue(v);
-          }}
-          disableButton={searchValue === ''}
-          onHandleClick={() => search(searchValue)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && searchValue !== '') {
-              search(searchValue);
-              setIsOpen(false);
-            }
-          }}
-        />
-      </div>
-      <CommandList className="mt-2 border-t-2">
-        {searchValue ? (
-          <SearchResuts text={searchValue} />
-        ) : (
-          <div className="px-4 pb-2">
-            <RecentSearch />
-            <PopularSearch />
-          </div>
-        )}
+        }}
+      />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Suggestions">
+          {/* TODO: API ができたら繋ぎこむ */}
+          <CommandItem>
+            <Calendar className="mr-2 h-4 w-4" />
+            <span>Calendar</span>
+          </CommandItem>
+          <CommandItem>
+            <Smile className="mr-2 h-4 w-4" />
+            <span>Search Emoji</span>
+          </CommandItem>
+          <CommandItem>
+            <Calculator className="mr-2 h-4 w-4" />
+            <span>Calculator</span>
+          </CommandItem>
+        </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup heading="Settings">
+          <CommandItem>
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+            <CommandShortcut>⌘P</CommandShortcut>
+          </CommandItem>
+          <CommandItem>
+            <CreditCard className="mr-2 h-4 w-4" />
+            <span>Billing</span>
+            <CommandShortcut>⌘B</CommandShortcut>
+          </CommandItem>
+          <CommandItem>
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
+            <CommandShortcut>⌘S</CommandShortcut>
+          </CommandItem>
+        </CommandGroup>
       </CommandList>
     </Command>
   );
