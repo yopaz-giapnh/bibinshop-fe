@@ -1,6 +1,5 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
-import { Select, SelectContent, SelectTrigger } from '@/components/ui/select';
 import Rating from '@/features/review/components/rating';
 import { Suspense } from 'react';
 import { Vendor } from '../types';
@@ -39,16 +38,15 @@ export async function VendorReviews({ vendor }: Props) {
   return (
     <div className="flex w-full flex-col">
       <div className="sticky top-[72px] z-40 mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:bg-white-base">
-        <Select>
+        {/* <Select>
           <SelectTrigger className="mx-1 w-fit rounded-full border-2 border-bibinBlue-100 bg-white-base text-xs font-bold text-bibinBlue-100">
             並べ替え: ランキング順
           </SelectTrigger>
           <SelectContent>
-            {/* TODO: select values  */}
-            {/* <SelectItem value="1">1</SelectItem>
-              <SelectItem value="2">2</SelectItem> */}
+            <SelectItem value="1">1</SelectItem>
+              <SelectItem value="2">2</SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
       </div>
       {reviewsCount !== 0 ? (
         <>
@@ -96,10 +94,9 @@ export async function VendorReviews({ vendor }: Props) {
               </div>
             </div>
             <div className="mt-6 md:ml-14">
-              {/* TODO: api ができてから */}
               {/* <div className="absolute right-0 mr-14">
-            <SortButton />
-          </div> */}
+                <SortButton />
+              </div> */}
               <Suspense fallback={<LoadingSpinner />}>
                 <VendorReviewList vendorId={vendor.id} />
               </Suspense>

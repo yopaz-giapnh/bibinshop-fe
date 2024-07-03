@@ -1,3 +1,4 @@
+import { SortButton } from '@/components/button/sort-button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { FiltersDisplay } from '@/components/ui/mobile/filters-display';
 import { PriceSlider } from '@/components/ui/priceSlider';
@@ -8,11 +9,11 @@ import { getTaxons } from '@/features/taxon/actions';
 import { FilterForm } from '@/features/vendor/components/filterForm';
 import { Suspense } from 'react';
 
-export default async function Page({
-  searchParams
-}: {
-  searchParams?: { key?: string; taxons?: string[] | string; prices?: string };
-}) {
+type Props = {
+  searchParams?: { key?: string; taxons?: string[] | string; prices?: string; sort_by?: string };
+};
+
+export default async function Page({ searchParams }: Props) {
   return (
     <div className="mb-6 mt-2 h-full w-full bg-white-base md:px-16">
       <div className="pt-[64px] md:pt-[128px]">
@@ -22,24 +23,13 @@ export default async function Page({
               <FilterForm getTaxons={getTaxons()} />
             </Suspense>
             <PriceSlider />
-            {/* TODO: api が実装されてから表示 */}
-            {/* <div className="absolute right-0 mr-14">
+            <div className="absolute right-0 mr-14 hidden md:block">
               <SortButton />
-            </div> */}
+            </div>
           </div>
           <div className="relative mx-1 mt-2 flex-1 md:ml-14 md:mt-6">
-            {/* TODO: api が実装されてから表示 */}
-            {/* <div className="absolute right-0 mr-14">
-              <SortButton />
-            </div> */}
             <Suspense fallback={<LoadingSpinner />}>
-              {renderProductOverviewWithPagination(
-                searchParams?.key,
-                Array.isArray(searchParams?.taxons)
-                  ? searchParams?.taxons.join(',')
-                  : searchParams?.taxons,
-                searchParams?.prices
-              )}
+              <ProductOverviewWithPagination searchParams={searchParams} />
             </Suspense>
           </div>
         </div>
@@ -48,16 +38,20 @@ export default async function Page({
   );
 }
 
-const renderProductOverviewWithPagination = async (
-  key?: string,
-  taxons?: string,
-  prices?: string
-) => {
+async function ProductOverviewWithPagination({ searchParams }: Props) {
+  const key = searchParams?.key;
+  const taxons = Array.isArray(searchParams?.taxons)
+    ? searchParams?.taxons.join(',')
+    : searchParams?.taxons;
+  const prices = searchParams?.prices;
+  const sort_by = searchParams?.sort_by || '';
+
   const params = {
     query: {
       'filter[name]': key || '',
       'filter[taxons]': '',
-      'filter[price]': prices || ''
+      'filter[price]': prices || '',
+      sort_by
     }
   };
   if (taxons && taxons.length > 0) {
@@ -80,4 +74,4 @@ const renderProductOverviewWithPagination = async (
       )}
     </div>
   );
-};
+}

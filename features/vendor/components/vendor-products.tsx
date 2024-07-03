@@ -1,8 +1,5 @@
-import IconFunnel from '@/assets/funnel.svg';
-import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { PriceSlider } from '@/components/ui/priceSlider';
-import { Select, SelectContent, SelectTrigger } from '@/components/ui/select';
 import Pagination from '@/features/pagination/components/pagination';
 import { getProducts } from '@/features/product/actions';
 import { ProductGrid } from '@/features/product/components/product-grid';
@@ -25,7 +22,7 @@ export async function VendorProducts({ vendorId, searchParams }: Props) {
           <FilterForm getTaxons={getTaxons()} />
           <PriceSlider />
         </div>
-        <div className="sticky top-[72px] mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:hidden">
+        {/* <div className="sticky top-[72px] mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:hidden">
           <Button className="mx-1 w-3/5 border-2 border-bibinBlue-100 bg-white-base text-xs font-bold text-bibinBlue-100">
             <IconFunnel />
             絞り込み
@@ -35,14 +32,12 @@ export async function VendorProducts({ vendorId, searchParams }: Props) {
               並べ替え: ランキング順
             </SelectTrigger>
             <SelectContent>
-              {/* TODO: select values  */}
-              {/* <SelectItem value="1">1</SelectItem>
-              <SelectItem value="2">2</SelectItem> */}
+              <SelectItem value="1">1</SelectItem>
+              <SelectItem value="2">2</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
         <div className="w-full md:ml-14 md:mt-6">
-          {/* TODO: api できてから */}
           {/* <div className="absolute right-0 mr-14">
             <SortButton />
           </div> */}
