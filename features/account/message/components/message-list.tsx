@@ -20,7 +20,7 @@ export default async function MessageList({ currentPage }: Props) {
     <MessageEmptyView />
   ) : (
     <>
-      <div className="h-calc w-full overflow-y-auto rounded-[6px] bg-white-base p-[16px] shadow-base md:w-4/5 md:p-[24px]">
+      <div className="w-full overflow-y-auto rounded-[6px] bg-white-base p-[16px] shadow-base md:p-[24px]">
         {messages.data.map((message, index) => {
           const isFirst = index === 0;
 

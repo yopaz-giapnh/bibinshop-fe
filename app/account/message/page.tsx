@@ -19,7 +19,7 @@ export default function Page({
 
   return (
     <div className="mx-auto mb-[200px] flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:mb-0 md:h-screen md:p-[24px]">
-      <div className="flex w-full items-center justify-between pb-[24px] md:justify-normal">
+      <div className="flex w-full items-center justify-between pb-[24px] md:justify-center">
         <BackButton />
         <Typography
           as="boldXLarge"

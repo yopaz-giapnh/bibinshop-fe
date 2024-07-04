@@ -20,7 +20,7 @@ export default function MessageListItem({ message }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center md:items-stretch">
-      <div className="flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         <Image
           alt=""
           src={messageImageUrl}

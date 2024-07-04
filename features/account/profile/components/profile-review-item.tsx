@@ -34,17 +34,26 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
         {review.attributes.review}
       </Typography>
       <div className="mt-[8px] flex items-center rounded-[4px] bg-paleFrostBlue p-[16px] md:mt-[32px]">
-        <div className="relative h-[100px] w-[100px]">
+        <div className="relative h-[59px] w-[59px] md:h-[100px] md:w-[100px]">
           <Image
             src={getProductImageUrl(review.images[0])}
             layout="fill"
             objectFit="cover"
             alt={''}
-            className="rounded-[100px]"
+            className="rounded-[2px]"
           />
         </div>
         <div className="pl-[16px]">
-          <Typography as="bold" element="p" className="text-[14px] text-black-90 md:text-[16px]">
+          <Typography
+            as="bold"
+            element="p"
+            className="max-w-[200px] overflow-hidden whitespace-normal break-words text-[14px] text-black-90 md:max-w-[calc(60vw-100px)] md:text-[16px]"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2
+            }}
+          >
             {review.product?.attributes.name}
           </Typography>
           <Typography as="bold" element="p" className="mt-[10px] text-[14px] text-bibinBlue-100">

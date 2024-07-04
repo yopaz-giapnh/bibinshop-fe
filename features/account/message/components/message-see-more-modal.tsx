@@ -80,11 +80,15 @@ export default async function MessageSeeMoreModal({ message }: Props) {
               </Typography>
             </Link>
           )}
-          <Typography as="small" element="p" className="ml-[5px] text-[12px] text-black-90">
+          <Typography
+            as="small"
+            element="p"
+            className="ml-[5px] max-h-[200px] overflow-y-auto text-[12px] text-black-90 md:max-h-[350px]"
+          >
             {message.attributes.content}
           </Typography>
           <DialogClose asChild>
-            <Button type="submit" size="lg" variant="lg" className="mt-[24px] w-[392px]">
+            <Button type="submit" size="lg" variant="lg" className="mt-[24px] w-11/12 md:w-[392px]">
               確認する
             </Button>
           </DialogClose>
