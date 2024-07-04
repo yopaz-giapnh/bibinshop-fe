@@ -5,13 +5,12 @@ import { getCart } from '@/features/cart/actions';
 import Rating from '@/features/review/components/rating';
 import { Store } from 'lucide-react';
 import { Suspense } from 'react';
-import { getProducts } from '../actions';
 import { Product } from '../types';
 import { Gallery } from './gallery';
 import { ProductCartForm } from './product-cart-form';
 import { ProductDescription } from './product-description';
-import { ProductGrid } from './product-grid';
 import { ProductReviewList } from './product-review-list';
+import { RecommendProduct } from './recommend-product';
 import { ShopCard } from './shop-card';
 import { Supplementary } from './supplementary';
 
@@ -92,9 +91,9 @@ export async function ProductDetail({ product }: Props) {
         <Typography as="title" element="h1" className="text-black-90">
           おすすめ商品
         </Typography>
-        <div className="px-[8px] md:px-0">
-          <ProductGrid columns={5} products={[...(await getProducts()).data]} />
-        </div>
+        <Suspense fallback={<LoadingSpinner />}>
+          <RecommendProduct />
+        </Suspense>
       </div>
     </div>
   );

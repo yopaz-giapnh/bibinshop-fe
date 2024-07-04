@@ -1,9 +1,10 @@
 import BibiSuprisedFace from '@/assets/bibincban/surprised-face.svg';
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import { getProducts } from '@/features/product/actions';
-import { ProductOverview } from '@/features/product/components/product-overview';
+import { ProductOverviewByTaxon } from '@/features/product/components/product-overview-by-taxon';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 export default async function NotFound() {
   return (
@@ -23,12 +24,9 @@ export default async function NotFound() {
         </Link>
       </div>
       <div className="ml-2 mr-2 flex md:ml-6 md:mr-6">
-        <ProductOverview
-          title="新着"
-          seeMoreUrl="/products/new"
-          products={(await getProducts()).data}
-          columns={5}
-        />
+        <Suspense fallback={<LoadingSpinner />}>
+          <ProductOverviewByTaxon title="新着" seeMoreUrl="/products/new?page=1" />
+        </Suspense>
       </div>
     </>
   );
