@@ -1,26 +1,34 @@
 import { GoogleLogo } from '@/components/icons/google-logo';
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { useFormStatus } from 'react-dom';
 
 type Props = {
   title: string;
-  onClick: () => void;
 };
 
-export function GoogleAuthButton({ title, onClick }: Props) {
+export function GoogleAuthButton({ title }: Props) {
+  const { pending } = useFormStatus();
+
   return (
     <Button
-      type="button"
       className="w-full border border-black-20 bg-white-base"
       size="lg"
       variant="lg"
-      onClick={onClick}
+      disabled={pending}
     >
       <div className="flex items-center justify-center gap-4">
-        <GoogleLogo />
-        <Typography as="body" element="p" className="text-black-80">
-          {title}
-        </Typography>
+        {pending ? (
+          <LoadingSpinner color="#51B7FF" />
+        ) : (
+          <>
+            <GoogleLogo />
+            <Typography as="body" element="p" className="text-black-80">
+              {pending ? <LoadingSpinner /> : title}
+            </Typography>
+          </>
+        )}
       </div>
     </Button>
   );

@@ -10,15 +10,21 @@ import { Typography } from '@/components/ui/typography';
 import { toast } from '@/components/ui/use-toast';
 import { BadgeAlert } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { signUp } from '../actions';
+import { authenticateByGoogle, signUp } from '../actions';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
+import { GoogleAuthButton } from './google-auth-button';
 import { PasswordFormField } from './password-form-field';
 import { SentEmailModal, SentEmailModalRef } from './sent-email-modal';
+import { Separator } from './separator';
 
 export default function SignupForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || undefined;
+
   const SentEmailModalRef = useRef<SentEmailModalRef>(null);
 
   const form = useForm<FormValues>({
@@ -51,26 +57,26 @@ export default function SignupForm() {
     }
   }, [state]);
 
+  const googleAction = authenticateByGoogle.bind(null, { callbackUrl });
+
   return (
     <div>
       <Form {...form}>
-        <form
-          action={signUpWithEmailAndPassword}
-          className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 md:shadow-base"
-        >
-          <Typography as="title" element="h1" className="text-center text-gray-800/80">
-            新規会員登録
-          </Typography>
+        <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 md:shadow-base">
+          <form action={signUpWithEmailAndPassword}>
+            <Typography as="title" element="h1" className="text-center text-gray-800/80">
+              新規会員登録
+            </Typography>
 
-          <div>
-            <EmailFormField control={form.control} />
-            <PasswordFormField control={form.control} />
-          </div>
+            <div className="mb-4">
+              <EmailFormField control={form.control} />
+              <PasswordFormField control={form.control} />
+            </div>
 
-          <SubmitButton disabled={!form.formState.isValid} />
+            <SubmitButton disabled={!form.formState.isValid} />
+          </form>
 
-          {/* TODO: Google SignIn審査通過するまでコメントアウト */}
-          {/* <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-6">
             <Separator />
             <Typography as="body" element="p">
               または
@@ -78,12 +84,9 @@ export default function SignupForm() {
             <Separator />
           </div>
 
-          <GoogleAuthButton
-            onClick={() => {
-              alert('TODO: Google アカウントで作成');
-            }}
-            title="Google アカウントで作成"
-          /> */}
+          <form action={googleAction}>
+            <GoogleAuthButton title="Google アカウントで作成" />
+          </form>
 
           <Typography as="caption" element="p" className="text-center text-black-base">
             次に進むことで、当社の
@@ -96,7 +99,7 @@ export default function SignupForm() {
             </Link>
             に同意したものとみなされます。
           </Typography>
-        </form>
+        </div>
       </Form>
 
       <div className="mt-6 flex items-center justify-center">

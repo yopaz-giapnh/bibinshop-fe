@@ -2,7 +2,6 @@
 
 import { signIn, signOut } from '@/auth';
 import { apiClient } from '@/config/api-client';
-import { associateCart } from '@/features/cart/actions';
 import { isClientError } from '@/utils/error';
 import { isRedirectError } from 'next/dist/client/components/redirect';
 import { FormValues } from '../types/password-reset-form';
@@ -16,11 +15,25 @@ type State =
 
 export async function authenticate(
   prevState: State,
-  { email, password }: { email: string; password: string }
+  { email, password, callbackUrl }: { email: string; password: string; callbackUrl?: string }
 ) {
   try {
-    await signIn('credentials', { email, password });
-    await associateCart();
+    await signIn('credentials', { email, password, redirectTo: callbackUrl });
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    return {
+      success: false,
+      message: 'ログインに失敗しました'
+    };
+  }
+}
+
+export async function authenticateByGoogle({ callbackUrl }: { callbackUrl?: string }) {
+  try {
+    await signIn('google', { redirectTo: callbackUrl });
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -115,6 +128,26 @@ export async function createToken({ email, password }: { email: string; password
   }
 }
 
+export async function createTokenByGoogle({ idToken }: { idToken: string }) {
+  try {
+    const { data, error } = await apiClient.POST('/spree_oauth/token', {
+      body: {
+        grant_type: 'assertion',
+        provider: 'google',
+        id_token: idToken
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function logout() {
   await signOut();
 }
@@ -150,7 +183,6 @@ export async function resendEmail(prevState: State, { email }: { email: string }
 export async function authenticateFromToken(confirmationToken: string) {
   try {
     await signIn('confirmation', { confirmationToken });
-    await associateCart();
   } catch (error) {
     console.error(error);
     if (isRedirectError(error)) {
@@ -221,4 +253,21 @@ export async function sendResetPasswordEmail(prevState: State, email: string) {
       message: isClientError(error) ? error.error : 'エラーが発生しました'
     };
   }
+}
+
+export async function getUser({ accessToken }: { accessToken: string }) {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/account', {
+    headers: {
+      accept: 'application/vnd.api+json',
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data: user } = data;
+
+  return user;
 }

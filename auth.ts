@@ -1,10 +1,11 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
 import { z } from 'zod';
 import { authConfig } from './auth.config';
-import { apiClient } from './config/api-client';
-import { accountConfirm, createToken } from './features/auth/actions';
+import { accountConfirm, createToken, getUser } from './features/auth/actions';
 import { calculateAccessTokenExpires } from './features/auth/utils';
+import { associateCart } from './features/cart/actions';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -28,6 +29,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!user) {
             return null;
           }
+
+          await associateCart({ accessToken: token.access_token });
 
           return {
             id: user.id,
@@ -64,6 +67,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
+          await associateCart({ accessToken: token.access_token });
+
           return {
             id: user.id,
             accessToken: token.access_token,
@@ -78,23 +83,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         console.log('Invalid credentials');
         return null;
       }
+    }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET
     })
   ]
 });
-
-async function getUser({ accessToken }: { accessToken: string }) {
-  const { data, error } = await apiClient.GET('/api/v2/storefront/account', {
-    headers: {
-      accept: 'application/vnd.api+json',
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-
-  if (error) {
-    throw error;
-  }
-
-  const { data: user } = data;
-
-  return user;
-}

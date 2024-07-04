@@ -96,6 +96,24 @@ export interface components {
        */
       refresh_token: string;
     };
+    /** Create access token from external provider login (grant_type: assertion) */
+    AssertionTokenBody: {
+      /**
+       * @example refresh_token
+       * @enum {string}
+       */
+      grant_type: 'assertion';
+      /**
+       * @description Assertion provider, currently only google is supported.
+       * @enum {string}
+       */
+      provider: 'google';
+      /**
+       * @description Id token obtained from google login
+       * @example 27af95fd57a424e5d01aaf5eab1324a8d5c0ca57daf384fae39f811a5144330143301'
+       */
+      id_token: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -121,7 +139,8 @@ export interface operations {
         'application/json':
           | components['schemas']['CreateTokenBody']
           | components['schemas']['ClientTokenBody']
-          | components['schemas']['RefreshTokenBody'];
+          | components['schemas']['RefreshTokenBody']
+          | components['schemas']['AssertionTokenBody'];
         'application/xml': Record<string, never>;
       };
     };

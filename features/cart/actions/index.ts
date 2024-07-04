@@ -157,7 +157,7 @@ export async function updateItemQuantity({
   });
 }
 
-export async function associateCart() {
+export async function associateCart({ accessToken }: { accessToken: string }) {
   try {
     const cartToken = cookies().get(COOKIES.cartToken);
     if (!cartToken) {
@@ -165,6 +165,10 @@ export async function associateCart() {
     }
 
     await apiClient.PATCH('/api/v2/storefront/cart/associate', {
+      headers: {
+        accept: 'application/vnd.api+json',
+        Authorization: `Bearer ${accessToken}`
+      },
       params: {
         query: {
           guest_order_token: cartToken.value

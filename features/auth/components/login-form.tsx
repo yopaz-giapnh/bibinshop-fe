@@ -8,13 +8,15 @@ import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BadgeAlert } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { authenticate } from '../actions';
+import { authenticate, authenticateByGoogle } from '../actions';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
 import { ForgotPasswordModal, ForgotPasswordModalRef } from './forgot-password-modal';
+import { GoogleAuthButton } from './google-auth-button';
 import { PasswordFormField } from './password-form-field';
 import {
   PasswordReserSendLinkModal,
@@ -23,6 +25,9 @@ import {
 import { Separator } from './separator';
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || undefined;
+
   const PasswordReserSendLinkModalRef = useRef<PasswordReserSendLinkModalRef>(null);
   const ForfgotPasswordModalRef = useRef<ForgotPasswordModalRef>(null);
 
@@ -35,7 +40,8 @@ export default function LoginForm() {
     mode: 'onBlur'
   });
   const [state, formAction] = useFormState(authenticate, undefined);
-  const action = formAction.bind(null, form.getValues());
+  const credentialsPayload = { ...form.getValues(), callbackUrl };
+  const credentialsAction = formAction.bind(null, credentialsPayload);
 
   useEffect(() => {
     if (!state) {
@@ -50,6 +56,8 @@ export default function LoginForm() {
       });
     }
   }, [state]);
+
+  const googleAction = authenticateByGoogle.bind(null, { callbackUrl });
 
   return (
     <div>
@@ -75,39 +83,36 @@ export default function LoginForm() {
       </div>
 
       <Form {...form}>
-        <form
-          action={action}
-          className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 md:shadow-base"
-        >
-          <Typography as="title" element="h1" className="text-center  text-gray-800/80">
-            ログイン
-          </Typography>
+        <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-6 md:shadow-base">
+          <form action={credentialsAction}>
+            <Typography as="title" element="h1" className="text-center  text-gray-800/80">
+              ログイン
+            </Typography>
 
-          <div>
-            <EmailFormField control={form.control} />
-            <PasswordFormField control={form.control} />
-            <div className="flex justify-end">
-              <button
-                onClick={() => {
-                  ForfgotPasswordModalRef.current?.open();
-                }}
-                type="button"
-              >
-                <Typography
-                  as="bold"
-                  element="p"
-                  className="mt-[8px] text-right text-[14px] text-bibinBlue-100"
+            <div>
+              <EmailFormField control={form.control} />
+              <PasswordFormField control={form.control} />
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    ForfgotPasswordModalRef.current?.open();
+                  }}
+                  type="button"
                 >
-                  パスワードをお忘れですか？
-                </Typography>
-              </button>
+                  <Typography
+                    as="bold"
+                    element="p"
+                    className="mt-[8px] text-right text-[14px] text-bibinBlue-100"
+                  >
+                    パスワードをお忘れですか？
+                  </Typography>
+                </button>
+              </div>
             </div>
-          </div>
 
-          <LoginButton disabled={!form.formState.isValid} />
-
-          {/* TODO: Google SignIn審査通過するまでコメントアウト */}
-          {/* <div className="flex items-center justify-center gap-6">
+            <LoginButton disabled={!form.formState.isValid} />
+          </form>
+          <div className="flex items-center justify-center gap-6">
             <Separator />
             <Typography as="body" element="p">
               または
@@ -115,13 +120,10 @@ export default function LoginForm() {
             <Separator />
           </div>
 
-          <GoogleAuthButton
-            onClick={() => {
-              alert('TODO: Google アカウントでログイン');
-            }}
-            title="Google アカウントでログイン"
-          /> */}
-        </form>
+          <form action={googleAction}>
+            <GoogleAuthButton title="Google アカウントでログイン" />
+          </form>
+        </div>
       </Form>
 
       <div className="mt-6 hidden items-center justify-center gap-6 md:flex">
