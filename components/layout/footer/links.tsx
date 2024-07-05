@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 const components: { title: string; links: { label: string; href?: string }[] }[] = [
   {
-    title: 'BIBINについて',
+    title: 'bibinについて',
     links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
   },
   {
