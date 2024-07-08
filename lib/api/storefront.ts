@@ -613,6 +613,13 @@ export interface paths {
      */
     get: operations['shipping-methods-list'];
   };
+  '/api/v2/storefront/banners': {
+    /**
+     * List all Banners
+     * @description Returns a list of all active banners in the current store.
+     */
+    get: operations['get-banners'];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -2199,6 +2206,23 @@ export interface components {
       refresh_token: string;
       created_at: number;
     };
+    /** Banner */
+    Banner: {
+      /** @example 1 */
+      id: string;
+      /** @default banner */
+      type: string;
+      attributes: {
+        /** @example title */
+        title: string;
+        /** @example https://example.com/image.jpg */
+        image: string;
+        /** @example https://example.com/mobile_image.jpg */
+        mobile_image: string;
+        /** @example https://example.com */
+        link: string;
+      };
+    };
   };
   responses: {
     /** @description 404 Not Found - Resource not found. */
@@ -2525,6 +2549,16 @@ export interface components {
         'application/vnd.api+json': {
           data: components['schemas']['ShippingMethod'][];
           included?: components['schemas']['ShippingMethodIncludes'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
+    /** @description 200 Success - Returns an array of `banner` objects. */
+    BannerList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Banner'][];
           meta: components['schemas']['ListMeta'];
           links: components['schemas']['ListLinks'];
         };
@@ -4428,6 +4462,15 @@ export interface operations {
     };
     responses: {
       200: components['responses']['ShippingMethodList'];
+    };
+  };
+  /**
+   * List all Banners
+   * @description Returns a list of all active banners in the current store.
+   */
+  'get-banners': {
+    responses: {
+      200: components['responses']['BannerList'];
     };
   };
 }

@@ -1,6 +1,7 @@
 import { Menu } from '@/components/layout/navbar/menu';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { getBanners } from '@/features/banner/actions';
 import { CarouselBanner } from '@/features/banner/components/carousel-banner';
 import { ProductOverviewByTaxon } from '@/features/product/components/product-overview-by-taxon';
 import { getTaxons } from '@/features/taxon/actions';
@@ -14,7 +15,9 @@ export default async function Page() {
         <div className="md:hidden">
           <Menu getTaxons={getTaxons()} />
         </div>
-        <CarouselBanner />
+        <Suspense fallback={<LoadingSpinner />}>
+          <CarouselBanner getBanners={getBanners()} />
+        </Suspense>
         <Suspense fallback={<LoadingSpinner />}>
           <TaxonList />
         </Suspense>
