@@ -17,7 +17,7 @@ type Props = {
 export function ProductCard({ product, imageSize }: Props) {
   const { toast } = useToast();
 
-  const { defaultVariant } = product;
+  const defaultVariant = product.relationships.default_variant?.data;
 
   const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
