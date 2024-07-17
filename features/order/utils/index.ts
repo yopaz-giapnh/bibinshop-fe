@@ -2,24 +2,26 @@ import { Order } from '../types';
 
 export const getShipmentStateTitle = (order: Order) => {
   switch (order.attributes.shipment_state) {
-    case 'pending':
-      return '未払い';
     case 'ready':
-      return '処理中';
+      return '発送予定';
     case 'shipped':
-      return '出荷済み';
+      return '配送中';
+    case 'delivered':
+      return '配送完了';
     default:
-      return '未払い';
+      return '発送予定';
   }
 };
 
 export const getTabValue = (status: string) => {
   switch (status) {
-    case 'all':
-      return 'すべて';
-    case 'processing':
-      return '処理中';
+    case 'ready':
+      return '発送予定';
     case 'shipped':
-      return '出荷済み';
+      return '配送中';
+    case 'delivered':
+      return '配送完了';
+    default:
+      return '発送予定';
   }
 };

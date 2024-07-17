@@ -30,8 +30,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       'z-50 w-[192px] items-center justify-center py-[12px] text-[16px] font-medium text-black-70 ' +
-        'data-[state=active]:border-b-4 data-[state=active]:border-gray-900 data-[state=active]:text-black-80' +
-        'md:data-[state=active]:border-b-[3px] md:data-[state=active]:border-bibinBlue-100 md:data-[state=active]:text-bibinBlue-100',
+        'data-[state=active]:border-bibinBlue-100 data-[state=active]:font-bold data-[state=active]:text-bibinBlue-100',
       className
     )}
     {...props}

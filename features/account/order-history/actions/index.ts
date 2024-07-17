@@ -68,7 +68,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
     const creditCard = allCreditCards.find(
       (creditCard) => payment?.relationships.source?.data?.id === creditCard.id
     );
-    const shipment = allShipments.find((shipment) =>
+    const shipments = allShipments.filter((shipment) =>
       order.relationships.shipments?.data?.map((i) => i?.id).includes(shipment.id)
     );
     const variants = allVariants.filter((variant) =>
@@ -91,7 +91,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
       vendors,
       address,
       creditCard,
-      shipment,
+      shipments,
       variants,
       images,
       products
@@ -132,7 +132,7 @@ export async function getOrder(order_number: string) {
   const vendors = included?.filter(isVendorSchema) || [];
   const address = included?.find(isAddressSchema);
   const creditCard = included?.find(isCreditCardSchema);
-  const shipment = included?.find(isShippmentSchema);
+  const shipments = included?.filter(isShippmentSchema) || [];
   const variants = included?.filter(isVariantSchema) || [];
   const images = included?.filter(isImageSchema) || [];
   const products = included?.filter(isProductSchema) || [];
@@ -143,9 +143,31 @@ export async function getOrder(order_number: string) {
     vendors,
     address,
     creditCard,
-    shipment,
+    shipments,
     variants,
     images,
     products
   };
+}
+
+export async function receiveOrder(id: string) {
+  const { data, error } = await apiClient.POST(
+    '/api/v2/storefront/account/shipments/{id}/received',
+    {
+      params: {
+        path: {
+          id
+        }
+      },
+      fetch: (request) => {
+        return fetch(request, { next: { tags: [TAGS.orders] } });
+      }
+    }
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
 }

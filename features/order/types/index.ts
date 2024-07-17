@@ -9,7 +9,7 @@ export type Order = CartSchema & {
   vendors: VendorSchema[];
   address: Address | undefined;
   creditCard: CreditCard | undefined;
-  shipment: ShippmentSchema | undefined;
+  shipments: ShippmentSchema[];
   variants: VariantSchema[];
   images: ImageSchema[];
   products: ProductSchema[];

@@ -1,20 +1,22 @@
+import { Order } from '@/features/order/types';
 import Pagination from '@/features/pagination/components/pagination';
-import { getAccountOrders } from '../actions';
-import { buildShipmentState } from '../utils';
 import OrderHistoryEmptyView from './order-history-empty-view';
 import OrderHistoryList from './order-history-list';
 
 type OrderHistoryTabsProps = {
   status: string;
   currentPage: number;
+  orders: {
+    data: Array<Order>;
+    meta: { total_pages: number /* other properties */ };
+  };
 };
 
 /**
  * 注文履歴タブ内のコンテンツコンポーネント
  * @returns JSX.Element
  */
-export async function OrderHistoryTabContent({ status, currentPage }: OrderHistoryTabsProps) {
-  const orders = await getAccountOrders({ ...buildShipmentState(status), page: currentPage });
+export async function OrderHistoryTabContent({ status, orders }: OrderHistoryTabsProps) {
   const isEmpty = orders.data.length === 0;
 
   return (
@@ -24,7 +26,7 @@ export async function OrderHistoryTabContent({ status, currentPage }: OrderHisto
           <OrderHistoryEmptyView status={status} />
         ) : (
           <div className="w-full">
-            {orders.data.map((order) => (
+            {orders.data.map((order: Order) => (
               <OrderHistoryList key={order.id} order={order} />
             ))}
           </div>

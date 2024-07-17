@@ -44,6 +44,18 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/account/profile': {
+    /**
+     * Create a User Profile
+     * @description Creates a new profile for the current user.
+     */
+    post: operations['create-user-profile'];
+    /**
+     * Update a User Profile
+     * @description Updates the profile for the current user.
+     */
+    patch: operations['update-user-profile'];
+  };
   '/api/v2/storefront/account/addresses': {
     /**
      * List all Addresses
@@ -119,6 +131,20 @@ export interface paths {
         order_number: components['parameters']['OrderParam'];
       };
     };
+  };
+  '/api/v2/storefront/account/shipments/{id}/received': {
+    /**
+     * Mark Shipment as Received
+     * @description Marks a shipment as received by the customer.
+     */
+    post: operations['mark-shipment-received'];
+  };
+  '/api/v2/storefront/account/social_links': {
+    /**
+     * Create or Update a Social Link
+     * @description Creates a new social link or updates an existing one for the current user.
+     */
+    post: operations['create-social-link'];
   };
   '/api/v2/storefront/account_confirmations': {
     /**
@@ -606,6 +632,20 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/reviews/{review_id}/feedbacks': {
+    /**
+     * Add feedback to a review
+     * @description Adds a "helpful" feedback to the specified review for the current user.
+     */
+    post: operations['add-review-feedback'];
+  };
+  '/api/v2/storefront/reviews/{review_id}/feedbacks/{id}': {
+    /**
+     * Remove feedback from a review
+     * @description Removes the specified "helpful" feedback from the review for the current user.
+     */
+    delete: operations['remove-review-feedback'];
+  };
   '/api/v2/storefront/shipping_methods': {
     /**
      * Return a list of Shipping Methods
@@ -619,6 +659,87 @@ export interface paths {
      * @description Returns a list of all active banners in the current store.
      */
     get: operations['get-banners'];
+  };
+  '/api/v2/storefront/variant_ratings': {
+    /**
+     * Create or Update a Variant Rating
+     * @description Creates a new variant rating or updates an existing one for the current user.
+     */
+    post: operations['create-variant-rating'];
+  };
+  '/api/v2/storefront/users': {
+    /**
+     * List Users
+     * @description Returns a list of users with optional filtering and sorting.
+     */
+    get: {
+      parameters: {
+        query?: {
+          include?: components['parameters']['UserIncludeParam'];
+          /** @description Filter users by skin type */
+          'filter[skin_type]'?: string;
+          /** @description Filter users by personal colors */
+          'filter[personal_color]'?: string;
+          /** @description Filter users by skin concerns */
+          'filter[skin_concern]'?: string;
+          /** @description Filter users by scalp and hair concerns */
+          'filter[scalp_hair_concern]'?: string;
+          /** @description Filter users by scalp and hair concerns */
+          'filter[without_self]'?: boolean;
+          /** @description Sort users by followers count */
+          sort_by?: 'followers_asc' | 'followers_desc';
+          page?: components['parameters']['PageParam'];
+          per_page?: components['parameters']['PerPageParam'];
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        200: {
+          content: {
+            'application/vnd.api+json': {
+              data?: components['schemas']['PublicUser'][];
+              meta?: components['schemas']['ListMeta'];
+              links?: components['schemas']['ListLinks'];
+            };
+          };
+        };
+        403: components['responses']['Forbidden'];
+      };
+    };
+  };
+  '/api/v2/storefront/users/{unique_key}': {
+    /**
+     * Retrieve a User
+     * @description Returns the details of a specific user.
+     */
+    get: {
+      parameters: {
+        query?: {
+          include?: components['parameters']['UserIncludeParam'];
+        };
+        path: {
+          /** @description The unique identifier of the user. */
+          unique_key: string;
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        200: {
+          content: {
+            'application/vnd.api+json': {
+              data?: components['schemas']['PublicUser'];
+              included?: (
+                | components['schemas']['UserProfile']
+                | components['schemas']['UserAvatar']
+                | components['schemas']['UserSocialLink']
+                | components['schemas']['Product']
+              )[];
+            };
+          };
+        };
+        404: components['responses']['NotFound'];
+      };
+    };
   };
 }
 
@@ -824,6 +945,7 @@ export interface components {
           | 'partial'
           | 'ready'
           | 'shipped'
+          | 'delivered'
           | null;
         /**
          * @description Overall state of the Payments. Please see <a href="/developer/core-concepts/orders#order-payment-states">
@@ -1641,6 +1763,7 @@ export interface components {
          * @example https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=4123412434%2C
          */
         tracking_url?: string | null;
+        tracking?: string | null;
         /**
          * @description Status of the Shipment. For a list of all available statuses please refer: <a href="/developer/core-concepts/shipments" target="_blank" rel="noopener">
          *   Shipment section in Spree Guides
@@ -1648,7 +1771,7 @@ export interface components {
          * @example shipped
          * @enum {string}
          */
-        state?: 'pending' | 'ready' | 'shipped' | 'canceled';
+        state?: 'pending' | 'ready' | 'shipped' | 'canceled' | 'delivered';
         /**
          * Format: date-time
          * @description Date when Shipment was being sent from the warehouse
@@ -2085,12 +2208,31 @@ export interface components {
         /** @example Doe */
         review?: string | null;
         created_at?: components['schemas']['Timestamp'];
+        is_feeback_review?: boolean;
       };
       relationships: {
         user?: {
           data?: components['schemas']['Relation'];
         };
         product?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
+    /**
+     * Feedback Review
+     * @description The Feedback Review model.
+     */
+    FeedbackReview: {
+      /** @example 1 */
+      id: string;
+      /** @default feedback_review */
+      type: string;
+      relationships: {
+        user?: {
+          data?: components['schemas']['Relation'];
+        };
+        review?: {
           data?: components['schemas']['Relation'];
         };
       };
@@ -2159,6 +2301,82 @@ export interface components {
         styles?: components['schemas']['ImageStyle'][];
       };
     };
+    UserProfile: {
+      id?: string;
+      /** @enum {string} */
+      type?: 'user_profile';
+      attributes?: {
+        /** @enum {string} */
+        skin_type?: 'NORMAL' | 'OILY' | 'DRY' | 'COMBINATION';
+        /** @enum {string} */
+        personal_color?:
+          | 'YELLOW_SPRING'
+          | 'BLUE_SUMMER'
+          | 'YELLOW_AUTUMN'
+          | 'BLUE_WINTER'
+          | 'UNKNOWN';
+        birthyear?: number;
+        skin_concerns?: (
+          | 'ATOPY'
+          | 'ACNE'
+          | 'SENSITIVE'
+          | 'BLEMISHES'
+          | 'BLACKHEADS'
+          | 'DARK_CIRCLES'
+          | 'DRY_SKIN'
+          | 'WRINKLES'
+          | 'PORES'
+          | 'REDNESS'
+          | 'ROUGHNESS'
+          | 'NONE'
+        )[];
+        scalp_hair_concerns?: (
+          | 'HAIR_REMOVAL'
+          | 'DAMAGED_HAIR'
+          | 'SCALP_PROBLEMS'
+          | 'SUNBURNED_SCALP'
+          | 'OILY_SCALP'
+          | 'ITCHY_SCALP'
+          | 'DANDRUFF'
+          | 'NONE'
+        )[];
+        health_concerns?: (
+          | 'EYE_HEALTH'
+          | 'CHRONIC_FATIGUE'
+          | 'SLEEP_STRESS'
+          | 'WEIGHT_LOSS'
+          | 'IMMUNITY'
+          | 'MUSCLE_STRENGTH'
+          | 'CHOLESTEROL'
+          | 'DIGESTIVE_HEALTH'
+          | 'LIVER_HEALTH'
+          | 'BONE_HEALTH'
+          | 'WOMEN_HEALTH'
+          | 'BLOOD_CIRCULATION'
+          | 'STOMACH_HEALTH'
+          | 'NONE'
+        )[];
+      };
+      relationships?: {
+        user?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
+    UserSocialLink: {
+      id?: string;
+      /** @enum {string} */
+      type?: 'user_social_link';
+      attributes?: {
+        url?: string;
+        platform?: string;
+      };
+      relationships?: {
+        user?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
     /**
      * ShippingMethod
      * @description The ShippingMethod model.
@@ -2209,10 +2427,10 @@ export interface components {
     /** Banner */
     Banner: {
       /** @example 1 */
-      id: string;
+      id?: string;
       /** @default banner */
-      type: string;
-      attributes: {
+      type?: string;
+      attributes?: {
         /** @example title */
         title: string;
         /** @example https://example.com/image.jpg */
@@ -2221,6 +2439,30 @@ export interface components {
         mobile_image: string;
         /** @example https://example.com */
         link: string;
+      };
+    };
+    VariantRating: {
+      data?: {
+        id?: string;
+        /** @default variant_rating */
+        type?: string;
+        attributes?: {
+          rating?: boolean;
+        };
+      };
+    };
+    PublicUser: {
+      id?: string;
+      /** @enum {string} */
+      type?: 'user';
+      attributes?: {
+        first_name?: string;
+        last_name?: string;
+      };
+      relationships?: {
+        user_profile?: {
+          data?: components['schemas']['Relation'];
+        };
       };
     };
   };
@@ -2282,7 +2524,9 @@ export interface components {
           data: components['schemas']['User'];
           included?: (components['schemas']['Address'] &
             components['schemas']['UserAvatar'] &
-            components['schemas']['Review'])[];
+            components['schemas']['Review'] &
+            components['schemas']['UserProfile'] &
+            components['schemas']['UserSocialLink'])[];
         };
       };
     };
@@ -2543,6 +2787,14 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns the `user_profile` object. */
+    UserProfile: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['UserProfile'];
+        };
+      };
+    };
     /** @description 200 Success - Returns an array of `shipping_method` objects. */
     ShippingMethodList: {
       content: {
@@ -2638,6 +2890,7 @@ export interface components {
      * @example default_variant,variants,option_types,product_properties,taxons,images,primary_variant
      */
     ProductIncludeParam?: string;
+    UserIncludeParam?: string;
     /**
      * @description Specify what related resources (relationships) you would like to receive in the response body. Eg.
      *
@@ -2722,6 +2975,11 @@ export interface components {
      * @example 1,2
      */
     FilterByUserIds?: string;
+    /**
+     * @description Fetch only resources with corresponding Rating
+     * @example 1,2
+     */
+    FilterByRating?: string;
     /** @example a,b */
     FilterBySlugs?: string;
     /**
@@ -2905,6 +3163,142 @@ export interface operations {
     };
   };
   /**
+   * Create a User Profile
+   * @description Creates a new profile for the current user.
+   */
+  'create-user-profile': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          user_profile?: {
+            /** @enum {string} */
+            skin_type?: 'NORMAL' | 'OILY' | 'DRY' | 'COMBINATION';
+            /** @enum {string} */
+            personal_color?:
+              | 'YELLOW_SPRING'
+              | 'BLUE_SUMMER'
+              | 'YELLOW_AUTUMN'
+              | 'BLUE_WINTER'
+              | 'UNKNOWN';
+            birthyear?: number;
+            skin_concerns?: (
+              | 'ATOPY'
+              | 'ACNE'
+              | 'SENSITIVE'
+              | 'BLEMISHES'
+              | 'BLACKHEADS'
+              | 'DARK_CIRCLES'
+              | 'DRY_SKIN'
+              | 'WRINKLES'
+              | 'PORES'
+              | 'REDNESS'
+              | 'ROUGHNESS'
+              | 'NONE'
+            )[];
+            scalp_hair_concerns?: (
+              | 'HAIR_REMOVAL'
+              | 'DAMAGED_HAIR'
+              | 'SCALP_PROBLEMS'
+              | 'SUNBURNED_SCALP'
+              | 'OILY_SCALP'
+              | 'ITCHY_SCALP'
+              | 'DANDRUFF'
+              | 'NONE'
+            )[];
+            health_concerns?: (
+              | 'EYE_HEALTH'
+              | 'CHRONIC_FATIGUE'
+              | 'SLEEP_STRESS'
+              | 'WEIGHT_LOSS'
+              | 'IMMUNITY'
+              | 'MUSCLE_STRENGTH'
+              | 'CHOLESTEROL'
+              | 'DIGESTIVE_HEALTH'
+              | 'LIVER_HEALTH'
+              | 'BONE_HEALTH'
+              | 'WOMEN_HEALTH'
+              | 'BLOOD_CIRCULATION'
+              | 'STOMACH_HEALTH'
+              | 'NONE'
+            )[];
+          };
+        };
+      };
+    };
+    responses: {
+      200: components['responses']['UserProfile'];
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * Update a User Profile
+   * @description Updates the profile for the current user.
+   */
+  'update-user-profile': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          user_profile?: {
+            /** @enum {string} */
+            skin_type?: 'NORMAL' | 'OILY' | 'DRY' | 'COMBINATION';
+            /** @enum {string} */
+            personal_color?:
+              | 'YELLOW_SPRING'
+              | 'BLUE_SUMMER'
+              | 'YELLOW_AUTUMN'
+              | 'BLUE_WINTER'
+              | 'UNKNOWN';
+            birthyear?: number;
+            skin_concerns?: (
+              | 'ATOPY'
+              | 'ACNE'
+              | 'SENSITIVE'
+              | 'BLEMISHES'
+              | 'BLACKHEADS'
+              | 'DARK_CIRCLES'
+              | 'DRY_SKIN'
+              | 'WRINKLES'
+              | 'PORES'
+              | 'REDNESS'
+              | 'ROUGHNESS'
+              | 'NONE'
+            )[];
+            scalp_hair_concerns?: (
+              | 'HAIR_REMOVAL'
+              | 'DAMAGED_HAIR'
+              | 'SCALP_PROBLEMS'
+              | 'SUNBURNED_SCALP'
+              | 'OILY_SCALP'
+              | 'ITCHY_SCALP'
+              | 'DANDRUFF'
+              | 'NONE'
+            )[];
+            health_concerns?: (
+              | 'EYE_HEALTH'
+              | 'CHRONIC_FATIGUE'
+              | 'SLEEP_STRESS'
+              | 'WEIGHT_LOSS'
+              | 'IMMUNITY'
+              | 'MUSCLE_STRENGTH'
+              | 'CHOLESTEROL'
+              | 'DIGESTIVE_HEALTH'
+              | 'LIVER_HEALTH'
+              | 'BONE_HEALTH'
+              | 'WOMEN_HEALTH'
+              | 'BLOOD_CIRCULATION'
+              | 'STOMACH_HEALTH'
+              | 'NONE'
+            )[];
+          };
+        };
+      };
+    };
+    responses: {
+      200: components['responses']['UserProfile'];
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
    * List all Addresses
    * @description Returns a list of addresses for the current user.
    */
@@ -3053,7 +3447,7 @@ export interface operations {
         'fields[cart]'?: components['parameters']['SparseFieldsCart'];
         page?: components['parameters']['PageParam'];
         per_page?: components['parameters']['PerPageParam'];
-        /** @example backorder,canceled,partial,pending,ready,shipped */
+        /** @example pending,ready,shipped,delivered */
         'filter[shipment_state]'?: string;
       };
     };
@@ -3079,6 +3473,65 @@ export interface operations {
     responses: {
       200: components['responses']['Cart'];
       403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Mark Shipment as Received
+   * @description Marks a shipment as received by the customer.
+   */
+  'mark-shipment-received': {
+    parameters: {
+      path: {
+        /** @description The ID of the shipment to mark as received. */
+        id: string;
+      };
+    };
+    responses: {
+      200: components['responses']['Shipment'];
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * Create or Update a Social Link
+   * @description Creates a new social link or updates an existing one for the current user.
+   */
+  'create-social-link': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          user_social_link?: {
+            /**
+             * @description The URL of the social media profile
+             * @example https://twitter.com/example_user
+             */
+            url: string;
+            /**
+             * @description The social media platform
+             * @example X
+             * @enum {string}
+             */
+            platform: 'INSTAGRAM' | 'FACEBOOK' | 'X';
+          };
+        };
+      };
+    };
+    responses: {
+      /** @description Social link successfully created or updated */
+      200: {
+        content: {
+          'application/vnd.api+json': components['schemas']['UserSocialLink'];
+        };
+      };
+      /** @description Social link successfully created */
+      201: {
+        content: {
+          'application/vnd.api+json': components['schemas']['UserSocialLink'];
+        };
+      };
+      403: components['responses']['Forbidden'];
+      422: components['responses']['UnprocessableEntity'];
     };
   };
   /**
@@ -3841,6 +4294,8 @@ export interface operations {
          * @example true
          */
         'filter[purchasable]'?: boolean;
+        'filter[variant_rating_user_ids]'?: string;
+        'filter[variant_rating]'?: boolean;
         /**
          * @description Sort products based on: <ul>
          *   <li>name (ascending/descending)</li>
@@ -4391,6 +4846,7 @@ export interface operations {
         'filter[product_ids]'?: components['parameters']['FilterByProductIds'];
         'filter[vendor_ids]'?: components['parameters']['FilterByVendorIds'];
         'filter[user_ids]'?: components['parameters']['FilterByUserIds'];
+        'filter[rating]'?: components['parameters']['FilterByRating'];
         page?: components['parameters']['PageParam'];
         per_page?: components['parameters']['PerPageParam'];
       };
@@ -4449,6 +4905,51 @@ export interface operations {
     };
   };
   /**
+   * Add feedback to a review
+   * @description Adds a "helpful" feedback to the specified review for the current user.
+   */
+  'add-review-feedback': {
+    parameters: {
+      path: {
+        /** @description The ID of the review to add feedback to. */
+        review_id: string;
+      };
+    };
+    responses: {
+      /** @description Feedback successfully added */
+      201: {
+        content: {
+          'application/vnd.api+json': components['schemas']['FeedbackReview'];
+        };
+      };
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * Remove feedback from a review
+   * @description Removes the specified "helpful" feedback from the review for the current user.
+   */
+  'remove-review-feedback': {
+    parameters: {
+      path: {
+        /** @description The ID of the review the feedback belongs to. */
+        review_id: string;
+        /** @description The ID of the feedback to remove. */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Feedback successfully removed */
+      204: {
+        content: never;
+      };
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+    };
+  };
+  /**
    * Return a list of Shipping Methods
    * @description Returns a list of Shipping Methods
    */
@@ -4471,6 +4972,40 @@ export interface operations {
   'get-banners': {
     responses: {
       200: components['responses']['BannerList'];
+    };
+  };
+  /**
+   * Create or Update a Variant Rating
+   * @description Creates a new variant rating or updates an existing one for the current user.
+   */
+  'create-variant-rating': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          variant_rating?: {
+            /** @description The rating for the variant (true or false) */
+            rating: boolean;
+            /** @description The ID of the variant being rated */
+            variant_id: string;
+          };
+        };
+      };
+    };
+    responses: {
+      /** @description Successful response (existing rating updated) */
+      200: {
+        content: {
+          'application/vnd.api+json': components['schemas']['VariantRating'];
+        };
+      };
+      /** @description Successful response (new rating created) */
+      201: {
+        content: {
+          'application/vnd.api+json': components['schemas']['VariantRating'];
+        };
+      };
+      403: components['responses']['Forbidden'];
+      422: components['responses']['UnprocessableEntity'];
     };
   };
 }

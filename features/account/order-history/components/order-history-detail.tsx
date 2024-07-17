@@ -3,7 +3,6 @@ import { Typography } from '@/components/ui/typography';
 import { BackButton } from '@/components/button/back-button';
 import { Order } from '@/features/order/types';
 import { OrderDetail } from '../../../order/components/order-detail';
-import OrderHistoryDetailBottomButton from './order-history-detail-bottom-button';
 
 type Props = {
   order: Order;
@@ -29,7 +28,6 @@ export default function OrderHistoryDetail({ order }: Props) {
           orderNumber={order.attributes.number}
         />
       )}
-      <OrderHistoryDetailBottomButton order={order} />
     </>
   );
 }
