@@ -54,8 +54,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
     tryReviewWriteModalRef.current?.open(selectedItemId ?? '');
   };
 
-  const handleShowShippingInfo = () => {
-    const trackingNumber = order?.shipments[0]?.attributes.tracking;
+  const handleShowShippingInfo = (trackingNumber: string) => {
     if (trackingNumber) {
       orderTrackerModalRef.current?.open(trackingNumber);
     }
@@ -116,19 +115,24 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
                 >
                   受取確認
                 </Button>
-                <button
-                  type="button"
-                  className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                  onClick={handleShowShippingInfo}
-                >
-                  <Typography
-                    as="bold"
-                    element="p"
-                    className="ml-[8px] text-[14px] text-bibinBlue-100"
-                  >
-                    配送情報
-                  </Typography>
-                </button>
+                {order.shipments
+                  .filter((shipment) => shipment.attributes.state === 'shipped')
+                  .map((shipment) => (
+                    <button
+                      key={shipment.id}
+                      type="button"
+                      className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                      onClick={() => handleShowShippingInfo(shipment.attributes.tracking ?? '')}
+                    >
+                      <Typography
+                        as="bold"
+                        element="p"
+                        className="ml-[8px] text-[14px] text-bibinBlue-100"
+                      >
+                        配送情報
+                      </Typography>
+                    </button>
+                  ))}
               </>
             )}
             {(state === 'delivered' || state === 'shipped') && (
@@ -201,15 +205,26 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
           {(state === 'delivered' || state === 'shipped') && (
             <div className="flex w-full justify-between pb-[8px]">
               {state === 'shipped' && (
-                <button
-                  type="button"
-                  className="mt-[8px] w-[155px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                  onClick={handleShowShippingInfo}
-                >
-                  <Typography as="bold" element="p" className="text-[14px] text-bibinBlue-100">
-                    配送情報
-                  </Typography>
-                </button>
+                <>
+                  {order.shipments
+                    .filter((shipment) => shipment.attributes.state === 'shipped')
+                    .map((shipment) => (
+                      <button
+                        key={shipment.id}
+                        type="button"
+                        className="mt-[8px] w-[48%] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                        onClick={() => handleShowShippingInfo(shipment.attributes.tracking ?? '')}
+                      >
+                        <Typography
+                          as="bold"
+                          element="p"
+                          className="text-[14px] text-bibinBlue-100"
+                        >
+                          配送情報
+                        </Typography>
+                      </button>
+                    ))}
+                </>
               )}
               <Link
                 href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
