@@ -86,6 +86,13 @@ export function SpSideBar({ isSignedIn, getTaxons }: Props) {
           <CategoryLink href="/products/ranking?page=1" icon={StarIcon} label="ランキング" />
           <CategoryLink href="/products/new?page=1" icon={MegaphoneIcon} label="新着" />
         </div>
+        <div className="mb-[20px] flex w-full items-center justify-center">
+          <SheetClose asChild>
+            <Link href={'/sns'} passHref>
+              <Image src={'/sns-sidebar-banner.png'} alt={'sns banner'} width={258} height={43} />
+            </Link>
+          </SheetClose>
+        </div>
         <ScrollArea>
           <ul
             style={{
