@@ -114,7 +114,7 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
       query: {
         'filter[taxons]': taxonIds.join(','),
         page: Number(page || 1),
-        include: 'images,vendor,product_properties'
+        include: 'images,vendor,product_properties,default_variant'
       }
     },
     fetch: (request) => {
