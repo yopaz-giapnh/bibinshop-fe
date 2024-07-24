@@ -6,12 +6,14 @@ import { CarouselBanner } from '@/features/banner/components/carousel-banner';
 import { ProductOverviewByTaxon } from '@/features/product/components/product-overview-by-taxon';
 import { getTaxons } from '@/features/taxon/actions';
 import { TaxonList } from '@/features/taxon/components/taxon-list';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Suspense } from 'react';
 
 export default async function Page() {
   return (
     <div className="h-full w-full">
-      <div className="mx-auto flex w-full flex-col pt-[73px] md:pt-[126px]">
+      <div className="mx-auto flex w-full flex-col items-center pt-[73px] md:pt-[126px]">
         <div className="md:hidden">
           <Menu getTaxons={getTaxons()} />
         </div>
@@ -21,6 +23,22 @@ export default async function Page() {
         <Suspense fallback={<LoadingSpinner />}>
           <TaxonList />
         </Suspense>
+        <Link href={'/sns'} passHref className="mt-[24px]">
+          <Image
+            src={'/sns-banner-pc.png'}
+            alt={'sms banner'}
+            width={1060}
+            height={130}
+            className="hidden md:block"
+          />
+          <Image
+            src={'/sns-banner-sp.png'}
+            alt={'sms banner'}
+            width={344}
+            height={130}
+            className="md:hidden"
+          />
+        </Link>
         <div className="flex w-full flex-col">
           <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">
             <Suspense fallback={<LoadingSpinner />}>

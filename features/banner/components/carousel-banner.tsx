@@ -55,25 +55,29 @@ export function CarouselBanner({ getBanners }: Props) {
   return (
     <Carousel setApi={setApi} className="w-full">
       <CarouselContent>
-        {banners.map((banner) => (
-          // NOTE: "pl-[426px]は、カテゴリーメニューと同じ位置に設定"
-          <CarouselItem
-            key={banner.id}
-            className="md:pl-[426px]"
-            style={{
-              backgroundColor: banner.backgroundColor
-            }}
-          >
-            <Link key={banner.id} href={banner.linkUrl ?? ''} passHref>
-              <Image
-                src={isPc ? banner.imageUrl ?? '' : banner.mobileImageUrl ?? ''}
-                alt={banner.title ?? ''}
-                width={790}
-                height={370}
-              />
-            </Link>
-          </CarouselItem>
-        ))}
+        {banners.map(
+          (banner) =>
+            banner.linkUrl &&
+            banner.imageUrl && (
+              // NOTE: "pl-[426px]は、カテゴリーメニューと同じ位置に設定"
+              <CarouselItem
+                key={banner.id}
+                className="md:pl-[426px]"
+                style={{
+                  backgroundColor: banner.backgroundColor
+                }}
+              >
+                <Link key={banner.id} href={banner.linkUrl} passHref>
+                  <Image
+                    src={isPc ? banner.imageUrl : banner.mobileImageUrl || banner.imageUrl}
+                    alt={banner.title ?? 'banner'}
+                    width={790}
+                    height={370}
+                  />
+                </Link>
+              </CarouselItem>
+            )
+        )}
       </CarouselContent>
       <CarouselDots current={current} count={count} />
     </Carousel>
