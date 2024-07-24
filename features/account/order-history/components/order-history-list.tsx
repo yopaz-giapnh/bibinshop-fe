@@ -41,11 +41,11 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
   const { variants } = order;
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedShipmentId, setSelectedShipmentId] = useState<string | null>(null);
 
   const handleReceiptConfirm = () => {
     orderReceiptConfirmModalRef.current?.close();
-    tryReviewWriteModalRef.current?.open(selectedItemId ?? '');
+    tryReviewWriteModalRef.current?.open(selectedShipmentId ?? '');
   };
 
   const handleShowShippingInfo = (trackingNumber: string) => {
@@ -72,40 +72,34 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
           <div className="absolute right-0 top-[16px]">
             {state === 'shipped' && (
               <>
-                <Button
-                  type="button"
-                  className="w-full"
-                  onClick={() => {
-                    const shippedItem = sortedLineItems['shipped'][0];
-                    if (shippedItem) {
-                      setSelectedItemId(shippedItem.id);
-                      orderReceiptConfirmModalRef.current?.open(shippedItem.id);
-                    }
-                  }}
-                >
-                  受取確認
-                </Button>
                 {order.shipments
-                  .filter(
-                    (shipment) =>
-                      shipment.attributes.state === 'shipped' &&
-                      shipment.attributes.tracking?.length
-                  )
+                  .filter((shipment) => shipment.attributes.state === 'shipped')
                   .map((shipment) => (
-                    <button
-                      key={shipment.id}
-                      type="button"
-                      className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                      onClick={() => handleShowShippingInfo(shipment.attributes.tracking ?? '')}
-                    >
-                      <Typography
-                        as="bold"
-                        element="p"
-                        className="ml-[8px] text-[14px] text-bibinBlue-100"
+                    <div key={shipment.id}>
+                      <Button
+                        type="button"
+                        className="mb-[8px] w-full"
+                        onClick={() => {
+                          setSelectedShipmentId(shipment.id);
+                          orderReceiptConfirmModalRef.current?.open(shipment.id);
+                        }}
                       >
-                        配送情報
-                      </Typography>
-                    </button>
+                        受取確認
+                      </Button>
+                      <button
+                        type="button"
+                        className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                        onClick={() => handleShowShippingInfo(shipment.attributes.tracking ?? '')}
+                      >
+                        <Typography
+                          as="bold"
+                          element="p"
+                          className="ml-[8px] text-[14px] text-bibinBlue-100"
+                        >
+                          配送情報
+                        </Typography>
+                      </button>
+                    </div>
                   ))}
               </>
             )}
@@ -145,8 +139,8 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
         );
 
         return (
-          <>
-            <div className="flex" key={item.id}>
+          <div key={item.id}>
+            <div className="flex">
               <OrderHistoryItem
                 item={item}
                 image={image}
@@ -156,25 +150,29 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
               />
             </div>
             {index === items.length - 1 && isPc && isLastGroup && <div className="border-[1px]" />}
-          </>
+          </div>
         );
       })}
       {!isPc && (
         <>
           {state === 'shipped' && (
-            <Button
-              type="button"
-              className="w-full"
-              onClick={() => {
-                const shippedItem = sortedLineItems['shipped'][0];
-                if (shippedItem) {
-                  setSelectedItemId(shippedItem.id);
-                  orderReceiptConfirmModalRef.current?.open(shippedItem.id);
-                }
-              }}
-            >
-              受取確認
-            </Button>
+            <>
+              {order.shipments
+                .filter((shipment) => shipment.attributes.state === 'shipped')
+                .map((shipment) => (
+                  <Button
+                    key={shipment.id}
+                    type="button"
+                    className="mb-[8px] w-full"
+                    onClick={() => {
+                      setSelectedShipmentId(shipment.id);
+                      orderReceiptConfirmModalRef.current?.open(shipment.id);
+                    }}
+                  >
+                    受取確認
+                  </Button>
+                ))}
+            </>
           )}
           {(state === 'delivered' || state === 'shipped') && (
             <div className="flex w-full justify-between pb-[8px]">
@@ -257,7 +255,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
       </div>
       <OrderReceiptConfirmModal
         ref={orderReceiptConfirmModalRef}
-        selectedItemId={selectedItemId}
+        shipmentId={selectedShipmentId}
         onConfirm={handleReceiptConfirm}
       />
       <TryReviewWriteModal ref={tryReviewWriteModalRef} sortedLineItems={sortedLineItems} />

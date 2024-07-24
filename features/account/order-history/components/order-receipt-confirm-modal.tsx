@@ -14,19 +14,19 @@ export type OrderReceiptConfirmModalRef = {
 };
 
 type OrderReceiptConfirmModalProps = {
-  selectedItemId: string | null;
+  shipmentId: string | null;
   onConfirm: () => void;
 };
 
 export const OrderReceiptConfirmModal = forwardRef<
   OrderReceiptConfirmModalRef,
   OrderReceiptConfirmModalProps
->(({ selectedItemId, onConfirm }, ref) => {
+>(({ shipmentId, onConfirm }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOnClickYes = () => {
-    if (selectedItemId) {
-      receiveOrder(selectedItemId);
+    if (shipmentId) {
+      receiveOrder(shipmentId);
     }
     onConfirm();
   };

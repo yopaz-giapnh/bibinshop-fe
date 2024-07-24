@@ -63,7 +63,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
   const [order, setOrder] = useState<Order | null>(null);
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedShipmentId, setSelectedShipmentId] = useState<string | null>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
 
   const handleReceiptConfirm = () => {
     orderReceiptConfirmModalRef.current?.close();
-    tryReviewWriteModalRef.current?.open(selectedItemId ?? '');
+    tryReviewWriteModalRef.current?.open(selectedShipmentId ?? '');
   };
 
   const sortedLineItems = sortLineItemsByShipmentState(order);
@@ -105,19 +105,6 @@ export function OrderDetail({ className, orderNumber }: Props) {
           <div className="absolute right-0 top-[16px]">
             {state === 'shipped' && (
               <>
-                <Button
-                  type="button"
-                  className="w-full"
-                  onClick={() => {
-                    const shippedItem = sortedLineItems['shipped'][0];
-                    if (shippedItem) {
-                      setSelectedItemId(shippedItem.id);
-                      orderReceiptConfirmModalRef.current?.open(shippedItem.id);
-                    }
-                  }}
-                >
-                  受取確認
-                </Button>
                 {order.shipments
                   .filter(
                     (shipment) =>
@@ -197,19 +184,24 @@ export function OrderDetail({ className, orderNumber }: Props) {
       {!isPc && (
         <>
           {state === 'shipped' && (
-            <Button
-              type="button"
-              className="w-full"
-              onClick={() => {
-                const shippedItem = sortedLineItems['shipped'][0];
-                if (shippedItem) {
-                  setSelectedItemId(shippedItem.id);
-                  orderReceiptConfirmModalRef.current?.open(shippedItem.id);
-                }
-              }}
-            >
-              受取確認
-            </Button>
+            <>
+              {order.shipments
+                .filter((shipment) => shipment.attributes.state === 'shipped')
+                .map((shipment) => (
+                  <div key={shipment.id}>
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={() => {
+                        setSelectedShipmentId(shipment.id);
+                        orderReceiptConfirmModalRef.current?.open(shipment.id);
+                      }}
+                    >
+                      受取確認
+                    </Button>
+                  </div>
+                ))}
+            </>
           )}
           {(state === 'delivered' || state === 'shipped') && (
             <div className="flex w-full justify-between pb-[8px]">
@@ -308,7 +300,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
       </div>
       <OrderReceiptConfirmModal
         ref={orderReceiptConfirmModalRef}
-        selectedItemId={selectedItemId}
+        shipmentId={selectedShipmentId}
         onConfirm={handleReceiptConfirm}
       />
       <TryReviewWriteModal ref={tryReviewWriteModalRef} sortedLineItems={sortedLineItems} />

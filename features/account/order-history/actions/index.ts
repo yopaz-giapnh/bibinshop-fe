@@ -8,6 +8,7 @@ import { isCreditCardSchema, isPaymentSchema } from '@/features/payment/utils';
 import { isImageSchema, isProductSchema, isVariantSchema } from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { isNotFound } from '@/utils/api';
+import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 
 export async function getAccountOrders({
@@ -158,9 +159,6 @@ export async function receiveOrder(id: string) {
         path: {
           id
         }
-      },
-      fetch: (request) => {
-        return fetch(request, { next: { tags: [TAGS.orders] } });
       }
     }
   );
@@ -168,6 +166,8 @@ export async function receiveOrder(id: string) {
   if (error) {
     throw error;
   }
+
+  revalidateTag(TAGS.orders);
 
   return data;
 }
