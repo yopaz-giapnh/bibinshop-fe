@@ -53,7 +53,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   // 出荷状態でアイテムをソート
   const sortedLineItems = lineItems.reduce<SortedLineItems>((acc, item) => {
     const shipment = order.shipments.find((shipment) =>
-      shipment.relationships.line_items.data.some(
+      shipment.relationships.line_items?.data?.some(
         (lineItem: { id: string }) => lineItem.id === item.id
       )
     );

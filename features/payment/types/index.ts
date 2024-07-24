@@ -17,4 +17,12 @@ export type CreditCard = components['schemas']['CreditCard'];
 
 export type ShippmentSchema = components['schemas']['Shipment'];
 
+export type ExtendedShipmentSchema = ShippmentSchema & {
+  relationships?: {
+    line_items?: {
+      data?: { id: string; type: string }[];
+    };
+  };
+};
+
 export type PaymentSchema = components['schemas']['Payment'];
