@@ -120,7 +120,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
                 </Button>
                 {order.shipments
                   .filter((shipment) => shipment.attributes.state === 'shipped')
-                  .map((shipment, index) => (
+                  .map((shipment) => (
                     <button
                       key={shipment.id}
                       type="button"
@@ -132,7 +132,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
                         element="p"
                         className="ml-[8px] text-[14px] text-bibinBlue-100"
                       >
-                        配送情報 {index + 1}
+                        配送情報
                       </Typography>
                     </button>
                   ))}
@@ -213,7 +213,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
                 <>
                   {order.shipments
                     .filter((shipment) => shipment.attributes.state === 'shipped')
-                    .map((shipment, index) => (
+                    .map((shipment) => (
                       <button
                         key={shipment.id}
                         type="button"
@@ -225,7 +225,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
                           element="p"
                           className="text-[14px] text-bibinBlue-100"
                         >
-                          配送情報 {index + 1}
+                          配送情報
                         </Typography>
                       </button>
                     ))}
