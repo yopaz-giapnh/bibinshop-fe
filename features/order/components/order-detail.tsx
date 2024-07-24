@@ -24,7 +24,7 @@ import { FilePen } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Order } from '../types';
-import { getShipmentStateTitle, getTabValue } from '../utils';
+import { getShipmentStateTitle, getTabValue, sortLineItemsByShipmentState } from '../utils';
 import { OrderDetailAddress } from './order-detail-address';
 import { OrderDetailOverview } from './order-detail-overview';
 import { OrderDetailPaymentMethod } from './order-detail-payment-method';
@@ -87,18 +87,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
     tryReviewWriteModalRef.current?.open(selectedItemId ?? '');
   };
 
-  // 出荷状態でアイテムをソート
-  const sortedLineItems = order?.lineItems.reduce<SortedLineItems>((acc, item) => {
-    const shipment = order?.shipments.find((shipment) =>
-      shipment.relationships.line_items?.data?.some(
-        (lineItem: { id: string }) => lineItem.id === item.id
-      )
-    );
-    const state = shipment?.attributes.state || 'unknown';
-    if (!acc[state]) acc[state] = [];
-    acc[state].push(item);
-    return acc;
-  }, {});
+  const sortedLineItems = sortLineItemsByShipmentState(order);
 
   const extractSlugs = (items: SortedLineItems) => {
     return Object.entries(items)

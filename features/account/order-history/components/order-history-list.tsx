@@ -3,7 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { Order } from '@/features/order/types';
-import { getShipmentStateTitle, getTabValue } from '@/features/order/utils';
+import {
+  getShipmentStateTitle,
+  getTabValue,
+  sortLineItemsByShipmentState
+} from '@/features/order/utils';
 import { findImageFromLineItem } from '@/features/product/utils';
 import {
   TryReviewWriteModal,
@@ -36,7 +40,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
-  const { variants, lineItems } = order;
+  const { variants } = order;
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   const handleReceiptConfirm = () => {
@@ -50,18 +54,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
     }
   };
 
-  // 出荷状態でアイテムをソート
-  const sortedLineItems = lineItems.reduce<SortedLineItems>((acc, item) => {
-    const shipment = order.shipments.find((shipment) =>
-      shipment.relationships.line_items?.data?.some(
-        (lineItem) => lineItem && lineItem.id === item.id
-      )
-    );
-    const state = shipment?.attributes.state || 'unknown';
-    if (!acc[state]) acc[state] = [];
-    acc[state].push(item);
-    return acc;
-  }, {});
+  const sortedLineItems = sortLineItemsByShipmentState(order);
 
   const extractSlugs = (items: SortedLineItems) => {
     return Object.entries(items)
