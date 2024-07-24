@@ -119,7 +119,11 @@ export function OrderDetail({ className, orderNumber }: Props) {
                   受取確認
                 </Button>
                 {order.shipments
-                  .filter((shipment) => shipment.attributes.state === 'shipped')
+                  .filter(
+                    (shipment) =>
+                      shipment.attributes.state === 'shipped' &&
+                      shipment.attributes.tracking?.length
+                  )
                   .map((shipment) => (
                     <button
                       key={shipment.id}
@@ -212,7 +216,11 @@ export function OrderDetail({ className, orderNumber }: Props) {
               {state === 'shipped' && (
                 <>
                   {order.shipments
-                    .filter((shipment) => shipment.attributes.state === 'shipped')
+                    .filter(
+                      (shipment) =>
+                        shipment.attributes.state === 'shipped' &&
+                        shipment.attributes.tracking?.length
+                    )
                     .map((shipment) => (
                       <button
                         key={shipment.id}
