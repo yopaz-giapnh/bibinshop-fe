@@ -707,6 +707,32 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/users/{unique_key}/followers': {
+    /**
+     * List Followers
+     * @description Returns a list of users that are following the specified user.
+     */
+    get: operations['get-followers'];
+  };
+  '/api/v2/storefront/users/{unique_key}/followees': {
+    /**
+     * List Followees
+     * @description Returns a list of users that the specified user is following.
+     */
+    get: operations['get-followees'];
+  };
+  '/api/v2/storefront/users/{unique_key}/follow': {
+    /**
+     * Follow a User
+     * @description Follow a user
+     */
+    post: operations['follow-user'];
+    /**
+     * Unfollow a User
+     * @description Unfollow a user
+     */
+    delete: operations['unfollow-user'];
+  };
   '/api/v2/storefront/users/{unique_key}': {
     /**
      * Retrieve a User
@@ -945,7 +971,6 @@ export interface components {
           | 'partial'
           | 'ready'
           | 'shipped'
-          | 'delivered'
           | null;
         /**
          * @description Overall state of the Payments. Please see <a href="/developer/core-concepts/orders#order-payment-states">
@@ -1786,6 +1811,9 @@ export interface components {
         shipping_rates?: {
           data?: components['schemas']['Relation'][];
         };
+        line_items?: {
+          data?: components['schemas']['Relation'][];
+        };
       };
     };
     /** Shipment Includes */
@@ -2451,13 +2479,31 @@ export interface components {
         };
       };
     };
+    /** Follow */
+    Follow: {
+      /** @example 1 */
+      id: string;
+      /** @default follow */
+      type: string;
+      attributes: {
+        /** @example 2 */
+        user_id?: number;
+        /** @example ユーザー１ */
+        user_nickname?: string;
+      };
+    };
     PublicUser: {
       id?: string;
       /** @enum {string} */
       type?: 'user';
       attributes?: {
+        unique_key?: string;
         first_name?: string;
         last_name?: string;
+        /** @description Indicates if this user is following the current user. False if the current user is not signed in. */
+        following_me?: boolean;
+        /** @description Indicates if the current user is following this user.  False if the current user is not signed in. */
+        followed_by_me?: boolean;
       };
       relationships?: {
         user_profile?: {
@@ -4297,6 +4343,11 @@ export interface operations {
         'filter[variant_rating_user_ids]'?: string;
         'filter[variant_rating]'?: boolean;
         /**
+         * @description Filter Products based on ordered user IDs
+         * @example 1,2,3
+         */
+        'filter[ordered_user_ids]'?: string;
+        /**
          * @description Sort products based on: <ul>
          *   <li>name (ascending/descending)</li>
          *   <li>price (ascending/descending)</li>
@@ -5006,6 +5057,104 @@ export interface operations {
       };
       403: components['responses']['Forbidden'];
       422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * List Followers
+   * @description Returns a list of users that are following the specified user.
+   */
+  'get-followers': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['UserIncludeParam'];
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+      path: {
+        /** @description The unique key of the user to retrieve followers for. */
+        unique_key: string;
+      };
+    };
+    responses: {
+      /** @description Successful response */
+      200: {
+        content: {
+          'application/vnd.api+json': {
+            data?: components['schemas']['PublicUser'][];
+            meta?: components['schemas']['ListMeta'];
+            links?: components['schemas']['ListLinks'];
+          };
+        };
+      };
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * List Followees
+   * @description Returns a list of users that the specified user is following.
+   */
+  'get-followees': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['UserIncludeParam'];
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+      path: {
+        /** @description The unique key of the user to retrieve followees for. */
+        unique_key: string;
+      };
+    };
+    responses: {
+      /** @description Successful response */
+      200: {
+        content: {
+          'application/vnd.api+json': {
+            data?: components['schemas']['PublicUser'][];
+            meta?: components['schemas']['ListMeta'];
+            links?: components['schemas']['ListLinks'];
+          };
+        };
+      };
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Follow a User
+   * @description Follow a user
+   */
+  'follow-user': {
+    parameters: {
+      path: {
+        /** @description The unique key of the user to follow. */
+        unique_key: string;
+      };
+    };
+    responses: {
+      /** @description Followed user */
+      201: {
+        content: never;
+      };
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Unfollow a User
+   * @description Unfollow a user
+   */
+  'unfollow-user': {
+    parameters: {
+      path: {
+        /** @description The unique key of the user to unfollow. */
+        unique_key: string;
+      };
+    };
+    responses: {
+      /** @description Unfollowed user */
+      200: {
+        content: never;
+      };
+      403: components['responses']['Forbidden'];
     };
   };
 }

@@ -54,7 +54,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const sortedLineItems = lineItems.reduce<SortedLineItems>((acc, item) => {
     const shipment = order.shipments.find((shipment) =>
       shipment.relationships.line_items?.data?.some(
-        (lineItem: { id: string }) => lineItem.id === item.id
+        (lineItem) => lineItem && lineItem.id === item.id
       )
     );
     const state = shipment?.attributes.state || 'unknown';
