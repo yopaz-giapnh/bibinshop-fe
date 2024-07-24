@@ -19,6 +19,7 @@ const slideInterval = 5000 as const;
 type Props = {
   getBanners: ReturnType<typeof getBanners>;
 };
+
 export function CarouselBanner({ getBanners }: Props) {
   const banners = React.use(getBanners);
   const [api, setApi] = React.useState<CarouselApi>();

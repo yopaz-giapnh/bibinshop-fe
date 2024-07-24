@@ -971,6 +971,7 @@ export interface components {
           | 'partial'
           | 'ready'
           | 'shipped'
+          | 'delivered'
           | null;
         /**
          * @description Overall state of the Payments. Please see <a href="/developer/core-concepts/orders#order-payment-states">
@@ -1809,6 +1810,9 @@ export interface components {
           data?: components['schemas']['Relation'];
         };
         shipping_rates?: {
+          data?: components['schemas']['Relation'][];
+        };
+        line_items?: {
           data?: components['schemas']['Relation'][];
         };
       };
