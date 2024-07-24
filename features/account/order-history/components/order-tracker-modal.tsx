@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogDescription } from '@/components/ui/dialog';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Dialog } from '@radix-ui/react-dialog';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
@@ -16,6 +17,7 @@ export const OrderTrackerModal = forwardRef<OrderTrackerModalRef>((_, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState<string | undefined>();
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(true);
 
   useEffect(() => {
     if (!window.Ordertracker) {
@@ -58,6 +60,17 @@ export const OrderTrackerModal = forwardRef<OrderTrackerModalRef>((_, ref) => {
     }
   }, [isOpen, isScriptLoaded, ordertrackerID, trackingNumber]);
 
+  useEffect(() => {
+    if (isOpen) {
+      setShowSpinner(true);
+      const timer = setTimeout(() => {
+        setShowSpinner(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   useImperativeHandle(ref, () => ({
     open: (newTrackingNumber: string) => {
       setTrackingNumber(newTrackingNumber);
@@ -76,12 +89,17 @@ export const OrderTrackerModal = forwardRef<OrderTrackerModalRef>((_, ref) => {
             配送情報
           </Typography>
           {isOpen && (
-            <div
-              id="ordertracker-widget"
-              className="min-h-[100px] w-full flex-grow items-center justify-center overflow-y-auto"
-            >
-              {isScriptLoaded && '配送情報を読み込んでいます...'}
-            </div>
+            <>
+              <div
+                id="ordertracker-widget"
+                className="min-h-[100px] w-full flex-grow items-center justify-center overflow-y-auto"
+              ></div>
+              {showSpinner && (
+                <div className="absolute items-center justify-center">
+                  <LoadingSpinner />
+                </div>
+              )}
+            </>
           )}
           <Button
             className="mt-4 h-[48px] w-[150px] md:h-[55px] md:w-[200px]"
