@@ -971,6 +971,7 @@ export interface components {
           | 'partial'
           | 'ready'
           | 'shipped'
+          | 'delivered'
           | null;
         /**
          * @description Overall state of the Payments. Please see <a href="/developer/core-concepts/orders#order-payment-states">
