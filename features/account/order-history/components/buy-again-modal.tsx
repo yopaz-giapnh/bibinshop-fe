@@ -13,12 +13,11 @@ import {
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { addItem } from '@/features/cart/actions';
-import { BadgeAlert, Check, IterationCcw } from 'lucide-react';
+import { BadgeAlert, Check } from 'lucide-react';
 
 type Props = {
   variantIds: string[];
   buttonStyle?: string;
-  buttonIconStyle?: string;
   buttonTextStyle?: string;
 };
 
@@ -26,12 +25,7 @@ type Props = {
  * 再度購入するか確認モーダル
  * @returns JSX.Element
  */
-export default function BuyAgainModal({
-  variantIds,
-  buttonStyle,
-  buttonIconStyle,
-  buttonTextStyle
-}: Props) {
+export default function BuyAgainModal({ variantIds, buttonStyle, buttonTextStyle }: Props) {
   const { toast } = useToast();
 
   const addToCart = async () => {
@@ -58,7 +52,6 @@ export default function BuyAgainModal({
       <DialogDescription>
         <DialogTrigger asChild>
           <Button type="button" className={buttonStyle}>
-            <IterationCcw className={buttonIconStyle} />
             <Typography as="bold" element="p" className={buttonTextStyle}>
               再度購入
             </Typography>

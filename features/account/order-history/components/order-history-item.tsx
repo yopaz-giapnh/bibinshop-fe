@@ -77,8 +77,7 @@ export default function OrderHistoryItem({
           <BuyAgainModal
             variantIds={[variantId]}
             buttonStyle="md:w-[105px] md:h-[30px] w-[80px] h-[25px]"
-            buttonIconStyle="md:h-[16px] md:w-[16px] h-[12px] w-[12px]"
-            buttonTextStyle="ml-[8px] text-[12px] text-white-base"
+            buttonTextStyle="text-[12px] text-white-base"
           />
         )}
       </div>
