@@ -2,10 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
-import {
-  VariantRatingsModal,
-  VariantRatingsModalRef
-} from '@/features/VariantRating/components/variant-ratings-modal';
 import { Order } from '@/features/order/types';
 import { getShipmentStateTitle, getTabValue } from '@/features/order/utils';
 import { findImageFromLineItem } from '@/features/product/utils';
@@ -38,7 +34,6 @@ const STATE_PRIORITY = ['shipped', 'ready', 'pending', 'canceled', 'delivered'];
 export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const isPc = useIsPc();
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
-  const variantRatingsModalRef = useRef<VariantRatingsModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
   const { variants, lineItems } = order;
@@ -46,11 +41,6 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
 
   const handleReceiptConfirm = () => {
     orderReceiptConfirmModalRef.current?.close();
-    variantRatingsModalRef.current?.open();
-  };
-
-  const handleVariantRatingsConfirm = () => {
-    variantRatingsModalRef.current?.close();
     tryReviewWriteModalRef.current?.open(selectedItemId ?? '');
   };
 
@@ -77,19 +67,6 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
     return Object.entries(items)
       .filter(([state]) => state === 'shipped' || state === 'delivered')
       .flatMap(([, lineItems]) => lineItems.map((item) => item.attributes.slug));
-  };
-
-  const shippedOrder = {
-    ...order,
-    lineItems: order.lineItems.filter((item) => {
-      const shipment = order.shipments.find((shipment) =>
-        shipment.relationships.line_items.data.some(
-          (lineItem: { id: string }) => lineItem.id === item.id
-        )
-      );
-      return shipment?.attributes.state === 'shipped';
-    }),
-    shipments: order.shipments.filter((shipment) => shipment.attributes.state === 'shipped')
   };
 
   const renderLineItems = (items: Order['lineItems'], state: string, isLastGroup: boolean) => (
@@ -281,11 +258,6 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
         ref={orderReceiptConfirmModalRef}
         selectedItemId={selectedItemId}
         onConfirm={handleReceiptConfirm}
-      />
-      <VariantRatingsModal
-        ref={variantRatingsModalRef}
-        selectedOrder={shippedOrder}
-        onConfirm={handleVariantRatingsConfirm}
       />
       <TryReviewWriteModal ref={tryReviewWriteModalRef} sortedLineItems={sortedLineItems} />
       <OrderTrackerModal ref={orderTrackerModalRef} />

@@ -2,10 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
-import {
-  VariantRatingsModal,
-  VariantRatingsModalRef
-} from '@/features/VariantRating/components/variant-ratings-modal';
 import { getOrder } from '@/features/account/order-history/actions';
 import OrderHistoryItem from '@/features/account/order-history/components/order-history-item';
 import {
@@ -66,7 +62,6 @@ export function OrderDetail({ className, orderNumber }: Props) {
   const isPc = useIsPc();
   const [order, setOrder] = useState<Order | null>(null);
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
-  const variantRatingsModalRef = useRef<VariantRatingsModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
@@ -89,11 +84,6 @@ export function OrderDetail({ className, orderNumber }: Props) {
 
   const handleReceiptConfirm = () => {
     orderReceiptConfirmModalRef.current?.close();
-    variantRatingsModalRef.current?.open();
-  };
-
-  const handleVariantRatingsConfirm = () => {
-    variantRatingsModalRef.current?.close();
     tryReviewWriteModalRef.current?.open(selectedItemId ?? '');
   };
 
@@ -109,19 +99,6 @@ export function OrderDetail({ className, orderNumber }: Props) {
     acc[state].push(item);
     return acc;
   }, {});
-
-  const shippedOrder = {
-    ...order,
-    lineItems: order.lineItems.filter((item) => {
-      const shipment = order.shipments.find((shipment) =>
-        shipment.relationships.line_items.data.some(
-          (lineItem: { id: string }) => lineItem.id === item.id
-        )
-      );
-      return shipment?.attributes.state === 'shipped';
-    }),
-    shipments: order.shipments.filter((shipment) => shipment.attributes.state === 'shipped')
-  };
 
   const extractSlugs = (items: SortedLineItems) => {
     return Object.entries(items)
@@ -336,11 +313,6 @@ export function OrderDetail({ className, orderNumber }: Props) {
         ref={orderReceiptConfirmModalRef}
         selectedItemId={selectedItemId}
         onConfirm={handleReceiptConfirm}
-      />
-      <VariantRatingsModal
-        ref={variantRatingsModalRef}
-        selectedOrder={shippedOrder}
-        onConfirm={handleVariantRatingsConfirm}
       />
       <TryReviewWriteModal ref={tryReviewWriteModalRef} sortedLineItems={sortedLineItems} />
       <OrderTrackerModal ref={orderTrackerModalRef} />
