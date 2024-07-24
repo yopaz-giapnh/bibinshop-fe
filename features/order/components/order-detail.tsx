@@ -90,7 +90,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
   // 出荷状態でアイテムをソート
   const sortedLineItems = order?.lineItems.reduce<SortedLineItems>((acc, item) => {
     const shipment = order?.shipments.find((shipment) =>
-      shipment.relationships.line_items.data.some(
+      shipment.relationships.line_items?.data?.some(
         (lineItem: { id: string }) => lineItem.id === item.id
       )
     );

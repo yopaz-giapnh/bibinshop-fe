@@ -63,10 +63,10 @@ export function CarouselBanner({ getBanners }: Props) {
               backgroundColor: banner.backgroundColor
             }}
           >
-            <Link key={banner.id} href={banner.linkUrl} passHref>
+            <Link key={banner.id} href={banner.linkUrl ?? ''} passHref>
               <Image
-                src={isPc ? banner.imageUrl : banner.mobileImageUrl}
-                alt={banner.title}
+                src={isPc ? banner.imageUrl ?? '' : banner.mobileImageUrl ?? ''}
+                alt={banner.title ?? ''}
                 width={790}
                 height={370}
               />
