@@ -10,6 +10,30 @@ import { isVendorSchema } from '@/features/vendor/utils';
 import { isNotFound } from '@/utils/api';
 import { TAGS } from '../constants';
 
+// todo: confirm what includes are needed.
+// extra includes are costly.
+// all includes: loads in 12s
+// only line_items: loads in < 9s
+const includes = [
+  //order related
+  'line_items'
+  // 'billing_address',
+  // 'variants',
+  // 'variants.images',
+  // 'variants.product',
+  // 'variants.product.variants',
+  // 'variants.product.product_properties',
+  //vendor related
+  // 'vendors',
+  // 'vendors.banner_image',
+  // 'vendor_totals',
+  //payment related
+  // 'payments.source'
+  //shipment related
+  // 'shipments',
+  // 'shipments.selected_shipping_rate'
+].join(',');
+
 export async function getAccountOrders({
   shipment_state,
   page
@@ -17,8 +41,7 @@ export async function getAccountOrders({
   const { data, error } = await apiClient.GET('/api/v2/storefront/account/orders', {
     params: {
       query: {
-        include:
-          'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images,variants.product',
+        include: includes,
         'filter[shipment_state]': shipment_state,
         page
       }
@@ -108,8 +131,7 @@ export async function getOrder(order_number: string) {
           order_number
         },
         query: {
-          include:
-            'line_items,vendors,vendor_totals,billing_address,payments.source,shipments,variants.images,variants.product'
+          include: includes
         }
       },
       fetch: (request) => {

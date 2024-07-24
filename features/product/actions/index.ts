@@ -24,7 +24,7 @@ export async function getProducts(params?: ProductsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
     params: {
       query: {
-        include: 'images,vendor,product_properties',
+        include: 'images,vendor,product_properties,vendor.banner_image',
         'filter[in_stock]': true,
         ...params?.query
       }
@@ -56,7 +56,7 @@ export async function getProduct(product_slug: string) {
         product_slug
       },
       query: {
-        include: 'images,product_properties,vendor,taxons,variants,default_variant',
+        include: 'images,product_properties,vendor,variants,default_variant',
         'filter[in_stock]': true
       }
     },

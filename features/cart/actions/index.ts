@@ -16,7 +16,8 @@ export async function getCart({ cache = 'no-store' }: { cache?: RequestCache } =
   const { response, error, data } = await apiClient.GET('/api/v2/storefront/cart', {
     params: {
       query: {
-        include: 'line_items,vendors,vendor_totals,payments.source,billing_address,variants.images'
+        include:
+          'line_items,vendors,vendor_totals,payments.source,billing_address,variants.images,vendors.banner_image'
       }
     },
     fetch: (request) => {
