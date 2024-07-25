@@ -170,7 +170,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
               <OrderHistoryItem
                 item={item}
                 image={image}
-                status={getShipmentStateTitle(order)}
+                status={getShipmentStateTitle(order) ?? undefined}
                 optionsText={variant?.attributes.options_text}
                 showBuyAgain={false}
               />

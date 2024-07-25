@@ -33,7 +33,7 @@ type SortedLineItems = {
   [key: string]: Order['lineItems'];
 };
 
-const STATE_PRIORITY = ['shipped', 'ready', 'pending', 'canceled', 'delivered'];
+const STATE_PRIORITY = ['shipped', 'partial', 'ready', 'pending', 'delivered', 'unknown'];
 
 export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const isPc = useIsPc();
@@ -140,11 +140,12 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
 
         return (
           <div key={item.id}>
+            <div>{getShipmentStateTitle(order)}</div>
             <div className="flex">
               <OrderHistoryItem
                 item={item}
                 image={image}
-                status={getShipmentStateTitle(order)}
+                status={getShipmentStateTitle(order) ?? undefined}
                 optionsText={variant?.attributes.options_text}
                 showPrice={false}
               />
