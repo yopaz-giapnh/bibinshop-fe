@@ -86,7 +86,7 @@ export default function ProfileEditModal({ account }: Props) {
         <DialogTrigger asChild>
           <button
             type="button"
-            className="ml-[24px] flex w-full items-center justify-center gap-2 rounded-[100px] border border-bibinBlue-100 bg-inherit px-[16px] py-[8px]"
+            className="flex w-full items-center justify-center gap-2 rounded-[100px] border border-bibinBlue-100 bg-inherit px-[16px] py-[8px]"
           >
             <PencilRuler className="h-6 w-6" color="#51B7FF" />
             <Typography as="bold" element="p" className="text-bibinBlue-100">

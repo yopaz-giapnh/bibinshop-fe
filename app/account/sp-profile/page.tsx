@@ -11,7 +11,7 @@ export default async function Page() {
   return (
     <div className="mx-auto flex w-full flex-col justify-center bg-paleFrostBlue p-[16px] md:hidden">
       <Suspense fallback={<LoadingSpinner />}>
-        <ProfileDetail />
+        <ProfileDetail isSpHomeProfile={true} />
       </Suspense>
       <AccountSideBar />
     </div>

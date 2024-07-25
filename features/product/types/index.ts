@@ -26,6 +26,12 @@ export type Products =
 
 export type ProductsListParameters = operations['products-list']['parameters'];
 
+export type PurchaseProductsListParameters = {
+  orderedUserId: string;
+  page?: number;
+  perPage?: number;
+};
+
 export type ImageSchema = components['schemas']['Image'];
 
 export type ProductImage = components['schemas']['Image'] & { url: string };
