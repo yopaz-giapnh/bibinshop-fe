@@ -98,21 +98,15 @@ function filterOrdersByTabState(orders: Order[], tabState: string) {
   if (tabState === 'all') return orders;
 
   return orders.filter((order) => {
-    const shipments = order.shipments;
-
-    // shipments がない場合は false を返す
-    if (!shipments || shipments.length === 0) return false;
+    const shipmentState = order.attributes.shipment_state;
 
     switch (tabState) {
       case 'ready':
-        // 少なくとも1つの出荷が 'ready' 状態
-        return shipments.some((shipment) => shipment.attributes.state === 'ready');
+        return shipmentState === 'ready' || shipmentState === 'pending';
       case 'shipped':
-        // 少なくとも1つの出荷が 'shipped' 状態
-        return shipments.some((shipment) => shipment.attributes.state === 'shipped');
+        return shipmentState === 'shipped' || shipmentState === 'partial';
       case 'delivered':
-        // なくとも1つの出荷が 'delivered' 状態
-        return shipments.some((shipment) => shipment.attributes.state === 'delivered');
+        return shipmentState === 'delivered';
       default:
         return false;
     }

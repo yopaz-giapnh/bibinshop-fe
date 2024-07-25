@@ -33,7 +33,7 @@ type SortedLineItems = {
   [key: string]: Order['lineItems'];
 };
 
-const STATE_PRIORITY = ['shipped', 'ready', 'pending', 'canceled', 'delivered'];
+const STATE_PRIORITY = ['shipped', 'partial', 'ready', 'pending', 'delivered', 'unknown'];
 
 export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const isPc = useIsPc();
@@ -70,37 +70,31 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
         </Typography>
         {isPc && (
           <div className="absolute right-0 top-[16px]">
-            {state === 'shipped' && (
+            {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
               <>
-                {order.shipments
-                  .filter((shipment) => shipment.attributes.state === 'shipped')
-                  .map((shipment) => (
-                    <div key={shipment.id}>
-                      <Button
-                        type="button"
-                        className="mb-[8px] w-full"
-                        onClick={() => {
-                          setSelectedShipmentId(shipment.id);
-                          orderReceiptConfirmModalRef.current?.open(shipment.id);
-                        }}
-                      >
-                        受取確認
-                      </Button>
-                      <button
-                        type="button"
-                        className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                        onClick={() => handleShowShippingInfo(shipment.attributes.tracking ?? '')}
-                      >
-                        <Typography
-                          as="bold"
-                          element="p"
-                          className="ml-[8px] text-[14px] text-bibinBlue-100"
-                        >
-                          配送情報
-                        </Typography>
-                      </button>
-                    </div>
-                  ))}
+                <Button
+                  type="button"
+                  className="mb-[8px] w-full"
+                  onClick={() => {
+                    setSelectedShipmentId(order.id);
+                    orderReceiptConfirmModalRef.current?.open(order.id);
+                  }}
+                >
+                  受取確認
+                </Button>
+                <button
+                  type="button"
+                  className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                  onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
+                >
+                  <Typography
+                    as="bold"
+                    element="p"
+                    className="ml-[8px] text-[14px] text-bibinBlue-100"
+                  >
+                    配送情報
+                  </Typography>
+                </button>
               </>
             )}
             {(state === 'delivered' || state === 'shipped') && (
@@ -144,7 +138,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
               <OrderHistoryItem
                 item={item}
                 image={image}
-                status={getShipmentStateTitle(order)}
+                status={getShipmentStateTitle(order) ?? undefined}
                 optionsText={variant?.attributes.options_text}
                 showPrice={false}
               />
@@ -155,52 +149,31 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
       })}
       {!isPc && (
         <>
-          {state === 'shipped' && (
-            <>
-              {order.shipments
-                .filter((shipment) => shipment.attributes.state === 'shipped')
-                .map((shipment) => (
-                  <Button
-                    key={shipment.id}
-                    type="button"
-                    className="mb-[8px] w-full"
-                    onClick={() => {
-                      setSelectedShipmentId(shipment.id);
-                      orderReceiptConfirmModalRef.current?.open(shipment.id);
-                    }}
-                  >
-                    受取確認
-                  </Button>
-                ))}
-            </>
-          )}
+          {(state === 'delivered' || state === 'shipped') &&
+            order.attributes.shipment_state === 'shipped' && (
+              <Button
+                type="button"
+                className="mb-[8px] w-full"
+                onClick={() => {
+                  setSelectedShipmentId(order.id);
+                  orderReceiptConfirmModalRef.current?.open(order.id);
+                }}
+              >
+                受取確認
+              </Button>
+            )}
           {(state === 'delivered' || state === 'shipped') && (
             <div className="flex w-full justify-between pb-[8px]">
-              {state === 'shipped' && (
-                <>
-                  {order.shipments
-                    .filter(
-                      (shipment) =>
-                        shipment.attributes.state === 'shipped' &&
-                        shipment.attributes.tracking?.length
-                    )
-                    .map((shipment) => (
-                      <button
-                        key={shipment.id}
-                        type="button"
-                        className="mt-[8px] w-[48%] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                        onClick={() => handleShowShippingInfo(shipment.attributes.tracking ?? '')}
-                      >
-                        <Typography
-                          as="bold"
-                          element="p"
-                          className="text-[14px] text-bibinBlue-100"
-                        >
-                          配送情報
-                        </Typography>
-                      </button>
-                    ))}
-                </>
+              {(state === 'shipped' || order.attributes.shipment_state === 'shipped') && (
+                <button
+                  type="button"
+                  className="mt-[8px] w-[48%] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                  onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
+                >
+                  <Typography as="bold" element="p" className="text-[14px] text-bibinBlue-100">
+                    配送情報
+                  </Typography>
+                </button>
               )}
               <Link
                 href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
