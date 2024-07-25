@@ -35,8 +35,6 @@ export default function UserRow(props: Props) {
         {props.tags.map((t, idx) => (
           <>
             <UserTag tag={t} key={idx} />
-            <UserTag tag={t} key={idx} />
-            <UserTag tag={t} key={idx} />
           </>
         ))}
       </div>
