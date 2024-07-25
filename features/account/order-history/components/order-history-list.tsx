@@ -140,7 +140,6 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
 
         return (
           <div key={item.id}>
-            <div>{getShipmentStateTitle(order)}</div>
             <div className="flex">
               <OrderHistoryItem
                 item={item}
