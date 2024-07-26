@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import FollowUnfollowButton from './follow-unfollow-button';
 
 type Props = {
@@ -13,13 +14,15 @@ export default function UserRow(props: Props) {
   return (
     <div className="mx-6 py-6 ">
       <div className="flex h-10 items-center md:h-16">
-        <Image
-          src={props.avatar}
-          alt="avatar"
-          className="w-10 rounded-full md:w-16"
-          width={64}
-          height={64}
-        />
+        <Link href={`/user-detail/${props.unique_key}`}>
+          <Image
+            src={props.avatar}
+            alt="avatar"
+            className="w-10 rounded-full md:w-16"
+            width={64}
+            height={64}
+          />
+        </Link>
         <div className="ml-4 flex flex-col md:h-16 md:justify-between">
           <p className="mb-1 text-sm font-bold">{props.nickname}</p>
           <div className="hidden gap-2 md:flex">

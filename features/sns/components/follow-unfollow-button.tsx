@@ -43,7 +43,7 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
             variant="outline"
             className="rounded-[100px] border-bibinBlue-100 font-medium not-italic leading-normal tracking-[0.42px] text-bibinBlue-100"
           >
-            フォロー解除
+            フォロー中
           </Button>
         </DialogTrigger>
         <DialogContent className="flex w-[592px] flex-col items-center justify-center">
@@ -68,7 +68,7 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
                 )
               }
             >
-              フォロー解除
+              フォロー中
             </Button>
           </div>
         </DialogContent>
