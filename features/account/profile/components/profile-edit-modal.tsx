@@ -167,7 +167,11 @@ export default function ProfileEditModal({ account }: Props) {
                 <FormItem className="w-full">
                   <FormLabel>生まれた年</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      type="number"
+                      onChange={(e) => form.setValue('birthyear', Number.parseInt(e.target.value))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -180,7 +184,13 @@ export default function ProfileEditModal({ account }: Props) {
                 <FormItem className="w-full">
                   <FormLabel>インスタグラムURL</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      type="url"
+                      onChange={(e) =>
+                        form.setValue('instagram', e.target.value ? e.target.value : undefined)
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +203,13 @@ export default function ProfileEditModal({ account }: Props) {
                 <FormItem className="w-full">
                   <FormLabel>X URL</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      type="url"
+                      onChange={(e) =>
+                        form.setValue('x', e.target.value ? e.target.value : undefined)
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -206,7 +222,13 @@ export default function ProfileEditModal({ account }: Props) {
                 <FormItem className="w-full">
                   <FormLabel>TikTok URL</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      type="url"
+                      onChange={(e) =>
+                        form.setValue('tiktok', e.target.value ? e.target.value : undefined)
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
