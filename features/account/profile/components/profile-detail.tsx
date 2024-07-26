@@ -2,19 +2,17 @@ import { Typography } from '@/components/ui/typography';
 import { UserDetailProfileStats } from '@/features/sns/components/user-detail-profile-stats';
 import { UserDetailTabs } from '@/features/sns/components/user-detail-tabs';
 import Image from 'next/image';
-import Link from 'next/link';
 import { getAccount } from '../actions';
 import ProfileEditModal from './profile-edit-modal';
-
-/**
- * ユーザープロフィール画像、名前、編集ボタンコンポーネント
- * @returns JSX.Element
- */
 
 type Props = {
   isSpHomeProfile?: boolean;
 };
 
+/**
+ * ユーザープロフィール画像、名前、編集ボタンコンポーネント
+ * @returns JSX.Element
+ */
 export default async function ProfileDetail({ isSpHomeProfile = false }: Props) {
   const account = await getAccount();
   const reviewsCount = account.relationships.reviews?.data?.length || 0;
@@ -36,41 +34,6 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
       alt: link.attributes.platform
     };
   });
-
-  const Tag = ({ text }: { text: string }) => (
-    <Typography as="small" element="p" className="rounded-full bg-blue-200 px-2 py-1 text-sm">
-      {text}
-    </Typography>
-  );
-
-  const SocialLink = ({ href, iconSrc, alt }: { href: string; iconSrc: string; alt: string }) => (
-    <Link href={href} target="_blank" rel="noopener noreferrer" passHref>
-      <Image src={iconSrc} alt={alt} width={32} height={32} />
-    </Link>
-  );
-
-  const StatItem = ({ value, label }: { value: string; label: string }) => (
-    <div className="flex flex-col items-center">
-      <Typography as="boldSmall" element="p" className="text-[16px] md:text-sm">
-        {value}
-      </Typography>
-      <Typography as="caption" element="p" className="text-[12px] md:text-sm">
-        {label}
-      </Typography>
-    </div>
-  );
-
-  const UserStats = () => (
-    <div className="mb-4 flex items-center justify-center space-x-3 pt-[17px]">
-      <StatItem value={reviewsCount.toString()} label="レビュー" />
-      <div className="h-[40px] w-[0.5px] bg-gray-400" />
-      <StatItem value="121" label="参考になった" />
-      <div className="h-[40px] w-[0.5px] bg-gray-400" />
-      <StatItem value="121" label="フォロワー" />
-      <div className="h-[40px] w-[0.5px] bg-gray-400" />
-      <StatItem value="121" label="フォロー中" />
-    </div>
-  );
 
   return (
     <div>

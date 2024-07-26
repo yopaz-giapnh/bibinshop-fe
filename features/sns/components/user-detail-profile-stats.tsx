@@ -39,7 +39,7 @@ export const UserDetailProfileStats = ({
     onClick?: () => void;
   }) => (
     <div
-      className="flex flex-col items-center "
+      className="flex flex-col items-center"
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
