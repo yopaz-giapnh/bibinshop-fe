@@ -4,7 +4,7 @@ import { apiClient } from '@/config/api-client';
 import { getAccessToken } from '@/features/auth/utils/session';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
-import { UserAvatarSchema, UserSex } from '../types';
+import { FormValues, UserAvatarSchema } from '../types';
 import { isUserAvatarSchema } from '../utils';
 
 export async function getAccount() {
@@ -34,17 +34,16 @@ export async function getAccount() {
   };
 }
 
+type UpdateAccountParams = FormValues;
 export async function updateAccount(
   prevState: { success: boolean; message: string } | null,
-  { nickname, sex }: { nickname: string; sex: UserSex }
+  params: UpdateAccountParams
 ) {
+  //todo: check if sending all params is correct.
   try {
     await apiClient.PATCH('/api/v2/storefront/account', {
       body: {
-        user: {
-          nickname,
-          sex
-        }
+        user: params
       }
     });
 

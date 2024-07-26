@@ -16,7 +16,25 @@ export type User = UserSchema & {
 export type UserSex = UserSchema['attributes']['sex'];
 
 export const formSchema = z.object({
-  nickname: z.string()
+  nickname: z.string(),
+  sex: z.custom<UserSex>(),
+  birthyear: z.number().int().optional(),
+  instagram: z
+    .string()
+    .url()
+    .startsWith('https://www.instagram.com/', 'リンクがインスタグラムではありません')
+    .optional(),
+  x: z.string().url().startsWith('https://www.x.com/', 'リンクはXではありません').optional(),
+  tiktok: z
+    .string()
+    .url()
+    .startsWith('https://www.tiktok.com/', 'リンクはTikTokではありません')
+    .optional(),
+  skinType: z.string().optional(),
+  personalColor: z.string().optional(),
+  skinConcerns: z.array(z.string()).optional(),
+  scalpConcerns: z.array(z.string()).optional(),
+  healthConcerns: z.array(z.string()).optional()
 });
 
 export type FormValues = z.infer<typeof formSchema>;
