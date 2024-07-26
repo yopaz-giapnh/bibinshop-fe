@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import { DialogClose } from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { follow, unfollow } from '../actions';
 
@@ -24,7 +25,7 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
       <Button
         className="ml-auto md:self-center"
         onClick={async () =>
-          await follow({ unique_key: unique_key }).then(
+          await follow({ unique_key }).then(
             () => setFollowing(true),
             () => {}
           )
@@ -50,12 +51,14 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
             <DialogTitle>{username}さんをフォロー解除しますか？</DialogTitle>
           </DialogHeader>
           <div className="flex-row items-center justify-center ">
-            <Button
-              variant="outline"
-              className="mx-1 rounded-[100px] border-bibinBlue-100 px-6 font-medium not-italic leading-normal tracking-[0.42px] text-bibinBlue-100"
-            >
-              キャンセル
-            </Button>
+            <DialogClose>
+              <Button
+                variant="outline"
+                className="mx-1 rounded-[100px] border-bibinBlue-100 px-6 font-medium not-italic leading-normal tracking-[0.42px] text-bibinBlue-100"
+              >
+                キャンセル
+              </Button>
+            </DialogClose>
             <Button
               className="mx-1 px-6"
               onClick={async () =>

@@ -350,8 +350,7 @@ function AvatarUpload({ account }: { account: User }) {
               : account.avatar?.url || '/placeholder-product-image.png'
           }
           className="rounded-[100px]"
-          layout="fill"
-          objectFit="cover"
+          fill
           alt={''}
         />
       </button>

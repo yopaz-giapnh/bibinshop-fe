@@ -22,9 +22,6 @@ const tabs = [
     value: 'review',
     icon: <MessageSquareHeart />
   },
-  // TODO:グッド、バッド要件から削除されているため一旦コメントアウト
-  // { label: 'グッド', value: 'good', icon: <ThumbsUp /> },
-  // { label: 'バッド', value: 'bad', icon: <ThumbsDown /> },
   { label: '購入した商品', value: 'purchased', icon: <BriefcaseBusiness /> }
 ] as const;
 

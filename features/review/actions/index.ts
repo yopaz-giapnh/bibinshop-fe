@@ -199,3 +199,61 @@ async function updateReview({
     };
   }
 }
+
+export async function addReviewFeedback({ review_id }: { review_id: string }) {
+  try {
+    const { error } = await apiClient.POST('/api/v2/storefront/reviews/{review_id}/feedbacks', {
+      params: {
+        path: {
+          review_id
+        }
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      success: true,
+      message: 'フィードバックを追加しました'
+    };
+  } catch (error) {
+    console.error('フィードバック追加エラー:', error);
+    return {
+      success: false,
+      message: 'フィードバックの追加に失敗しました'
+    };
+  }
+}
+
+export async function removeReviewFeedback({ review_id, id }: { review_id: string; id: string }) {
+  try {
+    const { error } = await apiClient.DELETE(
+      '/api/v2/storefront/reviews/{review_id}/feedbacks/{id}',
+      {
+        params: {
+          path: {
+            review_id,
+            id
+          }
+        }
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      success: true,
+      message: 'フィードバックを削除しました'
+    };
+  } catch (error) {
+    console.error('フィードバック削除エラー:', error);
+    return {
+      success: false,
+      message: 'フィードバックの削除に失敗しました'
+    };
+  }
+}

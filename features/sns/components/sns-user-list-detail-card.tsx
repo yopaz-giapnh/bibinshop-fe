@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { ProductGrid } from '@/features/product/components/product-grid';
 import { Product } from '@/features/product/types';
@@ -8,6 +7,7 @@ import { User } from '@/features/users/types';
 import { useIsPc } from '@/hooks/use-is-pc';
 import Image from 'next/image';
 import Link from 'next/link';
+import FollowUnfollowButton from './follow-unfollow-button';
 
 type SnsUserListDetailCardProps = {
   user: User;
@@ -16,6 +16,10 @@ type SnsUserListDetailCardProps = {
 
 export async function SnsUserListDetailCard({ user, products }: SnsUserListDetailCardProps) {
   const isPc = useIsPc();
+  const nickname = user.attributes.nickname || '名無し';
+  const uniqueKey = user.attributes.unique_key;
+  const avatarUrl = user.avatar?.url || '/placeholder-product-image.png';
+  const isFollowing = user.attributes.followed_by_me;
 
   // TODO:demoデータ。あとで置き換える
   const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];
@@ -29,9 +33,9 @@ export async function SnsUserListDetailCard({ user, products }: SnsUserListDetai
   return (
     <div className="bg-white-base p-4 shadow md:rounded-lg">
       <div className="mb-4 flex items-center">
-        <Link href={`/user-detail/${user.attributes.unique_key}`}>
+        <Link href={`/user-detail/${uniqueKey}`}>
           <Image
-            src={user.avatar?.url || '/placeholder-product-image.png'}
+            src={avatarUrl}
             alt={''}
             width={isPc ? 84 : 64}
             height={isPc ? 84 : 64}
@@ -40,7 +44,7 @@ export async function SnsUserListDetailCard({ user, products }: SnsUserListDetai
         </Link>
         <div className="flex h-[64px] flex-col justify-center md:justify-between">
           <Typography as="boldSmall" element="h2" className="text-[16px] md:text-[20px]">
-            {user.attributes.nickname || '名無し'}
+            {nickname}
           </Typography>
           <div className="mb-4 hidden space-x-2 pt-[8px] md:flex">
             {tags.map((tag, index) => (
@@ -48,11 +52,11 @@ export async function SnsUserListDetailCard({ user, products }: SnsUserListDetai
             ))}
           </div>
         </div>
-        <Button className="text-white ml-auto rounded-full px-4 py-1">
-          <Typography as="boldSmall" element="p" className="text-white-base">
-            フォローする
-          </Typography>
-        </Button>
+        <FollowUnfollowButton
+          username={nickname}
+          unique_key={uniqueKey}
+          isFollowing={isFollowing}
+        />
       </div>
       <div className="mb-4 flex space-x-2 md:hidden">
         {tags.map((tag, index) => (

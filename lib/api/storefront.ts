@@ -2505,6 +2505,10 @@ export interface components {
         following_me?: boolean;
         /** @description Indicates if the current user is following this user.  False if the current user is not signed in. */
         followed_by_me?: boolean;
+        /** @description Number of followers for this user */
+        followers_count?: number;
+        /** @description Number of users this user is following */
+        followees_count?: number;
       };
       relationships?: {
         user_profile?: {

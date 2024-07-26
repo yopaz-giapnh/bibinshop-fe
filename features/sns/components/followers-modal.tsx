@@ -1,31 +1,35 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Typography } from '@/components/ui/typography';
-import { useEffect, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { getFollowers } from '../actions';
 import UserRow from './user-row';
 
 type Props = {
   unique_key: string;
 };
-export default function FollowersModal({ unique_key }: Props) {
+
+export type FollowersModalRef = {
+  open: () => void;
+  close: () => void;
+};
+
+export const FollowersModal = forwardRef<FollowersModalRef, Props>(({ unique_key }, ref) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [pages, setPages] = useState<Array<Awaited<ReturnType<typeof getFollowers>>>>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
   const data = useMemo(() => {
-    return pages.flatMap((p) => p.data);
+    return pages.flatMap((p) => p?.data);
   }, [pages]);
 
   useEffect(() => {
@@ -44,15 +48,26 @@ export default function FollowersModal({ unique_key }: Props) {
         res[idx] = response;
         return res;
       });
-      setHasMore(response.meta?.total_pages ? response.meta.total_pages >= page : true);
+      setHasMore(response?.meta?.total_pages ? response.meta.total_pages >= page : true);
       setLoading(false);
     };
     loadNextPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, unique_key]);
+
+  useImperativeHandle(ref, () => ({
+    open: () => {
+      setIsOpen(true);
+    },
+    close: () => {
+      setIsOpen(false);
+    }
+  }));
 
   return (
     <Dialog
       onOpenChange={(opened) => {
+        setIsOpen(opened);
         if (opened) {
           setPage(-1);
           setPages([]);
@@ -60,15 +75,9 @@ export default function FollowersModal({ unique_key }: Props) {
           setHasMore(true);
         }
       }}
+      open={isOpen}
     >
       <DialogDescription>
-        <DialogTrigger asChild>
-          <Button className="border border-bibinBlue-100 bg-white-base">
-            <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
-              フォロワー
-            </Typography>
-          </Button>
-        </DialogTrigger>
         <DialogContent className="flex h-[90%] flex-col items-center justify-center md:w-[592px]">
           <DialogHeader>
             <DialogTitle>フォロワー</DialogTitle>
@@ -87,9 +96,8 @@ export default function FollowersModal({ unique_key }: Props) {
             <div className="grid grid-cols-1 divide-y divide-gray-200">
               {data.map((item, idx) => (
                 <UserRow
-                  avatar={item?.relationships?.user_profile?.data?.id ?? ''}
-                  firstName={item?.attributes?.first_name ?? ''}
-                  lastName={item?.attributes?.last_name ?? ''}
+                  avatar={item?.avatar?.url || '/placeholder-product-image.png'}
+                  nickname={item?.attributes?.nickname ?? ''}
                   unique_key={item?.attributes?.unique_key ?? ''}
                   isFollowee={item?.attributes?.followed_by_me ?? false}
                   tags={['tag1', 'tag2', 'tag3']}
@@ -102,4 +110,6 @@ export default function FollowersModal({ unique_key }: Props) {
       </DialogDescription>
     </Dialog>
   );
-}
+});
+
+FollowersModal.displayName = 'FollowersModal';

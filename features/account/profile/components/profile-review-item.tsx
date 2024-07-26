@@ -1,9 +1,14 @@
+'use client';
+
 import { Typography } from '@/components/ui/typography';
 import { getProductImageUrl } from '@/features/product/utils';
+import { addReviewFeedback, removeReviewFeedback } from '@/features/review/actions';
 import Rating from '@/features/review/components/rating';
 import { Review } from '@/features/review/types';
 import { formatDateString } from '@/utils/date';
+import { ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 /**
  * ユーザープロフィールレビューカードコンポーネント
@@ -14,6 +19,17 @@ type ReviewProps = {
 };
 
 export async function ProfileReviewItem({ review }: ReviewProps) {
+  const [isFeedback, setIsFeedback] = useState(!!review.attributes.is_feedback_review);
+
+  const handleFeedbackToggle = async () => {
+    if (isFeedback) {
+      await removeReviewFeedback({ review_id: review.id, id: review.id });
+    } else {
+      await addReviewFeedback({ review_id: review.id });
+    }
+    setIsFeedback(!isFeedback);
+  };
+
   return (
     <div>
       <div className="flex items-baseline">
@@ -60,6 +76,16 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
             {review.product?.attributes.display_price}
           </Typography>
         </div>
+      </div>
+      <div className="mt-[16px] flex justify-end">
+        <button className="flex items-center space-x-2" onClick={handleFeedbackToggle}>
+          <ThumbsUp
+            className={`h-[16px] w-[16px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
+          />
+          <Typography as="caption" element="p" className="text-[14px] text-black-90">
+            参考になった
+          </Typography>
+        </button>
       </div>
     </div>
   );
