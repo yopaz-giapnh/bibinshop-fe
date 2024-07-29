@@ -28,7 +28,7 @@ import { PencilRuler } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
 import { updateAccount, updateSocialLink, uploadAvatar } from '../actions';
 import { FormValues, User, UserSex, formSchema } from '../types';
 import { isUserSex } from '../utils';
@@ -65,8 +65,17 @@ export default function ProfileEditModal({ account }: Props) {
     form.setValue('skinConcerns', skinConcerns);
     form.setValue('scalpConcerns', scalpConcerns);
     form.setValue('healthConcerns', healthConcerns);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sex, skinType, personalColor, skinConcerns, scalpConcerns, healthConcerns]);
+  }, [
+    sex,
+    skinType,
+    personalColor,
+    skinConcerns,
+    scalpConcerns,
+    healthConcerns,
+    form.formState.isValid,
+    form,
+    selectedSex
+  ]);
 
   useEffect(() => {
     const links: Record<string, string> = {};
@@ -198,7 +207,7 @@ export default function ProfileEditModal({ account }: Props) {
                           value={field.value || ''}
                           onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-                            form.setValue('birthyear', value ? Number(value) : undefined);
+                            form.setValue('birthyear', value);
                           }}
                         />
                       </FormControl>
@@ -341,7 +350,7 @@ export default function ProfileEditModal({ account }: Props) {
               </div>
               <div className="mt-[16px] w-full">
                 <form onSubmit={form.handleSubmit(handleSubmit)}>
-                  <SaveButton disabled={!form.formState.isValid} />
+                  <SaveButton />
                 </form>
               </div>
             </Form>
@@ -352,8 +361,9 @@ export default function ProfileEditModal({ account }: Props) {
   );
 }
 
-function SaveButton({ disabled }: { disabled: boolean }) {
+function SaveButton() {
   const { pending } = useFormStatus();
+  const formState = useFormState();
 
   return (
     <Button
@@ -361,7 +371,7 @@ function SaveButton({ disabled }: { disabled: boolean }) {
       size="lg"
       variant="lg"
       className="h-[48px] w-full md:h-[55px]"
-      disabled={pending || disabled}
+      disabled={pending || Object.keys(formState.errors).length > 0}
     >
       {pending ? <LoadingSpinner /> : '保存'}
     </Button>

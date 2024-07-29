@@ -16,24 +16,17 @@ export type User = UserSchema & {
 export type UserSex = UserSchema['attributes']['sex'];
 
 export const formSchema = z.object({
-  nickname: z.string(),
-  sex: z.custom<UserSex>(),
-  birthyear: z.number().int().optional(),
-  instagram: z
+  nickname: z.string().min(1, '名前を入力してください').optional(),
+  sex: z.enum(['male', 'female', 'not_applicable']).optional(),
+  birthyear: z
     .string()
-    .url()
-    .startsWith('https://www.instagram.com/', '正しいインスタグラムのリンクを入力してください')
+    .refine((val) => !val || /^\d{4}$/.test(val), {
+      message: '正しい年を入力してください'
+    })
     .optional(),
-  x: z
-    .string()
-    .url()
-    .startsWith('https://www.x.com/', '正しいXのリンクを入力してください')
-    .optional(),
-  facebook: z
-    .string()
-    .url()
-    .startsWith('https://www.facebook.com/', '正しいFacebookのリンクを入力してください')
-    .optional(),
+  instagram: z.string().url('正しいURLを入力してください').optional().or(z.literal('')),
+  x: z.string().url('正しいURLを入力してください').optional().or(z.literal('')),
+  facebook: z.string().url('正しいURLを入力してください').optional().or(z.literal('')),
   skinType: z.string().optional(),
   personalColor: z.string().optional(),
   skinConcerns: z.array(z.string()).optional(),
