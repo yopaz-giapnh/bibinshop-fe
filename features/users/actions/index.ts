@@ -2,7 +2,7 @@
 
 import { apiClient } from '@/config/api-client';
 import { UserAvatarSchema } from '@/features/account/profile/types';
-import { isUserAvatarSchema } from '@/features/account/profile/utils';
+import { isSocialLinkSchema, isUserAvatarSchema } from '@/features/account/profile/utils';
 import { getProducts } from '@/features/product/actions';
 import { Product } from '@/features/product/types';
 
@@ -50,6 +50,7 @@ export async function getUsers({
   const { data: users, included } = data;
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
+  const socialLinks = included?.filter(isSocialLinkSchema);
 
   // Fetch recommended products for all users
   const allRecommendedProductIds = users?.flatMap(
@@ -78,6 +79,9 @@ export async function getUsers({
         ?.map((product: Product) => productMap.get(product.id))
         .filter(Boolean) || [];
 
+    const userSocialLinks =
+      socialLinks?.filter((link) => link.relationships.user.data.id === user.id) || [];
+
     return {
       ...user,
       avatar: avatar
@@ -85,7 +89,8 @@ export async function getUsers({
             url: avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url || null
           }
         : null,
-      recommendedProducts: userRecommendedProducts
+      recommendedProducts: userRecommendedProducts,
+      socialLinks: userSocialLinks
     };
   });
 }
@@ -95,6 +100,9 @@ export async function getUserDetails(uniqueKey: string) {
     params: {
       path: {
         unique_key: uniqueKey
+      },
+      query: {
+        include: 'user_social_links,avatars,recommended_products'
       }
     }
   });
@@ -106,6 +114,7 @@ export async function getUserDetails(uniqueKey: string) {
   const { data: user, included } = data;
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
+  const socialLinks = included?.filter(isSocialLinkSchema) || [];
 
   const userAvatars = user?.relationships?.avatars?.data || [];
   const avatar =
@@ -129,6 +138,12 @@ export async function getUserDetails(uniqueKey: string) {
       ?.map((product: Product) => productMap.get(product.id))
       .filter(Boolean) || [];
 
+  const userSocialLinks = socialLinks.map((link) => ({
+    id: link.id,
+    type: link.type,
+    attributes: link.attributes
+  }));
+
   return {
     ...user,
     avatar: avatar
@@ -136,6 +151,7 @@ export async function getUserDetails(uniqueKey: string) {
           url: avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url || null
         }
       : null,
-    recommendedProducts: userRecommendedProducts
+    recommendedProducts: userRecommendedProducts,
+    socialLinks: userSocialLinks
   };
 }

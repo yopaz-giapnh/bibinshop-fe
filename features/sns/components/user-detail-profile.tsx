@@ -24,17 +24,15 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
   // TODO:demoデータ。あとで置き換える
   const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];
 
-  // TODO:demoデータ。あとで置き換える
-  const socialLinks = [
-    {
-      href: 'https://www.instagram.com/bibinews_/',
-      iconSrc: '/instagram-icon.png',
-      alt: 'Instagram'
-    },
-    { href: 'https://www.facebook.com/bibinews_/', iconSrc: '/facebook-icon.png', alt: 'Facebook' },
-    { href: 'https://www.x.com/bibinews_/', iconSrc: '/x-icon.png', alt: 'X' }
-  ];
-
+  const socialLinks =
+    userDetail.socialLinks?.map((link) => {
+      const platform = link.attributes.platform.toLowerCase();
+      return {
+        href: link.attributes.url,
+        iconSrc: `/${platform}-icon.png`,
+        alt: link.attributes.platform
+      };
+    }) || [];
   return (
     <div className="bg mt-[24px] w-full items-center justify-center md:flex">
       <div className="mb-[16px] ml-[8px] flex md:mb-0 md:ml-0">

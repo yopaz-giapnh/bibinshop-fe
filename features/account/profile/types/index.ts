@@ -22,13 +22,17 @@ export const formSchema = z.object({
   instagram: z
     .string()
     .url()
-    .startsWith('https://www.instagram.com/', 'リンクがインスタグラムではありません')
+    .startsWith('https://www.instagram.com/', '正しいインスタグラムのリンクを入力してください')
     .optional(),
-  x: z.string().url().startsWith('https://www.x.com/', 'リンクはXではありません').optional(),
-  tiktok: z
+  x: z
     .string()
     .url()
-    .startsWith('https://www.tiktok.com/', 'リンクはTikTokではありません')
+    .startsWith('https://www.x.com/', '正しいXのリンクを入力してください')
+    .optional(),
+  facebook: z
+    .string()
+    .url()
+    .startsWith('https://www.facebook.com/', '正しいFacebookのリンクを入力してください')
     .optional(),
   skinType: z.string().optional(),
   personalColor: z.string().optional(),

@@ -26,16 +26,14 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
   // TODO:demoデータ。あとで置き換える
   const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];
 
-  // TODO:demoデータ。あとで置き換える
-  const socialLinks = [
-    {
-      href: 'https://www.instagram.com/bibinews_/',
-      iconSrc: '/instagram-icon.png',
-      alt: 'Instagram'
-    },
-    { href: 'https://www.facebook.com/bibinews_/', iconSrc: '/facebook-icon.png', alt: 'Facebook' },
-    { href: 'https://www.x.com/bibinews_/', iconSrc: '/x-icon.png', alt: 'X' }
-  ];
+  const socialLinks = account?.socialLinks?.map((link) => {
+    const platform = link.attributes.platform.toLowerCase();
+    return {
+      href: link.attributes.url,
+      iconSrc: `/${platform}-icon.png`,
+      alt: link.attributes.platform
+    };
+  });
 
   return (
     <div>

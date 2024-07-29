@@ -58,11 +58,15 @@ export const UserDetailProfileStats = ({
     </Typography>
   );
 
-  const SocialLink = ({ href, iconSrc, alt }: { href: string; iconSrc: string; alt: string }) => (
-    <Link href={href} target="_blank" rel="noopener noreferrer" passHref>
-      <Image src={iconSrc} alt={alt} width={32} height={32} />
-    </Link>
-  );
+  const SocialLink = ({ href, iconSrc, alt }: { href: string; iconSrc: string; alt: string }) => {
+    if (!href) return null;
+
+    return (
+      <Link href={href} target="_blank" rel="noopener noreferrer" passHref>
+        <Image src={iconSrc} alt={alt} width={32} height={32} />
+      </Link>
+    );
+  };
 
   return (
     <>
@@ -95,9 +99,11 @@ export const UserDetailProfileStats = ({
         ))}
       </div>
       <div className="flex space-x-3">
-        {socialLinks.map((link, index) => (
-          <SocialLink key={index} {...link} />
-        ))}
+        {socialLinks
+          .filter((link) => link.href)
+          .map((link, index) => (
+            <SocialLink key={index} {...link} />
+          ))}
       </div>
       <FollowersModal unique_key={uniqueKey} ref={followersModalRef} />
       <FolloweesModal unique_key={uniqueKey} ref={followeesModalRef} />
