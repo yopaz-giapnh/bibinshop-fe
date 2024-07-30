@@ -24,14 +24,16 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
+    showBottomLine?: boolean;
+  }
+>(({ className, showBottomLine = true, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'z-50 w-[192px] items-center justify-center py-[12px] text-[16px] font-medium text-black-70 ' +
-        'data-[state=active]:border-b-4 data-[state=active]:border-gray-900 data-[state=active]:text-black-80' +
-        'data-[state=active]:border-b-[3px] data-[state=active]:border-bibinBlue-100 data-[state=active]:text-bibinBlue-100',
+      'z-50 w-[192px] items-center justify-center py-[12px] text-[16px] font-medium text-black-70',
+      showBottomLine &&
+        'mb-[2px] data-[state=active]:border-b-4 data-[state=active]:border-bibinBlue-100 data-[state=active]:text-bibinBlue-100',
       className
     )}
     {...props}

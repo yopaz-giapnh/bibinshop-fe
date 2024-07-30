@@ -83,7 +83,7 @@ export const FolloweesModal = forwardRef<FolloweesModalRef, Props>(({ unique_key
             <DialogTitle>フォロー中</DialogTitle>
           </DialogHeader>
           <ScrollArea
-            className="mb-auto w-[343px] md:h-[570px] md:w-[592px]"
+            className="mb-auto w-full md:h-[570px] md:w-[592px]"
             onScrollCapture={(e) => {
               if (loading) return;
               if (!hasMore) return;
@@ -100,7 +100,7 @@ export const FolloweesModal = forwardRef<FolloweesModalRef, Props>(({ unique_key
                   nickname={item?.attributes?.nickname ?? ''}
                   unique_key={item?.attributes?.unique_key ?? ''}
                   isFollowee={item?.attributes?.followed_by_me ?? false}
-                  tags={['tag1', 'tag2', 'tag3']}
+                  tags={['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴']}
                   key={idx}
                 />
               ))}

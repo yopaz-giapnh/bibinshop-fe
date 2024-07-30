@@ -82,7 +82,11 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
           <ThumbsUp
             className={`h-[16px] w-[16px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
           />
-          <Typography as="caption" element="p" className="text-[14px] text-black-90">
+          <Typography
+            as="caption"
+            element="p"
+            className={`text-[14px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
+          >
             参考になった
           </Typography>
         </button>

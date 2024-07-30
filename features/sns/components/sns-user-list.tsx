@@ -18,7 +18,7 @@ export function SnsUserList() {
           perPage: 25,
           sortBy: sortBy,
           filter: {
-            withoutSelf: false
+            withoutSelf: true
           }
         });
         setUsers(fetchedUsers || []);

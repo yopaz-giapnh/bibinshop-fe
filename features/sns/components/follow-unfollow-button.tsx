@@ -23,7 +23,7 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
   if (!following) {
     return (
       <Button
-        className="ml-auto md:self-center"
+        className="ml-auto"
         onClick={async () =>
           await follow({ unique_key }).then(
             () => setFollowing(true),
@@ -68,7 +68,7 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
                 )
               }
             >
-              フォロー中
+              フォロー解除
             </Button>
           </div>
         </DialogContent>

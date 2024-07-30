@@ -59,7 +59,7 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
             </Typography>
             <ProfileEditModal account={account} />
           </div>
-          <div className="hidden md:block">
+          <div className="mt-[8px] hidden md:block">
             <UserDetailProfileStats
               reviewsCount={reviewsCount}
               followersCount={followersCount}

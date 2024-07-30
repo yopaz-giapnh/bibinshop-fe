@@ -1,6 +1,3 @@
-import { Button } from '@/components/ui/button';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-
 const reviewFilters = [
   { label: 'すべてのレビュー', value: 'all' },
   { label: '星5つ', value: '5' },
@@ -17,20 +14,22 @@ interface ReviewFiltersProps {
 
 export function ReviewFilters({ selectedFilter, onFilterChange }: ReviewFiltersProps) {
   return (
-    <ScrollArea className="w-full whitespace-nowrap">
-      <div className="flex justify-center space-x-2 p-2 md:mb-[16px]">
+    <div className="scrollbar-hide w-full overflow-x-auto whitespace-nowrap">
+      <div className="flex space-x-2 p-2 md:mb-[16px]">
         {reviewFilters.map((filter) => (
-          <Button
+          <button
             key={filter.value}
             onClick={() => onFilterChange(filter.value)}
-            className="border-black-40 rounded-full border-[1px] px-4 py-2"
-            variant={selectedFilter === filter.value ? 'default' : 'outline'}
+            className={`flex-shrink-0 rounded-full border-[1px] border-black-50 px-4 py-2 ${
+              selectedFilter === filter.value
+                ? 'bg-primary text-white-base'
+                : 'bg-white text-black-50'
+            }`}
           >
             {filter.label}
-          </Button>
+          </button>
         ))}
       </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </div>
   );
 }

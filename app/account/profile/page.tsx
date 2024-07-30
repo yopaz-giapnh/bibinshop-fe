@@ -11,7 +11,7 @@ import { Suspense } from 'react';
 export default async function Page() {
   return (
     <div className="mx-auto mb-[200px] flex w-full flex-col justify-center bg-paleFrostBlue py-[16px] md:mb-0 md:p-[24px]">
-      <div className="mb-[24px] flex w-full items-center justify-between md:hidden">
+      <div className="mx-[8px] mb-[24px] flex w-full items-center justify-between md:hidden">
         <BackButton />
         <Typography as="bold" element="p" className="text-[16px]">
           プロフィール

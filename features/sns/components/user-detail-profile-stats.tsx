@@ -39,7 +39,7 @@ export const UserDetailProfileStats = ({
     onClick?: () => void;
   }) => (
     <div
-      className="flex flex-col items-center"
+      className="flex flex-col items-center "
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
@@ -53,7 +53,11 @@ export const UserDetailProfileStats = ({
   );
 
   const Tag = ({ text }: { text: string }) => (
-    <Typography as="small" element="p" className="rounded-full bg-blue-200 px-2 py-1 text-sm">
+    <Typography
+      as="small"
+      element="p"
+      className="mr-2 mt-2 rounded-full bg-blue-200 px-2 py-1 text-sm"
+    >
       {text}
     </Typography>
   );
@@ -70,7 +74,7 @@ export const UserDetailProfileStats = ({
 
   return (
     <>
-      <div className="mb-4 flex items-center space-x-4">
+      <div className="mb-2 flex w-full items-center justify-center space-x-4">
         <StatItem value={reviewsCount?.toString() || '0'} label="レビュー" />
         <div className="h-[40px] w-[0.5px] bg-gray-400" />
         <StatItem value={receivedFeedbackReviewsCount?.toString() || '0'} label="参考になった" />
@@ -93,7 +97,7 @@ export const UserDetailProfileStats = ({
           }}
         />
       </div>
-      <div className="mb-4 flex space-x-2">
+      <div className="mx-[8px] mb-4 flex max-w-screen-sm flex-wrap md:mx-0">
         {tags.map((tag, index) => (
           <Tag key={index} text={tag} />
         ))}

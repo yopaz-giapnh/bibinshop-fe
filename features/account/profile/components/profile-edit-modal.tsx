@@ -26,7 +26,7 @@ import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PencilRuler } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { useForm, useFormState } from 'react-hook-form';
 import { updateAccount, updateSocialLink, uploadAvatar } from '../actions';
@@ -58,6 +58,37 @@ export default function ProfileEditModal({ account }: Props) {
   const [scalpConcerns, setScalpConcerns] = useState<string[]>([]);
   const [healthConcerns, setHealthConcerns] = useState<string[]>([]);
 
+  const resetForm = useCallback(() => {
+    form.reset({
+      nickname: nickname || '',
+      sex: selectedSex,
+      birthyear: account.attributes.birthyear || '',
+      instagram: socialLinks.instagram || '',
+      x: socialLinks.x || '',
+      facebook: socialLinks.facebook || '',
+      skinType,
+      personalColor,
+      skinConcerns,
+      scalpConcerns,
+      healthConcerns
+    });
+  }, [
+    form,
+    nickname,
+    selectedSex,
+    account.attributes.birthyear,
+    socialLinks,
+    skinType,
+    personalColor,
+    skinConcerns,
+    scalpConcerns,
+    healthConcerns
+  ]);
+
+  useEffect(() => {
+    resetForm();
+  }, [resetForm]);
+
   useEffect(() => {
     form.setValue('sex', selectedSex);
     form.setValue('skinType', skinType);
@@ -85,8 +116,6 @@ export default function ProfileEditModal({ account }: Props) {
       }
     });
     setSocialLinks(links);
-
-    // フォームの初期値を設定
     form.setValue('instagram', links.instagram || '');
     form.setValue('x', links.x || '');
     form.setValue('facebook', links.facebook || '');
@@ -107,11 +136,20 @@ export default function ProfileEditModal({ account }: Props) {
         await updateSocialLink(formData.facebook, 'FACEBOOK');
       }
       setIsOpen(false);
+      resetForm();
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (!open) {
+          resetForm();
+        }
+      }}
+    >
       <DialogDescription>
         <DialogTrigger asChild>
           <button
@@ -124,8 +162,8 @@ export default function ProfileEditModal({ account }: Props) {
             </Typography>
           </button>
         </DialogTrigger>
-        <DialogContent className="flex h-[calc(150vw-80px)] w-11/12 flex-col items-center justify-center overflow-y-auto md:h-modal-screen-calc md:w-[640px]">
-          <div className="flex max-h-[80vh] w-full flex-col items-center overflow-y-auto">
+        <DialogContent className="flex h-[calc(150vw-80px)] w-full flex-col items-center justify-center overflow-y-auto md:h-modal-screen-calc md:w-[640px]">
+          <div className="flex max-h-[80vh] w-full flex-col items-center overflow-y-auto px-1">
             <DialogHeader>
               <DialogTitle className="text-[16px] md:text-[20px]">プロフィール編集</DialogTitle>
             </DialogHeader>
@@ -140,7 +178,14 @@ export default function ProfileEditModal({ account }: Props) {
                   <FormItem className="w-full">
                     <FormLabel>名前</FormLabel>
                     <FormControl>
-                      <Input {...field} autoComplete="username" />
+                      <Input
+                        {...field}
+                        autoComplete="username"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          form.trigger('nickname');
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -155,6 +200,8 @@ export default function ProfileEditModal({ account }: Props) {
                   onValueChange={(value) => {
                     if (isUserSex(value)) {
                       setSelectedSex(value);
+                      form.setValue('sex', value);
+                      form.trigger('sex');
                     }
                   }}
                   className="mt-[4px] flex justify-between md:justify-normal"
@@ -204,10 +251,11 @@ export default function ProfileEditModal({ account }: Props) {
                           type="text"
                           inputMode="numeric"
                           maxLength={4}
-                          value={field.value || ''}
+                          value={field.value}
                           onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                             form.setValue('birthyear', value);
+                            form.trigger('birthyear');
                           }}
                         />
                       </FormControl>
@@ -227,10 +275,12 @@ export default function ProfileEditModal({ account }: Props) {
                         <Input
                           {...field}
                           type="url"
-                          defaultValue={socialLinks.instagram || ''}
-                          onChange={(e) =>
-                            form.setValue('instagram', e.target.value ? e.target.value : undefined)
-                          }
+                          defaultValue={socialLinks.instagram}
+                          onChange={(e) => {
+                            const value = e.target.value ? e.target.value : undefined;
+                            form.setValue('instagram', value);
+                            form.trigger('instagram');
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -249,10 +299,12 @@ export default function ProfileEditModal({ account }: Props) {
                         <Input
                           {...field}
                           type="url"
-                          defaultValue={socialLinks.x || ''}
-                          onChange={(e) =>
-                            form.setValue('x', e.target.value ? e.target.value : undefined)
-                          }
+                          defaultValue={socialLinks.x}
+                          onChange={(e) => {
+                            const value = e.target.value ? e.target.value : undefined;
+                            form.setValue('x', value);
+                            form.trigger('x');
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -271,10 +323,12 @@ export default function ProfileEditModal({ account }: Props) {
                         <Input
                           {...field}
                           type="url"
-                          defaultValue={socialLinks.facebook || ''}
-                          onChange={(e) =>
-                            form.setValue('facebook', e.target.value ? e.target.value : undefined)
-                          }
+                          defaultValue={socialLinks.facebook}
+                          onChange={(e) => {
+                            const value = e.target.value ? e.target.value : undefined;
+                            form.setValue('facebook', value);
+                            form.trigger('facebook');
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -413,7 +467,7 @@ function AvatarUpload({ account }: { account: User }) {
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept="image/*"
+        accept="image/"
         className="hidden"
         name="file"
       />
