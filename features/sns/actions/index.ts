@@ -2,6 +2,7 @@
 
 import { apiClient } from '@/config/api-client';
 import { isUserAvatarSchema } from '@/features/account/profile/utils';
+import { isUserProfile } from '../utils';
 
 // todo: add includes user tags
 const includes = 'avatars';
@@ -121,4 +122,54 @@ export async function unfollow({ unique_key }: { unique_key: string }) {
   if (error) {
     throw error;
   }
+}
+
+export async function getConcerns() {
+  const attributes = await getCurrentUserAttributes();
+
+  if (!attributes || !attributes.unique_key) {
+    throw new Error('User not logged in');
+  }
+  const { data, error } = await apiClient.GET('/api/v2/storefront/users/{unique_key}', {
+    params: {
+      path: {
+        unique_key: attributes.unique_key
+      },
+      query: {
+        include:
+          'user_profile.skin_type,user_profile.personal_color,user_profile.skin_concerns,user_profile.scalp_hair_concerns,user_profile.health_concerns'
+      }
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+  if (!data.included) {
+    throw new Error('No included data');
+  }
+
+  const profile = data.included.filter(isUserProfile)[0];
+  if (!profile || !profile.attributes) {
+    throw new Error('No profile data');
+  }
+
+  return {
+    skinType: profile.attributes.skin_type,
+    personalColor: profile.attributes.personal_color,
+    skinConcerns: profile.attributes.skin_concerns,
+    hairConcerns: profile.attributes.scalp_hair_concerns,
+    healthConcerns: profile.attributes.health_concerns
+  };
+}
+
+async function getCurrentUserAttributes() {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/account', {
+    params: {
+      query: {
+        'fields[user]': 'unique_key'
+      }
+    }
+  });
+  return data?.data?.attributes as { unique_key: string };
 }
