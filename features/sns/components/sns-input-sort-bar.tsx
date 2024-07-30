@@ -4,64 +4,81 @@ import { Button } from '@/components/ui/button';
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Typography } from '@/components/ui/typography';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getConcerns } from '../actions';
+import {
+  HairConcernEntry,
+  HealthConcernEntry,
+  SkinColorEntry,
+  SkinConcernEntry,
+  SkinTypeEntry,
+  colors,
+  hairConcerns,
+  healthConcerns,
+  skinConcerns,
+  skinTypes
+} from '../constants';
 
 interface SnsInputSortBarProps {
   onSortChange: (sortBy: 'followers_asc' | 'followers_desc') => void;
 }
-
-const skinTypes = ['普通肌', '乾燥肌', '脂性肌', '混合肌'];
-const skins = [
-  {
-    name: 'イエベ春タイプ',
-    color: '#F7D4C0'
-  },
-  {
-    name: 'ブルべ夏タイプ',
-    color: '#FFE0D8'
-  },
-  {
-    name: 'イエベ秋タイプ',
-    color: '#FCE6CE'
-  },
-  {
-    name: 'ブルべ冬タイプ',
-    color: '#FDEFEC'
-  }
-];
-const skinConcerns = [
-  'アトピー',
-  'ニキビ',
-  '敏感肌',
-  '美白/シミ',
-  '皮脂/ブラックヘッド',
-  'クマ',
-  '乾燥肌',
-  'シワ/弾力',
-  '毛穴',
-  '赤み',
-  '角質',
-  '該当なし'
-];
-
 export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
   const [sortOption, setSortOption] = useState('フォロワー数(昇順)');
   const [selectionVisible, setSelectionVisible] = useState(false);
-  const [selectedSkinType, setSelectedSkinType] = useState<string | undefined>(undefined);
-  const [selectedSkinColor, setSelectedSkinColor] = useState<string | undefined>(undefined);
-  const [selectedSkinConcerns, setSelectedSkinConcerns] = useState<string[]>([]);
+  const [selectedSkinType, setSelectedSkinType] = useState<SkinTypeEntry | undefined>(undefined);
+  const [selectedSkinColor, setSelectedSkinColor] = useState<SkinColorEntry | undefined>(undefined);
+  const [selectedSkinConcerns, setSelectedSkinConcerns] = useState<SkinConcernEntry[]>([]);
+  const [selectedHairConcerns, setSelectedHairConcerns] = useState<HairConcernEntry[]>([]);
+  const [selectedHealthConcerns, setSelectedHealthConcerns] = useState<HealthConcernEntry[]>([]);
   const [closeTimeout, setCloseTimeout] = useState<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
   const ref = useRef<HTMLInputElement>(null);
 
-  const hasInput = selectedSkinType || selectedSkinColor || selectedSkinConcerns.length;
+  useEffect(() => {
+    const fetchConcerns = async () => {
+      const result = await getConcerns();
+      if (result.skinType)
+        setSelectedSkinType(skinTypes.find((type) => type.value === result.skinType));
+      if (result.personalColor)
+        setSelectedSkinColor(colors.find((color) => color.value === result.personalColor));
+      if (result.skinConcerns)
+        setSelectedSkinConcerns(
+          skinConcerns.filter((concern) => result.skinConcerns?.includes(concern.value[0]))
+        );
+      if (result.hairConcerns)
+        setSelectedHairConcerns(
+          hairConcerns.filter((concern) => result.hairConcerns?.includes(concern.value[0]))
+        );
+      if (result.healthConcerns)
+        setSelectedHealthConcerns(
+          healthConcerns.filter((concern) => result.healthConcerns?.includes(concern.value[0]))
+        );
+    };
+    fetchConcerns();
+  }, []);
+
+  const hasInput =
+    selectedSkinType ||
+    selectedSkinColor ||
+    selectedSkinConcerns?.length ||
+    selectedHairConcerns?.length ||
+    selectedHealthConcerns?.length;
 
   const handleSortChange = (value: string) => {
     const newSortOption = value === '1' ? 'フォロワー数(昇順)' : 'フォロワー数(降順)';
     setSortOption(newSortOption);
     onSortChange(value === '1' ? 'followers_asc' : 'followers_desc');
   };
+  const openCommands = () => {
+    clearTimeout(closeTimeout);
+    setSelectionVisible(true);
+  };
+
+  useEffect(() => {
+    if (selectionVisible) return;
+    //params changed, should refresh search?
+  }, [selectionVisible]);
 
   return (
     <div className="mt-[24px] flex w-full flex-col items-center justify-center px-[8px] md:flex-row md:justify-between">
@@ -69,13 +86,9 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
         <CommandInput
           ref={ref}
           placeholder={hasInput ? undefined : '例：普通肌・ニキビ・毛穴'}
-          className="rounded-[44px] border-2 border-bibinBlue-100 bg-white-base md:w-2/3"
-          onFocus={() => {
-            clearTimeout(closeTimeout);
-            setSelectionVisible(true);
-          }}
+          className="overflow-x-auto overflow-y-hidden rounded-[44px] border-2 border-bibinBlue-100 bg-white-base md:w-2/3"
+          onFocus={openCommands}
           onBlur={() => {
-            console.log('onBlur');
             setCloseTimeout(
               setTimeout(async () => {
                 setSelectionVisible(false);
@@ -86,18 +99,51 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
             hasInput ? (
               <div className="flex h-full items-center whitespace-nowrap">
                 {selectedSkinType && (
-                  <Pill text={selectedSkinType} onRemove={() => setSelectedSkinType(undefined)} />
+                  <Pill
+                    text={selectedSkinType.text}
+                    onClick={() => ref.current?.focus()}
+                    onRemove={() => setSelectedSkinType(undefined)}
+                  />
                 )}
                 {selectedSkinColor && (
-                  <Pill text={selectedSkinColor} onRemove={() => setSelectedSkinColor(undefined)} />
+                  <Pill
+                    text={selectedSkinColor.name}
+                    onClick={() => ref.current?.focus()}
+                    onRemove={() => setSelectedSkinColor(undefined)}
+                  />
                 )}
-                {selectedSkinConcerns.map((concern, index) => (
+                {selectedSkinConcerns?.map((concern, index) => (
                   <Pill
                     key={index}
-                    text={concern}
+                    text={concern.text}
+                    onClick={() => ref.current?.focus()}
                     onRemove={() =>
                       setSelectedSkinConcerns(
-                        selectedSkinConcerns.filter((item) => item !== concern)
+                        selectedSkinConcerns.filter((item) => item.value !== concern.value)
+                      )
+                    }
+                  />
+                ))}
+                {selectedHairConcerns?.map((concern, index) => (
+                  <Pill
+                    key={index}
+                    text={concern.text}
+                    onClick={() => ref.current?.focus()}
+                    onRemove={() =>
+                      setSelectedHairConcerns(
+                        selectedHairConcerns.filter((item) => item.value !== concern.value)
+                      )
+                    }
+                  />
+                ))}
+                {selectedHealthConcerns?.map((concern, index) => (
+                  <Pill
+                    key={index}
+                    text={concern.text}
+                    onClick={() => ref.current?.focus()}
+                    onRemove={() =>
+                      setSelectedHealthConcerns(
+                        selectedHealthConcerns.filter((item) => item.value !== concern.value)
                       )
                     }
                   />
@@ -123,17 +169,18 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
               {skinTypes.map((type, index) => (
                 <Button
                   key={index}
-                  variant={selectedSkinType == type ? 'secondary' : 'outline'}
+                  variant={selectedSkinType?.value == type.value ? 'secondary' : 'outline'}
                   className={
-                    'm-1 border-2 p-6' + (selectedSkinType == type ? ' border-bibinBlue-100 ' : '')
+                    'm-1 border-2 p-6' +
+                    (selectedSkinType?.value == type.value ? ' border-bibinBlue-100 ' : '')
                   }
                   onClick={(e) => {
                     clearTimeout(closeTimeout);
                     ref.current?.focus();
-                    setSelectedSkinType(selectedSkinType == type ? undefined : type);
+                    setSelectedSkinType(selectedSkinType?.value == type.value ? undefined : type);
                   }}
                 >
-                  {type}
+                  {type.text}
                 </Button>
               ))}
             </div>
@@ -141,16 +188,16 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
               パーソナルカラー
             </Typography>
             <div className="grid grid-cols-2 md:grid-cols-4">
-              {skins.map((type, index) => (
+              {colors.map((type, index) => (
                 <SkinButton
                   key={index}
                   name={type.name}
                   color={type.color}
-                  active={selectedSkinType == type.name}
+                  active={selectedSkinColor?.value == type.value}
                   onClick={() => {
                     clearTimeout(closeTimeout);
                     ref.current?.focus();
-                    setSelectedSkinType(selectedSkinType == type.name ? undefined : type.name);
+                    setSelectedSkinColor(selectedSkinColor?.value == type.value ? undefined : type);
                   }}
                 />
               ))}
@@ -162,24 +209,98 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
               {skinConcerns.map((concern, index) => (
                 <Button
                   key={index}
-                  variant={selectedSkinConcerns.includes(concern) ? 'secondary' : 'outline'}
+                  variant={
+                    selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])
+                      ? 'secondary'
+                      : 'outline'
+                  }
                   className={
                     'm-1 border-2 p-6' +
-                    (selectedSkinConcerns.includes(concern) ? ' border-bibinBlue-100 ' : '')
+                    (selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])
+                      ? ' border-bibinBlue-100 '
+                      : '')
                   }
                   onClick={(e) => {
                     clearTimeout(closeTimeout);
                     ref.current?.focus();
-                    if (selectedSkinConcerns.includes(concern)) {
+                    if (selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])) {
                       setSelectedSkinConcerns(
-                        selectedSkinConcerns.filter((item) => item !== concern)
+                        selectedSkinConcerns.filter((item) => item.value[0] !== concern.value[0])
                       );
                     } else {
                       setSelectedSkinConcerns([...selectedSkinConcerns, concern]);
                     }
                   }}
                 >
-                  {concern}
+                  {concern.text}
+                </Button>
+              ))}
+            </div>
+            <Typography className="p-[8px]" element="p" as="boldSmall">
+              頭皮・毛髪の悩み
+            </Typography>
+            <div className="grid grid-cols-2 md:grid-cols-4">
+              {hairConcerns.map((concern, index) => (
+                <Button
+                  key={index}
+                  variant={
+                    selectedHairConcerns?.find((c) => c.value[0] == concern.value[0])
+                      ? 'secondary'
+                      : 'outline'
+                  }
+                  className={
+                    'm-1 border-2 p-6' +
+                    (selectedHairConcerns?.find((c) => c.value[0] == concern.value[0])
+                      ? ' border-bibinBlue-100 '
+                      : '')
+                  }
+                  onClick={(e) => {
+                    clearTimeout(closeTimeout);
+                    ref.current?.focus();
+                    if (selectedHairConcerns.find((c) => c.value[0] == concern.value[0])) {
+                      setSelectedHairConcerns(
+                        selectedHairConcerns.filter((item) => item.value[0] !== concern.value[0])
+                      );
+                    } else {
+                      setSelectedHairConcerns([...selectedHairConcerns, concern]);
+                    }
+                  }}
+                >
+                  {concern.text}
+                </Button>
+              ))}
+            </div>
+            <Typography className="p-[8px]" element="p" as="boldSmall">
+              健康の悩み
+            </Typography>
+            <div className="grid grid-cols-2 md:grid-cols-4">
+              {healthConcerns.map((concern, index) => (
+                <Button
+                  key={index}
+                  variant={
+                    selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])
+                      ? 'secondary'
+                      : 'outline'
+                  }
+                  className={
+                    'm-1 border-2 p-6' +
+                    (selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])
+                      ? ' border-bibinBlue-100 '
+                      : '')
+                  }
+                  onClick={(e) => {
+                    clearTimeout(closeTimeout);
+                    ref.current?.focus();
+                    if (selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])) {
+                      setSelectedHealthConcerns(
+                        selectedHealthConcerns.filter((item) => item.value[0] !== concern.value[0])
+                      );
+                    } else {
+                      setSelectedHealthConcerns([...selectedHealthConcerns, concern]);
+                    }
+                  }}
+                >
+                  {concern.text}
                 </Button>
               ))}
             </div>
@@ -202,13 +323,15 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
 type PillParams = {
   text: string;
   onRemove: () => void;
+  onClick?: () => void;
 };
-function Pill({ text, onRemove }: PillParams) {
+function Pill({ text, onRemove, onClick }: PillParams) {
   return (
     <Typography
       className="mx-1 flex h-8 items-center rounded-full bg-[#D9F0FF] pl-2"
       element="div"
       as="xSmall"
+      onClick={onClick}
     >
       {text}
       <svg
