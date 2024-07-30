@@ -15,7 +15,7 @@ interface ReviewFiltersProps {
 export function ReviewFilters({ selectedFilter, onFilterChange }: ReviewFiltersProps) {
   return (
     <div className="scrollbar-hide w-full overflow-x-auto whitespace-nowrap">
-      <div className="flex space-x-2 p-2 md:mb-[16px]">
+      <div className="flex space-x-2 p-2 md:mb-[16px] md:justify-center">
         {reviewFilters.map((filter) => (
           <button
             key={filter.value}

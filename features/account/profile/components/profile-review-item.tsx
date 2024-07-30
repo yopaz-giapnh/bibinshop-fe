@@ -8,26 +8,43 @@ import { Review } from '@/features/review/types';
 import { formatDateString } from '@/utils/date';
 import { ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getAccount } from '../actions';
+import { User } from '../types';
 
-/**
- * ユーザープロフィールレビューカードコンポーネント
- * @returns JSX.Element
- */
 type ReviewProps = {
   review: Review;
 };
 
-export async function ProfileReviewItem({ review }: ReviewProps) {
-  const [isFeedback, setIsFeedback] = useState(!!review.attributes.is_feedback_review);
+export function ProfileReviewItem({ review }: ReviewProps) {
+  const [isFeedback, setIsFeedback] = useState(review.attributes.is_feeback_review);
+  const [account, setAccount] = useState<User | null>(null);
+  const isCurrentUser = account?.id === review?.relationships?.user?.data?.id;
+
+  useEffect(() => {
+    async function fetchAccount() {
+      try {
+        const accountData = await getAccount();
+        setAccount(accountData);
+      } catch (error) {
+        console.error('Error fetching account:', error);
+      }
+    }
+
+    fetchAccount();
+  }, []);
 
   const handleFeedbackToggle = async () => {
-    if (isFeedback) {
-      await removeReviewFeedback({ review_id: review.id, id: review.id });
-    } else {
-      await addReviewFeedback({ review_id: review.id });
+    try {
+      if (isFeedback) {
+        await removeReviewFeedback({ review_id: review.id, id: review.id });
+      } else {
+        await addReviewFeedback({ review_id: review.id });
+      }
+      setIsFeedback(!isFeedback);
+    } catch (error) {
+      console.error('Error toggling feedback:', error);
     }
-    setIsFeedback(!isFeedback);
   };
 
   return (
@@ -77,20 +94,22 @@ export async function ProfileReviewItem({ review }: ReviewProps) {
           </Typography>
         </div>
       </div>
-      <div className="mt-[16px] flex justify-end">
-        <button className="flex items-center space-x-2" onClick={handleFeedbackToggle}>
-          <ThumbsUp
-            className={`h-[16px] w-[16px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
-          />
-          <Typography
-            as="caption"
-            element="p"
-            className={`text-[14px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
-          >
-            参考になった
-          </Typography>
-        </button>
-      </div>
+      {!isCurrentUser && (
+        <div className="mt-[16px] flex justify-end">
+          <button className="flex items-center space-x-2" onClick={handleFeedbackToggle}>
+            <ThumbsUp
+              className={`h-[16px] w-[16px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
+            />
+            <Typography
+              as="caption"
+              element="p"
+              className={`text-[14px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
+            >
+              参考になった
+            </Typography>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

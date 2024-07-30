@@ -93,7 +93,7 @@ export const FolloweesModal = forwardRef<FolloweesModalRef, Props>(({ unique_key
               }
             }}
           >
-            <div className="grid grid-cols-1 divide-y divide-gray-200">
+            <div className="grid grid-cols-1 divide-y divide-gray-200 md:mx-[16px]">
               {data.map((item, idx) => (
                 <UserRow
                   avatar={item?.avatar?.url || '/placeholder-product-image.png'}
@@ -102,6 +102,7 @@ export const FolloweesModal = forwardRef<FolloweesModalRef, Props>(({ unique_key
                   isFollowee={item?.attributes?.followed_by_me ?? false}
                   tags={['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴']}
                   key={idx}
+                  userType={item?.type}
                 />
               ))}
             </div>

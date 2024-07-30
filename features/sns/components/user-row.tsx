@@ -9,15 +9,34 @@ type Props = {
   tags: string[];
   avatar: string;
   isFollowee: boolean;
+  userType: string;
 };
 
 export default function UserRow(props: Props) {
   return (
     <div className="py-6">
       <div className="flex items-center md:items-start">
-        <Link href={`/user-detail/${props.unique_key}`} className="flex-shrink-0">
-          <Image src={props.avatar} alt="avatar" className="rounded-full" width={64} height={64} />
-        </Link>
+        {props.userType !== 'account' ? (
+          <Link href={`/user-detail/${props.unique_key}`} className="flex-shrink-0">
+            <Image
+              src={props.avatar}
+              alt="avatar"
+              className="rounded-full"
+              width={64}
+              height={64}
+            />
+          </Link>
+        ) : (
+          <div className="flex-shrink-0">
+            <Image
+              src={props.avatar}
+              alt="avatar"
+              className="rounded-full"
+              width={64}
+              height={64}
+            />
+          </div>
+        )}
         <div className="ml-[8px] flex flex-col">
           <Typography
             as="bold"
@@ -39,11 +58,13 @@ export default function UserRow(props: Props) {
             ))}
           </div>
         </div>
-        <FollowUnfollowButton
-          isFollowing={props.isFollowee}
-          unique_key={props.unique_key}
-          username={props.nickname}
-        />
+        {props.userType !== 'account' && (
+          <FollowUnfollowButton
+            isFollowing={props.isFollowee}
+            unique_key={props.unique_key}
+            username={props.nickname}
+          />
+        )}
       </div>
       <div className="mt-2 flex flex-wrap md:hidden ">
         {props.tags.map((t, idx) => (
