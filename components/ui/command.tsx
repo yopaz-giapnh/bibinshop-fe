@@ -56,7 +56,7 @@ const CommandInput = React.forwardRef<
       type="button"
       disabled={disableButton}
       onClick={onHandleClick}
-      className={`ml-auto flex h-10 w-[54px] items-center justify-center rounded-[24px] ${disableButton ? 'bg-gray-200' : 'bg-gradation'}`}
+      className={`ml-auto flex h-10 w-[54px] min-w-[54px] items-center justify-center rounded-[24px] ${disableButton ? 'bg-gray-200' : 'bg-gradation'}`}
     >
       <Search className="h-5 w-5 text-white-base" />
     </button>
