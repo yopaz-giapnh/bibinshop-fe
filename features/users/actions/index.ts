@@ -76,7 +76,7 @@ export async function getUsers({
         .filter(Boolean) || [];
 
     const userSocialLinks =
-      socialLinks?.filter((link) => link.relationships.user.data.id === user.id) || [];
+      socialLinks?.filter((link) => link?.relationships?.user?.data?.id === user.id) || [];
 
     return {
       ...user,

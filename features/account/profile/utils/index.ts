@@ -1,5 +1,5 @@
 import { hasProperty } from '@/utils/type';
-import { UserAvatarSchema, UserSex } from '../types';
+import { UserAvatarSchema, UserSex, UserSocialLinkSchema } from '../types';
 
 export function isUserAvatarSchema(includedObject: unknown): includedObject is UserAvatarSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'user_avatar';
@@ -16,11 +16,4 @@ export function isSocialLinkSchema(item: unknown): item is SocialLinkSchema {
 }
 
 // SocialLinkSchema の型定義を追加
-export type SocialLinkSchema = {
-  type: 'user_social_link';
-  id: string;
-  attributes: {
-    url: string;
-    platform: 'INSTAGRAM' | 'FACEBOOK' | 'X';
-  };
-};
+export type SocialLinkSchema = UserSocialLinkSchema;

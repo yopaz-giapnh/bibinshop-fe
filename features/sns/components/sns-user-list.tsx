@@ -21,7 +21,7 @@ export function SnsUserList() {
             withoutSelf: true
           }
         });
-        setUsers(fetchedUsers || []);
+        setUsers((fetchedUsers as User[]) || []);
       } catch (error) {
         console.error('Failed to fetch users:', error);
       }

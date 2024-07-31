@@ -700,7 +700,10 @@ export interface paths {
               data?: components['schemas']['PublicUser'][];
               meta?: components['schemas']['ListMeta'];
               links?: components['schemas']['ListLinks'];
-              included?: components['schemas']['UserSocialLink'][];
+              included?: (
+                | components['schemas']['UserSocialLink']
+                | components['schemas']['UserAvatar']
+              )[];
             };
           };
         };

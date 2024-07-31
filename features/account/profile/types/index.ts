@@ -5,6 +5,7 @@ import { SocialLinkSchema } from '../utils';
 export type UserSchema = components['schemas']['User'] & components['schemas']['PublicUser'];
 
 export type UserAvatarSchema = components['schemas']['UserAvatar'];
+export type UserSocialLinkSchema = components['schemas']['UserSocialLink'];
 
 export type UserAvatarWithUrl = UserAvatarSchema & {
   url: string;

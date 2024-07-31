@@ -109,8 +109,8 @@ export default function ProfileEditModal({ account }: Props) {
   useEffect(() => {
     const links: Record<string, string> = {};
     account.socialLinks?.forEach((link) => {
-      if (link.attributes) {
-        links[link.attributes.platform.toLowerCase()] = link.attributes.url;
+      if (link && link.attributes && link.attributes.platform) {
+        links[link?.attributes?.platform?.toLowerCase()] = link.attributes.url ?? '';
       }
     });
     setSocialLinks(links);

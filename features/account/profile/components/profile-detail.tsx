@@ -27,11 +27,11 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
   const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];
 
   const socialLinks = account?.socialLinks?.map((link) => {
-    const platform = link.attributes.platform.toLowerCase();
+    const platform = link?.attributes?.platform?.toLowerCase();
     return {
-      href: link.attributes.url,
+      href: link?.attributes?.url,
       iconSrc: `/${platform}-icon.png`,
-      alt: link.attributes.platform
+      alt: link?.attributes?.platform
     };
   });
 

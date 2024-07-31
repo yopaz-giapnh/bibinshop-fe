@@ -14,7 +14,11 @@ type Props = {
   receivedFeedbackReviewsCount: number;
   uniqueKey: string;
   tags: string[];
-  socialLinks?: { href: string; iconSrc: string; alt: string }[];
+  socialLinks?: {
+    href: string | undefined;
+    iconSrc: string | undefined;
+    alt: string | undefined;
+  }[];
 };
 
 export const UserDetailProfileStats = ({
@@ -107,7 +111,7 @@ export const UserDetailProfileStats = ({
           {socialLinks
             .filter((link) => link.href)
             .map((link, index) => (
-              <SocialLink key={index} href={link.href} alt="" iconSrc={link.iconSrc} />
+              <SocialLink key={index} href={link.href || ''} alt="" iconSrc={link.iconSrc || ''} />
             ))}
         </div>
       )}
