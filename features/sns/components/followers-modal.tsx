@@ -102,7 +102,7 @@ export const FollowersModal = forwardRef<FollowersModalRef, Props>(({ unique_key
                   isFollowee={item?.attributes?.followed_by_me ?? false}
                   tags={['tag1', 'tag2', 'tag3']}
                   key={idx}
-                  userType={item?.type}
+                  userType={item?.type || ''}
                 />
               ))}
             </div>

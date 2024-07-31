@@ -1,5 +1,6 @@
 import { UserDetail } from '@/features/sns/components/user-detail';
 import { getUserDetails } from '@/features/users/actions';
+import { User } from '@/features/users/types';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: { params: { userUniqueKey: string } }) {
@@ -9,7 +10,7 @@ export default async function Page({ params }: { params: { userUniqueKey: string
 
   return (
     <div className="bg-paleFrostBlues h-full w-full">
-      <UserDetail userDetail={userDetail} />
+      <UserDetail userDetail={userDetail as User} />
     </div>
   );
 }

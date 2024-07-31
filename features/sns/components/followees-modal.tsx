@@ -102,7 +102,7 @@ export const FolloweesModal = forwardRef<FolloweesModalRef, Props>(({ unique_key
                   isFollowee={item?.attributes?.followed_by_me ?? false}
                   tags={['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴']}
                   key={idx}
-                  userType={item?.type}
+                  userType={item?.type || ''}
                 />
               ))}
             </div>

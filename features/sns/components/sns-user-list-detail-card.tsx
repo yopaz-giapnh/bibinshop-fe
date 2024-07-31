@@ -55,7 +55,7 @@ export async function SnsUserListDetailCard({ user, products }: SnsUserListDetai
         <FollowUnfollowButton
           username={nickname}
           unique_key={uniqueKey}
-          isFollowing={isFollowing}
+          isFollowing={isFollowing || false}
         />
       </div>
       <div className="mb-4 flex flex-wrap md:hidden">

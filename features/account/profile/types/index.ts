@@ -1,7 +1,8 @@
 import { components } from '@/lib/api/storefront';
 import { z } from 'zod';
+import { SocialLinkSchema } from '../utils';
 
-export type UserSchema = components['schemas']['User'];
+export type UserSchema = components['schemas']['User'] & components['schemas']['PublicUser'];
 
 export type UserAvatarSchema = components['schemas']['UserAvatar'];
 
@@ -11,13 +12,14 @@ export type UserAvatarWithUrl = UserAvatarSchema & {
 
 export type User = UserSchema & {
   avatar: UserAvatarWithUrl | undefined;
+  socialLinks?: SocialLinkSchema[];
 };
 
 export type UserSex = UserSchema['attributes']['sex'];
 
 export const formSchema = z.object({
   nickname: z.string().min(1, '名前を入力してください').optional(),
-  sex: z.enum(['male', 'female', 'not_applicable']).optional(),
+  sex: z.enum(['male', 'female', 'not_applicable', 'not_known']).optional(),
   birthyear: z
     .string()
     .refine((val) => !val || /^\d{4}$/.test(val), {

@@ -700,6 +700,7 @@ export interface paths {
               data?: components['schemas']['PublicUser'][];
               meta?: components['schemas']['ListMeta'];
               links?: components['schemas']['ListLinks'];
+              included?: components['schemas']['UserSocialLink'][];
             };
           };
         };
@@ -2509,10 +2510,17 @@ export interface components {
         followers_count?: number;
         /** @description Number of users this user is following */
         followees_count?: number;
+        nickname?: string;
       };
       relationships?: {
         user_profile?: {
           data?: components['schemas']['Relation'];
+        };
+        avatars?: {
+          data?: components['schemas']['UserAvatar'][];
+        };
+        recommended_products?: {
+          data?: components['schemas']['Product'][];
         };
       };
     };
@@ -5088,6 +5096,7 @@ export interface operations {
             data?: components['schemas']['PublicUser'][];
             meta?: components['schemas']['ListMeta'];
             links?: components['schemas']['ListLinks'];
+            included?: components['schemas']['UserAvatar'][];
           };
         };
       };
@@ -5118,6 +5127,7 @@ export interface operations {
             data?: components['schemas']['PublicUser'][];
             meta?: components['schemas']['ListMeta'];
             links?: components['schemas']['ListLinks'];
+            included?: components['schemas']['UserAvatar'][];
           };
         };
       };

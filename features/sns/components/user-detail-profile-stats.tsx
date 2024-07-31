@@ -14,7 +14,7 @@ type Props = {
   receivedFeedbackReviewsCount: number;
   uniqueKey: string;
   tags: string[];
-  socialLinks: Array<{ href: string; iconSrc: string; alt: string }>;
+  socialLinks?: { href: string; iconSrc: string; alt: string }[];
 };
 
 export const UserDetailProfileStats = ({
@@ -102,13 +102,15 @@ export const UserDetailProfileStats = ({
           <Tag key={index} text={tag} />
         ))}
       </div>
-      <div className="flex space-x-3">
-        {socialLinks
-          .filter((link) => link.href)
-          .map((link, index) => (
-            <SocialLink key={index} {...link} />
-          ))}
-      </div>
+      {socialLinks && (
+        <div className="flex space-x-3">
+          {socialLinks
+            .filter((link) => link.href)
+            .map((link, index) => (
+              <SocialLink key={index} href={link.href} alt="" iconSrc={link.iconSrc} />
+            ))}
+        </div>
+      )}
       <FollowersModal unique_key={uniqueKey} ref={followersModalRef} />
       <FolloweesModal unique_key={uniqueKey} ref={followeesModalRef} />
     </>

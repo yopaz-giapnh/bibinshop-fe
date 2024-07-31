@@ -62,7 +62,6 @@ export default function ProfileEditModal({ account }: Props) {
     form.reset({
       nickname: nickname || '',
       sex: selectedSex,
-      birthyear: account.attributes.birthyear || '',
       instagram: socialLinks.instagram || '',
       x: socialLinks.x || '',
       facebook: socialLinks.facebook || '',
@@ -76,7 +75,6 @@ export default function ProfileEditModal({ account }: Props) {
     form,
     nickname,
     selectedSex,
-    account.attributes.birthyear,
     socialLinks,
     skinType,
     personalColor,

@@ -4,7 +4,6 @@ import { apiClient } from '@/config/api-client';
 import { UserAvatarSchema } from '@/features/account/profile/types';
 import { isSocialLinkSchema, isUserAvatarSchema } from '@/features/account/profile/utils';
 import { getProducts } from '@/features/product/actions';
-import { Product } from '@/features/product/types';
 
 export async function getUsers({
   include,
@@ -54,8 +53,7 @@ export async function getUsers({
 
   // Fetch recommended products for all users
   const allRecommendedProductIds = users?.flatMap(
-    (user) =>
-      user?.relationships?.recommended_products?.data?.map((product: Product) => product.id) ?? []
+    (user) => user?.relationships?.recommended_products?.data?.map((product) => product.id) ?? []
   );
 
   const uniqueProductIds = Array.from(new Set(allRecommendedProductIds));
@@ -67,16 +65,14 @@ export async function getUsers({
 
   const productMap = new Map(recommendedProducts.data.map((product) => [product.id, product]));
 
-  return users?.map((user: any) => {
-    const userAvatars = user.relationships.avatars?.data || [];
+  return users?.map((user) => {
+    const userAvatars = user?.relationships?.avatars?.data || [];
     const avatar =
-      userAvatars.length > 0
-        ? avatars.find((a: UserAvatarSchema) => a.id === userAvatars[0].id)
-        : undefined;
+      userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
 
     const userRecommendedProducts =
-      user.relationships.recommended_products?.data
-        ?.map((product: Product) => productMap.get(product.id))
+      user?.relationships?.recommended_products?.data
+        ?.map((product) => productMap.get(product.id))
         .filter(Boolean) || [];
 
     const userSocialLinks =
@@ -123,7 +119,7 @@ export async function getUserDetails(uniqueKey: string) {
       : undefined;
 
   const allRecommendedProductIds =
-    user?.relationships?.recommended_products?.data?.map((product: Product) => product.id) || [];
+    user?.relationships?.recommended_products?.data?.map((product) => product.id) || [];
   const uniqueProductIds = Array.from(new Set(allRecommendedProductIds));
   const recommendedProducts = await getProducts({
     query: {
@@ -135,7 +131,7 @@ export async function getUserDetails(uniqueKey: string) {
 
   const userRecommendedProducts =
     user?.relationships?.recommended_products?.data
-      ?.map((product: Product) => productMap.get(product.id))
+      ?.map((product) => productMap.get(product.id))
       .filter(Boolean) || [];
 
   const userSocialLinks = socialLinks.map((link) => ({

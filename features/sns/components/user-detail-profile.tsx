@@ -19,7 +19,7 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
   const nickname = userDetail.attributes.nickname || '名無し';
   const avatarUrl = userDetail.avatar?.url || '/placeholder-product-image.png';
   const receivedFeedbackReviewsCount = userDetail.attributes.received_feedback_reviews_count || 0;
-  const isFollowing = userDetail.attributes.followed_by_me;
+  const isFollowing = userDetail.attributes.followed_by_me || false;
 
   // TODO:demoデータ。あとで置き換える
   const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];

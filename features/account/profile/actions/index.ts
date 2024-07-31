@@ -2,6 +2,7 @@
 
 import { apiClient } from '@/config/api-client';
 import { getAccessToken } from '@/features/auth/utils/session';
+import { User } from '@/features/users/types';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import { FormValues, UserAvatarSchema } from '../types';
@@ -33,7 +34,7 @@ export async function getAccount() {
     ...account,
     avatar: reshapeImage(avatar),
     socialLinks
-  };
+  } as User;
 }
 
 type UpdateAccountParams = FormValues;

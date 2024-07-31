@@ -33,7 +33,7 @@ export async function getFollowers({ page, unique_key }: GetFollowersParams) {
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
 
-  const reshapedFollowers = followers?.map((follower: any) => {
+  const reshapedFollowers = followers?.map((follower) => {
     const userAvatars = follower.relationships?.avatars?.data || [];
     const avatar =
       userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
@@ -76,7 +76,7 @@ export async function getFollowees({ page, unique_key }: GetFollowersParams) {
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
 
-  const reshapedFollowees = followees?.map((followee: any) => {
+  const reshapedFollowees = followees?.map((followee) => {
     const userAvatars = followee.relationships?.avatars?.data || [];
     const avatar =
       userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
