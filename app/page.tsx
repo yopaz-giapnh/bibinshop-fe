@@ -3,6 +3,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getBanners } from '@/features/banner/actions';
 import { CarouselBanner } from '@/features/banner/components/carousel-banner';
+import { StickyBanner } from '@/features/banner/components/sticky-banner';
 import { ProductOverviewByTaxon } from '@/features/product/components/product-overview-by-taxon';
 import { getTaxons } from '@/features/taxon/actions';
 import { TaxonList } from '@/features/taxon/components/taxon-list';
@@ -63,6 +64,7 @@ export default async function Page() {
           </div>
         </div>
       </div>
+      <StickyBanner />
     </div>
   );
 }
