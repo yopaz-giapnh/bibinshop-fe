@@ -38,19 +38,19 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
   useEffect(() => {
     const fetchConcerns = async () => {
       const result = await getConcerns();
-      if (result.skinType)
+      if (result && result.skinType)
         setSelectedSkinType(skinTypes.find((type) => type.value === result.skinType));
-      if (result.personalColor)
+      if (result && result.personalColor)
         setSelectedSkinColor(colors.find((color) => color.value === result.personalColor));
-      if (result.skinConcerns)
+      if (result && result.skinConcerns)
         setSelectedSkinConcerns(
           skinConcerns.filter((concern) => result.skinConcerns?.includes(concern.value[0]))
         );
-      if (result.hairConcerns)
+      if (result && result.hairConcerns)
         setSelectedHairConcerns(
           hairConcerns.filter((concern) => result.hairConcerns?.includes(concern.value[0]))
         );
-      if (result.healthConcerns)
+      if (result && result.healthConcerns)
         setSelectedHealthConcerns(
           healthConcerns.filter((concern) => result.healthConcerns?.includes(concern.value[0]))
         );
@@ -80,236 +80,252 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
     //params changed, should refresh search?
   }, [selectionVisible]);
 
+  // 検索バーが開いているときにスクロールさせてしまうとUIが崩れるので無効にする
+  useEffect(() => {
+    if (selectionVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectionVisible]);
+
   return (
     <div className="mt-[24px] flex w-full flex-col items-center justify-center px-[8px] md:flex-row md:justify-between">
-      <Command className="w-full bg-paleFrostBlue">
-        <CommandInput
-          readOnly
-          ref={ref}
-          placeholder={hasInput ? undefined : '例：普通肌・ニキビ・毛穴'}
-          className="overflow-x-auto overflow-y-hidden rounded-[44px] border-2 border-bibinBlue-100 bg-white-base md:w-2/3"
-          onFocus={openCommands}
-          value={hasInput ? ' ' : ''}
-          onBlur={() => {
-            setCloseTimeout(
-              setTimeout(async () => {
-                setSelectionVisible(false);
-              }, 150)
-            );
-          }}
-          // eslint-disable-next-line react/no-children-prop
-          children={
-            hasInput ? (
-              <div className="flex h-full items-center whitespace-nowrap">
-                {selectedSkinType && (
-                  <Pill
-                    text={selectedSkinType.text}
-                    onClick={() => ref.current?.focus()}
-                    onRemove={() => setSelectedSkinType(undefined)}
-                  />
-                )}
-                {selectedSkinColor && (
-                  <Pill
-                    text={selectedSkinColor.name}
-                    onClick={() => ref.current?.focus()}
-                    onRemove={() => setSelectedSkinColor(undefined)}
-                  />
-                )}
-                {selectedSkinConcerns?.map((concern, index) => (
-                  <Pill
+      {selectionVisible && <div className="fixed inset-0 z-10 bg-black-70 opacity-70 md:hidden" />}
+      <div className={`${selectionVisible ? 'relative z-20' : ''} w-full`}>
+        <Command className="w-full rounded-full bg-paleFrostBlue">
+          <CommandInput
+            readOnly
+            ref={ref}
+            placeholder={hasInput ? undefined : '例：普通肌・ニキビ・毛穴'}
+            className="scrollbar-hide overflow-x-auto overflow-y-hidden whitespace-nowrap rounded-[44px] border-2 border-bibinBlue-100 bg-white-base md:w-4/5 md:max-w-[80%]"
+            onFocus={openCommands}
+            value={hasInput ? ' ' : ''}
+            onBlur={() => {
+              setCloseTimeout(
+                setTimeout(async () => {
+                  setSelectionVisible(false);
+                }, 150)
+              );
+            }}
+            // eslint-disable-next-line react/no-children-prop
+            children={
+              hasInput ? (
+                <div className="flex h-full items-center whitespace-nowrap">
+                  {selectedSkinType && (
+                    <Pill
+                      text={selectedSkinType.text}
+                      onClick={() => ref.current?.focus()}
+                      onRemove={() => setSelectedSkinType(undefined)}
+                    />
+                  )}
+                  {selectedSkinColor && (
+                    <Pill
+                      text={selectedSkinColor.name}
+                      onClick={() => ref.current?.focus()}
+                      onRemove={() => setSelectedSkinColor(undefined)}
+                    />
+                  )}
+                  {selectedSkinConcerns?.map((concern, index) => (
+                    <Pill
+                      key={index}
+                      text={concern.text}
+                      onClick={() => ref.current?.focus()}
+                      onRemove={() =>
+                        setSelectedSkinConcerns(
+                          selectedSkinConcerns.filter((item) => item.value !== concern.value)
+                        )
+                      }
+                    />
+                  ))}
+                  {selectedHairConcerns?.map((concern, index) => (
+                    <Pill
+                      key={index}
+                      text={concern.text}
+                      onClick={() => ref.current?.focus()}
+                      onRemove={() =>
+                        setSelectedHairConcerns(
+                          selectedHairConcerns.filter((item) => item.value !== concern.value)
+                        )
+                      }
+                    />
+                  ))}
+                  {selectedHealthConcerns?.map((concern, index) => (
+                    <Pill
+                      key={index}
+                      text={concern.text}
+                      onClick={() => ref.current?.focus()}
+                      onRemove={() =>
+                        setSelectedHealthConcerns(
+                          selectedHealthConcerns.filter((item) => item.value !== concern.value)
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              ) : undefined
+            }
+          />
+          <div>
+            <CommandList
+              className={
+                'absolute left-0 w-full rounded-md bg-white-base px-4 pt-4 md:left-auto md:max-w-[80%] md:border-2 ' +
+                (selectionVisible ? 'max-h-[55vh] overflow-y-auto' : 'hidden')
+              }
+            >
+              <Typography className="p-[8px]" element="p" as="boldSmall">
+                肌タイプ
+              </Typography>
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {skinTypes.map((type, index) => (
+                  <Button
                     key={index}
-                    text={concern.text}
-                    onClick={() => ref.current?.focus()}
-                    onRemove={() =>
-                      setSelectedSkinConcerns(
-                        selectedSkinConcerns.filter((item) => item.value !== concern.value)
-                      )
+                    variant={selectedSkinType?.value == type.value ? 'secondary' : 'outline'}
+                    className={
+                      'm-1 border-2 p-6' +
+                      (selectedSkinType?.value == type.value ? ' border-bibinBlue-100 ' : '')
                     }
-                  />
+                    onClick={() => {
+                      clearTimeout(closeTimeout);
+                      ref.current?.focus();
+                      setSelectedSkinType(selectedSkinType?.value == type.value ? undefined : type);
+                    }}
+                  >
+                    {type.text}
+                  </Button>
                 ))}
-                {selectedHairConcerns?.map((concern, index) => (
-                  <Pill
+              </div>
+              <Typography className="p-[8px]" element="p" as="boldSmall">
+                パーソナルカラー
+              </Typography>
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {colors.map((type, index) => (
+                  <SkinButton
                     key={index}
-                    text={concern.text}
-                    onClick={() => ref.current?.focus()}
-                    onRemove={() =>
-                      setSelectedHairConcerns(
-                        selectedHairConcerns.filter((item) => item.value !== concern.value)
-                      )
-                    }
-                  />
-                ))}
-                {selectedHealthConcerns?.map((concern, index) => (
-                  <Pill
-                    key={index}
-                    text={concern.text}
-                    onClick={() => ref.current?.focus()}
-                    onRemove={() =>
-                      setSelectedHealthConcerns(
-                        selectedHealthConcerns.filter((item) => item.value !== concern.value)
-                      )
-                    }
+                    name={type.name}
+                    color={type.color}
+                    active={selectedSkinColor?.value == type.value}
+                    onClick={() => {
+                      clearTimeout(closeTimeout);
+                      ref.current?.focus();
+                      setSelectedSkinColor(
+                        selectedSkinColor?.value == type.value ? undefined : type
+                      );
+                    }}
                   />
                 ))}
               </div>
-            ) : undefined
-          }
-        />
-        <div>
-          <CommandList
-            className={
-              'absolute left-0 w-full rounded-md bg-white-base px-4 pt-4 md:left-auto md:max-w-[52%] md:border-2 ' +
-              (selectionVisible ? '' : ' hidden ')
-            }
-          >
-            <Typography className="p-[8px]" element="h3" as="boldXLarge">
-              肌質で検索
-            </Typography>
-            <Typography className="p-[8px]" element="p" as="boldSmall">
-              肌タイプ
-            </Typography>
-            <div className="grid grid-cols-2 md:grid-cols-4">
-              {skinTypes.map((type, index) => (
-                <Button
-                  key={index}
-                  variant={selectedSkinType?.value == type.value ? 'secondary' : 'outline'}
-                  className={
-                    'm-1 border-2 p-6' +
-                    (selectedSkinType?.value == type.value ? ' border-bibinBlue-100 ' : '')
-                  }
-                  onClick={() => {
-                    clearTimeout(closeTimeout);
-                    ref.current?.focus();
-                    setSelectedSkinType(selectedSkinType?.value == type.value ? undefined : type);
-                  }}
-                >
-                  {type.text}
-                </Button>
-              ))}
-            </div>
-            <Typography className="p-[8px]" element="p" as="boldSmall">
-              パーソナルカラー
-            </Typography>
-            <div className="grid grid-cols-2 md:grid-cols-4">
-              {colors.map((type, index) => (
-                <SkinButton
-                  key={index}
-                  name={type.name}
-                  color={type.color}
-                  active={selectedSkinColor?.value == type.value}
-                  onClick={() => {
-                    clearTimeout(closeTimeout);
-                    ref.current?.focus();
-                    setSelectedSkinColor(selectedSkinColor?.value == type.value ? undefined : type);
-                  }}
-                />
-              ))}
-            </div>
-            <Typography className="p-[8px]" element="p" as="boldSmall">
-              肌タイプ
-            </Typography>
-            <div className="grid grid-cols-2 md:grid-cols-4">
-              {skinConcerns.map((concern, index) => (
-                <Button
-                  key={index}
-                  variant={
-                    selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])
-                      ? 'secondary'
-                      : 'outline'
-                  }
-                  className={
-                    'm-1 border-2 p-6' +
-                    (selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])
-                      ? ' border-bibinBlue-100 '
-                      : '')
-                  }
-                  onClick={() => {
-                    clearTimeout(closeTimeout);
-                    ref.current?.focus();
-                    if (selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])) {
-                      setSelectedSkinConcerns(
-                        selectedSkinConcerns.filter((item) => item.value[0] !== concern.value[0])
-                      );
-                    } else {
-                      setSelectedSkinConcerns([...selectedSkinConcerns, concern]);
+              <Typography className="p-[8px]" element="p" as="boldSmall">
+                肌タイプ
+              </Typography>
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {skinConcerns.map((concern, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                      selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])
+                        ? 'secondary'
+                        : 'outline'
                     }
-                  }}
-                >
-                  {concern.text}
-                </Button>
-              ))}
-            </div>
-            <Typography className="p-[8px]" element="p" as="boldSmall">
-              頭皮・毛髪の悩み
-            </Typography>
-            <div className="grid grid-cols-2 md:grid-cols-4">
-              {hairConcerns.map((concern, index) => (
-                <Button
-                  key={index}
-                  variant={
-                    selectedHairConcerns?.find((c) => c.value[0] == concern.value[0])
-                      ? 'secondary'
-                      : 'outline'
-                  }
-                  className={
-                    'm-1 border-2 p-6' +
-                    (selectedHairConcerns?.find((c) => c.value[0] == concern.value[0])
-                      ? ' border-bibinBlue-100 '
-                      : '')
-                  }
-                  onClick={() => {
-                    clearTimeout(closeTimeout);
-                    ref.current?.focus();
-                    if (selectedHairConcerns.find((c) => c.value[0] == concern.value[0])) {
-                      setSelectedHairConcerns(
-                        selectedHairConcerns.filter((item) => item.value[0] !== concern.value[0])
-                      );
-                    } else {
-                      setSelectedHairConcerns([...selectedHairConcerns, concern]);
+                    className={
+                      'm-1 border-2 p-6' +
+                      (selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])
+                        ? ' border-bibinBlue-100 '
+                        : '')
                     }
-                  }}
-                >
-                  {concern.text}
-                </Button>
-              ))}
-            </div>
-            <Typography className="p-[8px]" element="p" as="boldSmall">
-              健康の悩み
-            </Typography>
-            <div className="grid grid-cols-2 md:grid-cols-4">
-              {healthConcerns.map((concern, index) => (
-                <Button
-                  key={index}
-                  variant={
-                    selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])
-                      ? 'secondary'
-                      : 'outline'
-                  }
-                  className={
-                    'm-1 border-2 p-6' +
-                    (selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])
-                      ? ' border-bibinBlue-100 '
-                      : '')
-                  }
-                  onClick={() => {
-                    clearTimeout(closeTimeout);
-                    ref.current?.focus();
-                    if (selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])) {
-                      setSelectedHealthConcerns(
-                        selectedHealthConcerns.filter((item) => item.value[0] !== concern.value[0])
-                      );
-                    } else {
-                      setSelectedHealthConcerns([...selectedHealthConcerns, concern]);
+                    onClick={() => {
+                      clearTimeout(closeTimeout);
+                      ref.current?.focus();
+                      if (selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])) {
+                        setSelectedSkinConcerns(
+                          selectedSkinConcerns.filter((item) => item.value[0] !== concern.value[0])
+                        );
+                      } else {
+                        setSelectedSkinConcerns([...selectedSkinConcerns, concern]);
+                      }
+                    }}
+                  >
+                    {concern.text}
+                  </Button>
+                ))}
+              </div>
+              <Typography className="p-[8px]" element="p" as="boldSmall">
+                頭皮・毛髪の悩み
+              </Typography>
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {hairConcerns.map((concern, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                      selectedHairConcerns?.find((c) => c.value[0] == concern.value[0])
+                        ? 'secondary'
+                        : 'outline'
                     }
-                  }}
-                >
-                  {concern.text}
-                </Button>
-              ))}
-            </div>
-          </CommandList>
-        </div>
-      </Command>
+                    className={
+                      'm-1 border-2 p-6' +
+                      (selectedHairConcerns?.find((c) => c.value[0] == concern.value[0])
+                        ? ' border-bibinBlue-100 '
+                        : '')
+                    }
+                    onClick={() => {
+                      clearTimeout(closeTimeout);
+                      ref.current?.focus();
+                      if (selectedHairConcerns.find((c) => c.value[0] == concern.value[0])) {
+                        setSelectedHairConcerns(
+                          selectedHairConcerns.filter((item) => item.value[0] !== concern.value[0])
+                        );
+                      } else {
+                        setSelectedHairConcerns([...selectedHairConcerns, concern]);
+                      }
+                    }}
+                  >
+                    {concern.text}
+                  </Button>
+                ))}
+              </div>
+              <Typography className="p-[8px]" element="p" as="boldSmall">
+                健康の悩み
+              </Typography>
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {healthConcerns.map((concern, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                      selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])
+                        ? 'secondary'
+                        : 'outline'
+                    }
+                    className={
+                      'm-1 border-2 p-6' +
+                      (selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])
+                        ? ' border-bibinBlue-100 '
+                        : '')
+                    }
+                    onClick={() => {
+                      clearTimeout(closeTimeout);
+                      ref.current?.focus();
+                      if (selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])) {
+                        setSelectedHealthConcerns(
+                          selectedHealthConcerns.filter(
+                            (item) => item.value[0] !== concern.value[0]
+                          )
+                        );
+                      } else {
+                        setSelectedHealthConcerns([...selectedHealthConcerns, concern]);
+                      }
+                    }}
+                  >
+                    {concern.text}
+                  </Button>
+                ))}
+              </div>
+            </CommandList>
+          </div>
+        </Command>
+      </div>
       <Select onValueChange={handleSortChange}>
         <SelectTrigger className="mt-[8px] h-[48px] w-[300px] rounded-full border-[1px] border-bibinBlue-100 bg-paleFrostBlue px-[24px] py-[4px] text-[14px] font-semibold text-bibinBlue-100 md:mt-0">
           {`並べ替え: ${sortOption}`}

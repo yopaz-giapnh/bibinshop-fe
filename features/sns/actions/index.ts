@@ -125,42 +125,53 @@ export async function unfollow({ unique_key }: { unique_key: string }) {
 }
 
 export async function getConcerns() {
-  const attributes = await getCurrentUserAttributes();
+  try {
+    const attributes = await getCurrentUserAttributes();
 
-  if (!attributes || !attributes.unique_key) {
-    throw new Error('User not logged in');
-  }
-  const { data, error } = await apiClient.GET('/api/v2/storefront/users/{unique_key}', {
-    params: {
-      path: {
-        unique_key: attributes.unique_key
-      },
-      query: {
-        include:
-          'user_profile.skin_type,user_profile.personal_color,user_profile.skin_concerns,user_profile.scalp_hair_concerns,user_profile.health_concerns'
-      }
+    if (!attributes || !attributes.unique_key) {
+      console.warn('User not logged in');
+      return null;
     }
-  });
 
-  if (error) {
-    throw error;
-  }
-  if (!data.included) {
-    throw new Error('No included data');
-  }
+    const { data, error } = await apiClient.GET('/api/v2/storefront/users/{unique_key}', {
+      params: {
+        path: {
+          unique_key: attributes.unique_key
+        },
+        query: {
+          include:
+            'user_profile.skin_type,user_profile.personal_color,user_profile.skin_concerns,user_profile.scalp_hair_concerns,user_profile.health_concerns'
+        }
+      }
+    });
 
-  const profile = data.included.filter(isUserProfile)[0];
-  if (!profile || !profile.attributes) {
-    throw new Error('No profile data');
-  }
+    if (error) {
+      console.error('Error fetching user data:', error);
+      return null;
+    }
 
-  return {
-    skinType: profile.attributes.skin_type,
-    personalColor: profile.attributes.personal_color,
-    skinConcerns: profile.attributes.skin_concerns,
-    hairConcerns: profile.attributes.scalp_hair_concerns,
-    healthConcerns: profile.attributes.health_concerns
-  };
+    if (!data.included) {
+      console.warn('No included data');
+      return null;
+    }
+
+    const profile = data.included.filter(isUserProfile)[0];
+    if (!profile || !profile.attributes) {
+      console.warn('No profile data');
+      return null;
+    }
+
+    return {
+      skinType: profile.attributes.skin_type,
+      personalColor: profile.attributes.personal_color,
+      skinConcerns: profile.attributes.skin_concerns,
+      hairConcerns: profile.attributes.scalp_hair_concerns,
+      healthConcerns: profile.attributes.health_concerns
+    };
+  } catch (error) {
+    console.error('Error in getConcerns:', error);
+    return null;
+  }
 }
 
 async function getCurrentUserAttributes() {
@@ -171,5 +182,11 @@ async function getCurrentUserAttributes() {
       }
     }
   });
+
+  if (error) {
+    console.error('Error get user data:', error);
+    return null;
+  }
+
   return data?.data?.attributes as { unique_key: string };
 }
