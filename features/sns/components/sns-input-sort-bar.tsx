@@ -84,10 +84,12 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
     <div className="mt-[24px] flex w-full flex-col items-center justify-center px-[8px] md:flex-row md:justify-between">
       <Command className="w-full bg-paleFrostBlue">
         <CommandInput
+          readOnly
           ref={ref}
           placeholder={hasInput ? undefined : '例：普通肌・ニキビ・毛穴'}
           className="overflow-x-auto overflow-y-hidden rounded-[44px] border-2 border-bibinBlue-100 bg-white-base md:w-2/3"
           onFocus={openCommands}
+          value={hasInput ? ' ' : ''}
           onBlur={() => {
             setCloseTimeout(
               setTimeout(async () => {
@@ -95,6 +97,7 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
               }, 150)
             );
           }}
+          // eslint-disable-next-line react/no-children-prop
           children={
             hasInput ? (
               <div className="flex h-full items-center whitespace-nowrap">
@@ -174,7 +177,7 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
                     'm-1 border-2 p-6' +
                     (selectedSkinType?.value == type.value ? ' border-bibinBlue-100 ' : '')
                   }
-                  onClick={(e) => {
+                  onClick={() => {
                     clearTimeout(closeTimeout);
                     ref.current?.focus();
                     setSelectedSkinType(selectedSkinType?.value == type.value ? undefined : type);
@@ -220,7 +223,7 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
                       ? ' border-bibinBlue-100 '
                       : '')
                   }
-                  onClick={(e) => {
+                  onClick={() => {
                     clearTimeout(closeTimeout);
                     ref.current?.focus();
                     if (selectedSkinConcerns.find((c) => c.value[0] == concern.value[0])) {
@@ -254,7 +257,7 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
                       ? ' border-bibinBlue-100 '
                       : '')
                   }
-                  onClick={(e) => {
+                  onClick={() => {
                     clearTimeout(closeTimeout);
                     ref.current?.focus();
                     if (selectedHairConcerns.find((c) => c.value[0] == concern.value[0])) {
@@ -288,7 +291,7 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
                       ? ' border-bibinBlue-100 '
                       : '')
                   }
-                  onClick={(e) => {
+                  onClick={() => {
                     clearTimeout(closeTimeout);
                     ref.current?.focus();
                     if (selectedHealthConcerns.find((c) => c.value[0] == concern.value[0])) {
