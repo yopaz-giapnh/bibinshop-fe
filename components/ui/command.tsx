@@ -43,8 +43,9 @@ const CommandInput = React.forwardRef<
     disableButton?: boolean;
     onHandleClick?: () => void;
   }
->(({ className, onHandleClick, disableButton, ...props }, ref) => (
+>(({ className, onHandleClick, disableButton, children, ...props }, ref) => (
   <div className={cn('flex items-center border-b pl-3 pr-0.5', className)} cmdk-input-wrapper="">
+    {children && <>{children}</>}
     <CommandPrimitive.Input
       ref={ref}
       className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-black-30 disabled:cursor-not-allowed disabled:opacity-50"
@@ -55,7 +56,7 @@ const CommandInput = React.forwardRef<
       type="button"
       disabled={disableButton}
       onClick={onHandleClick}
-      className={`flex h-10 w-[54px] items-center justify-center rounded-[24px] ${disableButton ? 'bg-gray-200' : 'bg-gradation'}`}
+      className={`ml-auto flex h-10 w-[54px] min-w-[54px] items-center justify-center rounded-[24px] ${disableButton ? 'bg-gray-200' : 'bg-gradation'}`}
     >
       <Search className="h-5 w-5 text-white-base" />
     </button>

@@ -5,7 +5,16 @@ import { Typography } from '@/components/ui/typography';
 import { logout } from '@/features/auth/actions';
 import { useIsPc } from '@/hooks/use-is-pc';
 import clsx from 'clsx';
-import { Bell, CreditCard, FileText, LogOut, MapPin, ShieldPlus, UserRound } from 'lucide-react';
+import {
+  Bell,
+  CreditCard,
+  FileText,
+  LogOut,
+  MapPin,
+  ShieldPlus,
+  UserRound,
+  Users
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -55,6 +64,11 @@ export default function AccountSideBar() {
       href: '/account/message',
       icon: <Bell className="h-6 w-6" color="black" />,
       label: 'メッセージ'
+    },
+    {
+      href: '/sns',
+      icon: <Users className="h-6 w-6" color="black" />,
+      label: 'bibin SNS'
     }
   ];
 

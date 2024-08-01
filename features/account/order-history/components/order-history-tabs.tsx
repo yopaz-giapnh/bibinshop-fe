@@ -57,8 +57,11 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
               <TabsTrigger
                 value={tab.value}
                 className="flex flex-1 flex-col items-center justify-center py-2 text-[14px] md:text-[20px]"
+                showBottomLine={false}
               >
-                <span>{tab.label}</span>
+                <span className={`${tab.value === tabState ? 'text-bibinBlue-100' : ''}`}>
+                  {tab.label}
+                </span>
                 <Typography
                   as="boldXLarge"
                   element="p"

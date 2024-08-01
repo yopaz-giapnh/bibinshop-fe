@@ -9,6 +9,7 @@ import {
   ProductIncludes,
   ProductSchema,
   ProductsListParameters,
+  PurchaseProductsListParameters,
   ShippingMethodIncludes,
   ShippingMethodSchema
 } from '../types';
@@ -47,6 +48,18 @@ export async function getProducts(params?: ProductsListParameters) {
     }),
     meta
   };
+}
+
+export async function getPurchasedProducts(params?: PurchaseProductsListParameters) {
+  const res = await getProducts({
+    query: {
+      'filter[ordered_user_ids]': params?.orderedUserId,
+      page: params?.page,
+      per_page: params?.perPage
+    }
+  });
+
+  return res;
 }
 
 export async function getProduct(product_slug: string) {

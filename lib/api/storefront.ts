@@ -700,6 +700,10 @@ export interface paths {
               data?: components['schemas']['PublicUser'][];
               meta?: components['schemas']['ListMeta'];
               links?: components['schemas']['ListLinks'];
+              included?: (
+                | components['schemas']['UserSocialLink']
+                | components['schemas']['UserAvatar']
+              )[];
             };
           };
         };
@@ -2505,10 +2509,21 @@ export interface components {
         following_me?: boolean;
         /** @description Indicates if the current user is following this user.  False if the current user is not signed in. */
         followed_by_me?: boolean;
+        /** @description Number of followers for this user */
+        followers_count?: number;
+        /** @description Number of users this user is following */
+        followees_count?: number;
+        nickname?: string;
       };
       relationships?: {
         user_profile?: {
           data?: components['schemas']['Relation'];
+        };
+        avatars?: {
+          data?: components['schemas']['UserAvatar'][];
+        };
+        recommended_products?: {
+          data?: components['schemas']['Product'][];
         };
       };
     };
@@ -5084,6 +5099,7 @@ export interface operations {
             data?: components['schemas']['PublicUser'][];
             meta?: components['schemas']['ListMeta'];
             links?: components['schemas']['ListLinks'];
+            included?: components['schemas']['UserAvatar'][];
           };
         };
       };
@@ -5114,6 +5130,7 @@ export interface operations {
             data?: components['schemas']['PublicUser'][];
             meta?: components['schemas']['ListMeta'];
             links?: components['schemas']['ListLinks'];
+            included?: components['schemas']['UserAvatar'][];
           };
         };
       };

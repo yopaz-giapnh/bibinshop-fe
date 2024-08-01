@@ -70,6 +70,14 @@
     text-decoration-thickness: 4px; /* 下線の太さを調整 */
     text-underline-offset: 8px; /* 下線と文字の間に隙間をあける */
   }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer base {

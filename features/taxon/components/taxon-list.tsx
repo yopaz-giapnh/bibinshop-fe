@@ -53,7 +53,6 @@ const ListItem = React.forwardRef<
         )}
         {...props}
       >
-        {/* TODO: bg-redあとで消す */}
         <Image
           src={imageUrl}
           alt={title}

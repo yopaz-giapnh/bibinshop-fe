@@ -2,16 +2,17 @@
 
 import { apiClient } from '@/config/api-client';
 import { getAccessToken } from '@/features/auth/utils/session';
+import { User } from '@/features/users/types';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import { FormValues, UserAvatarSchema } from '../types';
-import { isUserAvatarSchema } from '../utils';
+import { isSocialLinkSchema, isUserAvatarSchema } from '../utils';
 
 export async function getAccount() {
   const { data, error } = await apiClient.GET('/api/v2/storefront/account', {
     params: {
       query: {
-        include: 'avatars'
+        include: 'avatars,user_social_links'
       }
     },
     fetch: (request) => {
@@ -27,11 +28,13 @@ export async function getAccount() {
 
   // NOTE: 複数枚可能だが、現在は1枚しかない想定
   const avatar = included?.find(isUserAvatarSchema);
+  const socialLinks = included?.filter(isSocialLinkSchema);
 
   return {
     ...account,
-    avatar: reshapeImage(avatar)
-  };
+    avatar: reshapeImage(avatar),
+    socialLinks
+  } as User;
 }
 
 type UpdateAccountParams = FormValues;
@@ -96,5 +99,37 @@ export async function uploadAvatar(formData: FormData) {
     revalidateTag(TAGS.account);
   } catch (error) {
     console.error('Avatar upload failed:', error);
+  }
+}
+
+// プラットフォームの型を定義
+type SocialPlatform = 'INSTAGRAM' | 'FACEBOOK' | 'X';
+
+export async function updateSocialLink(url: string, platform: SocialPlatform) {
+  try {
+    const { error } = await apiClient.POST('/api/v2/storefront/account/social_links', {
+      body: {
+        user_social_link: {
+          url,
+          platform
+        }
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    revalidateTag(TAGS.account);
+
+    return {
+      success: true,
+      message: 'ソーシャルリンクが更新されました。'
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'ソーシャルリンクの更新に失敗しました。'
+    };
   }
 }
