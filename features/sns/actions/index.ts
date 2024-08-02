@@ -2,7 +2,16 @@
 
 import { apiClient } from '@/config/api-client';
 import { isUserAvatarSchema } from '@/features/account/profile/utils';
-import { isUserProfile } from '../utils';
+import { revalidateTag } from 'next/cache';
+import { TAGS } from '../constants';
+import {
+  HairConcern,
+  HealthConcern,
+  PersonalColor,
+  SkinConcern,
+  SkinType,
+  isUserProfile
+} from '../utils';
 
 // todo: add includes user tags
 const includes = 'avatars';
@@ -161,6 +170,8 @@ export async function getConcerns() {
       return null;
     }
 
+    revalidateTag(TAGS.concerns);
+
     return {
       skinType: profile.attributes.skin_type,
       personalColor: profile.attributes.personal_color,
@@ -189,4 +200,37 @@ async function getCurrentUserAttributes() {
   }
 
   return data?.data?.attributes as { unique_key: string };
+}
+
+type userProfileParams = {
+  user_profile: {
+    skin_type?: SkinType;
+    personal_color?: PersonalColor;
+    birthyear?: number;
+    skin_concerns?: SkinConcern;
+    scalp_hair_concerns?: HairConcern;
+    health_concerns?: HealthConcern;
+  };
+};
+
+export async function createUserProfile({ user_profile }: userProfileParams) {
+  const { error } = await apiClient.POST('/api/v2/storefront/account/profile', {
+    body: { user_profile }
+  });
+
+  if (error) {
+    throw error;
+  }
+}
+
+export async function updateUserProfile({ user_profile }: userProfileParams) {
+  const { error } = await apiClient.PATCH('/api/v2/storefront/account/profile', {
+    body: { user_profile }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  revalidateTag(TAGS.concerns);
 }

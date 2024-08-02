@@ -10,15 +10,23 @@ type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   goToBack: () => void;
   goToNext: () => void;
+  birthYear: number | undefined;
+  setBirthYear: Dispatch<SetStateAction<number | undefined>>;
 };
 
-const ProfileFormBirthdayModal = ({ isOpen, setIsOpen, goToBack, goToNext }: Props) => {
+const ProfileFormBirthdayModal = ({
+  isOpen,
+  setIsOpen,
+  goToBack,
+  goToNext,
+  birthYear,
+  setBirthYear
+}: Props) => {
   const [selectedGender, setSelectedGender] = useState('女性');
-  const [birthYear, setBirthYear] = useState('');
   const [isNextButtonActive, setIsNextButtonActive] = useState(false);
 
   useEffect(() => {
-    setIsNextButtonActive(birthYear.trim() !== '');
+    setIsNextButtonActive(birthYear !== undefined);
   }, [birthYear]);
 
   return (
@@ -101,8 +109,14 @@ const ProfileFormBirthdayModal = ({ isOpen, setIsOpen, goToBack, goToNext }: Pro
                 type="number"
                 placeholder="例：2000"
                 value={birthYear}
-                onChange={(e) => setBirthYear(e.target.value)}
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  if (inputValue.length <= 4) {
+                    setBirthYear(Number(inputValue));
+                  }
+                }}
                 className="w-full rounded-md border border-gray-200 p-4 text-sm"
+                maxLength={4}
               />
             </div>
           </div>

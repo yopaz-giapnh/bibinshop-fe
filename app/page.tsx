@@ -1,6 +1,7 @@
 import { Menu } from '@/components/layout/navbar/menu';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import * as session from '@/features/auth/utils/session';
 import { getBanners } from '@/features/banner/actions';
 import { CarouselBanner } from '@/features/banner/components/carousel-banner';
 import { StickyBanner } from '@/features/banner/components/sticky-banner';
@@ -12,6 +13,8 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 
 export default async function Page() {
+  const isSignedIn = await session.isSignedIn();
+
   return (
     <div className="h-full w-full">
       <div className="mx-auto flex w-full flex-col items-center pt-[73px] md:pt-[126px]">
@@ -64,7 +67,7 @@ export default async function Page() {
           </div>
         </div>
       </div>
-      <StickyBanner />
+      <StickyBanner isSignedIn={isSignedIn} />
     </div>
   );
 }

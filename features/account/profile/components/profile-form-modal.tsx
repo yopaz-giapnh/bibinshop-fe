@@ -2,62 +2,37 @@
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
+import { colors, skinConcerns as skinConcernOptions, skinTypes } from '@/features/sns/constants';
+import { PersonalColor, SkinConcern, SkinType } from '@/features/sns/utils';
 import { RadioGroup } from '@radix-ui/react-radio-group';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   nextTo: () => void;
+  setSkinType: Dispatch<SetStateAction<SkinType | undefined>>;
+  setPersonalColor: Dispatch<SetStateAction<PersonalColor | undefined>>;
+  setSkinConcerns: Dispatch<SetStateAction<SkinConcern[]>>;
+  skinType: SkinType | undefined;
+  personalColor: PersonalColor | undefined;
+  skinConcerns: SkinConcern[];
 };
 
-const ProfileFormModal = ({ isOpen, setIsOpen, nextTo }: Props) => {
-  const [skinType, setSkinType] = useState('普通肌');
-  const [personalColor, setPersonalColor] = useState('イエベ春タイプ');
-  const [skinConcerns, setSkinConcerns] = useState(['アトピー']);
-
-  const skinTypes = ['普通肌', '脂性肌', '乾燥肌', '混合肌'];
+const ProfileFormModal = ({
+  isOpen,
+  setIsOpen,
+  nextTo,
+  setSkinType,
+  setPersonalColor,
+  setSkinConcerns,
+  skinType,
+  personalColor,
+  skinConcerns
+}: Props) => {
   const personalColors = [
-    {
-      name: 'イエベ春タイプ',
-      description: '白い人は明るいアイボリーベージュ、日に焼けている人は明るい小麦色肌',
-      color: 'bg-[#F7D4C0]'
-    },
-    {
-      name: 'ブルベ夏タイプ',
-      description: '色の白い人はピンクベージュ、日焼けている人はソフトな健康肌',
-      color: 'bg-[#FFE0D8]'
-    },
-    {
-      name: 'イエベ秋タイプ',
-      description:
-        '白い人は黄味がかったベージュまたは蜂蜜のような色味、日焼けしている人は琥珀色の小麦色の方',
-      color: 'bg-[#FCE6CE]'
-    },
-    {
-      name: 'ブルベ冬タイプ',
-      description: '色の白い人はピンクの中の白、日焼けている人は赤味がない澄んだ肌色',
-      color: 'bg-[#FDEFEC]'
-    },
-    {
-      name: '',
-      description: 'よくわかりません',
-      color: ''
-    }
-  ];
-  const skinConcernOptions = [
-    'アトピー',
-    'ニキビ',
-    '敏感肌',
-    '美白/シミ',
-    '毛穴',
-    '皮脂/ブラックヘッド',
-    'クマ',
-    '乾燥肌',
-    'シワ/弾力',
-    '赤み',
-    '角質',
-    '該当なし'
+    ...colors,
+    { name: '', description: 'よくわかりません', color: '', value: 'UNKNOWN' }
   ];
 
   return (
@@ -65,7 +40,7 @@ const ProfileFormModal = ({ isOpen, setIsOpen, nextTo }: Props) => {
       <DialogDescription className="p-4">
         <DialogContent
           hideCloseButton
-          className="mx-auto max-h-[calc(100vh-32px)] w-[calc(100vw-32px)] max-w-[640px] overflow-y-auto rounded-lg bg-white-base p-4 shadow-md sm:p-6"
+          className="mx-auto h-[90%] max-h-[calc(100vh-32px)] w-[calc(100vw-32px)] max-w-[640px] overflow-y-auto rounded-lg bg-white-base p-4 shadow-md sm:p-6"
         >
           <h2 className="mb-2 text-center text-xl font-bold">肌質を入力する</h2>
           <p className="mb-6 text-center text-sm">
@@ -78,21 +53,21 @@ const ProfileFormModal = ({ isOpen, setIsOpen, nextTo }: Props) => {
               <RadioGroup
                 value={skinType}
                 onValueChange={(v) => {
-                  setSkinType(v);
+                  setSkinType(v as SkinType);
                 }}
                 className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
               >
                 {skinTypes.map((type) => (
                   <label
-                    key={type}
+                    key={type.value}
                     className={`flex cursor-pointer items-center rounded-[6px] px-4 py-4 text-sm ${
-                      skinType === type
+                      skinType === type.value
                         ? 'border-2 border-[#51B7FF] bg-[#F6FBFF] text-[#51B7FF]'
                         : 'bg-white text-black border border-gray-200'
                     }`}
                   >
-                    <RadioGroupItem value={type} id={type} className="focus mr-2" />
-                    {type}
+                    <RadioGroupItem value={type.value} id={type.value} className="focus mr-2" />
+                    {type.text}
                   </label>
                 ))}
               </RadioGroup>
@@ -104,7 +79,7 @@ const ProfileFormModal = ({ isOpen, setIsOpen, nextTo }: Props) => {
             <RadioGroup
               value={personalColor}
               onValueChange={(v) => {
-                setPersonalColor(v);
+                setPersonalColor(v as PersonalColor);
               }}
             >
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -112,26 +87,26 @@ const ProfileFormModal = ({ isOpen, setIsOpen, nextTo }: Props) => {
                   <>
                     {color.color && (
                       <label
-                        key={color.name}
+                        key={color.value}
                         className={`cursor-pointer rounded-lg p-4 text-left ${
-                          personalColor === color.name
+                          personalColor === color.value
                             ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
                             : 'bg-white border border-gray-200'
                         }`}
                       >
                         <div className="flex">
                           <div className="mr-2 flex flex-1 items-center justify-center">
-                            <RadioGroupItem value={color.name} id={color.color} className="" />
+                            <RadioGroupItem value={color.value} id={color.value} className="" />
                           </div>
                           <div className="flex flex-col items-center justify-center">
                             {color.color && (
                               <>
                                 <div className="flex flex-col items-center justify-center">
                                   <div
-                                    className={`h-12 w-12 rounded-full ${color.color} border border-gray-300`}
+                                    className={`h-12 w-12 rounded-full bg-[${color.color}] border border-gray-300`}
                                   />
                                   <span
-                                    className={`mt-2 text-sm font-bold ${personalColor === color.name ? 'text-[#51B7FF]' : 'text-black'}`}
+                                    className={`mt-2 text-sm font-bold ${personalColor === color.value ? 'text-[#51B7FF]' : 'text-black'}`}
                                   >
                                     {color.name}
                                   </span>
@@ -150,16 +125,16 @@ const ProfileFormModal = ({ isOpen, setIsOpen, nextTo }: Props) => {
               </div>
               <div
                 className={`mt-2 cursor-pointer rounded-lg p-4 text-left ${
-                  personalColor === personalColors[4].name
+                  personalColor === personalColors[4].value
                     ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
                     : 'bg-white border border-gray-200'
                 }`}
               >
-                <label key={personalColors[4].name} className="flex flex-row">
+                <label key={personalColors[4].value} className="flex flex-row">
                   <div className="flex-1">
                     <RadioGroupItem
-                      value={personalColors[4].name}
-                      id={personalColors[4].color}
+                      value={personalColors[4].value}
+                      id={personalColors[4].value}
                       className=""
                     />
                   </div>
@@ -176,21 +151,21 @@ const ProfileFormModal = ({ isOpen, setIsOpen, nextTo }: Props) => {
             <div className="flex flex-wrap gap-1">
               {skinConcernOptions.map((concern) => (
                 <button
-                  key={concern}
+                  key={concern.value[0]}
                   className={`w-[142px] rounded-[6px] px-4 py-4 text-sm ${
-                    skinConcerns.includes(concern)
+                    skinConcerns.includes(concern.value)
                       ? 'border-2 border-[#51B7FF] bg-[#F6FBFF] text-[#51B7FF]'
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (skinConcerns.includes(concern)) {
-                      setSkinConcerns(skinConcerns.filter((c) => c !== concern));
+                    if (skinConcerns.includes(concern.value)) {
+                      setSkinConcerns(skinConcerns.filter((c) => c !== concern.value));
                     } else {
-                      setSkinConcerns([...skinConcerns, concern]);
+                      setSkinConcerns([...skinConcerns, concern.value]);
                     }
                   }}
                 >
-                  {concern}
+                  {concern.text}
                 </button>
               ))}
             </div>
