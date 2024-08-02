@@ -1,5 +1,9 @@
 import { HairConcern, HealthConcern, PersonalColor, SkinConcern, SkinType } from '../utils';
 
+export const TAGS = {
+  concerns: 'concerns'
+};
+
 export type SkinTypeEntry = { text: string; value: SkinType };
 export const skinTypes: SkinTypeEntry[] = [
   { text: '普通肌', value: 'NORMAL' },
@@ -7,25 +11,35 @@ export const skinTypes: SkinTypeEntry[] = [
   { text: '脂性肌', value: 'OILY' },
   { text: '混合肌', value: 'COMBINATION' }
 ];
-export type SkinColorEntry = { name: string; color: string; value: PersonalColor };
+export type SkinColorEntry = {
+  name: string;
+  description: string;
+  color: string;
+  value: PersonalColor;
+};
 export const colors: SkinColorEntry[] = [
   {
     name: 'イエベ春タイプ',
+    description: '白い人は明るいアイボリーベージュ、日に焼けている人は明るい小麦色肌',
     color: '#F7D4C0',
     value: 'YELLOW_SPRING'
   },
   {
     name: 'ブルべ夏タイプ',
+    description: '色の白い人はピンクベージュ、日焼けている人はソフトな健康肌',
     color: '#FFE0D8',
     value: 'BLUE_SUMMER'
   },
   {
     name: 'イエベ秋タイプ',
+    description:
+      '白い人は黄味がかったベージュまたは蜂蜜のような色味、日焼けしている人は琥珀色の小麦色の方',
     color: '#FCE6CE',
     value: 'YELLOW_AUTUMN'
   },
   {
     name: 'ブルべ冬タイプ',
+    description: '色の白い人はピンクの中の白、日焼けている人は赤味がない澄んだ肌色',
     color: '#FDEFEC',
     value: 'BLUE_WINTER'
   }
