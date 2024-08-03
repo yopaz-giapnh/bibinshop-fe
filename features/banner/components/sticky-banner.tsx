@@ -56,8 +56,10 @@ export function StickyBanner({ isSignedIn }: Props) {
   useEffect(() => {
     fetchConcerns();
     if (concerns) return;
-    setOpen(true);
-  }, [concerns]);
+    //TODO: あとで直す
+    // setOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { toast } = useToast();
 

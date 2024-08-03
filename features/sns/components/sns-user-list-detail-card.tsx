@@ -4,6 +4,7 @@ import { Product } from '@/features/product/types';
 import { User } from '@/features/users/types';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getConcernTags } from '../utils';
 import FollowUnfollowButton from './follow-unfollow-button';
 
 type SnsUserListDetailCardProps = {
@@ -16,9 +17,8 @@ export async function SnsUserListDetailCard({ user, products }: SnsUserListDetai
   const uniqueKey = user.attributes.unique_key;
   const avatarUrl = user.avatar?.url || '/placeholder-product-image.png';
   const isFollowing = user.attributes.followed_by_me;
-
-  // TODO:demoデータ。あとで置き換える
-  const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];
+  const userProfileConcern = user.userProfile?.attributes;
+  const tags = getConcernTags(userProfileConcern);
 
   const Tag = ({ text }: { text: string }) => (
     <Typography

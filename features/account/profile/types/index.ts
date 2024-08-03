@@ -6,6 +6,7 @@ export type UserSchema = components['schemas']['User'] & components['schemas']['
 
 export type UserAvatarSchema = components['schemas']['UserAvatar'];
 export type UserSocialLinkSchema = components['schemas']['UserSocialLink'];
+export type UserProfileSchema = components['schemas']['UserProfile'];
 
 export type UserAvatarWithUrl = UserAvatarSchema & {
   url: string;

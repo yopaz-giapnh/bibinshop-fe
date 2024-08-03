@@ -15,8 +15,8 @@ export function SnsUserList() {
       try {
         const fetchedUsers = await getUsers({
           page: 1,
-          perPage: 25,
-          sortBy: sortBy,
+          perPage: 50,
+          sortBy,
           filter: {
             withoutSelf: true
           }

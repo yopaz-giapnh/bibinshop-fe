@@ -2,6 +2,7 @@ import { Typography } from '@/components/ui/typography';
 import { getReviews } from '@/features/review/actions';
 import { User } from '@/features/users/types';
 import Image from 'next/image';
+import { getConcernTags } from '../utils';
 import FollowUnfollowButton from './follow-unfollow-button';
 import { UserDetailProfileStats } from './user-detail-profile-stats';
 
@@ -20,9 +21,9 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
   const avatarUrl = userDetail.avatar?.url || '/placeholder-product-image.png';
   const receivedFeedbackReviewsCount = userDetail.attributes.received_feedback_reviews_count || 0;
   const isFollowing = userDetail.attributes.followed_by_me || false;
+  const userProfile = userDetail.userProfile?.[0]?.attributes;
 
-  // TODO:demoデータ。あとで置き換える
-  const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];
+  const tags = getConcernTags(userProfile);
 
   const socialLinks =
     userDetail.socialLinks?.map((link) => {

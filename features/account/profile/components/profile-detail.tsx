@@ -1,6 +1,8 @@
 import { Typography } from '@/components/ui/typography';
 import { UserDetailProfileStats } from '@/features/sns/components/user-detail-profile-stats';
 import { UserDetailTabs } from '@/features/sns/components/user-detail-tabs';
+import { getConcernTags } from '@/features/sns/utils';
+import { getUserDetails } from '@/features/users/actions';
 import Image from 'next/image';
 import { getAccount } from '../actions';
 import ProfileEditModal from './profile-edit-modal';
@@ -15,6 +17,7 @@ type Props = {
  */
 export default async function ProfileDetail({ isSpHomeProfile = false }: Props) {
   const account = await getAccount();
+  const currentUserProfile = await getUserDetails(account.attributes.unique_key);
   const reviewsCount = account.relationships.reviews?.data?.length || 0;
   const followersCount = account.attributes.followers_count || 0;
   const followeesCount = account.attributes.followees_count || 0;
@@ -22,9 +25,7 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
   const avatarUrl = account.avatar?.url || '/placeholder-product-image.png';
   const nickname = account.attributes.nickname || '名無し';
   const receivedFeedbackReviewsCount = account.attributes.received_feedback_reviews_count || 0;
-
-  // TODO:demoデータ。あとで置き換える
-  const tags = ['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴'];
+  const tags = getConcernTags(currentUserProfile.userProfile[0].attributes);
 
   const socialLinks = account?.socialLinks?.map((link) => {
     const platform = link?.attributes?.platform?.toLowerCase();
