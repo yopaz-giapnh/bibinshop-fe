@@ -97,28 +97,26 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
                 </button>
               </>
             )}
-            {(state === 'delivered' || state === 'shipped') && (
-              <Link
-                href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
-                  .map((slug) => `slug=${slug}`)
-                  .join('&')}`}
-                passHref
+            <Link
+              href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
+                .map((slug) => `slug=${slug}`)
+                .join('&')}`}
+              passHref
+            >
+              <button
+                type="button"
+                className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
               >
-                <button
-                  type="button"
-                  className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
+                <Typography
+                  as="bold"
+                  element="p"
+                  className="ml-[8px] text-[14px] text-bibinBlue-100"
                 >
-                  <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
-                  <Typography
-                    as="bold"
-                    element="p"
-                    className="ml-[8px] text-[14px] text-bibinBlue-100"
-                  >
-                    レビューを書く
-                  </Typography>
-                </button>
-              </Link>
-            )}
+                  レビューを書く
+                </Typography>
+              </button>
+            </Link>
           </div>
         )}
       </div>

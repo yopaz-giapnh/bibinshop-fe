@@ -2,7 +2,11 @@
 
 import { apiClient } from '@/config/api-client';
 import { UserAvatarSchema } from '@/features/account/profile/types';
-import { isSocialLinkSchema, isUserAvatarSchema } from '@/features/account/profile/utils';
+import {
+  isSocialLinkSchema,
+  isUserAvatarSchema,
+  isUserProfileSchema
+} from '@/features/account/profile/utils';
 import { getProducts } from '@/features/product/actions';
 
 export async function getUsers({
@@ -28,8 +32,8 @@ export async function getUsers({
     params: {
       query: {
         include: include
-          ? `${include},avatars,recommended_products`
-          : 'avatars,recommended_products',
+          ? `${include},avatars,recommended_products,user_profile`
+          : 'avatars,recommended_products,user_profile',
         'filter[skin_type]': filter?.skinType,
         'filter[personal_color]': filter?.personalColor,
         'filter[skin_concern]': filter?.skinConcern,
@@ -49,7 +53,8 @@ export async function getUsers({
   const { data: users, included } = data;
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
-  const socialLinks = included?.filter(isSocialLinkSchema);
+  const socialLinks = included?.filter(isSocialLinkSchema) || [];
+  const userProfiles = included?.filter(isUserProfileSchema) || [];
 
   // Fetch recommended products for all users
   const allRecommendedProductIds = users?.flatMap(
@@ -70,6 +75,9 @@ export async function getUsers({
     const avatar =
       userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
 
+    const userProfileId = user?.relationships?.user_profile?.data?.id;
+    const userProfile = userProfiles.find((profile) => profile.id === userProfileId);
+
     const userRecommendedProducts =
       user?.relationships?.recommended_products?.data
         ?.map((product) => productMap.get(product.id))
@@ -86,7 +94,8 @@ export async function getUsers({
           }
         : null,
       recommendedProducts: userRecommendedProducts,
-      socialLinks: userSocialLinks
+      socialLinks: userSocialLinks,
+      userProfile
     };
   });
 }
@@ -98,7 +107,7 @@ export async function getUserDetails(uniqueKey: string) {
         unique_key: uniqueKey
       },
       query: {
-        include: 'user_social_links,avatars,recommended_products'
+        include: 'user_social_links,avatars,recommended_products,user_profile'
       }
     }
   });
@@ -111,6 +120,7 @@ export async function getUserDetails(uniqueKey: string) {
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
   const socialLinks = included?.filter(isSocialLinkSchema) || [];
+  const userProfile = included?.filter(isUserProfileSchema) || [];
 
   const userAvatars = user?.relationships?.avatars?.data || [];
   const avatar =
@@ -147,6 +157,7 @@ export async function getUserDetails(uniqueKey: string) {
           url: avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url || null
         }
       : null,
+    userProfile,
     recommendedProducts: userRecommendedProducts,
     socialLinks: userSocialLinks
   };

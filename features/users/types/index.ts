@@ -1,3 +1,4 @@
+import { UserProfileSchema } from '@/features/account/profile/types';
 import { SocialLinkSchema } from '@/features/account/profile/utils';
 import { Product } from '@/features/product/types';
 import { components } from '@/lib/api/storefront';
@@ -30,4 +31,5 @@ export type User = Omit<UserSchema, 'relationships' | 'attributes'> & {
   avatar: UserAvatarWithUrl | undefined;
   recommendedProducts?: Product[];
   socialLinks?: SocialLinkSchema[];
+  userProfile?: UserProfileSchema[];
 };

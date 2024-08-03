@@ -5,7 +5,6 @@ import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Typography } from '@/components/ui/typography';
 import { useEffect, useRef, useState } from 'react';
-import { getConcerns } from '../actions';
 import {
   HairConcernEntry,
   HealthConcernEntry,
@@ -34,29 +33,6 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
     undefined
   );
   const ref = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const fetchConcerns = async () => {
-      const result = await getConcerns();
-      if (result && result.skinType)
-        setSelectedSkinType(skinTypes.find((type) => type.value === result.skinType));
-      if (result && result.personalColor)
-        setSelectedSkinColor(colors.find((color) => color.value === result.personalColor));
-      if (result && result.skinConcerns)
-        setSelectedSkinConcerns(
-          skinConcerns.filter((concern) => result.skinConcerns?.includes(concern.value[0]))
-        );
-      if (result && result.hairConcerns)
-        setSelectedHairConcerns(
-          hairConcerns.filter((concern) => result.hairConcerns?.includes(concern.value[0]))
-        );
-      if (result && result.healthConcerns)
-        setSelectedHealthConcerns(
-          healthConcerns.filter((concern) => result.healthConcerns?.includes(concern.value[0]))
-        );
-    };
-    fetchConcerns();
-  }, []);
 
   const hasInput =
     selectedSkinType ||

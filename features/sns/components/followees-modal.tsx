@@ -10,6 +10,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { getFollowees } from '../actions';
+import { getConcernTags, isUserProfile } from '../utils';
 import UserRow from './user-row';
 
 type Props = {
@@ -94,17 +95,25 @@ export const FolloweesModal = forwardRef<FolloweesModalRef, Props>(({ unique_key
             }}
           >
             <div className="grid grid-cols-1 divide-y divide-gray-200 md:mx-[16px]">
-              {data.map((item, idx) => (
-                <UserRow
-                  avatar={item?.avatar?.url || '/placeholder-product-image.png'}
-                  nickname={item?.attributes?.nickname ?? ''}
-                  unique_key={item?.attributes?.unique_key ?? ''}
-                  isFollowee={item?.attributes?.followed_by_me ?? false}
-                  tags={['普通肌', '肌色: イエベ春タイプ', 'ニキビ', '毛穴']}
-                  key={idx}
-                  userType={item?.type || ''}
-                />
-              ))}
+              {data.map((item, idx) => {
+                const userProfile = item?.userProfile;
+                const tags =
+                  userProfile && isUserProfile(userProfile)
+                    ? getConcernTags(userProfile.attributes)
+                    : [];
+
+                return (
+                  <UserRow
+                    avatar={item?.avatar?.url || '/placeholder-product-image.png'}
+                    nickname={item?.attributes?.nickname ?? ''}
+                    unique_key={item?.attributes?.unique_key ?? ''}
+                    isFollowee={item?.attributes?.followed_by_me ?? false}
+                    tags={tags}
+                    key={idx}
+                    userType={item?.type || ''}
+                  />
+                );
+              })}
             </div>
           </ScrollArea>
         </DialogContent>
