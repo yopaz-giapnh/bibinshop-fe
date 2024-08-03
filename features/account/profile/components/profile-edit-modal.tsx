@@ -138,6 +138,17 @@ export default function ProfileEditModal({ account }: Props) {
     }
   };
 
+  // URLからクエリパラメータを除去する関数
+  const removeQueryParams = (url: string): string => {
+    try {
+      const parsedUrl = new URL(url);
+      return `${parsedUrl.origin}${parsedUrl.pathname}`;
+    } catch (error) {
+      // URLのパースに失敗した場合は元の文字列をそのまま返す
+      return url;
+    }
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -274,10 +285,18 @@ export default function ProfileEditModal({ account }: Props) {
                           {...field}
                           type="url"
                           defaultValue={socialLinks.instagram}
+                          // HACK: インスタの共有リンクはデフォルトでクエリパラメータがついてるためクエリを削除する処理を追加した
                           onChange={(e) => {
-                            const value = e.target.value ? e.target.value : undefined;
-                            form.setValue('instagram', value);
+                            const rawValue = e.target.value;
+                            const cleanedValue = rawValue ? removeQueryParams(rawValue) : '';
+                            form.setValue('instagram', cleanedValue);
                             form.trigger('instagram');
+                          }}
+                          onBlur={(e) => {
+                            const rawValue = e.target.value;
+                            const cleanedValue = rawValue ? removeQueryParams(rawValue) : '';
+                            e.target.value = cleanedValue;
+                            field.onBlur();
                           }}
                         />
                       </FormControl>
@@ -299,8 +318,7 @@ export default function ProfileEditModal({ account }: Props) {
                           type="url"
                           defaultValue={socialLinks.x}
                           onChange={(e) => {
-                            const value = e.target.value ? e.target.value : undefined;
-                            form.setValue('x', value);
+                            form.setValue('x', e.target.value);
                             form.trigger('x');
                           }}
                         />
@@ -323,8 +341,7 @@ export default function ProfileEditModal({ account }: Props) {
                           type="url"
                           defaultValue={socialLinks.facebook}
                           onChange={(e) => {
-                            const value = e.target.value ? e.target.value : undefined;
-                            form.setValue('facebook', value);
+                            form.setValue('facebook', e.target.value);
                             form.trigger('facebook');
                           }}
                         />
