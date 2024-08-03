@@ -75,6 +75,9 @@ export async function getUsers({
     const avatar =
       userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
 
+    const userProfileId = user?.relationships?.user_profile?.data?.id;
+    const userProfile = userProfiles.find((profile) => profile.id === userProfileId);
+
     const userRecommendedProducts =
       user?.relationships?.recommended_products?.data
         ?.map((product) => productMap.get(product.id))
@@ -82,8 +85,6 @@ export async function getUsers({
 
     const userSocialLinks =
       socialLinks?.filter((link) => link?.relationships?.user?.data?.id === user.id) || [];
-
-    const userProfile = userProfiles?.find((profile) => profile.id === user.id);
 
     return {
       ...user,

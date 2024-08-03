@@ -1,7 +1,7 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
-import { isUserAvatarSchema } from '@/features/account/profile/utils';
+import { isUserAvatarSchema, isUserProfileSchema } from '@/features/account/profile/utils';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import {
@@ -14,7 +14,7 @@ import {
 } from '../utils';
 
 // todo: add includes user tags
-const includes = 'avatars';
+const includes = 'avatars,user_profile';
 
 type GetFollowersParams = {
   page: number;
@@ -41,11 +41,14 @@ export async function getFollowers({ page, unique_key }: GetFollowersParams) {
   const { data: followers, included } = data;
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
+  const userProfiles = included?.filter(isUserProfileSchema) || [];
 
   const reshapedFollowers = followers?.map((follower) => {
     const userAvatars = follower.relationships?.avatars?.data || [];
+    const userProfileId = follower.relationships?.user_profile?.data?.id;
     const avatar =
       userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
+    const userProfile = userProfiles.find((profile) => profile.id === userProfileId);
 
     return {
       ...follower,
@@ -54,7 +57,8 @@ export async function getFollowers({ page, unique_key }: GetFollowersParams) {
             ...avatar,
             url: `${avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url}`
           }
-        : undefined
+        : undefined,
+      userProfile: userProfile
     };
   });
 
@@ -84,11 +88,14 @@ export async function getFollowees({ page, unique_key }: GetFollowersParams) {
   const { data: followees, included } = data;
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
+  const userProfiles = included?.filter(isUserProfileSchema) || [];
 
   const reshapedFollowees = followees?.map((followee) => {
     const userAvatars = followee.relationships?.avatars?.data || [];
+    const userProfileId = followee.relationships?.user_profile?.data?.id;
     const avatar =
       userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
+    const userProfile = userProfiles.find((profile) => profile.id === userProfileId);
 
     return {
       ...followee,
@@ -97,7 +104,8 @@ export async function getFollowees({ page, unique_key }: GetFollowersParams) {
             ...avatar,
             url: `${avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url}`
           }
-        : undefined
+        : undefined,
+      userProfile: userProfile
     };
   });
 
