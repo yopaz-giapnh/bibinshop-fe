@@ -20,8 +20,15 @@ import {
 
 interface SnsInputSortBarProps {
   onSortChange: (sortBy: 'followers_asc' | 'followers_desc') => void;
+  onFilterChange: (filter: {
+    withoutSelf: boolean;
+    skinType: string;
+    personalColor: string;
+    skinConcern: string;
+    scalpHairConcern: string;
+  }) => void;
 }
-export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
+export function SnsInputSortBar({ onSortChange, onFilterChange }: SnsInputSortBarProps) {
   const [sortOption, setSortOption] = useState('フォロワー数(昇順)');
   const [selectionVisible, setSelectionVisible] = useState(false);
   const [selectedSkinType, setSelectedSkinType] = useState<SkinTypeEntry | undefined>(undefined);
@@ -68,12 +75,23 @@ export function SnsInputSortBar({ onSortChange }: SnsInputSortBarProps) {
     };
   }, [selectionVisible]);
 
+  const applyFilters = () => {
+    onFilterChange({
+      withoutSelf: true,
+      skinType: selectedSkinType?.value || '',
+      personalColor: selectedSkinColor?.value || '',
+      skinConcern: selectedSkinConcerns.map((concern) => concern.value[0]).join(','),
+      scalpHairConcern: selectedHairConcerns.map((concern) => concern.value[0]).join(',')
+    });
+  };
+
   return (
     <div className="mt-[24px] flex w-full flex-col items-center justify-center px-[8px] md:flex-row md:justify-between">
       {selectionVisible && <div className="fixed inset-0 z-10 bg-black-70 opacity-70 md:hidden" />}
       <div className={`${selectionVisible ? 'relative z-20' : ''} w-full`}>
         <Command className="w-full rounded-full bg-paleFrostBlue">
           <CommandInput
+            onHandleClick={applyFilters}
             readOnly
             ref={ref}
             placeholder={hasInput ? undefined : '例：普通肌・ニキビ・毛穴'}

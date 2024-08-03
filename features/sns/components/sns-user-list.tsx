@@ -9,6 +9,13 @@ import { SnsUserListDetailCard } from './sns-user-list-detail-card';
 export function SnsUserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [sortBy, setSortBy] = useState<'followers_asc' | 'followers_desc'>('followers_asc');
+  const [filter, setFilter] = useState({
+    withoutSelf: true,
+    skinType: '',
+    personalColor: '',
+    skinConcern: '',
+    scalpHairConcern: ''
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -17,9 +24,7 @@ export function SnsUserList() {
           page: 1,
           perPage: 50,
           sortBy,
-          filter: {
-            withoutSelf: true
-          }
+          filter
         });
         setUsers((fetchedUsers as User[]) || []);
       } catch (error) {
@@ -28,7 +33,7 @@ export function SnsUserList() {
     };
 
     fetchUsers();
-  }, [sortBy]);
+  }, [sortBy, filter]);
 
   // recommendedProductsが空でないユーザーのみをフィルタリング
   const haveRecommendedProductsUsers = users.filter(
@@ -37,7 +42,7 @@ export function SnsUserList() {
 
   return (
     <>
-      <SnsInputSortBar onSortChange={setSortBy} />
+      <SnsInputSortBar onSortChange={setSortBy} onFilterChange={setFilter} />
       <div className="mt-[24px] w-full space-y-4 overflow-y-auto">
         {haveRecommendedProductsUsers.map((user: User) => (
           <SnsUserListDetailCard
