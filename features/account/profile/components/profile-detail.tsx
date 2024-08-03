@@ -64,7 +64,7 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
             <UserDetailProfileStats
               reviewsCount={reviewsCount}
               followersCount={followersCount}
-              receivedFeedbackReviewsCount={4}
+              receivedFeedbackReviewsCount={receivedFeedbackReviewsCount}
               followeesCount={followeesCount}
               uniqueKey={userUniqueKey}
               tags={tags}
