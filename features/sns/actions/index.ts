@@ -22,6 +22,7 @@ type GetFollowersParams = {
 };
 
 export async function getFollowers({ page, unique_key }: GetFollowersParams) {
+  // no-cache is used to prevent the cache from being used when the user follows or unfollows
   const { data, error } = await apiClient.GET('/api/v2/storefront/users/{unique_key}/followers', {
     params: {
       path: {
@@ -31,7 +32,8 @@ export async function getFollowers({ page, unique_key }: GetFollowersParams) {
         page,
         include: includes
       }
-    }
+    },
+    cache: 'no-cache'
   });
 
   if (error) {
@@ -69,6 +71,7 @@ export async function getFollowers({ page, unique_key }: GetFollowersParams) {
 }
 
 export async function getFollowees({ page, unique_key }: GetFollowersParams) {
+  // no-cache is used to prevent the cache from being used when the user follows or unfollows
   const { data, error } = await apiClient.GET('/api/v2/storefront/users/{unique_key}/followees', {
     params: {
       path: {
@@ -78,7 +81,8 @@ export async function getFollowees({ page, unique_key }: GetFollowersParams) {
         page,
         include: includes
       }
-    }
+    },
+    cache: 'no-cache'
   });
 
   if (error) {

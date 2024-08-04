@@ -101,6 +101,7 @@ export async function getUsers({
 }
 
 export async function getUserDetails(uniqueKey: string) {
+  // no-cache is used to prevent the user's followers, possibly other includes, from being cached.
   const { data, error } = await apiClient.GET('/api/v2/storefront/users/{unique_key}', {
     params: {
       path: {
@@ -109,7 +110,8 @@ export async function getUserDetails(uniqueKey: string) {
       query: {
         include: 'user_social_links,avatars,recommended_products,user_profile'
       }
-    }
+    },
+    cache: 'no-cache'
   });
 
   if (error) {
