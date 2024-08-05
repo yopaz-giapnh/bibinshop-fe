@@ -90,7 +90,7 @@ export function SnsInputSortBar({ onSortChange, onFilterChange }: SnsInputSortBa
     <div className="mt-[24px] flex w-full flex-col items-center justify-center px-[8px] md:flex-row md:justify-between">
       {selectionVisible && <div className="fixed inset-0 z-10 bg-black-70 opacity-70 md:hidden" />}
       <div
-        className={`${selectionVisible ? 'relative z-20' : ''} flex w-full flex-col items-center md:flex-row`}
+        className={`${selectionVisible ? 'relative z-20' : ''} it flex w-full flex-col md:flex-row`}
       >
         <Command className="w-full rounded-full bg-paleFrostBlue">
           <CommandInput
