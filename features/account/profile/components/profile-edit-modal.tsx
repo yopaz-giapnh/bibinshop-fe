@@ -22,6 +22,8 @@ import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
+import { toast } from '@/components/ui/use-toast';
+import { Concerns } from '@/features/sns/constants';
 import {
   HairConcern,
   HealthConcern,
@@ -31,7 +33,7 @@ import {
 } from '@/features/sns/utils';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PencilRuler } from 'lucide-react';
+import { Check, PencilRuler } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
@@ -44,7 +46,7 @@ import ProfileFormModal from './profile-form-modal';
 
 type Props = {
   account: User;
-  concerns: any;
+  concerns: Concerns;
   skinTags: string[];
   hairTags: string[];
 };
@@ -80,46 +82,13 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
       sex: selectedSex,
       instagram: socialLinks.instagram || '',
       x: socialLinks.x || '',
-      facebook: socialLinks.facebook || '',
-      skinType,
-      personalColor,
-      skinConcerns: skinConcerns.flat(),
-      healthConcerns: healthConcerns.flat(),
-      hairConcerns: hairConcerns.flat(),
-      healthConcerns: healthConcerns.flat()
+      facebook: socialLinks.facebook || ''
     });
-  }, [
-    form,
-    nickname,
-    selectedSex,
-    socialLinks,
-    skinType,
-    personalColor,
-    skinConcerns,
-    healthConcerns,
-    hairConcerns
-  ]);
+  }, [form, nickname, selectedSex, socialLinks]);
 
   useEffect(() => {
     resetForm();
   }, [resetForm]);
-
-  useEffect(() => {
-    form.setValue('sex', selectedSex);
-    form.setValue('skinType', skinType);
-    form.setValue('personalColor', personalColor);
-    form.setValue('skinConcerns', skinConcerns.flat());
-    form.setValue('healthConcerns', healthConcerns.flat());
-  }, [
-    sex,
-    skinType,
-    personalColor,
-    skinConcerns,
-    healthConcerns,
-    form.formState.isValid,
-    form,
-    selectedSex
-  ]);
 
   useEffect(() => {
     const links: Record<string, string> = {};
@@ -151,6 +120,10 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
 
       setIsOpen(false);
       resetForm();
+      toast({
+        title: 'プロフィールを更新しました',
+        icon: <Check className="h-6 w-6" />
+      });
     }
   };
 
@@ -379,31 +352,32 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   />
                 </div>
                 <div className="mt-[16px] w-full">
-                  <FormItem className="w-full">
-                    <FormLabel className="flex h-[24px] items-center">
+                  <div className="flex h-[24px] items-center">
+                    <Typography as="bold" element="p" className="text-[14px] text-black-90">
                       肌の悩み
-                      <div
-                        className="flex items-center"
-                        onClick={() => setOpenProfileFormModal(true)}
-                      >
-                        <PencilSquareIcon className="ml-2" width={24} height={24} color="#51B7FF" />
-                        <Typography className="text-bibinBlue-100" element="p">
-                          編集
-                        </Typography>
-                      </div>
-                    </FormLabel>
-                    <div className="mx-[8px] mb-4 flex max-w-screen-sm flex-wrap md:mx-0">
-                      {skinTags.map((tag, index) => (
-                        <Tag key={index} text={tag} />
-                      ))}
+                    </Typography>
+                    <div
+                      className="flex items-center"
+                      onClick={() => setOpenProfileFormModal(true)}
+                    >
+                      <PencilSquareIcon className="ml-2" width={24} height={24} color="#51B7FF" />
+                      <Typography className="text-bibinBlue-100" element="p">
+                        編集
+                      </Typography>
                     </div>
-                    <FormMessage />
-                  </FormItem>
+                  </div>
+                  <div className="mx-[8px] mb-4 flex max-w-screen-sm flex-wrap md:mx-0">
+                    {skinTags.map((tag, index) => (
+                      <Tag key={index} text={tag} />
+                    ))}
+                  </div>
                 </div>
                 <div className="mt-[16px] w-full">
-                  <FormItem className="w-full">
-                    <FormLabel className="flex h-[24px] items-center">
-                      頭皮・毛髪の悩み、健康の悩み
+                  <div className="mt-[16px] w-full">
+                    <div className="flex h-[24px] items-center">
+                      <Typography as="bold" element="p" className="text-[14px] text-black-90">
+                        頭皮・毛髪の悩み、健康の悩み
+                      </Typography>
                       <div
                         className="flex items-center"
                         onClick={() => setOpenProfileFormHairModal(true)}
@@ -413,14 +387,13 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                           編集
                         </Typography>
                       </div>
-                    </FormLabel>
+                    </div>
                     <div className="mx-[8px] mb-4 flex max-w-screen-sm flex-wrap md:mx-0">
                       {hairTags.map((tag, index) => (
                         <Tag key={index} text={tag} />
                       ))}
                     </div>
-                    <FormMessage />
-                  </FormItem>
+                  </div>
                 </div>
                 <div className="mt-[16px] w-full">
                   <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -447,6 +420,7 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
         }}
         hairConcerns={hairConcerns}
         healthConcerns={healthConcerns}
+        concerns={concerns}
       />
       <ProfileFormHairModal
         isOpen={openProfileFormHairModal}
@@ -465,6 +439,7 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
         personalColor={personalColor}
         skinConcerns={skinConcerns}
         isProfileEdit
+        concerns={concerns}
       />
     </>
   );

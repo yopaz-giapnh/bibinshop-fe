@@ -1,7 +1,8 @@
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
-import { updateUserProfile } from '@/features/sns/actions';
+import { createUserProfile, updateUserProfile } from '@/features/sns/actions';
 import {
+  Concerns,
   hairConcerns as hairConcernOptions,
   healthConcerns as healthConcernOptions
 } from '@/features/sns/constants';
@@ -28,6 +29,7 @@ type Props = {
   personalColor: PersonalColor | undefined;
   skinConcerns: SkinConcern[];
   isProfileEdit?: boolean;
+  concerns: Concerns | undefined;
 };
 
 const ProfileFormHairModal: React.FC<Props> = ({
@@ -42,24 +44,26 @@ const ProfileFormHairModal: React.FC<Props> = ({
   skinType,
   personalColor,
   skinConcerns,
-  isProfileEdit
+  isProfileEdit,
+  concerns
 }) => {
   const handleUpdateProfile = async () => {
-    const skinConcernsFlat = skinConcerns.flat();
-    const hairConcernsFlat = hairConcerns.flat();
-    const healthConcernsFlat = healthConcerns.flat();
+    const userProfile = {
+      user_profile: {
+        skin_type: skinType,
+        personal_color: personalColor,
+        skin_concerns: skinConcerns.flat(),
+        scalp_hair_concerns: hairConcerns.flat(),
+        health_concerns: healthConcerns.flat()
+      }
+    };
 
     try {
-      await updateUserProfile({
-        user_profile: {
-          skin_type: skinType,
-          personal_color: personalColor,
-          skin_concerns: skinConcernsFlat,
-          scalp_hair_concerns: hairConcernsFlat,
-          health_concerns: healthConcernsFlat
-        }
-      });
-      setIsOpen(false);
+      if (concerns) {
+        await updateUserProfile(userProfile);
+      } else {
+        await createUserProfile(userProfile);
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -78,14 +82,12 @@ const ProfileFormHairModal: React.FC<Props> = ({
               <span className="ml-2 text-sm font-bold">戻る</span>
             </button>
           </div>
-
           <h2 className="mb-6 text-center text-xl font-bold">頭皮・毛髪の悩み、健康の悩み</h2>
           {!isProfileEdit && (
             <p className="mb-6 text-center text-sm">
               あなたの悩みに合った商品をおすすめするために、以下の質問にお答えください。
             </p>
           )}
-
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">頭皮・毛髪の悩みを教えてください</h3>
             <div className="flex flex-wrap gap-2">
@@ -110,7 +112,6 @@ const ProfileFormHairModal: React.FC<Props> = ({
               ))}
             </div>
           </div>
-
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">健康の悩みを教えてください</h3>
             <div className="flex flex-wrap gap-2">
@@ -135,7 +136,6 @@ const ProfileFormHairModal: React.FC<Props> = ({
               ))}
             </div>
           </div>
-
           <div className="flex flex-col items-center">
             <button
               className="h-12 w-full max-w-[392px] rounded-full bg-gradient-to-r from-[#51B7FF] to-[#5CE686] text-sm font-bold sm:h-[56px] sm:text-base"

@@ -163,7 +163,7 @@ export async function getConcerns() {
           include:
             'user_profile.skin_type,user_profile.personal_color,user_profile.skin_concerns,user_profile.scalp_hair_concerns,user_profile.health_concerns'
         },
-        fetch: (request: any) => {
+        fetch: (request: Request) => {
           return fetch(request, { next: { tags: [TAGS.concerns] } });
         }
       }
@@ -184,8 +184,6 @@ export async function getConcerns() {
       console.warn('No profile data');
       return null;
     }
-
-    revalidateTag(TAGS.concerns);
 
     return {
       skinType: profile.attributes.skin_type,
@@ -236,6 +234,8 @@ export async function createUserProfile({ user_profile }: userProfileParams) {
   if (error) {
     throw error;
   }
+
+  revalidateTag(TAGS.concerns);
 }
 
 export async function updateUserProfile({ user_profile }: userProfileParams) {

@@ -3,8 +3,13 @@
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
-import { updateUserProfile } from '@/features/sns/actions';
-import { colors, skinConcerns as skinConcernOptions, skinTypes } from '@/features/sns/constants';
+import { createUserProfile, updateUserProfile } from '@/features/sns/actions';
+import {
+  Concerns,
+  colors,
+  skinConcerns as skinConcernOptions,
+  skinTypes
+} from '@/features/sns/constants';
 import {
   HairConcern,
   HealthConcern,
@@ -29,6 +34,7 @@ type Props = {
   hairConcerns: HairConcern[];
   healthConcerns: HealthConcern[];
   isProfileEdit?: boolean;
+  concerns: Concerns | undefined;
 };
 
 const ProfileFormModal = ({
@@ -43,28 +49,31 @@ const ProfileFormModal = ({
   skinConcerns,
   isProfileEdit,
   hairConcerns,
-  healthConcerns
+  healthConcerns,
+  concerns
 }: Props) => {
   const personalColors = [
     ...colors,
     { name: '', description: 'よくわかりません', color: '', value: 'UNKNOWN' }
   ];
 
-  const handleUpdateProfie = async () => {
-    const skinConcernsFlat = skinConcerns.flat();
-    const hairConcernsFlat = hairConcerns.flat();
-    const healthConcernsFlat = healthConcerns.flat();
+  const handleUpdateProfile = async () => {
+    const userProfile = {
+      user_profile: {
+        skin_type: skinType,
+        personal_color: personalColor,
+        skin_concerns: skinConcerns.flat(),
+        scalp_hair_concerns: hairConcerns.flat(),
+        health_concerns: healthConcerns.flat()
+      }
+    };
 
     try {
-      await updateUserProfile({
-        user_profile: {
-          skin_type: skinType,
-          personal_color: personalColor,
-          skin_concerns: skinConcernsFlat,
-          scalp_hair_concerns: hairConcernsFlat,
-          health_concerns: healthConcernsFlat
-        }
-      });
+      if (concerns) {
+        await updateUserProfile(userProfile);
+      } else {
+        await createUserProfile(userProfile);
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -122,7 +131,6 @@ const ProfileFormModal = ({
               </RadioGroup>
             </div>
           </div>
-
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">パーソナルカラーを教えてください</h3>
             <RadioGroup
@@ -194,7 +202,6 @@ const ProfileFormModal = ({
               </div>
             </RadioGroup>
           </div>
-
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">肌の悩みを教えてください</h3>
             <div className="flex flex-wrap gap-1">
@@ -219,14 +226,13 @@ const ProfileFormModal = ({
               ))}
             </div>
           </div>
-
           <div className="flex flex-col items-center">
             <button
               className="h-12 w-full max-w-[392px] rounded-full bg-gradient-to-r from-[#51B7FF] to-[#5CE686] text-sm font-bold sm:h-[56px] sm:text-base"
               onClick={() => {
                 setIsOpen(false);
                 {
-                  !isProfileEdit ? nextTo() : handleUpdateProfie();
+                  !isProfileEdit ? nextTo() : handleUpdateProfile();
                 }
               }}
             >

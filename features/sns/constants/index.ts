@@ -5,6 +5,14 @@ export const TAGS = {
   account: 'account'
 };
 
+export type Concerns = {
+  skinType?: SkinType;
+  personalColor?: PersonalColor;
+  skinConcerns?: SkinConcern[];
+  hairConcerns?: HairConcern[];
+  healthConcerns?: HealthConcern[];
+};
+
 export type SkinTypeEntry = { text: string; value: NonNullable<SkinType> };
 export const skinTypes: SkinTypeEntry[] = [
   { text: '普通肌', value: 'NORMAL' },
