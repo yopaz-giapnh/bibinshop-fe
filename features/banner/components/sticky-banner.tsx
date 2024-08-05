@@ -20,9 +20,10 @@ import { useEffect, useState } from 'react';
 type Concerns = {
   skinType?: SkinType;
   personalColor?: PersonalColor;
-  skinConcerns?: SkinConcern[];
-  hairConcerns?: HairConcern[];
-  healthConcerns?: HealthConcern[];
+  //concerns are arrays
+  skinConcerns?: SkinConcern;
+  hairConcerns?: HairConcern;
+  healthConcerns?: HealthConcern;
 };
 
 type Props = {
@@ -46,6 +47,7 @@ export function StickyBanner({ isSignedIn }: Props) {
   const fetchConcerns = async () => {
     try {
       const data = await getConcerns();
+      if (!data) throw new Error('Concerns data not found');
       //TODO: あとで直す
       setConcerns(data);
     } catch (error) {
