@@ -2241,7 +2241,8 @@ export interface components {
         /** @example Doe */
         review?: string | null;
         created_at?: components['schemas']['Timestamp'];
-        is_feeback_review?: boolean;
+        /** @example 1 */
+        feedback_id?: string | null;
       };
       relationships: {
         user?: {

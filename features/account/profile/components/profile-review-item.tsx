@@ -17,7 +17,7 @@ type ReviewProps = {
 };
 
 export function ProfileReviewItem({ review }: ReviewProps) {
-  const [isFeedback, setIsFeedback] = useState(review.attributes.is_feeback_review);
+  const [isFeedback, setIsFeedback] = useState(!!review.attributes.feedback_id);
   const [account, setAccount] = useState<User | null>(null);
   const isCurrentUser = account?.id === review?.relationships?.user?.data?.id;
 
@@ -37,11 +37,17 @@ export function ProfileReviewItem({ review }: ReviewProps) {
   const handleFeedbackToggle = async () => {
     try {
       if (isFeedback) {
-        await removeReviewFeedback({ review_id: review.id, id: review.id });
+        const feedbackId = review.attributes.feedback_id;
+        if (feedbackId) {
+          await removeReviewFeedback({ review_id: review.id, id: feedbackId });
+          setIsFeedback(false);
+        } else {
+          return;
+        }
       } else {
         await addReviewFeedback({ review_id: review.id });
+        setIsFeedback(true);
       }
-      setIsFeedback(!isFeedback);
     } catch (error) {
       console.error('Error toggling feedback:', error);
     }

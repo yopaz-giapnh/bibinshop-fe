@@ -214,6 +214,7 @@ export async function addReviewFeedback({ review_id }: { review_id: string }) {
       throw error;
     }
 
+    revalidateTag(TAGS.reviews);
     return {
       success: true,
       message: 'フィードバックを追加しました'
@@ -244,6 +245,7 @@ export async function removeReviewFeedback({ review_id, id }: { review_id: strin
     if (error) {
       throw error;
     }
+    revalidateTag(TAGS.reviews);
 
     return {
       success: true,
