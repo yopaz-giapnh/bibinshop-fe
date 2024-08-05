@@ -40,6 +40,7 @@ export function SnsInputSortBar({ onSortChange, onFilterChange }: SnsInputSortBa
     undefined
   );
   const ref = useRef<HTMLInputElement>(null);
+  const cRef = useRef<HTMLDivElement>(null);
 
   const hasInput =
     selectedSkinType ||
@@ -88,7 +89,9 @@ export function SnsInputSortBar({ onSortChange, onFilterChange }: SnsInputSortBa
   return (
     <div className="mt-[24px] flex w-full flex-col items-center justify-center px-[8px] md:flex-row md:justify-between">
       {selectionVisible && <div className="fixed inset-0 z-10 bg-black-70 opacity-70 md:hidden" />}
-      <div className={`${selectionVisible ? 'relative z-20' : ''} w-full`}>
+      <div
+        className={`${selectionVisible ? 'relative z-20' : ''} flex w-full flex-col items-center md:flex-row`}
+      >
         <Command className="w-full rounded-full bg-paleFrostBlue">
           <CommandInput
             onHandleClick={applyFilters}
@@ -163,12 +166,18 @@ export function SnsInputSortBar({ onSortChange, onFilterChange }: SnsInputSortBa
               ) : undefined
             }
           />
-          <div>
-            <CommandList
+          <CommandList className="z-20">
+            <div
               className={
-                'absolute left-0 w-full rounded-md bg-white-base px-4 pt-4 md:left-auto md:max-w-[80%] md:border-2 ' +
+                'absolute left-0 w-full rounded-md bg-white-base px-4 pt-4 md:left-auto md:border-2 ' +
                 (selectionVisible ? 'max-h-[55vh] overflow-y-auto' : 'hidden')
               }
+              style={{
+                width:
+                  cRef.current && cRef.current.clientWidth > 992
+                    ? `${cRef.current.clientWidth * 0.8}px`
+                    : '100%'
+              }}
             >
               <Typography className="p-[8px]" element="p" as="boldSmall">
                 肌タイプ
@@ -316,19 +325,20 @@ export function SnsInputSortBar({ onSortChange, onFilterChange }: SnsInputSortBa
                   </Button>
                 ))}
               </div>
-            </CommandList>
-          </div>
+            </div>
+          </CommandList>
         </Command>
+
+        <Select onValueChange={handleSortChange}>
+          <SelectTrigger className="mt-[8px] h-[48px] w-[300px] rounded-full border-[1px] border-bibinBlue-100 bg-paleFrostBlue px-[24px] py-[4px] text-[14px] font-semibold text-bibinBlue-100 md:mt-0">
+            {`並べ替え: ${sortOption}`}
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">フォロワー数(昇順)</SelectItem>
+            <SelectItem value="2">フォロワー数(降順)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <Select onValueChange={handleSortChange}>
-        <SelectTrigger className="mt-[8px] h-[48px] w-[300px] rounded-full border-[1px] border-bibinBlue-100 bg-paleFrostBlue px-[24px] py-[4px] text-[14px] font-semibold text-bibinBlue-100 md:mt-0">
-          {`並べ替え: ${sortOption}`}
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="1">フォロワー数(昇順)</SelectItem>
-          <SelectItem value="2">フォロワー数(降順)</SelectItem>
-        </SelectContent>
-      </Select>
     </div>
   );
 }
@@ -341,7 +351,7 @@ type PillParams = {
 function Pill({ text, onRemove, onClick }: PillParams) {
   return (
     <Typography
-      className="mx-1 flex h-8 items-center rounded-full bg-[#D9F0FF] pl-2"
+      className="mx-1 flex h-8 items-center whitespace-nowrap rounded-full bg-[#D9F0FF] pl-2"
       element="div"
       as="xSmall"
       onClick={onClick}
