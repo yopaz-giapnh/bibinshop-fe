@@ -4,7 +4,7 @@ export const TAGS = {
   concerns: 'concerns'
 };
 
-export type SkinTypeEntry = { text: string; value: SkinType };
+export type SkinTypeEntry = { text: string; value: NonNullable<SkinType> };
 export const skinTypes: SkinTypeEntry[] = [
   { text: '普通肌', value: 'NORMAL' },
   { text: '乾燥肌', value: 'DRY' },
@@ -15,7 +15,7 @@ export type SkinColorEntry = {
   name: string;
   description: string;
   color: string;
-  value: PersonalColor;
+  value: NonNullable<PersonalColor>;
 };
 export const colors: SkinColorEntry[] = [
   {
