@@ -8,6 +8,7 @@ import {
   isUserProfileSchema
 } from '@/features/account/profile/utils';
 import { getProducts } from '@/features/product/actions';
+import { TAGS } from '../constants';
 
 export async function getUsers({
   include,
@@ -111,7 +112,10 @@ export async function getUserDetails(uniqueKey: string) {
         include: 'user_social_links,avatars,recommended_products,user_profile'
       }
     },
-    cache: 'no-cache'
+    cache: 'no-cache',
+    fetch: (request) => {
+      return fetch(request, { next: { tags: [TAGS.users] } });
+    }
   });
 
   if (error) {

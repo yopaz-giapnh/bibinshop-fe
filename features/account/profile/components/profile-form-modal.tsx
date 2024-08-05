@@ -1,10 +1,19 @@
 'use client';
+
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
+import { updateUserProfile } from '@/features/sns/actions';
 import { colors, skinConcerns as skinConcernOptions, skinTypes } from '@/features/sns/constants';
-import { PersonalColor, SkinConcern, SkinType } from '@/features/sns/utils';
+import {
+  HairConcern,
+  HealthConcern,
+  PersonalColor,
+  SkinConcern,
+  SkinType
+} from '@/features/sns/utils';
 import { RadioGroup } from '@radix-ui/react-radio-group';
+import { ChevronLeft } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 
 type Props = {
@@ -17,6 +26,9 @@ type Props = {
   skinType: SkinType | undefined;
   personalColor: PersonalColor | undefined;
   skinConcerns: SkinConcern[];
+  hairConcerns: HairConcern[];
+  healthConcerns: HealthConcern[];
+  isProfileEdit?: boolean;
 };
 
 const ProfileFormModal = ({
@@ -28,12 +40,35 @@ const ProfileFormModal = ({
   setSkinConcerns,
   skinType,
   personalColor,
-  skinConcerns
+  skinConcerns,
+  isProfileEdit,
+  hairConcerns,
+  healthConcerns
 }: Props) => {
   const personalColors = [
     ...colors,
     { name: '', description: 'よくわかりません', color: '', value: 'UNKNOWN' }
   ];
+
+  const handleUpdateProfie = async () => {
+    const skinConcernsFlat = skinConcerns.flat();
+    const hairConcernsFlat = hairConcerns.flat();
+    const healthConcernsFlat = healthConcerns.flat();
+
+    try {
+      await updateUserProfile({
+        user_profile: {
+          skin_type: skinType,
+          personal_color: personalColor,
+          skin_concerns: skinConcernsFlat,
+          scalp_hair_concerns: hairConcernsFlat,
+          health_concerns: healthConcernsFlat
+        }
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -42,11 +77,25 @@ const ProfileFormModal = ({
           hideCloseButton
           className="mx-auto h-[90%] max-h-[calc(100vh-32px)] w-[calc(100vw-32px)] max-w-[640px] overflow-y-auto rounded-lg bg-white-base p-4 shadow-md sm:p-6"
         >
+          {isProfileEdit && (
+            <div className="w-full">
+              <button
+                className="flex items-center text-gray-500"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                <span className="ml-2 text-sm font-bold">戻る</span>
+              </button>
+            </div>
+          )}
           <h2 className="mb-2 text-center text-xl font-bold">肌質を入力する</h2>
-          <p className="mb-6 text-center text-sm">
-            登録が完了しました！肌質を入力すると、肌質に合った商品をおすすめできます！
-          </p>
-
+          {!isProfileEdit && (
+            <p className="mb-6 text-center text-sm">
+              登録が完了しました！肌質を入力すると、肌質に合った商品をおすすめできます！
+            </p>
+          )}
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">どんな肌タイプですか？</h3>
             <div className="flex flex-wrap gap-2">
@@ -176,21 +225,25 @@ const ProfileFormModal = ({
               className="h-12 w-full max-w-[392px] rounded-full bg-gradient-to-r from-[#51B7FF] to-[#5CE686] text-sm font-bold sm:h-[56px] sm:text-base"
               onClick={() => {
                 setIsOpen(false);
-                nextTo();
+                {
+                  !isProfileEdit ? nextTo() : handleUpdateProfie();
+                }
               }}
             >
               <Typography element="span" className="font-bold text-white-base">
-                次へ
+                {isProfileEdit ? '保存' : '次へ'}
               </Typography>
             </button>
-            <button
-              className="w-full py-2 font-bold text-[#51B7FF]"
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
-              あとで登録
-            </button>
+            {!isProfileEdit && (
+              <button
+                className="w-full py-2 font-bold text-[#51B7FF]"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                あとで登録
+              </button>
+            )}
           </div>
         </DialogContent>
       </DialogDescription>

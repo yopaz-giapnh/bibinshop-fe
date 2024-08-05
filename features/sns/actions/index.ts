@@ -162,6 +162,9 @@ export async function getConcerns() {
         query: {
           include:
             'user_profile.skin_type,user_profile.personal_color,user_profile.skin_concerns,user_profile.scalp_hair_concerns,user_profile.health_concerns'
+        },
+        fetch: (request: any) => {
+          return fetch(request, { next: { tags: [TAGS.concerns] } });
         }
       }
     });

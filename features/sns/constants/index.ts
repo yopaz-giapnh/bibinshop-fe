@@ -1,7 +1,8 @@
 import { HairConcern, HealthConcern, PersonalColor, SkinConcern, SkinType } from '../utils';
 
 export const TAGS = {
-  concerns: 'concerns'
+  concerns: 'concerns',
+  account: 'account'
 };
 
 export type SkinTypeEntry = { text: string; value: NonNullable<SkinType> };
