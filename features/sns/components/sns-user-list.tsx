@@ -5,6 +5,7 @@ import { User } from '@/features/users/types';
 import { useEffect, useState } from 'react';
 import { SnsInputSortBar } from './sns-input-sort-bar';
 import { SnsUserListDetailCard } from './sns-user-list-detail-card';
+import SnsUserListEmptyView from './sns-user-list-empty-view';
 
 export function SnsUserList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -35,7 +36,6 @@ export function SnsUserList() {
     fetchUsers();
   }, [sortBy, filter]);
 
-  // recommendedProductsが空でないユーザーのみをフィルタリング
   const haveRecommendedProductsUsers = users.filter(
     (user: User) => user.recommendedProducts && user.recommendedProducts.length > 0
   );
@@ -43,15 +43,19 @@ export function SnsUserList() {
   return (
     <>
       <SnsInputSortBar onSortChange={setSortBy} onFilterChange={setFilter} />
-      <div className="mt-[24px] w-full space-y-4 overflow-y-auto">
-        {haveRecommendedProductsUsers.map((user: User) => (
-          <SnsUserListDetailCard
-            key={user.id}
-            user={user}
-            products={user.recommendedProducts || []}
-          />
-        ))}
-      </div>
+      {haveRecommendedProductsUsers.length > 0 ? (
+        <div className="mt-[24px] w-full space-y-4 overflow-y-auto">
+          {haveRecommendedProductsUsers.map((user: User) => (
+            <SnsUserListDetailCard
+              key={user.id}
+              user={user}
+              products={user.recommendedProducts || []}
+            />
+          ))}
+        </div>
+      ) : (
+        <SnsUserListEmptyView />
+      )}
     </>
   );
 }
