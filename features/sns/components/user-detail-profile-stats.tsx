@@ -3,7 +3,8 @@
 import { Typography } from '@/components/ui/typography';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { startTransition, useCallback, useRef } from 'react';
 import { FolloweesModal, FolloweesModalRef } from './followees-modal';
 import { FollowersModal, FollowersModalRef } from './followers-modal';
 
@@ -30,8 +31,14 @@ export const UserDetailProfileStats = ({
   socialLinks,
   uniqueKey
 }: Props) => {
+  const router = useRouter();
   const followersModalRef = useRef<FollowersModalRef>(null);
   const followeesModalRef = useRef<FolloweesModalRef>(null);
+  const refreshUserDetails = useCallback(() => {
+    startTransition(() => {
+      router.refresh();
+    });
+  }, [router]);
 
   const StatItem = ({
     value,
@@ -115,8 +122,16 @@ export const UserDetailProfileStats = ({
             ))}
         </div>
       )}
-      <FollowersModal unique_key={uniqueKey} ref={followersModalRef} />
-      <FolloweesModal unique_key={uniqueKey} ref={followeesModalRef} />
+      <FollowersModal
+        unique_key={uniqueKey}
+        ref={followersModalRef}
+        onClosed={refreshUserDetails}
+      />
+      <FolloweesModal
+        unique_key={uniqueKey}
+        ref={followeesModalRef}
+        onClosed={refreshUserDetails}
+      />
     </>
   );
 };

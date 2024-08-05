@@ -9,6 +9,7 @@ import { FormValues, UserAvatarSchema } from '../types';
 import { isSocialLinkSchema, isUserAvatarSchema } from '../utils';
 
 export async function getAccount() {
+  // no-cache to get the latest following/followers count
   const { data, error } = await apiClient.GET('/api/v2/storefront/account', {
     params: {
       query: {
@@ -17,7 +18,8 @@ export async function getAccount() {
     },
     fetch: (request) => {
       return fetch(request, { next: { tags: [TAGS.account] } });
-    }
+    },
+    cache: 'no-cache'
   });
 
   if (error) {

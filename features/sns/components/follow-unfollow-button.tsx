@@ -9,7 +9,8 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { startTransition, useCallback, useState } from 'react';
 import { follow, unfollow } from '../actions';
 
 type Props = {
@@ -19,6 +20,12 @@ type Props = {
 };
 export default function FollowUnfollowButton({ username, unique_key, isFollowing }: Props) {
   const [following, setFollowing] = useState(isFollowing);
+  const router = useRouter();
+  const refreshUserDetails = useCallback(() => {
+    startTransition(() => {
+      router.refresh();
+    });
+  }, [router]);
 
   if (!following) {
     return (
@@ -26,7 +33,10 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
         className="ml-auto"
         onClick={async () =>
           await follow({ unique_key }).then(
-            () => setFollowing(true),
+            () => {
+              setFollowing(true);
+              refreshUserDetails();
+            },
             () => {}
           )
         }
@@ -63,7 +73,10 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
               className="mx-1 px-6"
               onClick={async () =>
                 await unfollow({ unique_key: unique_key }).then(
-                  () => setFollowing(false),
+                  () => {
+                    setFollowing(false);
+                    refreshUserDetails();
+                  },
                   () => {}
                 )
               }
