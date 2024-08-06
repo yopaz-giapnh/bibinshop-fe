@@ -141,7 +141,7 @@ const ProfileFormModal = ({
             >
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {personalColors.map((color) => (
-                  <>
+                  <div key={color.value}>
                     {color.color && (
                       <label
                         key={color.value}
@@ -177,7 +177,7 @@ const ProfileFormModal = ({
                         </div>
                       </label>
                     )}
-                  </>
+                  </div>
                 ))}
               </div>
               <div
