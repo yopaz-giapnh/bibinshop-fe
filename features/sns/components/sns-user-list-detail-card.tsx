@@ -17,7 +17,7 @@ export async function SnsUserListDetailCard({ user, products }: SnsUserListDetai
   const uniqueKey = user.attributes.unique_key;
   const avatarUrl = user.avatar?.url || '/placeholder-product-image.png';
   const isFollowing = user.attributes.followed_by_me;
-  const userProfileConcern = user.userProfile?.[0]?.attributes;
+  const userProfileConcern = user.userProfile?.attributes;
   const tags = getConcernTags(userProfileConcern);
 
   const Tag = ({ text }: { text: string }) => (

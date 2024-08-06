@@ -31,5 +31,5 @@ export type User = Omit<UserSchema, 'relationships' | 'attributes'> & {
   avatar: UserAvatarWithUrl | undefined;
   recommendedProducts?: Product[];
   socialLinks?: SocialLinkSchema[];
-  userProfile?: UserProfileSchema[];
+  userProfile?: UserProfileSchema;
 };

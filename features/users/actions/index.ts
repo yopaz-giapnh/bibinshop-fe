@@ -126,7 +126,7 @@ export async function getUserDetails(uniqueKey: string) {
 
   const avatars = included?.filter(isUserAvatarSchema) || [];
   const socialLinks = included?.filter(isSocialLinkSchema) || [];
-  const userProfile = included?.filter(isUserProfileSchema) || [];
+  const userProfiles = included?.filter(isUserProfileSchema) || [];
 
   const userAvatars = user?.relationships?.avatars?.data || [];
   const avatar =
@@ -155,6 +155,10 @@ export async function getUserDetails(uniqueKey: string) {
     type: link.type,
     attributes: link.attributes
   }));
+
+  const userProfile = userProfiles.find(
+    (profile) => profile.id === user?.relationships?.user_profile?.data?.id
+  );
 
   return {
     ...user,

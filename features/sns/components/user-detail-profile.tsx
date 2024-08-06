@@ -21,7 +21,7 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
   const avatarUrl = userDetail.avatar?.url || '/placeholder-product-image.png';
   const receivedFeedbackReviewsCount = userDetail.attributes.received_feedback_reviews_count || 0;
   const isFollowing = userDetail.attributes.followed_by_me || false;
-  const userProfile = userDetail.userProfile?.[0]?.attributes;
+  const userProfile = userDetail.userProfile?.attributes;
 
   const tags = getConcernTags(userProfile);
 

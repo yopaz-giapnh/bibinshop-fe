@@ -138,68 +138,54 @@ const ProfileFormModal = ({
               onValueChange={(v) => {
                 setPersonalColor(v as PersonalColor);
               }}
+              className="space-y-2"
             >
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {personalColors.map((color) => (
-                  <div key={color.value}>
-                    {color.color && (
-                      <label
-                        key={color.value}
-                        className={`cursor-pointer rounded-lg p-4 text-left ${
-                          personalColor === color.value
-                            ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
-                            : 'bg-white border border-gray-200'
-                        }`}
-                      >
-                        <div className="flex">
-                          <div className="mr-2 flex flex-1 items-center justify-center">
-                            <RadioGroupItem value={color.value} id={color.value} className="" />
-                          </div>
-                          <div className="flex flex-col items-center justify-center">
-                            {color.color && (
-                              <>
-                                <div className="flex flex-col items-center justify-center">
-                                  <div
-                                    className={`h-12 w-12 rounded-full bg-[${color.color}] border border-gray-300`}
-                                  />
-                                  <span
-                                    className={`mt-2 text-sm font-bold ${personalColor === color.value ? 'text-[#51B7FF]' : 'text-black'}`}
-                                  >
-                                    {color.name}
-                                  </span>
-                                </div>
-                              </>
-                            )}
-                            <div className="mt-2 text-center">
-                              <p className="text-xs leading-tight">{color.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </label>
-                    )}
-                  </div>
+                {personalColors.slice(0, -1).map((color) => (
+                  <label
+                    key={color.value}
+                    className={`flex cursor-pointer items-center rounded-lg p-4 ${
+                      personalColor === color.value
+                        ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
+                        : 'bg-white border border-gray-200'
+                    }`}
+                  >
+                    <RadioGroupItem value={color.value} id={color.value} className="mr-4" />
+                    <div className="flex flex-1 items-center">
+                      <div
+                        style={{ backgroundColor: color.color }}
+                        className={`mr-4 h-12 w-12 rounded-full border border-gray-300`}
+                      />
+                      <div className="w-2/3">
+                        <span
+                          className={`text-sm font-bold ${
+                            personalColor === color.value ? 'text-[#51B7FF]' : 'text-black'
+                          }`}
+                        >
+                          {color.name}
+                        </span>
+                        <p className="mt-1 text-xs leading-tight">{color.description}</p>
+                      </div>
+                    </div>
+                  </label>
                 ))}
               </div>
-              <div
-                className={`mt-2 cursor-pointer rounded-lg p-4 text-left ${
-                  personalColor === personalColors[4].value
+              <label
+                className={`flex cursor-pointer items-center rounded-lg p-4 ${
+                  personalColor === personalColors[personalColors.length - 1].value
                     ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
                     : 'bg-white border border-gray-200'
                 }`}
               >
-                <label key={personalColors[4].value} className="flex flex-row">
-                  <div className="flex-1">
-                    <RadioGroupItem
-                      value={personalColors[4].value}
-                      id={personalColors[4].value}
-                      className=""
-                    />
-                  </div>
-                  <div className="flex flex-grow items-center ">
-                    <p className="text-xs">{personalColors[4].description}</p>
-                  </div>
-                </label>
-              </div>
+                <RadioGroupItem
+                  value={personalColors[personalColors.length - 1].value}
+                  id={personalColors[personalColors.length - 1].value}
+                  className="mr-4"
+                />
+                <span className="text-sm">
+                  {personalColors[personalColors.length - 1].description}
+                </span>
+              </label>
             </RadioGroup>
           </div>
           <div className="mb-6">
