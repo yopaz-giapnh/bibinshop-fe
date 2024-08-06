@@ -88,7 +88,6 @@ export const healthConcerns: HealthConcernEntry[] = [
   { text: '免疫力', value: ['IMMUNITY'] },
   { text: '筋力強化', value: ['MUSCLE_STRENGTH'] },
   { text: 'コレステロール改善', value: ['CHOLESTEROL'] },
-  { text: '腸の健康', value: ['DIGESTIVE_HEALTH'] },
   { text: '肝臓の健康', value: ['LIVER_HEALTH'] },
   { text: '骨/関節/歯', value: ['BONE_HEALTH'] },
   { text: '女性の健康', value: ['WOMEN_HEALTH'] },
