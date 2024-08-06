@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
 
-export default async function SnsUserListEmptyView() {
+export default function SnsUserListEmptyView() {
   return (
     <div className="mx-[16px] mt-[16px] flex flex-col items-center justify-center">
       <BibiSuprisedFace />
