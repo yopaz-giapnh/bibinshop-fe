@@ -80,7 +80,7 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
               account={account}
               skinTags={skinTags}
               hairTags={hairTags}
-              concerns={concerns}
+              concerns={concerns || undefined}
             />
           </div>
           <div className="mt-[8px] hidden md:block">

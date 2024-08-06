@@ -8,9 +8,9 @@ export const TAGS = {
 export type Concerns = {
   skinType?: SkinType;
   personalColor?: PersonalColor;
-  skinConcerns?: SkinConcern[];
-  hairConcerns?: HairConcern[];
-  healthConcerns?: HealthConcern[];
+  skinConcerns?: SkinConcern;
+  hairConcerns?: HairConcern;
+  healthConcerns?: HealthConcern;
 };
 
 export type SkinTypeEntry = { text: string; value: NonNullable<SkinType> };

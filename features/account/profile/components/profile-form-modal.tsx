@@ -27,12 +27,12 @@ type Props = {
   nextTo: () => void;
   setSkinType: Dispatch<SetStateAction<SkinType | undefined>>;
   setPersonalColor: Dispatch<SetStateAction<PersonalColor | undefined>>;
-  setSkinConcerns: Dispatch<SetStateAction<SkinConcern[]>>;
+  setSkinConcerns: Dispatch<SetStateAction<SkinConcern>>;
   skinType: SkinType | undefined;
   personalColor: PersonalColor | undefined;
-  skinConcerns: SkinConcern[];
-  hairConcerns: HairConcern[];
-  healthConcerns: HealthConcern[];
+  skinConcerns: SkinConcern;
+  hairConcerns: HairConcern;
+  healthConcerns: HealthConcern;
   isProfileEdit?: boolean;
   concerns: Concerns | undefined;
 };
@@ -209,15 +209,15 @@ const ProfileFormModal = ({
                 <button
                   key={concern.value[0]}
                   className={`w-[142px] rounded-[6px] px-4 py-4 text-sm ${
-                    skinConcerns.includes(concern.value)
+                    skinConcerns.some((c) => c.includes(concern.value[0]))
                       ? 'border-2 border-[#51B7FF] bg-[#F6FBFF] text-[#51B7FF]'
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (skinConcerns.includes(concern.value)) {
-                      setSkinConcerns(skinConcerns.filter((c) => c !== concern.value));
+                    if (skinConcerns.some((c) => c.includes(concern.value[0]))) {
+                      setSkinConcerns(skinConcerns.filter((c) => !c.includes(concern.value[0])));
                     } else {
-                      setSkinConcerns([...skinConcerns, concern.value]);
+                      setSkinConcerns([...skinConcerns, concern.value[0]]);
                     }
                   }}
                 >

@@ -39,9 +39,9 @@ export function StickyBanner({ isSignedIn }: Props) {
   const [openProfileFormBirthdayModal, setOpenProfileFormBirthdayModal] = useState(false);
   const [skinType, setSkinType] = useState<SkinType | undefined>();
   const [personalColor, setPersonalColor] = useState<PersonalColor | undefined>();
-  const [skinConcerns, setSkinConcerns] = useState<SkinConcern[]>([]);
-  const [hairConcerns, setHairConcerns] = useState<HairConcern[]>([]);
-  const [healthConcerns, setHealthConcerns] = useState<HealthConcern[]>([]);
+  const [skinConcerns, setSkinConcerns] = useState<SkinConcern>([]);
+  const [hairConcerns, setHairConcerns] = useState<HairConcern>([]);
+  const [healthConcerns, setHealthConcerns] = useState<HealthConcern>([]);
   const [birthYear, setBirthYear] = useState<number | undefined>();
 
   const fetchConcerns = async () => {
@@ -78,9 +78,9 @@ export function StickyBanner({ isSignedIn }: Props) {
           skin_type: skinType,
           personal_color: personalColor,
           birthyear: birthYear,
-          skin_concerns: skinConcerns.flat(),
-          scalp_hair_concerns: hairConcerns.flat(),
-          health_concerns: healthConcerns.flat()
+          skin_concerns: skinConcerns?.flat(),
+          scalp_hair_concerns: hairConcerns?.flat(),
+          health_concerns: healthConcerns?.flat()
         }
       });
       setOpenProfileFormBirthdayModal(false);

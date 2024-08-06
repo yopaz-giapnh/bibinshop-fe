@@ -3,7 +3,7 @@
 import { apiClient } from '@/config/api-client';
 import { isUserAvatarSchema, isUserProfileSchema } from '@/features/account/profile/utils';
 import { revalidateTag } from 'next/cache';
-import { TAGS } from '../constants';
+import { Concerns, TAGS } from '../constants';
 import {
   HairConcern,
   HealthConcern,
@@ -145,7 +145,7 @@ export async function unfollow({ unique_key }: { unique_key: string }) {
   }
 }
 
-export async function getConcerns() {
+export async function getConcerns(): Promise<Concerns | null> {
   try {
     const attributes = await getCurrentUserAttributes();
 

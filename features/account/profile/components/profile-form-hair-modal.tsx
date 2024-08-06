@@ -21,13 +21,13 @@ type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   goToBack: () => void;
   goToNext: () => void;
-  setHairConcerns: Dispatch<SetStateAction<HairConcern[]>>;
-  setHealthConcerns: Dispatch<SetStateAction<HealthConcern[]>>;
-  hairConcerns: HairConcern[];
-  healthConcerns: HealthConcern[];
+  setHairConcerns: Dispatch<SetStateAction<HairConcern>>;
+  setHealthConcerns: Dispatch<SetStateAction<HealthConcern>>;
+  hairConcerns: HairConcern;
+  healthConcerns: HealthConcern;
   skinType: SkinType | undefined;
   personalColor: PersonalColor | undefined;
-  skinConcerns: SkinConcern[];
+  skinConcerns: SkinConcern;
   isProfileEdit?: boolean;
   concerns: Concerns | undefined;
 };
@@ -95,15 +95,15 @@ const ProfileFormHairModal: React.FC<Props> = ({
                 <button
                   key={concern.value[0]}
                   className={`rounded-[6px] px-4 py-4 text-sm ${
-                    hairConcerns.includes(concern.value)
+                    hairConcerns.some((c) => c.includes(concern.value[0]))
                       ? 'border-2 border-[#51B7FF] bg-[#F6FBFF] text-[#51B7FF]'
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (hairConcerns.includes(concern.value)) {
-                      setHairConcerns(hairConcerns.filter((c) => c !== concern.value));
+                    if (hairConcerns.some((c) => c.includes(concern.value[0]))) {
+                      setHairConcerns(hairConcerns.filter((c) => !c.includes(concern.value[0])));
                     } else {
-                      setHairConcerns([...hairConcerns, concern.value]);
+                      setHairConcerns([...hairConcerns, concern.value[0]]);
                     }
                   }}
                 >
@@ -119,15 +119,17 @@ const ProfileFormHairModal: React.FC<Props> = ({
                 <button
                   key={concern.value[0]}
                   className={`rounded-[6px] px-4 py-4 text-sm ${
-                    healthConcerns.includes(concern.value)
+                    healthConcerns.some((c) => c.includes(concern.value[0]))
                       ? 'border-2 border-[#51B7FF] bg-[#F6FBFF] text-[#51B7FF]'
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (healthConcerns.includes(concern.value)) {
-                      setHealthConcerns(healthConcerns.filter((c) => c !== concern.value));
+                    if (healthConcerns.some((c) => c.includes(concern.value[0]))) {
+                      setHealthConcerns(
+                        healthConcerns.filter((c) => !c.includes(concern.value[0]))
+                      );
                     } else {
-                      setHealthConcerns([...healthConcerns, concern.value]);
+                      setHealthConcerns([...healthConcerns, concern.value[0]]);
                     }
                   }}
                 >

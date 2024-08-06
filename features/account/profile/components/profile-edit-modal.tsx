@@ -46,7 +46,7 @@ import ProfileFormModal from './profile-form-modal';
 
 type Props = {
   account: User;
-  concerns: Concerns;
+  concerns?: Concerns;
   skinTags: string[];
   hairTags: string[];
 };
@@ -62,9 +62,9 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
   const [personalColor, setPersonalColor] = useState<PersonalColor | undefined>(
     concerns?.personalColor
   );
-  const [skinConcerns, setSkinConcerns] = useState<SkinConcern[]>(concerns?.skinConcerns || []);
-  const [hairConcerns, setHairConcerns] = useState<HairConcern[]>(concerns?.hairConcerns || []);
-  const [healthConcerns, setHealthConcerns] = useState<HealthConcern[]>(
+  const [skinConcerns, setSkinConcerns] = useState<SkinConcern>(concerns?.skinConcerns || []);
+  const [hairConcerns, setHairConcerns] = useState<HairConcern>(concerns?.hairConcerns || []);
+  const [healthConcerns, setHealthConcerns] = useState<HealthConcern>(
     concerns?.healthConcerns || []
   );
 
