@@ -1,16 +1,14 @@
 'use client';
 
-import * as React from 'react';
-
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   type CarouselApi
 } from '@/components/ui/carousel';
-import { useIsPc } from '@/hooks/use-is-pc';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 import { getBanners } from '../actions';
 import { CarouselDots } from './carousel-dots';
 
@@ -25,7 +23,6 @@ export function CarouselBanner({ getBanners }: Props) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
-  const isPc = useIsPc();
 
   React.useEffect(() => {
     if (!api) {
@@ -69,10 +66,18 @@ export function CarouselBanner({ getBanners }: Props) {
               >
                 <Link key={banner.id} href={banner.linkUrl} passHref>
                   <Image
-                    src={isPc ? banner.imageUrl : banner.mobileImageUrl || banner.imageUrl}
+                    src={banner.imageUrl}
                     alt={banner.title ?? 'banner'}
                     width={790}
                     height={370}
+                    className="hidden md:block"
+                  />
+                  <Image
+                    src={banner.mobileImageUrl || banner.imageUrl}
+                    alt={banner.title ?? 'banner'}
+                    width={790}
+                    height={370}
+                    className="block md:hidden"
                   />
                 </Link>
               </CarouselItem>

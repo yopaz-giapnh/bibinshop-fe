@@ -5,7 +5,6 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
 import { displayPromoTotal } from '@/features/cart/utils';
-import { useIsPc } from '@/hooks/use-is-pc';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateCheckout } from '../actions';
 import { useCheckout } from './checkout-ctx';
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export function OrderOverview({ cart, canOrder }: Props) {
-  const isPc = useIsPc();
   const { activeAddress, activeCreditCard } = useCheckout();
   const [, formAction] = useFormState(updateCheckout, null);
   const action =
@@ -55,10 +53,10 @@ export function OrderOverview({ cart, canOrder }: Props) {
           {cart.attributes.display_total}
         </Typography>
       </div>
-      {!isPc && canOrder && (
+      {canOrder && (
         <form
           action={action}
-          className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between border-t-[1px] bg-white-base p-[8px] px-[16px]"
+          className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between border-t-[1px] bg-white-base p-[8px] px-[16px] md:hidden"
         >
           <div className="flex w-1/2 items-center">
             <Typography as="caption" element="p" className="mr-[4px] text-black-90">
@@ -71,11 +69,9 @@ export function OrderOverview({ cart, canOrder }: Props) {
           <OrderConfirmButton disabled={!canOrder} />
         </form>
       )}
-      {isPc && (
-        <form action={action}>
-          <OrderConfirmButton disabled={!canOrder} />
-        </form>
-      )}
+      <form action={action} className="hidden md:block">
+        <OrderConfirmButton disabled={!canOrder} />
+      </form>
     </>
   );
 }

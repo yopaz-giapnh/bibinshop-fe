@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { toast } from '@/components/ui/use-toast';
-import { useIsPc } from '@/hooks/use-is-pc';
 import { BadgeAlert } from 'lucide-react';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -22,7 +21,6 @@ export type SentEmailModalRef = {
  * @returns JSX.Element
  */
 export const SentEmailModal = forwardRef<SentEmailModalRef, { email: string }>(({ email }, ref) => {
-  const isPc = useIsPc();
   const [isOpen, setIsOpen] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [buttonText, setButtonText] = useState('メールを再送する');
@@ -77,52 +75,49 @@ export const SentEmailModal = forwardRef<SentEmailModalRef, { email: string }>((
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
-        {isPc ? (
-          <DialogContent className="hidden w-[472px] flex-col items-center justify-center md:flex">
-            <BibiBubbleEmail />
-            <Typography as="bold" element="p" className="mb-[24px] text-[20px] text-black-90">
-              入力したアドレスにメールを送信しました
-            </Typography>
-            <Typography as="bold" element="p" className="mb-[24px] text-[14px] text-bibinGreen-100">
-              {email}
-            </Typography>
-            <Typography as="caption" element="p" className="mb-[24px] text-[14px] text-black-90">
-              入力いただいたメールアドレスに確認のメールが送信されます。メールが届いていない場合は、迷惑メールフォルダをご確認ください。
-            </Typography>
-            <form action={action} className="w-full">
-              <ResendButton
-                disabled={isButtonDisabled}
-                text={`${buttonText} ${isButtonDisabled ? `${count}s` : ''}`}
-              />
-            </form>
-          </DialogContent>
-        ) : (
-          <DialogContent
-            className="flex w-11/12 flex-col items-center justify-center md:hidden"
-            hideCloseButton
+        <DialogContent className="hidden w-[472px] flex-col items-center justify-center md:flex">
+          <BibiBubbleEmail />
+          <Typography as="bold" element="p" className="mb-[24px] text-[20px] text-black-90">
+            入力したアドレスにメールを送信しました
+          </Typography>
+          <Typography as="bold" element="p" className="mb-[24px] text-[14px] text-bibinGreen-100">
+            {email}
+          </Typography>
+          <Typography as="caption" element="p" className="mb-[24px] text-[14px] text-black-90">
+            入力いただいたメールアドレスに確認のメールが送信されます。メールが届いていない場合は、迷惑メールフォルダをご確認ください。
+          </Typography>
+          <form action={action} className="w-full">
+            <ResendButton
+              disabled={isButtonDisabled}
+              text={`${buttonText} ${isButtonDisabled ? `${count}s` : ''}`}
+            />
+          </form>
+        </DialogContent>
+        <DialogContent
+          className="flex w-11/12 flex-col items-center justify-center md:hidden"
+          hideCloseButton
+        >
+          <img src={EmailSentGif.src} />
+          <Typography
+            as="bold"
+            element="p"
+            className="mb-[24px] text-center text-[20px] text-black-90"
           >
-            <img src={EmailSentGif.src} />
-            <Typography
-              as="bold"
-              element="p"
-              className="mb-[24px] text-center text-[20px] text-black-90"
-            >
-              入力したアドレスにメールを送信しました
-            </Typography>
-            <Typography as="bold" element="p" className="mb-[24px] text-[14px] text-bibinGreen-100">
-              {email}
-            </Typography>
-            <Typography as="caption" element="p" className="mb-[24px] text-[14px] text-black-90">
-              入力いただいたメールアドレスに確認のメールが送信されます。メールが届いていない場合は、迷惑メールフォルダをご確認ください。
-            </Typography>
-            <form action={action} className="w-full">
-              <ResendButton
-                disabled={isButtonDisabled}
-                text={`${buttonText} ${isButtonDisabled ? `${count}s` : ''}`}
-              />
-            </form>
-          </DialogContent>
-        )}
+            入力したアドレスにメールを送信しました
+          </Typography>
+          <Typography as="bold" element="p" className="mb-[24px] text-[14px] text-bibinGreen-100">
+            {email}
+          </Typography>
+          <Typography as="caption" element="p" className="mb-[24px] text-[14px] text-black-90">
+            入力いただいたメールアドレスに確認のメールが送信されます。メールが届いていない場合は、迷惑メールフォルダをご確認ください。
+          </Typography>
+          <form action={action} className="w-full">
+            <ResendButton
+              disabled={isButtonDisabled}
+              text={`${buttonText} ${isButtonDisabled ? `${count}s` : ''}`}
+            />
+          </form>
+        </DialogContent>
       </DialogDescription>
     </Dialog>
   );
