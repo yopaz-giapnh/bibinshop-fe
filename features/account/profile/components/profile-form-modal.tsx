@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
+import { useToast } from '@/components/ui/use-toast';
 import { createUserProfile, updateUserProfile } from '@/features/sns/actions';
 import {
   Concerns,
@@ -18,7 +19,7 @@ import {
   SkinType
 } from '@/features/sns/utils';
 import { RadioGroup } from '@radix-ui/react-radio-group';
-import { ChevronLeft } from 'lucide-react';
+import { BadgeAlert, ChevronLeft } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 
 type Props = {
@@ -52,6 +53,8 @@ const ProfileFormModal = ({
   healthConcerns,
   concerns
 }: Props) => {
+  const { toast } = useToast();
+
   const personalColors = [
     ...colors,
     { name: '', description: 'よくわかりません', color: '', value: 'UNKNOWN' }
@@ -75,7 +78,11 @@ const ProfileFormModal = ({
         await createUserProfile(userProfile);
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      toast({
+        title: 'プロフィールの更新中にエラーが発生しました。後でもう一度お試しください。',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
     }
   };
 

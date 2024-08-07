@@ -12,7 +12,7 @@ import {
   SkinConcern,
   SkinType
 } from '@/features/sns/utils';
-import { Check } from 'lucide-react';
+import { BadgeAlert, Check } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -89,7 +89,11 @@ export function StickyBanner({ isSignedIn }: Props) {
         icon: <Check className="h-6 w-6" />
       });
     } catch (error) {
-      console.error('Error updating profile:', error);
+      toast({
+        title: 'プロフィールの更新中にエラーが発生しました。後でもう一度お試しください。',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
     }
   };
 

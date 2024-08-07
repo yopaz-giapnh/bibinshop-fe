@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
+import { useToast } from '@/components/ui/use-toast';
 import { createUserProfile, updateUserProfile } from '@/features/sns/actions';
 import {
   Concerns,
@@ -13,7 +14,7 @@ import {
   SkinConcern,
   SkinType
 } from '@/features/sns/utils';
-import { ChevronLeft } from 'lucide-react';
+import { BadgeAlert, ChevronLeft } from 'lucide-react';
 import React, { Dispatch, SetStateAction } from 'react';
 
 type Props = {
@@ -47,6 +48,8 @@ const ProfileFormHairModal: React.FC<Props> = ({
   isProfileEdit,
   concerns
 }) => {
+  const { toast } = useToast();
+
   const handleUpdateProfile = async () => {
     const userProfile = {
       user_profile: {
@@ -65,7 +68,11 @@ const ProfileFormHairModal: React.FC<Props> = ({
         await createUserProfile(userProfile);
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      toast({
+        title: 'プロフィールの更新中にエラーが発生しました。後でもう一度お試しください。',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
     }
   };
 
