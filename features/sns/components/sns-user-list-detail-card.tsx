@@ -12,7 +12,7 @@ type SnsUserListDetailCardProps = {
   products: Product[];
 };
 
-export async function SnsUserListDetailCard({ user, products }: SnsUserListDetailCardProps) {
+export function SnsUserListDetailCard({ user, products }: SnsUserListDetailCardProps) {
   const nickname = user.attributes.nickname || '名無し';
   const uniqueKey = user.attributes.unique_key;
   const avatarUrl = user.avatar?.url || '/placeholder-product-image.png';
