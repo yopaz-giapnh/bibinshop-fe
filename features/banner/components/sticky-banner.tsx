@@ -49,7 +49,7 @@ export function StickyBanner({ isSignedIn }: Props) {
       const data = await getConcerns();
       setConcerns(data ? data : undefined);
     } catch (error) {
-      console.error('Error fetching concerns:', error);
+      () => {};
     }
   };
 
