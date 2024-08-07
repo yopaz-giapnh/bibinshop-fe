@@ -6,6 +6,7 @@ export const TAGS = {
 };
 
 export type Concerns = {
+  birthyear?: number;
   skinType?: SkinType;
   personalColor?: PersonalColor;
   skinConcerns?: SkinConcern;

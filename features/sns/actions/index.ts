@@ -189,6 +189,7 @@ export async function getConcerns(): Promise<Concerns | null> {
       skinType: profile.attributes.skin_type,
       personalColor: profile.attributes.personal_color,
       skinConcerns: profile.attributes.skin_concerns,
+      birthyear: profile.attributes.birthyear,
       hairConcerns: profile.attributes.scalp_hair_concerns,
       healthConcerns: profile.attributes.health_concerns
     };

@@ -23,6 +23,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
 import { toast } from '@/components/ui/use-toast';
+import { createUserProfile, updateUserProfile } from '@/features/sns/actions';
 import { Concerns } from '@/features/sns/constants';
 import {
   HairConcern,
@@ -67,14 +68,34 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
   const [healthConcerns, setHealthConcerns] = useState<HealthConcern>(
     concerns?.healthConcerns || []
   );
+  const [birthyear, setBirthyear] = useState<number | undefined>(concerns?.birthyear);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nickname: nickname || ''
+      nickname: nickname || '',
+      birthyear: concerns?.birthyear?.toString() || ''
     },
     mode: 'onBlur'
   });
+
+  const handleUpdateBirthyear = async () => {
+    const userProfile = {
+      user_profile: {
+        birthyear: birthyear
+      }
+    };
+
+    try {
+      if (concerns) {
+        await updateUserProfile(userProfile);
+      } else {
+        await createUserProfile(userProfile);
+      }
+    } catch (error) {
+      () => {};
+    }
+  };
 
   const resetForm = useCallback(() => {
     form.reset({
@@ -82,9 +103,10 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
       sex: selectedSex,
       instagram: socialLinks.instagram || '',
       x: socialLinks.x || '',
+      birthyear: birthyear?.toString() || '',
       facebook: socialLinks.facebook || ''
     });
-  }, [form, nickname, selectedSex, socialLinks]);
+  }, [form, nickname, selectedSex, socialLinks, birthyear]);
 
   useEffect(() => {
     resetForm();
@@ -118,6 +140,7 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
         await updateSocialLink(formData.facebook, 'FACEBOOK');
       }
 
+      handleUpdateBirthyear();
       setIsOpen(false);
       resetForm();
       toast({
@@ -177,9 +200,12 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                 <DialogTitle className="text-[16px] md:text-[20px]">プロフィール編集</DialogTitle>
               </DialogHeader>
               <Form {...form}>
+                {/* プロフィール写真 */}
                 <form className="relative mt-[16px] flex" action={uploadAvatar}>
                   <AvatarUpload account={account} />
                 </form>
+
+                {/* ニックネーム */}
                 <FormField
                   control={form.control}
                   name="nickname"
@@ -200,6 +226,8 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                     </FormItem>
                   )}
                 />
+
+                {/* 性別 */}
                 <div className="mt-[16px] w-full">
                   <Typography as="bold" element="p" className="mb-[8px] text-[14px] text-black-90">
                     性別
@@ -247,12 +275,14 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                     </div>
                   </RadioGroup>
                 </div>
+
+                {/* 生まれた年 */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
                     name="birthyear"
                     render={({ field }) => (
-                      <FormItem className="w-full">
+                      <FormItem>
                         <FormLabel>生まれた年</FormLabel>
                         <FormControl>
                           <Input
@@ -260,11 +290,13 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                             type="text"
                             inputMode="numeric"
                             maxLength={4}
-                            value={field.value}
                             onChange={(e) => {
                               const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-                              form.setValue('birthyear', value);
-                              form.trigger('birthyear');
+                              field.onChange(value);
+                              setBirthyear(value ? parseInt(value, 10) : undefined);
+                            }}
+                            onBlur={() => {
+                              field.onBlur();
                             }}
                           />
                         </FormControl>
@@ -273,6 +305,8 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                     )}
                   />
                 </div>
+
+                {/* Instagram URL */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
@@ -305,6 +339,8 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                     )}
                   />
                 </div>
+
+                {/* X URL */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
@@ -328,6 +364,8 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                     )}
                   />
                 </div>
+
+                {/* Facebook URL */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
@@ -351,6 +389,8 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                     )}
                   />
                 </div>
+
+                {/* 肌の悩み */}
                 <div className="mt-[16px] w-full">
                   <div className="flex h-[24px] items-center">
                     <Typography as="bold" element="p" className="text-[14px] text-black-90">
@@ -372,6 +412,8 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                     ))}
                   </div>
                 </div>
+
+                {/* 頭皮・毛髪の悩み、健康の悩み */}
                 <div className="mt-[16px] w-full">
                   <div className="mt-[16px] w-full">
                     <div className="flex h-[24px] items-center">
