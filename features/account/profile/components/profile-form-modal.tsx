@@ -1,10 +1,25 @@
 'use client';
+
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
-import { colors, skinConcerns as skinConcernOptions, skinTypes } from '@/features/sns/constants';
-import { PersonalColor, SkinConcern, SkinType } from '@/features/sns/utils';
+import { useToast } from '@/components/ui/use-toast';
+import { createUserProfile, updateUserProfile } from '@/features/sns/actions';
+import {
+  Concerns,
+  colors,
+  skinConcerns as skinConcernOptions,
+  skinTypes
+} from '@/features/sns/constants';
+import {
+  HairConcern,
+  HealthConcern,
+  PersonalColor,
+  SkinConcern,
+  SkinType
+} from '@/features/sns/utils';
 import { RadioGroup } from '@radix-ui/react-radio-group';
+import { BadgeAlert, ChevronLeft } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 
 type Props = {
@@ -13,10 +28,14 @@ type Props = {
   nextTo: () => void;
   setSkinType: Dispatch<SetStateAction<SkinType | undefined>>;
   setPersonalColor: Dispatch<SetStateAction<PersonalColor | undefined>>;
-  setSkinConcerns: Dispatch<SetStateAction<SkinConcern[]>>;
+  setSkinConcerns: Dispatch<SetStateAction<SkinConcern>>;
   skinType: SkinType | undefined;
   personalColor: PersonalColor | undefined;
-  skinConcerns: SkinConcern[];
+  skinConcerns: SkinConcern;
+  hairConcerns: HairConcern;
+  healthConcerns: HealthConcern;
+  isProfileEdit?: boolean;
+  concerns: Concerns | undefined;
 };
 
 const ProfileFormModal = ({
@@ -28,12 +47,44 @@ const ProfileFormModal = ({
   setSkinConcerns,
   skinType,
   personalColor,
-  skinConcerns
+  skinConcerns,
+  isProfileEdit,
+  hairConcerns,
+  healthConcerns,
+  concerns
 }: Props) => {
+  const { toast } = useToast();
+
   const personalColors = [
     ...colors,
     { name: '', description: 'よくわかりません', color: '', value: 'UNKNOWN' }
   ];
+
+  const handleUpdateProfile = async () => {
+    const userProfile = {
+      user_profile: {
+        skin_type: skinType,
+        personal_color: personalColor,
+        skin_concerns: skinConcerns.flat(),
+        scalp_hair_concerns: hairConcerns.flat(),
+        health_concerns: healthConcerns.flat()
+      }
+    };
+
+    try {
+      if (concerns) {
+        await updateUserProfile(userProfile);
+      } else {
+        await createUserProfile(userProfile);
+      }
+    } catch (error) {
+      toast({
+        title: 'プロフィールの更新中にエラーが発生しました。後でもう一度お試しください。',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -42,11 +93,25 @@ const ProfileFormModal = ({
           hideCloseButton
           className="mx-auto h-[90%] max-h-[calc(100vh-32px)] w-[calc(100vw-32px)] max-w-[640px] overflow-y-auto rounded-lg bg-white-base p-4 shadow-md sm:p-6"
         >
+          {isProfileEdit && (
+            <div className="w-full">
+              <button
+                className="flex items-center text-gray-500"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                <span className="ml-2 text-sm font-bold">戻る</span>
+              </button>
+            </div>
+          )}
           <h2 className="mb-2 text-center text-xl font-bold">肌質を入力する</h2>
-          <p className="mb-6 text-center text-sm">
-            登録が完了しました！肌質を入力すると、肌質に合った商品をおすすめできます！
-          </p>
-
+          {!isProfileEdit && (
+            <p className="mb-6 text-center text-sm">
+              登録が完了しました！肌質を入力すると、肌質に合った商品をおすすめできます！
+            </p>
+          )}
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">どんな肌タイプですか？</h3>
             <div className="flex flex-wrap gap-2">
@@ -73,7 +138,6 @@ const ProfileFormModal = ({
               </RadioGroup>
             </div>
           </div>
-
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">パーソナルカラーを教えてください</h3>
             <RadioGroup
@@ -81,71 +145,56 @@ const ProfileFormModal = ({
               onValueChange={(v) => {
                 setPersonalColor(v as PersonalColor);
               }}
+              className="space-y-2"
             >
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {personalColors.map((color) => (
-                  <>
-                    {color.color && (
-                      <label
-                        key={color.value}
-                        className={`cursor-pointer rounded-lg p-4 text-left ${
-                          personalColor === color.value
-                            ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
-                            : 'bg-white border border-gray-200'
-                        }`}
-                      >
-                        <div className="flex">
-                          <div className="mr-2 flex flex-1 items-center justify-center">
-                            <RadioGroupItem value={color.value} id={color.value} className="" />
-                          </div>
-                          <div className="flex flex-col items-center justify-center">
-                            {color.color && (
-                              <>
-                                <div className="flex flex-col items-center justify-center">
-                                  <div
-                                    className={`h-12 w-12 rounded-full bg-[${color.color}] border border-gray-300`}
-                                  />
-                                  <span
-                                    className={`mt-2 text-sm font-bold ${personalColor === color.value ? 'text-[#51B7FF]' : 'text-black'}`}
-                                  >
-                                    {color.name}
-                                  </span>
-                                </div>
-                              </>
-                            )}
-                            <div className="mt-2 text-center">
-                              <p className="text-xs leading-tight">{color.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </label>
-                    )}
-                  </>
+                {personalColors.slice(0, -1).map((color) => (
+                  <label
+                    key={color.value}
+                    className={`flex cursor-pointer items-center rounded-lg p-4 ${
+                      personalColor === color.value
+                        ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
+                        : 'bg-white border border-gray-200'
+                    }`}
+                  >
+                    <RadioGroupItem value={color.value} id={color.value} className="mr-4" />
+                    <div className="flex flex-1 items-center">
+                      <div
+                        style={{ backgroundColor: color.color }}
+                        className={`mr-4 h-12 w-12 rounded-full border border-gray-300`}
+                      />
+                      <div className="w-2/3">
+                        <span
+                          className={`text-sm font-bold ${
+                            personalColor === color.value ? 'text-[#51B7FF]' : 'text-black'
+                          }`}
+                        >
+                          {color.name}
+                        </span>
+                        <p className="mt-1 text-xs leading-tight">{color.description}</p>
+                      </div>
+                    </div>
+                  </label>
                 ))}
               </div>
-              <div
-                className={`mt-2 cursor-pointer rounded-lg p-4 text-left ${
-                  personalColor === personalColors[4].value
+              <label
+                className={`flex cursor-pointer items-center rounded-lg p-4 ${
+                  personalColor === personalColors[personalColors.length - 1].value
                     ? 'border-2 border-[#51B7FF] bg-[#F6FBFF]'
                     : 'bg-white border border-gray-200'
                 }`}
               >
-                <label key={personalColors[4].value} className="flex flex-row">
-                  <div className="flex-1">
-                    <RadioGroupItem
-                      value={personalColors[4].value}
-                      id={personalColors[4].value}
-                      className=""
-                    />
-                  </div>
-                  <div className="flex flex-grow items-center ">
-                    <p className="text-xs">{personalColors[4].description}</p>
-                  </div>
-                </label>
-              </div>
+                <RadioGroupItem
+                  value={personalColors[personalColors.length - 1].value}
+                  id={personalColors[personalColors.length - 1].value}
+                  className="mr-4"
+                />
+                <span className="text-sm">
+                  {personalColors[personalColors.length - 1].description}
+                </span>
+              </label>
             </RadioGroup>
           </div>
-
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">肌の悩みを教えてください</h3>
             <div className="flex flex-wrap gap-1">
@@ -153,15 +202,15 @@ const ProfileFormModal = ({
                 <button
                   key={concern.value[0]}
                   className={`w-[142px] rounded-[6px] px-4 py-4 text-sm ${
-                    skinConcerns.includes(concern.value)
+                    skinConcerns.some((c) => c.includes(concern.value[0]))
                       ? 'border-2 border-[#51B7FF] bg-[#F6FBFF] text-[#51B7FF]'
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (skinConcerns.includes(concern.value)) {
-                      setSkinConcerns(skinConcerns.filter((c) => c !== concern.value));
+                    if (skinConcerns.some((c) => c.includes(concern.value[0]))) {
+                      setSkinConcerns(skinConcerns.filter((c) => !c.includes(concern.value[0])));
                     } else {
-                      setSkinConcerns([...skinConcerns, concern.value]);
+                      setSkinConcerns([...skinConcerns, concern.value[0]]);
                     }
                   }}
                 >
@@ -170,27 +219,30 @@ const ProfileFormModal = ({
               ))}
             </div>
           </div>
-
           <div className="flex flex-col items-center">
             <button
               className="h-12 w-full max-w-[392px] rounded-full bg-gradient-to-r from-[#51B7FF] to-[#5CE686] text-sm font-bold sm:h-[56px] sm:text-base"
               onClick={() => {
                 setIsOpen(false);
-                nextTo();
+                {
+                  !isProfileEdit ? nextTo() : handleUpdateProfile();
+                }
               }}
             >
               <Typography element="span" className="font-bold text-white-base">
-                次へ
+                {isProfileEdit ? '保存' : '次へ'}
               </Typography>
             </button>
-            <button
-              className="w-full py-2 font-bold text-[#51B7FF]"
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
-              あとで登録
-            </button>
+            {!isProfileEdit && (
+              <button
+                className="w-full py-2 font-bold text-[#51B7FF]"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                あとで登録
+              </button>
+            )}
           </div>
         </DialogContent>
       </DialogDescription>

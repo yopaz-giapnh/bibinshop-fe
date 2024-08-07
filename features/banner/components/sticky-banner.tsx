@@ -4,7 +4,7 @@ import { useToast } from '@/components/ui/use-toast';
 import ProfileFormBirthdayModal from '@/features/account/profile/components/profile-form-birthday-modal';
 import ProfileFormHairModal from '@/features/account/profile/components/profile-form-hair-modal';
 import ProfileFormModal from '@/features/account/profile/components/profile-form-modal';
-import { createUserProfile, getConcerns, updateUserProfile } from '@/features/sns/actions';
+import { createUserProfile, getConcerns } from '@/features/sns/actions';
 import {
   HairConcern,
   HealthConcern,
@@ -12,7 +12,7 @@ import {
   SkinConcern,
   SkinType
 } from '@/features/sns/utils';
-import { Check } from 'lucide-react';
+import { BadgeAlert, Check } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -39,29 +39,31 @@ export function StickyBanner({ isSignedIn }: Props) {
   const [openProfileFormBirthdayModal, setOpenProfileFormBirthdayModal] = useState(false);
   const [skinType, setSkinType] = useState<SkinType | undefined>();
   const [personalColor, setPersonalColor] = useState<PersonalColor | undefined>();
-  const [skinConcerns, setSkinConcerns] = useState<SkinConcern[]>([]);
-  const [hairConcerns, setHairConcerns] = useState<HairConcern[]>([]);
-  const [healthConcerns, setHealthConcerns] = useState<HealthConcern[]>([]);
+  const [skinConcerns, setSkinConcerns] = useState<SkinConcern>([]);
+  const [hairConcerns, setHairConcerns] = useState<HairConcern>([]);
+  const [healthConcerns, setHealthConcerns] = useState<HealthConcern>([]);
   const [birthYear, setBirthYear] = useState<number | undefined>();
 
   const fetchConcerns = async () => {
     try {
       const data = await getConcerns();
-      if (!data) throw new Error('Concerns data not found');
-      //TODO: あとで直す
-      setConcerns(data);
+      setConcerns(data ? data : undefined);
     } catch (error) {
-      console.error('Error fetching concerns:', error);
+      () => {};
     }
   };
 
   useEffect(() => {
     fetchConcerns();
     if (concerns) return;
-    //TODO: あとで直す
-    // setOpen(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!concerns) {
+      setOpen(true);
+    }
+  }, [concerns]);
 
   const { toast } = useToast();
 
@@ -70,19 +72,15 @@ export function StickyBanner({ isSignedIn }: Props) {
   }
 
   const handleUpdateProfile = async () => {
-    const skinConcernsFlat = skinConcerns.flat();
-    const hairConcernsFlat = hairConcerns.flat();
-    const healthConcernsFlat = healthConcerns.flat();
-
     try {
-      await updateUserProfile({
+      await createUserProfile({
         user_profile: {
           skin_type: skinType,
           personal_color: personalColor,
           birthyear: birthYear,
-          skin_concerns: skinConcernsFlat,
-          scalp_hair_concerns: hairConcernsFlat,
-          health_concerns: healthConcernsFlat
+          skin_concerns: skinConcerns?.flat(),
+          scalp_hair_concerns: hairConcerns?.flat(),
+          health_concerns: healthConcerns?.flat()
         }
       });
       setOpenProfileFormBirthdayModal(false);
@@ -90,9 +88,12 @@ export function StickyBanner({ isSignedIn }: Props) {
         title: 'プロフィールを作成しました',
         icon: <Check className="h-6 w-6" />
       });
-      await fetchConcerns();
     } catch (error) {
-      console.error('Error updating profile:', error);
+      toast({
+        title: 'プロフィールの更新中にエラーが発生しました。後でもう一度お試しください。',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
     }
   };
 
@@ -112,20 +113,15 @@ export function StickyBanner({ isSignedIn }: Props) {
                 return;
               }
               setOpenProfileFormModal(true);
-              //TODO: イケテナイ、、、
-              createUserProfile({
-                user_profile: {
-                  skin_type: skinType,
-                  personal_color: personalColor,
-                  birthyear: birthYear,
-                  skin_concerns: [],
-                  scalp_hair_concerns: [],
-                  health_concerns: []
-                }
-              });
             }}
           >
-            <Image src={'/sticky_banner.png'} alt={'sticky banner'} width={344} height={130} />
+            <Image
+              src={'/sticky_banner.png'}
+              alt={'sticky banner'}
+              width={344}
+              height={130}
+              style={{ width: '100%', height: 'auto' }}
+            />
           </button>
         </div>
       )}
@@ -141,6 +137,9 @@ export function StickyBanner({ isSignedIn }: Props) {
         skinType={skinType}
         personalColor={personalColor}
         skinConcerns={skinConcerns}
+        hairConcerns={hairConcerns}
+        healthConcerns={healthConcerns}
+        concerns={concerns}
       />
       <ProfileFormHairModal
         isOpen={openProfileFormHairModal}
@@ -157,6 +156,10 @@ export function StickyBanner({ isSignedIn }: Props) {
         hairConcerns={hairConcerns}
         setHealthConcerns={setHealthConcerns}
         healthConcerns={healthConcerns}
+        skinType={skinType}
+        personalColor={personalColor}
+        skinConcerns={skinConcerns}
+        concerns={concerns}
       />
       <ProfileFormBirthdayModal
         isOpen={openProfileFormBirthdayModal}

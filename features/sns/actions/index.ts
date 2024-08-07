@@ -3,7 +3,7 @@
 import { apiClient } from '@/config/api-client';
 import { isUserAvatarSchema, isUserProfileSchema } from '@/features/account/profile/utils';
 import { revalidateTag } from 'next/cache';
-import { TAGS } from '../constants';
+import { Concerns, TAGS } from '../constants';
 import {
   HairConcern,
   HealthConcern,
@@ -145,7 +145,7 @@ export async function unfollow({ unique_key }: { unique_key: string }) {
   }
 }
 
-export async function getConcerns() {
+export async function getConcerns(): Promise<Concerns | null> {
   try {
     const attributes = await getCurrentUserAttributes();
 
@@ -162,6 +162,9 @@ export async function getConcerns() {
         query: {
           include:
             'user_profile.skin_type,user_profile.personal_color,user_profile.skin_concerns,user_profile.scalp_hair_concerns,user_profile.health_concerns'
+        },
+        fetch: (request: Request) => {
+          return fetch(request, { next: { tags: [TAGS.concerns] } });
         }
       }
     });
@@ -181,8 +184,6 @@ export async function getConcerns() {
       console.warn('No profile data');
       return null;
     }
-
-    revalidateTag(TAGS.concerns);
 
     return {
       skinType: profile.attributes.skin_type,
@@ -233,6 +234,8 @@ export async function createUserProfile({ user_profile }: userProfileParams) {
   if (error) {
     throw error;
   }
+
+  revalidateTag(TAGS.concerns);
 }
 
 export async function updateUserProfile({ user_profile }: userProfileParams) {
