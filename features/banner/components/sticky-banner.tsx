@@ -115,7 +115,13 @@ export function StickyBanner({ isSignedIn }: Props) {
               setOpenProfileFormModal(true);
             }}
           >
-            <Image src={'/sticky_banner.png'} alt={'sticky banner'} width={344} height={130} />
+            <Image
+              src={'/sticky_banner.png'}
+              alt={'sticky banner'}
+              width={344}
+              height={130}
+              style={{ width: '100%', height: 'auto' }}
+            />
           </button>
         </div>
       )}
