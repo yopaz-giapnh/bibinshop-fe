@@ -97,7 +97,7 @@ const ProfileFormHairModal: React.FC<Props> = ({
           )}
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">頭皮・毛髪の悩みを教えてください</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid w-full grid-cols-2 flex-wrap gap-2 md:grid-cols-4">
               {hairConcernOptions.map((concern) => (
                 <button
                   key={concern.value[0]}
@@ -121,7 +121,7 @@ const ProfileFormHairModal: React.FC<Props> = ({
           </div>
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">健康の悩みを教えてください</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid w-full grid-cols-2 flex-wrap gap-2 md:grid-cols-4">
               {healthConcernOptions.map((concern) => (
                 <button
                   key={concern.value[0]}
