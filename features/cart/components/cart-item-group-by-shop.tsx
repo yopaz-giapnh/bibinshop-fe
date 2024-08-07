@@ -46,13 +46,7 @@ export function CartItemGroupByShop({ shop }: Props) {
         return (
           <div key={key} className="flex cursor-pointer items-center gap-4">
             <div className="relative h-[100px] w-[100px]">
-              <Image
-                src={getProductImageUrl(image)}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-[4px]"
-                alt={''}
-              />
+              <Image src={getProductImageUrl(image)} fill className="rounded-[4px]" alt={''} />
             </div>
             <div className="flex h-[100px] flex-1 flex-col justify-between gap-1 md:justify-normal">
               <div className="flex justify-between">

@@ -25,8 +25,7 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
         <Image
           src={getVendorBannerImageUrl(vendor.vendorBannerImage)}
           className="mb-6"
-          layout="fill"
-          objectFit="cover"
+          fill
           alt={vendor.attributes.name || ''}
         />
       </div>

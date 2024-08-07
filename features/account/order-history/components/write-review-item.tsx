@@ -28,12 +28,7 @@ export default function WriteReviewItem({ product, review, onReviewStar, onRevie
     <div className="mt-[24px] w-full rounded-[6px] bg-white-base p-[16px] shadow-sm">
       <div className="flex">
         <div className="relative h-[100px] w-[100px]">
-          <Image
-            src={getProductImageUrl(product?.images[0])}
-            layout="fill"
-            objectFit="cover"
-            alt={''}
-          />
+          <Image src={getProductImageUrl(product?.images[0])} fill alt={''} />
         </div>
         <div className="ml-[16px] md:ml-[8px]">
           <Typography

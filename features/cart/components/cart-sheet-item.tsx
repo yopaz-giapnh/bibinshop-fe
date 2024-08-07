@@ -26,13 +26,7 @@ export function CartSheetItem({ cart, lineItem }: Props) {
   return (
     <div className="relative inline-flex items-center gap-[16px]">
       <div className="relative h-[100px] w-[100px]">
-        <Image
-          src={getProductImageUrl(image)}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-[4px]"
-          alt={''}
-        />
+        <Image src={getProductImageUrl(image)} fill className="rounded-[4px]" alt={''} />
       </div>
       <div className="relative inline-flex w-[250px] flex-[0_0_auto] flex-col items-start gap-[4px]">
         <Typography as="linkSmall" element="p" className="text-black-90">
