@@ -32,7 +32,12 @@ export function Header({ isSignedIn, getTaxons }: Props) {
             src={'/bibin-sns-header-icon.png'}
             alt={'sms header logo'}
             width={120}
-            height={120}
+            height={25}
+            style={{
+              width: 'auto',
+              height: '25px',
+              maxWidth: '120px'
+            }}
           />
         </Link>
         <div className="mr-[6px] hidden h-[40px] w-[1px] bg-gray-200 md:block" />

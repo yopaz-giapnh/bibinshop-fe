@@ -16,7 +16,7 @@ export default function OrderDetailListItem({ imageSrc, title, price, optionsTex
   return (
     <div className="mt-[16px] flex items-center">
       <div className="relative h-[100px] w-[100px]">
-        <Image src={imageSrc} layout="fill" objectFit="cover" alt={''} />
+        <Image src={imageSrc} fill alt={''} />
       </div>
       <div className="ml-[16px]">
         <Typography as="boldSmall" element="p" className="text-[14px] text-black-90">

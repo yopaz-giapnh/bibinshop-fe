@@ -76,8 +76,7 @@ export function ProfileReviewItem({ review }: ReviewProps) {
         <div className="relative h-[59px] w-[59px] md:h-[100px] md:w-[100px]">
           <Image
             src={getProductImageUrl(review.images[0])}
-            layout="fill"
-            objectFit="cover"
+            fill
             alt={''}
             className="rounded-[2px]"
           />

@@ -33,12 +33,7 @@ export default function OrderHistoryItem({
   return (
     <div className="flex py-[16px]">
       <div className="relative h-[80px] w-[80px] md:h-[100px] md:w-[100px]">
-        <Image
-          src={imageUrl || '/placeholder-product-image.png'}
-          layout="fill"
-          objectFit="cover"
-          alt={''}
-        />
+        <Image src={imageUrl || '/placeholder-product-image.png'} fill alt={''} />
       </div>
       <div className="ml-[8px] flex flex-col justify-between">
         <Typography
