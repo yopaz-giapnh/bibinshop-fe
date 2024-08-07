@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { createCart, getCart } from '@/features/cart/actions';
-import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -42,7 +42,6 @@ type Props = {
 function Form({ onClose, iconLayout }: Props) {
   const stripe = useStripe();
   const elements = useElements();
-  const isPc = useIsPc();
   const { toast } = useToast();
 
   const [cardErrors, setCardErrors] = useState({
@@ -219,7 +218,18 @@ function Form({ onClose, iconLayout }: Props) {
             disabled={isLoading || !stripe || !isFormValid}
             className="h-[48px] w-full md:h-[55px] md:w-[392px]"
           >
-            {isLoading ? <LoadingSpinner /> : isPc ? 'お支払い方法を保存する' : '保存'}
+            {isLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                <Typography as="bold" element="span" className="text-white hidden md:block">
+                  お支払い方法を保存する
+                </Typography>
+                <Typography as="bold" element="span" className="text-white md:hidden">
+                  保存
+                </Typography>
+              </>
+            )}
           </Button>
         </div>
       </form>

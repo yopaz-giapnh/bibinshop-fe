@@ -3,7 +3,6 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { logout } from '@/features/auth/actions';
-import { useIsPc } from '@/hooks/use-is-pc';
 import clsx from 'clsx';
 import {
   Bell,
@@ -32,7 +31,6 @@ interface SideNavButtonProps {
  */
 export default function AccountSideBar() {
   const pathname = usePathname();
-  const isPc = useIsPc();
 
   const sideNavButtons: SideNavButtonProps[] = [
     {
@@ -105,11 +103,9 @@ export default function AccountSideBar() {
           label={button.label}
         />
       ))}
-      {!isPc && (
-        <form action={logout}>
-          <LogoutButton />
-        </form>
-      )}
+      <form action={logout} className="md:hidden">
+        <LogoutButton />
+      </form>
     </div>
   );
 }

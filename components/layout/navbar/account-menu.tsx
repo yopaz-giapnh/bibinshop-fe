@@ -12,7 +12,6 @@ import {
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
 import { logout } from '@/features/auth/actions';
-import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { NavigationMenuList } from '@radix-ui/react-navigation-menu';
 import { UserRound } from 'lucide-react';
@@ -93,22 +92,26 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
 }
 
 const AccountLink = () => {
-  const isPc = useIsPc();
   const { pending } = useFormStatus();
 
   return (
-    <Link href={isPc ? '/account/profile' : '/account/sp-profile'} className="flex" passHref>
-      {pending ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <UserRound className="h-6 w-6" />
-          <Typography as="small" element="p" className="ml-1 hidden md:block">
-            アカウント管理
-          </Typography>
-        </>
-      )}
-    </Link>
+    <>
+      <Link href={'/account/profile'} className="hidden md:flex" passHref>
+        {pending ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <UserRound className="h-6 w-6" />
+            <Typography as="small" element="p" className="ml-1">
+              アカウント管理
+            </Typography>
+          </>
+        )}
+      </Link>
+      <Link href={'/account/sp-profile'} className="md:hidden" passHref>
+        {pending ? <LoadingSpinner /> : <UserRound className="h-6 w-6" />}
+      </Link>
+    </>
   );
 };
 

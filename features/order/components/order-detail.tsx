@@ -17,7 +17,6 @@ import {
   TryReviewWriteModal,
   TryReviewWriteModalRef
 } from '@/features/review/components/try-review-write-modal';
-import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { formatDateString } from '@/utils/date';
 import { FilePen } from 'lucide-react';
@@ -59,7 +58,6 @@ declare global {
  * @returns JSX.Element
  */
 export function OrderDetail({ className, orderNumber }: Props) {
-  const isPc = useIsPc();
   const [order, setOrder] = useState<Order | null>(null);
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
@@ -101,59 +99,57 @@ export function OrderDetail({ className, orderNumber }: Props) {
         <Typography as="boldSmall" element="p" className="text-[20px]">
           {getTabValue(state)}
         </Typography>
-        {isPc && (
-          <div className="absolute right-0 top-[16px]">
-            {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
-              <>
-                <Button
-                  type="button"
-                  className="mb-[8px] w-full"
-                  onClick={() => {
-                    setSelectedShipmentId(order.id);
-                    orderReceiptConfirmModalRef.current?.open(order.id);
-                  }}
-                >
-                  受取確認
-                </Button>
-                <button
-                  type="button"
-                  className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                  onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
-                >
-                  <Typography
-                    as="bold"
-                    element="p"
-                    className="ml-[8px] text-[14px] text-bibinBlue-100"
-                  >
-                    配送情報
-                  </Typography>
-                </button>
-              </>
-            )}
-            {(state === 'delivered' || state === 'shipped') && (
-              <Link
-                href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
-                  .map((slug) => `slug=${slug}`)
-                  .join('&')}`}
-                passHref
+        <div className="absolute right-0 top-[16px] hidden md:block">
+          {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
+            <>
+              <Button
+                type="button"
+                className="mb-[8px] w-full"
+                onClick={() => {
+                  setSelectedShipmentId(order.id);
+                  orderReceiptConfirmModalRef.current?.open(order.id);
+                }}
               >
-                <button
-                  type="button"
-                  className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                受取確認
+              </Button>
+              <button
+                type="button"
+                className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
+              >
+                <Typography
+                  as="bold"
+                  element="p"
+                  className="ml-[8px] text-[14px] text-bibinBlue-100"
                 >
-                  <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
-                  <Typography
-                    as="bold"
-                    element="p"
-                    className="ml-[8px] text-[14px] text-bibinBlue-100"
-                  >
-                    レビューを書く
-                  </Typography>
-                </button>
-              </Link>
-            )}
-          </div>
-        )}
+                  配送情報
+                </Typography>
+              </button>
+            </>
+          )}
+          {(state === 'delivered' || state === 'shipped') && (
+            <Link
+              href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
+                .map((slug) => `slug=${slug}`)
+                .join('&')}`}
+              passHref
+            >
+              <button
+                type="button"
+                className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+              >
+                <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
+                <Typography
+                  as="bold"
+                  element="p"
+                  className="ml-[8px] text-[14px] text-bibinBlue-100"
+                >
+                  レビューを書く
+                </Typography>
+              </button>
+            </Link>
+          )}
+        </div>
       </div>
       {items.map((item, index) => {
         const image = findImageFromLineItem({
@@ -176,64 +172,62 @@ export function OrderDetail({ className, orderNumber }: Props) {
                 showBuyAgain={false}
               />
             </div>
-            {index === items.length - 1 && isLastGroup && isPc && (
-              <div className="mb-[8px] border-b-[1px]" />
+            {index === items.length - 1 && isLastGroup && (
+              <div className="mb-[8px] hidden border-b-[1px] md:block" />
             )}
           </>
         );
       })}
-      {!isPc && (
-        <>
-          {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
-            <Button
-              type="button"
-              className="w-full"
-              onClick={() => {
-                setSelectedShipmentId(order.id);
-                orderReceiptConfirmModalRef.current?.open(order.id);
-              }}
-            >
-              受取確認
-            </Button>
-          )}
-          {(state === 'delivered' || state === 'shipped') && (
-            <div className="flex w-full justify-between pb-[8px]">
-              {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
-                <button
-                  type="button"
-                  className="mt-[8px] w-[48%] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                  onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
-                >
-                  <Typography as="bold" element="p" className="text-[14px] text-bibinBlue-100">
-                    配送情報
-                  </Typography>
-                </button>
-              )}
-              <Link
-                href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
-                  .map((slug) => `slug=${slug}`)
-                  .join('&')}`}
-                passHref
-                className={`${state === 'delivered' ? 'w-full' : ''}`}
+      <div className="md:hidden">
+        {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
+          <Button
+            type="button"
+            className="w-full"
+            onClick={() => {
+              setSelectedShipmentId(order.id);
+              orderReceiptConfirmModalRef.current?.open(order.id);
+            }}
+          >
+            受取確認
+          </Button>
+        )}
+        {(state === 'delivered' || state === 'shipped') && (
+          <div className="flex w-full justify-between pb-[8px]">
+            {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
+              <button
+                type="button"
+                className="mt-[8px] w-[48%] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
               >
-                <button
-                  type="button"
-                  className={`mt-[8px] flex items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px] ${state === 'delivered' ? 'w-full' : 'w-[155px]'}`}
+                <Typography as="bold" element="p" className="text-[14px] text-bibinBlue-100">
+                  配送情報
+                </Typography>
+              </button>
+            )}
+            <Link
+              href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
+                .map((slug) => `slug=${slug}`)
+                .join('&')}`}
+              passHref
+              className={`${state === 'delivered' ? 'w-full' : ''}`}
+            >
+              <button
+                type="button"
+                className={`mt-[8px] flex items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px] ${state === 'delivered' ? 'w-full' : 'w-[155px]'}`}
+              >
+                <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
+                <Typography
+                  as="bold"
+                  element="p"
+                  className="ml-[8px] text-[14px] text-bibinBlue-100"
                 >
-                  <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
-                  <Typography
-                    as="bold"
-                    element="p"
-                    className="ml-[8px] text-[14px] text-bibinBlue-100"
-                  >
-                    レビューを書く
-                  </Typography>
-                </button>
-              </Link>
-            </div>
-          )}
-        </>
-      )}
+                  レビューを書く
+                </Typography>
+              </button>
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 

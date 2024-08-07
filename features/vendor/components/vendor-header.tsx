@@ -1,8 +1,5 @@
-'use client';
-
 import { Typography } from '@/components/ui/typography';
 import Rating from '@/features/review/components/rating';
-import { useIsPc } from '@/hooks/use-is-pc';
 import Image from 'next/image';
 import { Vendor } from '../types';
 import { getVendorBannerImageUrl } from '../utils';
@@ -16,8 +13,6 @@ type VendorHeaderProps = {
  * @returns JSX.Element
  */
 export function VendorHeader({ vendor }: VendorHeaderProps) {
-  const isPc = useIsPc();
-
   return (
     <div className="flex flex-col md:my-6">
       {/* TODO: image のサイズどうするか */}
@@ -32,10 +27,10 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
       <div className="mt-2 flex w-full items-center rounded-[8px] border-2 md:mt-5 md:border-none">
         <Image
           src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
-          width={isPc ? 82 : 40}
-          height={isPc ? 82 : 40}
+          width={40}
+          height={40}
           alt={vendor.attributes.name || ''}
-          className="m-4 md:my-0 md:ml-0 md:mr-4"
+          className="m-4 md:my-0 md:ml-0 md:mr-4 md:h-[82px] md:w-[82px]"
         />
         <div className="my-4">
           <Typography as="title" element="h1" className="text-[14px] text-black-90 md:text-[24px]">
