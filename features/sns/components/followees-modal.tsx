@@ -87,7 +87,7 @@ export const FolloweesModal = forwardRef<FolloweesModalRef, Props>(
               <DialogTitle>フォロー中</DialogTitle>
             </DialogHeader>
             <ScrollArea
-              className="mb-auto w-full md:h-[570px] md:w-[592px]"
+              className="mb-auto w-full md:w-[592px]"
               onScrollCapture={(e) => {
                 if (loading) return;
                 if (!hasMore) return;
