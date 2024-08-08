@@ -120,7 +120,7 @@ const ProfileFormModal = ({
                 onValueChange={(v) => {
                   setSkinType(v as SkinType);
                 }}
-                className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
+                className="grid w-full grid-cols-2 gap-2 sm:flex sm:flex-wrap"
               >
                 {skinTypes.map((type) => (
                   <label
@@ -197,11 +197,11 @@ const ProfileFormModal = ({
           </div>
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-bold opacity-80">肌の悩みを教えてください</h3>
-            <div className="flex flex-wrap gap-1">
+            <div className="grid w-full grid-cols-2 flex-wrap gap-1 gap-2 md:grid-cols-4">
               {skinConcernOptions.map((concern) => (
                 <button
                   key={concern.value[0]}
-                  className={`w-[142px] rounded-[6px] px-4 py-4 text-sm ${
+                  className={`w-full rounded-[6px] px-4 py-4 text-sm ${
                     skinConcerns.some((c) => c.includes(concern.value[0]))
                       ? 'border-2 border-[#51B7FF] bg-[#F6FBFF] text-[#51B7FF]'
                       : 'bg-white text-black border border-gray-200'

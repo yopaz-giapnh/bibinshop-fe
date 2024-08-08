@@ -1,9 +1,21 @@
 'use client';
 
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
 type Props = {
   isOpen: boolean;
@@ -14,6 +26,19 @@ type Props = {
   setBirthYear: Dispatch<SetStateAction<number | undefined>>;
 };
 
+const formSchema = z.object({
+  birthYear: z
+    .string()
+    .refine((val) => /^\d{4}$/.test(val), { message: '4桁の数字を半角で入力してください' })
+    .refine(
+      (val) => {
+        const year = parseInt(val);
+        return year >= 1900 && year <= new Date().getFullYear();
+      },
+      { message: '生まれた年は1900以上2023未満の数字で入力してください' }
+    )
+});
+
 const ProfileFormBirthdayModal = ({
   isOpen,
   setIsOpen,
@@ -23,11 +48,34 @@ const ProfileFormBirthdayModal = ({
   setBirthYear
 }: Props) => {
   const [selectedGender, setSelectedGender] = useState('女性');
-  const [isNextButtonActive, setIsNextButtonActive] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      birthYear: birthYear?.toString() || ''
+    },
+    mode: 'onChange'
+  });
+
+  const { isValid } = form.formState;
 
   useEffect(() => {
-    setIsNextButtonActive(birthYear !== undefined);
-  }, [birthYear]);
+    form.setValue('birthYear', birthYear?.toString() || '');
+  }, [birthYear, form]);
+
+  const handleBirthYearChange = (value: string) => {
+    const year = parseInt(value);
+    if (!isNaN(year)) {
+      setBirthYear(year);
+    } else {
+      setBirthYear(undefined);
+    }
+  };
+
+  const onSubmit = () => {
+    setBirthYear(parseInt(form.getValues('birthYear')));
+    goToNext();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -103,37 +151,52 @@ const ProfileFormBirthdayModal = ({
               </div>
             </div>
 
-            <div className="w-full">
-              <p className="mb-2 text-sm font-bold text-gray-800">生まれた年を教えてください</p>
-              <input
-                type="number"
-                placeholder="例：2000"
-                value={birthYear}
-                onChange={(e) => {
-                  const inputValue = e.target.value;
-                  if (inputValue.length <= 4) {
-                    setBirthYear(Number(inputValue));
-                  }
-                }}
-                className="w-full rounded-md border border-gray-200 p-4 text-sm"
-                maxLength={4}
-              />
-            </div>
-          </div>
-          <div className="flex w-full flex-col items-center">
-            <button
-              onClick={goToNext}
-              className={`h-12 w-full max-w-[392px] rounded-full text-sm font-bold sm:h-[56px] sm:text-base ${
-                isNextButtonActive
-                  ? 'cursor-pointer bg-gradient-to-r from-[#51B7FF] to-[#5CE686] '
-                  : 'cursor-not-allowed bg-gray-300'
-              }`}
-              disabled={!isNextButtonActive}
-            >
-              <Typography element="span" className="font-bold text-white-base">
-                次へ
-              </Typography>
-            </button>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+                <FormField
+                  control={form.control}
+                  name="birthYear"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 text-sm font-bold text-gray-800">
+                        生まれた年を教えてください
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={4}
+                          placeholder="例：2000"
+                          className="w-full rounded-md border border-gray-200 p-4 text-sm"
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleBirthYearChange(e.target.value);
+                            form.trigger('birthYear');
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-sm text-red-500" />
+                    </FormItem>
+                  )}
+                />
+                <div className="mt-6 flex w-full flex-col items-center">
+                  <button
+                    type="submit"
+                    className={`h-12 w-full max-w-[392px] rounded-full text-sm font-bold sm:h-[56px] sm:text-base ${
+                      isValid && form.formState.isValid
+                        ? 'cursor-pointer bg-gradient-to-r from-[#51B7FF] to-[#5CE686] '
+                        : 'cursor-not-allowed bg-gray-300'
+                    }`}
+                    disabled={!isValid || !form.formState.isValid}
+                  >
+                    <Typography element="span" className="font-bold text-white-base">
+                      次へ
+                    </Typography>
+                  </button>
+                </div>
+              </form>
+            </Form>
           </div>
         </DialogContent>
       </DialogDescription>

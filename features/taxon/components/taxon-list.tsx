@@ -1,4 +1,3 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { getTaxonImageUrl } from '@/features/product/utils';
 import { getTaxons } from '@/features/taxon/actions';
@@ -11,31 +10,28 @@ export const TaxonList = async () => {
   const categoriesList = await getTaxons();
 
   return (
-    <ScrollArea className="whitespace-nowrap md:hidden">
-      <div className="flex flex-col px-[8px] pt-[8px]">
-        <ul className="flex w-full">
-          {categoriesList.slice(0, Math.ceil(categoriesList.length / 2)).map((category) => (
-            <ListItem
-              key={category.id}
-              title={category.attributes.name || ''}
-              href={`/search?taxons=${category.id}`}
-              imageUrl={getTaxonImageUrl(category.taxonImage)}
-            />
-          ))}
-        </ul>
-        <ul className="flex w-full">
-          {categoriesList.slice(Math.ceil(categoriesList.length / 2)).map((category) => (
-            <ListItem
-              key={category.id}
-              title={category.attributes.name || ''}
-              href={`/search?taxons=${category.id}`}
-              imageUrl={getTaxonImageUrl(category.taxonImage)}
-            />
-          ))}
-        </ul>
-      </div>
-      <ScrollBar orientation="horizontal" className="pt-[8px]" />
-    </ScrollArea>
+    <div className="scrollbar-hide flex w-full flex-col overflow-x-auto whitespace-nowrap px-[8px] pt-[8px] md:hidden">
+      <ul className="flex w-full">
+        {categoriesList.slice(0, Math.ceil(categoriesList.length / 2)).map((category) => (
+          <ListItem
+            key={category.id}
+            title={category.attributes.name || ''}
+            href={`/search?taxons=${category.id}`}
+            imageUrl={getTaxonImageUrl(category.taxonImage)}
+          />
+        ))}
+      </ul>
+      <ul className="flex w-full">
+        {categoriesList.slice(Math.ceil(categoriesList.length / 2)).map((category) => (
+          <ListItem
+            key={category.id}
+            title={category.attributes.name || ''}
+            href={`/search?taxons=${category.id}`}
+            imageUrl={getTaxonImageUrl(category.taxonImage)}
+          />
+        ))}
+      </ul>
+    </div>
   );
 };
 

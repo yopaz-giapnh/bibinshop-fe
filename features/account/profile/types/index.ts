@@ -24,9 +24,12 @@ export const formSchema = z.object({
   sex: z.enum(['male', 'female', 'not_applicable', 'not_known']).optional(),
   birthyear: z
     .string()
-    .refine((val) => !val || /^\d{4}$/.test(val), {
-      message: '正しい年を入力してください'
-    })
+    .refine(
+      (val) => !val || (/^\d{4}$/.test(val) && parseInt(val) >= 1900 && parseInt(val) < 2023),
+      {
+        message: '生まれた年は1900以上2023未満の4桁の数字で入力してください'
+      }
+    )
     .optional(),
   instagram: z.string().url('正しいURLを入力してください').optional().or(z.literal('')),
   x: z.string().url('正しいURLを入力してください').optional().or(z.literal('')),

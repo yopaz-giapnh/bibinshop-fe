@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type Concerns = {
+  birthyear?: number;
   skinType?: SkinType;
   personalColor?: PersonalColor;
   //concerns are arrays
@@ -55,6 +56,7 @@ export function StickyBanner({ isSignedIn }: Props) {
 
   useEffect(() => {
     fetchConcerns();
+
     if (concerns) return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -71,7 +73,7 @@ export function StickyBanner({ isSignedIn }: Props) {
     return null;
   }
 
-  const handleUpdateProfile = async () => {
+  const handleCreateProfile = async () => {
     try {
       await createUserProfile({
         user_profile: {
@@ -83,7 +85,6 @@ export function StickyBanner({ isSignedIn }: Props) {
           health_concerns: healthConcerns?.flat()
         }
       });
-      setOpenProfileFormBirthdayModal(false);
       toast({
         title: 'プロフィールを作成しました',
         icon: <Check className="h-6 w-6" />
@@ -95,6 +96,7 @@ export function StickyBanner({ isSignedIn }: Props) {
         icon: <BadgeAlert className="h-6 w-6" />
       });
     }
+    setOpenProfileFormBirthdayModal(false);
   };
 
   return (
@@ -168,7 +170,7 @@ export function StickyBanner({ isSignedIn }: Props) {
           setOpenProfileFormBirthdayModal(false);
           setOpenProfileFormHairModal(true);
         }}
-        goToNext={handleUpdateProfile}
+        goToNext={handleCreateProfile}
         setBirthYear={setBirthYear}
         birthYear={birthYear}
       />
