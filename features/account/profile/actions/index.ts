@@ -135,3 +135,30 @@ export async function updateSocialLink(url: string, platform: SocialPlatform) {
     };
   }
 }
+
+export async function deleteSocialLink(id: string) {
+  try {
+    const { error } = await apiClient.DELETE(`/api/v2/storefront/account/social_links/{id}`, {
+      params: {
+        path: {
+          id: id
+        }
+      }
+    });
+    if (error) {
+      throw error;
+    }
+
+    revalidateTag(TAGS.account);
+
+    return {
+      success: true,
+      message: 'ソーシャルリンクが削除されました。'
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'ソーシャルリンクの削除に失敗しました。'
+    };
+  }
+}
