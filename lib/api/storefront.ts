@@ -146,6 +146,13 @@ export interface paths {
      */
     post: operations['create-social-link'];
   };
+  '/api/v2/storefront/account/social_links/{id}': {
+    /**
+     * Delete a social link
+     * @description Deletes a social link for the current user.
+     */
+    delete: operations['delete-social-link'];
+  };
   '/api/v2/storefront/account_confirmations': {
     /**
      * Send Account Confirmation Instructions
@@ -3595,6 +3602,25 @@ export interface operations {
       };
       403: components['responses']['Forbidden'];
       422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * Delete a social link
+   * @description Deletes a social link for the current user.
+   */
+  'delete-social-link': {
+    parameters: {
+      path: {
+        /** @description The ID of the social link to delete. */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description 204 Success No Content Returned - Current social link has been removed. */
+      204: {
+        content: never;
+      };
+      404: components['responses']['NotFound'];
     };
   };
   /**

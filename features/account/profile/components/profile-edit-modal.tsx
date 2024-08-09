@@ -38,7 +38,13 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { useForm, useFormState } from 'react-hook-form';
-import { updateAccount, updateProfile, updateSocialLink, uploadAvatar } from '../actions';
+import {
+  deleteSocialLink,
+  updateAccount,
+  updateProfile,
+  updateSocialLink,
+  uploadAvatar
+} from '../actions';
 import { FormValues, User, UserSex, formSchema } from '../types';
 import { isUserSex } from '../utils';
 import ProfileFormHairModal from './profile-form-hair-modal';
@@ -120,12 +126,30 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
     if (accountUpdateResult.success && profileUpdateResult.success) {
       if (formData.instagram) {
         updateSocialLink(formData.instagram, 'INSTAGRAM');
+      } else {
+        account.socialLinks?.forEach(async (link) => {
+          if (link && link.id && link.attributes && link.attributes.platform === 'INSTAGRAM') {
+            await deleteSocialLink(link.id);
+          }
+        });
       }
       if (formData.x) {
         await updateSocialLink(formData.x, 'X');
+      } else {
+        account.socialLinks?.forEach(async (link) => {
+          if (link && link.id && link.attributes && link.attributes.platform === 'X') {
+            await deleteSocialLink(link.id);
+          }
+        });
       }
       if (formData.facebook) {
         await updateSocialLink(formData.facebook, 'FACEBOOK');
+      } else {
+        account.socialLinks?.forEach(async (link) => {
+          if (link && link.id && link.attributes && link.attributes.platform === 'FACEBOOK') {
+            await deleteSocialLink(link.id);
+          }
+        });
       }
 
       setIsOpen(false);
