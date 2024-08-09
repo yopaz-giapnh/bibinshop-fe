@@ -5,7 +5,7 @@ import { getAccessToken } from '@/features/auth/utils/session';
 import { User } from '@/features/users/types';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
-import { FormValues, UserAvatarSchema } from '../types';
+import { UserAvatarSchema, UserProfileSchema } from '../types';
 import { isSocialLinkSchema, isUserAvatarSchema } from '../utils';
 
 export async function getAccount() {
@@ -39,16 +39,45 @@ export async function getAccount() {
   } as User;
 }
 
-type UpdateAccountParams = FormValues;
+type UpdateAccountParams = {
+  nickname?: string;
+  sex?: 'not_known' | 'male' | 'female' | 'not_applicable';
+};
 export async function updateAccount(
   prevState: { success: boolean; message: string } | null,
   params: UpdateAccountParams
 ) {
-  //todo: check if sending all params is correct.
   try {
     await apiClient.PATCH('/api/v2/storefront/account', {
       body: {
         user: params
+      }
+    });
+
+    revalidateTag(TAGS.account);
+
+    return {
+      success: true,
+      message: 'プロフィールが更新されました。'
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: 'プロフィールの更新に失敗しました。'
+    };
+  }
+}
+type UpdateProfileParams = UserProfileSchema['attributes'];
+export async function updateProfile(
+  prevState: { success: boolean; message: string } | null,
+  params: UpdateProfileParams
+) {
+  try {
+    await apiClient.PATCH('/api/v2/storefront/account/profile', {
+      body: {
+        user_profile: params
       }
     });
 
