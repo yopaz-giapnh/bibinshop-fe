@@ -38,7 +38,13 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { useForm, useFormState } from 'react-hook-form';
-import { deleteSocialLink, updateAccount, updateProfile, updateSocialLink, uploadAvatar } from '../actions';
+import {
+  deleteSocialLink,
+  updateAccount,
+  updateProfile,
+  updateSocialLink,
+  uploadAvatar
+} from '../actions';
 import { FormValues, User, UserSex, formSchema } from '../types';
 import { isUserSex } from '../utils';
 import ProfileFormHairModal from './profile-form-hair-modal';
