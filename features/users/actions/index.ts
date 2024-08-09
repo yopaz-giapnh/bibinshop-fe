@@ -44,7 +44,8 @@ export async function getUsers({
         page,
         per_page: perPage
       }
-    }
+    },
+    cache: 'no-cache'
   });
 
   if (error) {
