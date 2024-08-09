@@ -29,7 +29,7 @@ export async function getFollowers({ page, unique_key }: GetFollowersParams) {
         unique_key
       },
       query: {
-        page,
+        page: page + 1,
         include: includes
       }
     },
@@ -78,7 +78,7 @@ export async function getFollowees({ page, unique_key }: GetFollowersParams) {
         unique_key
       },
       query: {
-        page,
+        page: page + 1,
         include: includes
       }
     },

@@ -23,7 +23,6 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
 import { toast } from '@/components/ui/use-toast';
-import { createUserProfile, updateUserProfile } from '@/features/sns/actions';
 import { Concerns } from '@/features/sns/constants';
 import {
   HairConcern,
@@ -39,7 +38,7 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { useForm, useFormState } from 'react-hook-form';
-import { deleteSocialLink, updateAccount, updateSocialLink, uploadAvatar } from '../actions';
+import { deleteSocialLink, updateAccount, updateProfile, updateSocialLink, uploadAvatar } from '../actions';
 import { FormValues, User, UserSex, formSchema } from '../types';
 import { isUserSex } from '../utils';
 import ProfileFormHairModal from './profile-form-hair-modal';
@@ -79,24 +78,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
     mode: 'onBlur'
   });
 
-  const handleUpdateBirthyear = async () => {
-    const userProfile = {
-      user_profile: {
-        birthyear: birthyear
-      }
-    };
-
-    try {
-      if (concerns) {
-        await updateUserProfile(userProfile);
-      } else {
-        await createUserProfile(userProfile);
-      }
-    } catch (error) {
-      () => {};
-    }
-  };
-
   const resetForm = useCallback(() => {
     form.reset({
       nickname: nickname || '',
@@ -128,8 +109,15 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
 
   const handleSubmit = async (formData: FormValues) => {
     const accountUpdateResult = await updateAccount(null, formData);
-
-    if (accountUpdateResult.success) {
+    const profileUpdateResult = await updateProfile(null, {
+      birthyear: birthyear,
+      skin_type: skinType,
+      personal_color: personalColor,
+      health_concerns: healthConcerns,
+      scalp_hair_concerns: hairConcerns,
+      skin_concerns: skinConcerns
+    });
+    if (accountUpdateResult.success && profileUpdateResult.success) {
       if (formData.instagram) {
         updateSocialLink(formData.instagram, 'INSTAGRAM');
       } else {
@@ -158,7 +146,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
         });
       }
 
-      handleUpdateBirthyear();
       setIsOpen(false);
       resetForm();
       toast({

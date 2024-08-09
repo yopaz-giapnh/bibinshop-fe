@@ -1,5 +1,6 @@
 'use client';
 
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getUsers } from '@/features/users/actions';
 import { User } from '@/features/users/types';
 import { useEffect, useState } from 'react';
@@ -17,8 +18,10 @@ export function SnsUserList() {
     skinConcern: '',
     scalpHairConcern: ''
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const fetchUsers = async () => {
       try {
         const fetchedUsers = await getUsers({
@@ -33,7 +36,7 @@ export function SnsUserList() {
       }
     };
 
-    fetchUsers();
+    fetchUsers().then(() => setLoading(false));
   }, [sortBy, filter]);
 
   const haveRecommendedProductsUsers = users.filter(
@@ -43,7 +46,9 @@ export function SnsUserList() {
   return (
     <>
       <SnsInputSortBar onSortChange={setSortBy} onFilterChange={setFilter} />
-      {haveRecommendedProductsUsers.length > 0 ? (
+      {loading ? (
+        <LoadingSpinner size={24} className="mx-auto mt-8" />
+      ) : haveRecommendedProductsUsers.length > 0 ? (
         <div className="mt-[24px] w-full space-y-4 overflow-y-auto">
           {haveRecommendedProductsUsers.map((user: User) => (
             <SnsUserListDetailCard
