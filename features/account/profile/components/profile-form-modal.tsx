@@ -207,10 +207,17 @@ const ProfileFormModal = ({
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (skinConcerns.some((c) => c.includes(concern.value[0]))) {
-                      setSkinConcerns(skinConcerns.filter((c) => !c.includes(concern.value[0])));
+                    if (concern.value[0] === 'NONE') {
+                      setSkinConcerns([concern.value[0]]);
+                    } else if (skinConcerns.some((c) => c.includes(concern.value[0]))) {
+                      setSkinConcerns((prev) =>
+                        prev.filter((c) => c !== 'NONE' && !c.includes(concern.value[0]))
+                      );
                     } else {
-                      setSkinConcerns([...skinConcerns, concern.value[0]]);
+                      setSkinConcerns((prev) => [
+                        ...prev.filter((c) => c !== 'NONE'),
+                        concern.value[0]
+                      ]);
                     }
                   }}
                 >

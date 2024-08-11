@@ -21,14 +21,14 @@ export function getConcernTags(userProfile: UserProfile['attributes']) {
     ...(userProfile?.personal_color
       ? [colors.find((color) => color.value === userProfile.personal_color)?.name]
       : []),
-    ...(userProfile?.skin_concerns?.map(
-      (concern) => skinConcerns.find((c) => c.value.includes(concern))?.text
-    ) || []),
-    ...(userProfile?.scalp_hair_concerns?.map(
-      (concern) => hairConcerns.find((c) => c.value.includes(concern))?.text
-    ) || []),
-    ...(userProfile?.health_concerns?.map(
-      (concern) => healthConcerns.find((c) => c.value.includes(concern))?.text
-    ) || [])
+    ...(userProfile?.skin_concerns
+      ?.filter((c) => c !== 'NONE')
+      ?.map((concern) => skinConcerns.find((c) => c.value.includes(concern))?.text) || []),
+    ...(userProfile?.scalp_hair_concerns
+      ?.filter((c) => c !== 'NONE')
+      ?.map((concern) => hairConcerns.find((c) => c.value.includes(concern))?.text) || []),
+    ...(userProfile?.health_concerns
+      ?.filter((c) => c !== 'NONE')
+      ?.map((concern) => healthConcerns.find((c) => c.value.includes(concern))?.text) || [])
   ].filter((tag): tag is string => !!tag);
 }
