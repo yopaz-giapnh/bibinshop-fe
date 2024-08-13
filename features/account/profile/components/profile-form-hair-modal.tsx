@@ -107,10 +107,17 @@ const ProfileFormHairModal: React.FC<Props> = ({
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (hairConcerns.some((c) => c.includes(concern.value[0]))) {
-                      setHairConcerns(hairConcerns.filter((c) => !c.includes(concern.value[0])));
+                    if (concern.value[0] === 'NONE') {
+                      setHairConcerns([concern.value[0]]);
+                    } else if (hairConcerns.some((c) => c.includes(concern.value[0]))) {
+                      setHairConcerns((prev) =>
+                        prev.filter((c) => c !== 'NONE' && !c.includes(concern.value[0]))
+                      );
                     } else {
-                      setHairConcerns([...hairConcerns, concern.value[0]]);
+                      setHairConcerns((prev) => [
+                        ...prev.filter((c) => c !== 'NONE'),
+                        concern.value[0]
+                      ]);
                     }
                   }}
                 >
@@ -131,12 +138,17 @@ const ProfileFormHairModal: React.FC<Props> = ({
                       : 'bg-white text-black border border-gray-200'
                   }`}
                   onClick={() => {
-                    if (healthConcerns.some((c) => c.includes(concern.value[0]))) {
-                      setHealthConcerns(
-                        healthConcerns.filter((c) => !c.includes(concern.value[0]))
+                    if (concern.value[0] === 'NONE') {
+                      setHealthConcerns([concern.value[0]]);
+                    } else if (healthConcerns.some((c) => c.includes(concern.value[0]))) {
+                      setHealthConcerns((prev) =>
+                        prev.filter((c) => c !== 'NONE' && !c.includes(concern.value[0]))
                       );
                     } else {
-                      setHealthConcerns([...healthConcerns, concern.value[0]]);
+                      setHealthConcerns((prev) => [
+                        ...prev.filter((c) => c !== 'NONE'),
+                        concern.value[0]
+                      ]);
                     }
                   }}
                 >
