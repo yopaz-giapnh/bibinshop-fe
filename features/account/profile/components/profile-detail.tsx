@@ -58,7 +58,7 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
     <div>
       <div className="flex items-center pl-[16px] md:ml-[24px] md:mr-0 md:justify-normal md:pl-0">
         <div className="relative h-[88px] w-[88px] md:h-[160px] md:w-[160px]">
-          <Image src={avatarUrl} className="rounded-[100px]" fill alt={'avatar'} />
+          <Image src={avatarUrl} className="rounded-full" fill alt={'avatar'} objectFit="cover" />
         </div>
         <div className="ml-[16px] flex flex-col justify-between">
           <div className="items-center md:flex">

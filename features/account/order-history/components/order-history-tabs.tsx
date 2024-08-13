@@ -43,6 +43,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
         >
           注文履歴
         </Typography>
+        <div className="h-7 w-7" />
       </div>
       <Tabs defaultValue={tabState} className="z-0 w-full items-center justify-center">
         <TabsList className="flex h-fit w-full overflow-hidden border-[1px] bg-white-base">
