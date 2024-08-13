@@ -1,23 +1,14 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
 import { Order } from '@/features/order/types';
-import {
-  getShipmentStateTitle,
-  getTabValue,
-  sortLineItemsByShipmentState
-} from '@/features/order/utils';
-import { findImageFromLineItem } from '@/features/product/utils';
+import { sortLineItemsByShipment } from '@/features/order/utils';
 import {
   TryReviewWriteModal,
   TryReviewWriteModalRef
 } from '@/features/review/components/try-review-write-modal';
-import { FilePen } from 'lucide-react';
-import Link from 'next/link';
 import { useRef, useState } from 'react';
-import OrderHistoryItem from './order-history-item';
 import OrderHistoryListInfo from './order-history-list-info';
+import OrderHistoryListItem from './order-history-list-item';
 import {
   OrderReceiptConfirmModal,
   OrderReceiptConfirmModalRef
@@ -28,17 +19,10 @@ type OrderHistoryListProps = {
   order: Order;
 };
 
-type SortedLineItems = {
-  [key: string]: Order['lineItems'];
-};
-
-const STATE_PRIORITY = ['shipped', 'partial', 'ready', 'pending', 'delivered', 'unknown'];
-
 export default function OrderHistoryList({ order }: OrderHistoryListProps) {
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
-  const { variants } = order;
   const [selectedShipmentId, setSelectedShipmentId] = useState<string | null>(null);
 
   const handleReceiptConfirm = () => {
@@ -52,167 +36,26 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
     }
   };
 
-  const sortedLineItems = sortLineItemsByShipmentState(order);
-
-  const extractSlugs = (items: SortedLineItems) => {
-    return Object.entries(items)
-      .filter(([state]) => state === 'shipped' || state === 'delivered')
-      .flatMap(([, lineItems]) => lineItems.map((item) => item.attributes.slug));
-  };
-
-  const renderLineItems = (items: Order['lineItems'], state: string, isLastGroup: boolean) => (
-    <div className="flex flex-col">
-      <div className="relative flex w-full justify-between">
-        <Typography as="boldSmall" element="p" className="mt-[16px] text-[20px]">
-          {getTabValue(state)}
-        </Typography>
-        <div className="absolute right-0 top-[16px] hidden md:block">
-          {state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
-            <>
-              <Button
-                type="button"
-                className="mb-[8px] w-full"
-                onClick={() => {
-                  setSelectedShipmentId(order.id);
-                  orderReceiptConfirmModalRef.current?.open(order.id);
-                }}
-              >
-                受取確認
-              </Button>
-              <button
-                type="button"
-                className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
-              >
-                <Typography
-                  as="bold"
-                  element="p"
-                  className="ml-[8px] text-[14px] text-bibinBlue-100"
-                >
-                  配送情報
-                </Typography>
-              </button>
-            </>
-          )}
-          <Link
-            href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
-              .map((slug) => `slug=${slug}`)
-              .join('&')}`}
-            passHref
-          >
-            <button
-              type="button"
-              className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-            >
-              <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
-              <Typography as="bold" element="p" className="ml-[8px] text-[14px] text-bibinBlue-100">
-                レビューを書く
-              </Typography>
-            </button>
-          </Link>
-        </div>
-      </div>
-      {items.map((item, index) => {
-        const image = findImageFromLineItem({
-          lineItem: item,
-          variants: order.variants,
-          images: order.images
-        });
-        const variant = variants.find(
-          (variant) => variant.id === item.relationships.variant?.data?.id
-        );
-
-        return (
-          <div key={item.id}>
-            <div className="flex">
-              <OrderHistoryItem
-                item={item}
-                image={image}
-                status={getShipmentStateTitle(order) ?? undefined}
-                optionsText={variant?.attributes.options_text}
-                showPrice={false}
-              />
-            </div>
-            {index === items.length - 1 && isLastGroup && (
-              <div className="hidden border-[1px] md:block" />
-            )}
-          </div>
-        );
-      })}
-      <div className="md:hidden">
-        {(state === 'delivered' || state === 'shipped') &&
-          order.attributes.shipment_state === 'shipped' && (
-            <Button
-              type="button"
-              className="mb-[8px] w-full"
-              onClick={() => {
-                setSelectedShipmentId(order.id);
-                orderReceiptConfirmModalRef.current?.open(order.id);
-              }}
-            >
-              受取確認
-            </Button>
-          )}
-        {(state === 'delivered' || state === 'shipped') && (
-          <div className="flex w-full justify-between pb-[8px]">
-            {(state === 'shipped' || order.attributes.shipment_state === 'shipped') && (
-              <button
-                type="button"
-                className="mt-[8px] w-[48%] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
-                onClick={() => handleShowShippingInfo(order.attributes.number ?? '')}
-              >
-                <Typography as="bold" element="p" className="text-[14px] text-bibinBlue-100">
-                  配送情報
-                </Typography>
-              </button>
-            )}
-            <Link
-              href={`/account/orders/write-review?${extractSlugs(sortedLineItems)
-                .map((slug) => `slug=${slug}`)
-                .join('&')}`}
-              passHref
-              className={`${state === 'delivered' ? 'w-full' : ''}`}
-            >
-              <button
-                type="button"
-                className={`mt-[8px] flex items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px] ${state === 'delivered' ? 'w-full' : 'w-[155px]'}`}
-              >
-                <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
-                <Typography
-                  as="bold"
-                  element="p"
-                  className="ml-[8px] text-[14px] text-bibinBlue-100"
-                >
-                  レビューを書く
-                </Typography>
-              </button>
-            </Link>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  const sortedLineItems = sortLineItemsByShipment(order);
 
   return (
     <>
       <div className="mb:mt-[24px] mt-[16px] rounded-[6px] border-[1px] bg-white-base shadow-sm">
         <OrderHistoryListInfo order={order} />
         <div className="flex w-full justify-between px-[16px]">
-          <div className="flex w-full flex-col ">
-            {STATE_PRIORITY.map(
-              (state, index) =>
-                sortedLineItems[state] &&
-                renderLineItems(
-                  sortedLineItems[state],
-                  state,
-                  index === STATE_PRIORITY.filter((s) => sortedLineItems[s]).length - 1
-                )
-            )}
-            {Object.keys(sortedLineItems)
-              .filter((state) => !STATE_PRIORITY.includes(state))
-              .map((state, index, array) =>
-                renderLineItems(sortedLineItems[state], state, index === array.length - 1)
-              )}
+          <div className="flex w-full flex-col">
+            {sortedLineItems.map((group, index, array) => (
+              <OrderHistoryListItem
+                key={index}
+                group={group}
+                index={index}
+                isLastGroup={index === array.length - 1}
+                order={order}
+                setSelectedShipmentId={setSelectedShipmentId}
+                orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
+                handleShowShippingInfo={handleShowShippingInfo}
+              />
+            ))}
           </div>
         </div>
       </div>

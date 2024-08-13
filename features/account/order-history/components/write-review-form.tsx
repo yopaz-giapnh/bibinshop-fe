@@ -6,7 +6,6 @@ import { toast } from '@/components/ui/use-toast';
 import { Product } from '@/features/product/types';
 import { saveReviews } from '@/features/review/actions';
 import { Review } from '@/features/review/types';
-import { isNumber } from '@/utils/isNumber';
 import { BadgeAlert, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -34,6 +33,7 @@ export default function WriteReviewForm({ products, reviews }: Props) {
       reviewId: review.id
     }))
   );
+  console.log('==========', products);
   const isValid =
     !!writeReviews.length && writeReviews.some((review) => !!review.rating && review.rating > 0);
 
@@ -71,30 +71,36 @@ export default function WriteReviewForm({ products, reviews }: Props) {
               product={product}
               review={reviews.find((review) => review.product?.id === product.id)}
               onReviewStar={({ productId, star }) => {
-                const targetReview = writeReviews.find((review) => review.productId === productId);
-                if (isNumber(star)) {
-                  setWriteReviews((prev) => {
-                    if (targetReview) {
-                      return [
-                        ...prev.filter((review) => review.productId !== productId),
-                        { ...targetReview, rating: star || targetReview.rating }
-                      ];
-                    } else {
-                      return [...prev, { productId, rating: star }];
-                    }
-                  });
-                }
+                setWriteReviews((prev) => {
+                  const existingReviewIndex = prev.findIndex(
+                    (review) => review.productId === productId
+                  );
+                  if (existingReviewIndex !== -1) {
+                    const updatedReviews = [...prev];
+                    updatedReviews[existingReviewIndex] = {
+                      ...updatedReviews[existingReviewIndex],
+                      rating: star || updatedReviews[existingReviewIndex].rating
+                    };
+                    return updatedReviews;
+                  } else {
+                    return [...prev, { productId, rating: star || 0, review: '' }];
+                  }
+                });
               }}
               onReviewText={({ productId, text }) => {
-                const targetReview = writeReviews.find((review) => review.productId === productId);
                 setWriteReviews((prev) => {
-                  if (targetReview) {
-                    return [
-                      ...prev.filter((review) => review.productId !== productId),
-                      { ...targetReview, review: text, rating: targetReview.rating ?? 0 }
-                    ];
+                  const existingReviewIndex = prev.findIndex(
+                    (review) => review.productId === productId
+                  );
+                  if (existingReviewIndex !== -1) {
+                    const updatedReviews = [...prev];
+                    updatedReviews[existingReviewIndex] = {
+                      ...updatedReviews[existingReviewIndex],
+                      review: text
+                    };
+                    return updatedReviews;
                   } else {
-                    return [...prev, { productId, review: text, rating: 0 }];
+                    return [...prev, { productId, rating: 0, review: text }];
                   }
                 });
               }}

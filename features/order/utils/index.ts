@@ -1,8 +1,7 @@
+import { SortedLineItemGroup } from '@/features/account/order-history/constants';
 import { Order } from '../types';
 
-type SortedLineItems = {
-  [key: string]: Order['lineItems'];
-};
+type SortedLineItems = SortedLineItemGroup[];
 
 export const getShipmentStateTitle = (order: Order) => {
   switch (order.attributes.shipment_state) {
@@ -35,25 +34,40 @@ export const getTabValue = (status: string) => {
       return status; // 未知の状態はそのまま表示
   }
 };
-// 出荷状態でアイテムをソート
-export function sortLineItemsByShipmentState(order: Order): SortedLineItems {
+
+export function extractSlugs(items: SortedLineItemGroup[]) {
+  return items
+    .filter((group) => group.state === 'shipped' || group.state === 'delivered')
+    .flatMap((group) => group.items.map((item) => item.attributes.slug));
+}
+
+export function sortLineItemsByShipment(order: Order): SortedLineItems {
   if (order.shipments.length === 0) {
-    // shipments が空の場合、order の shipment_state を使用
-    const state = order.attributes.shipment_state || 'unknown';
-    return {
-      [state]: order.lineItems
-    };
+    return [{ items: order.lineItems, state: 'unknown' }];
   }
 
-  return order.lineItems.reduce<SortedLineItems>((acc, item) => {
-    const shipment = order.shipments.find((shipment) =>
-      shipment.relationships.line_items?.data?.some(
-        (lineItem) => lineItem && lineItem.id === item.id
-      )
-    );
-    const state = shipment?.attributes.state || order.attributes.shipment_state || 'unknown';
-    if (!acc[state]) acc[state] = [];
-    acc[state].push(item);
-    return acc;
-  }, {});
+  const result: SortedLineItems = order.shipments.map((shipment) => ({
+    items: [],
+    state: shipment.attributes.state ?? ''
+  }));
+
+  order.shipments.forEach((shipment, index) => {
+    shipment.relationships.line_items?.data?.forEach((lineItemRef) => {
+      const lineItem = order.lineItems.find((item) => item.id === lineItemRef?.id);
+      if (lineItem) {
+        result[index].items.push(lineItem);
+      }
+    });
+  });
+
+  const assignedLineItemIds = new Set(
+    result.flatMap((group) => group.items.map((item) => item.id))
+  );
+  const unassignedLineItems = order.lineItems.filter((item) => !assignedLineItemIds.has(item.id));
+
+  if (unassignedLineItems.length > 0) {
+    result.push({ items: unassignedLineItems, state: 'unknown' });
+  }
+
+  return result;
 }
