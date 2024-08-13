@@ -43,7 +43,6 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
         >
           注文履歴
         </Typography>
-        <div className="h-7 w-7" />
       </div>
       <Tabs defaultValue={tabState} className="z-0 w-full items-center justify-center">
         <TabsList className="flex h-fit w-full overflow-hidden border-[1px] bg-white-base">
@@ -101,15 +100,15 @@ function filterOrdersByTabState(orders: Order[], tabState: string) {
   if (tabState === 'all') return orders;
 
   return orders.filter((order) => {
-    const shipmentState = order.attributes.shipment_state;
+    const shipmentStates = order.shipments.map((shipment) => shipment.attributes.state);
 
     switch (tabState) {
-      case 'ready':
-        return shipmentState === 'ready' || shipmentState === 'pending';
-      case 'shipped':
-        return shipmentState === 'shipped' || shipmentState === 'partial';
       case 'delivered':
-        return shipmentState === 'delivered';
+        return shipmentStates.includes('delivered');
+      case 'shipped':
+        return shipmentStates.includes('shipped') && !shipmentStates.includes('delivered');
+      case 'ready':
+        return shipmentStates.every((state) => state === 'ready' || state === 'pending');
       default:
         return false;
     }

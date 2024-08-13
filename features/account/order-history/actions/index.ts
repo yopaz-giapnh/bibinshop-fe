@@ -17,8 +17,10 @@ import { TAGS } from '../constants';
 // only line_items: loads in < 9s
 const includes = [
   //order related
-  'line_items'
-  // 'billing_address',
+  'line_items',
+  'billing_address',
+  'payments.source',
+  'shipments',
   // 'variants',
   // 'variants.images',
   // 'variants.product',
@@ -28,11 +30,8 @@ const includes = [
   // 'vendors',
   // 'vendors.banner_image',
   // 'vendor_totals',
-  //payment related
-  // 'payments.source'
   //shipment related
-  // 'shipments',
-  // 'shipments.selected_shipping_rate'
+  'shipments.selected_shipping_rate'
 ].join(',');
 
 export async function getAccountOrders({

@@ -25,7 +25,7 @@ export default function OrderHistoryItem({
   showBuyAgain = true,
   showPrice = true
 }: OrderHistoryItemProps) {
-  const isUnpaid = status === '未払い';
+  const isUnpaid = status === '発送予定';
   const variantId = item.relationships.variant?.data?.id;
   const imageUrl = image?.attributes.styles?.[image?.attributes.styles?.length - 1].url;
   const price = item?.attributes.display_total;
