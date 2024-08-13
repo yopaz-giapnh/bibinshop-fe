@@ -96,7 +96,6 @@ export function OrderDetail({ className, orderNumber }: Props) {
               setSelectedShipmentId={setSelectedShipmentId}
               orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
               handleShowShippingInfo={handleShowShippingInfo}
-              sortedLineItems={sortedLineItems}
             />
           ))}
         </div>

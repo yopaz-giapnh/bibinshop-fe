@@ -12,6 +12,14 @@ export type OrderTrackerModalRef = {
   close: () => void;
 };
 
+declare global {
+  interface Window {
+    Ordertracker?: (options: { id: string; trackingNumber: string }) => {
+      render: (selector: string) => void;
+    };
+  }
+}
+
 export const OrderTrackerModal = forwardRef<OrderTrackerModalRef>((_, ref) => {
   const ordertrackerID = process.env.NEXT_PUBLIC_ORDERTRACKER_ID;
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +49,7 @@ export const OrderTrackerModal = forwardRef<OrderTrackerModalRef>((_, ref) => {
     if (isOpen && isScriptLoaded && trackingNumber) {
       const initializeOrderTracker = async () => {
         try {
-          if (ordertrackerID && trackingNumber) {
+          if (ordertrackerID && trackingNumber && window.Ordertracker) {
             window
               .Ordertracker({
                 id: ordertrackerID,
