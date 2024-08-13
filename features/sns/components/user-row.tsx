@@ -17,23 +17,26 @@ export default function UserRow(props: Props) {
     <div className="py-6">
       <div className="flex items-center md:items-start">
         {props.userType !== 'account' ? (
-          <Link href={`/user-detail/${props.unique_key}`} className="flex-shrink-0">
+          <Link
+            href={`/user-detail/${props.unique_key}`}
+            className="relative h-[64px] w-[64px] flex-shrink-0"
+          >
             <Image
               src={props.avatar}
               alt="avatar"
               className="rounded-full"
-              width={64}
-              height={64}
+              fill
+              objectFit="cover"
             />
           </Link>
         ) : (
-          <div className="flex-shrink-0">
+          <div className="relative h-[64px] w-[64px] flex-shrink-0">
             <Image
               src={props.avatar}
               alt="avatar"
               className="rounded-full"
-              width={64}
-              height={64}
+              fill
+              objectFit="cover"
             />
           </div>
         )}

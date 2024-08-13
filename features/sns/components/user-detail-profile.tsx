@@ -37,13 +37,9 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
   return (
     <div className="bg mt-[24px] w-full items-center justify-center md:flex">
       <div className="mb-[16px] ml-[8px] flex md:mb-0 md:ml-0">
-        <Image
-          src={avatarUrl}
-          alt={nickname}
-          width={160}
-          height={160}
-          className="h-[88px] w-[88px] rounded-full md:h-[160px] md:w-[160px]"
-        />
+        <div className="relative h-[88px] w-[88px] rounded-full md:h-[160px] md:w-[160px]">
+          <Image src={avatarUrl} alt={nickname} className="rounded-full" fill objectFit="cover" />
+        </div>
         <div className="ml-4 flex flex-col items-baseline justify-end md:hidden">
           <Typography as="boldSmall" element="h2" className="mb-[8px] mr-[16px] text-[20px]">
             {nickname}
