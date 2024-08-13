@@ -30,7 +30,6 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
 }) => {
   const shipment = order.shipments[index];
   const shipmentTrackerNumber = shipment?.attributes.number ?? '';
-  const shipmentState = order.attributes.shipment_state;
   const groupSlugs = extractSlugs([group]);
 
   return (
@@ -40,7 +39,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
           {getTabValue(group.state)}
         </Typography>
         <div className="absolute right-0 top-[16px] hidden md:block">
-          {group.state === 'shipped' && order.attributes.shipment_state === 'shipped' && (
+          {group.state === 'shipped' && (
             <>
               <Button
                 type="button"
@@ -73,7 +72,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
               </button>
             </>
           )}
-          {shipmentState !== 'ready' && (
+          {group.state !== 'ready' && (
             <Link
               href={`/account/orders/write-review?${groupSlugs
                 .map((slug) => `slug=${slug}`)
@@ -97,7 +96,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
           )}
         </div>
       </div>
-      {group.items.map((item, itemIndex) => {
+      {group.items.map((item) => {
         const image = findImageFromLineItem({
           lineItem: item,
           variants: order.variants,
@@ -118,32 +117,28 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
                 showPrice={false}
               />
             </div>
-            {itemIndex === group.items.length - 1 && isLastGroup && (
-              <div className="hidden border-[1px] md:block" />
-            )}
           </div>
         );
       })}
       <div className="md:hidden">
-        {(group.state === 'delivered' || group.state === 'shipped') &&
-          order.attributes.shipment_state === 'shipped' && (
-            <Button
-              type="button"
-              className="mb-[8px] w-full"
-              onClick={() => {
-                setSelectedShipmentId(shipment?.id ?? null);
-                orderReceiptConfirmModalRef.current?.open(shipment?.id ?? '');
-              }}
-            >
-              受取確認
-            </Button>
-          )}
+        {group.state === 'shipped' && (
+          <Button
+            type="button"
+            className="mb-[8px] w-full"
+            onClick={() => {
+              setSelectedShipmentId(shipment?.id ?? null);
+              orderReceiptConfirmModalRef.current?.open(shipment?.id ?? '');
+            }}
+          >
+            受取確認
+          </Button>
+        )}
         {(group.state === 'delivered' || group.state === 'shipped') && (
           <div className="flex w-full justify-between pb-[8px]">
-            {(group.state === 'shipped' || order.attributes.shipment_state === 'shipped') && (
+            {group.state === 'shipped' && (
               <button
                 type="button"
-                className="mt-[8px] w-[48%] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                className="mr-[4px] mt-[8px] w-full items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
                 onClick={() => {
                   if (shipment) {
                     handleShowShippingInfo(shipmentTrackerNumber);
@@ -160,10 +155,11 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
                 .map((slug) => `slug=${slug}`)
                 .join('&')}`}
               passHref
+              className="ml-[4px] w-full"
             >
               <button
                 type="button"
-                className="mt-[8px] flex w-[222px] items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
+                className="mt-[8px] flex w-full items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 py-[8px]"
               >
                 <FilePen className="h-[18px] w-[18px]" color="#51B7FF" />
                 <Typography
@@ -178,6 +174,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
           </div>
         )}
       </div>
+      {!isLastGroup && <div className="hidden border-[1px] md:block" />}
     </div>
   );
 };
