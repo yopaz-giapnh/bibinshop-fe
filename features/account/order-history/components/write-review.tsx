@@ -1,6 +1,6 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getProducts } from '@/features/product/actions';
-import { getReviews } from '@/features/review/actions';
+import { getMyReviews } from '@/features/review/actions';
 import { Suspense } from 'react';
 import WriteReviewForm from './write-review-form';
 
@@ -14,7 +14,7 @@ type Props = {
  */
 export default async function WriteReview({ slugs }: Props) {
   const products = await getProducts({ query: { 'filter[slugs]': slugs.join(',') } });
-  const reviews = await getReviews({
+  const reviews = await getMyReviews({
     query: { 'filter[product_ids]': products.data.map((product) => product.id).join(',') }
   });
 

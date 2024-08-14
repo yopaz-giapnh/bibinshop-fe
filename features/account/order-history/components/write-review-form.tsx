@@ -27,13 +27,12 @@ export type WriteReview = {
 export default function WriteReviewForm({ products, reviews }: Props) {
   const [writeReviews, setWriteReviews] = useState<WriteReview[]>(
     reviews.map((review) => ({
-      productId: review.product?.id || '',
+      productId: review.product?.id || review.relationships.product?.data?.id || '',
       rating: review.attributes.rating || 0,
       review: review.attributes.review || '',
       reviewId: review.id
     }))
   );
-  console.log('==========', products);
   const isValid =
     !!writeReviews.length && writeReviews.some((review) => !!review.rating && review.rating > 0);
 
@@ -69,7 +68,9 @@ export default function WriteReviewForm({ products, reviews }: Props) {
             <WriteReviewItem
               key={product.id}
               product={product}
-              review={reviews.find((review) => review.product?.id === product.id)}
+              review={reviews.find(
+                (review) => review.relationships.product?.data?.id === product.id
+              )}
               onReviewStar={({ productId, star }) => {
                 setWriteReviews((prev) => {
                   const existingReviewIndex = prev.findIndex(
