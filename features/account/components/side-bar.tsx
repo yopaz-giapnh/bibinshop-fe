@@ -3,14 +3,17 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { logout } from '@/features/auth/actions';
+import { useIsPc } from '@/hooks/use-is-pc';
 import clsx from 'clsx';
 import {
   Bell,
+  CircleDollarSign,
   CreditCard,
   FileText,
   LogOut,
   MapPin,
   ShieldPlus,
+  Ticket,
   UserRound,
   Users
 } from 'lucide-react';
@@ -31,6 +34,26 @@ interface SideNavButtonProps {
  */
 export default function AccountSideBar() {
   const pathname = usePathname();
+  const isPc = useIsPc();
+
+  const sideNavTopButtons: SideNavButtonProps[] = [
+    {
+      href: '/account/order-history',
+      icon: <FileText className="h-6 w-6" color="white" />,
+      label: '注文履歴'
+    },
+    {
+      href: '/account/coupon',
+      icon: <Ticket className="h-6 w-6" color="white" />,
+      label: 'クーポン'
+    },
+    {
+      // TODO:ポイント残高に置き換える
+      href: '/account/coupon',
+      icon: <CircleDollarSign className="h-6 w-6" color="white" />,
+      label: 'ポイント残高'
+    }
+  ];
 
   const sideNavButtons: SideNavButtonProps[] = [
     {
@@ -38,11 +61,24 @@ export default function AccountSideBar() {
       icon: <UserRound className="h-6 w-6" color="black" />,
       label: 'プロフィール'
     },
-    {
-      href: '/account/order-history',
-      icon: <FileText className="h-6 w-6" color="black" />,
-      label: '注文履歴'
-    },
+    ...(isPc
+      ? [
+          {
+            href: '/account/order-history',
+            icon: <FileText className="h-6 w-6" color="black" />,
+            label: '注文履歴'
+          }
+        ]
+      : []),
+    ...(isPc
+      ? [
+          {
+            href: '/account/coupon',
+            icon: <FileText className="h-6 w-6" color="black" />,
+            label: 'クーポン'
+          }
+        ]
+      : []),
     {
       href: '/account/address',
       icon: <MapPin className="h-6 w-6" color="black" />,
@@ -93,8 +129,33 @@ export default function AccountSideBar() {
     );
   };
 
+  const SideNavTopButton = ({ href, icon, label }: SideNavButtonProps) => {
+    return (
+      <div className="flex w-full flex-col items-center justify-center">
+        <Link href={href} passHref>
+          <button type="button" className="rounded-full bg-bibinBlue-100 p-[24px]">
+            {icon}
+          </button>
+        </Link>
+        <Typography as="bold" element="p" className="pt-[8px] text-[16px] text-black-90">
+          {label}
+        </Typography>
+      </div>
+    );
+  };
+
   return (
     <div className="w-full flex-col items-center bg-paleFrostBlue md:w-[400px] md:pl-[24px]">
+      <div className="flex w-full md:hidden">
+        {sideNavTopButtons.map((button) => (
+          <SideNavTopButton
+            key={button.label}
+            href={button.href}
+            icon={button.icon}
+            label={button.label}
+          />
+        ))}
+      </div>
       {sideNavButtons.map((button) => (
         <SideNavButton
           key={button.label}

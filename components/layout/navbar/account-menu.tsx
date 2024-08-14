@@ -35,6 +35,14 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
       href: '/account/order-history'
     },
     {
+      title: 'メッセージ',
+      href: '/account/message'
+    },
+    {
+      title: 'クーポン',
+      href: '/account/coupon'
+    },
+    {
       title: 'お届け先住所',
       href: '/account/address'
     },
@@ -45,10 +53,6 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
     {
       title: 'アカウントセキュリティ',
       href: '/account/security'
-    },
-    {
-      title: 'メッセージ',
-      href: '/account/message'
     }
   ];
 
