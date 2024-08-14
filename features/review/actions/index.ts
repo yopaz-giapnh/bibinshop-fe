@@ -1,6 +1,7 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
+import { getAccount } from '@/features/account/profile/actions';
 import { UserSchema } from '@/features/account/types';
 import { isUserSchema } from '@/features/account/utils';
 import { ImageSchema, ProductSchema } from '@/features/product/types';
@@ -8,6 +9,17 @@ import { isImageSchema, isProductSchema } from '@/features/product/utils';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import { ReviewListParameters, ReviewSchema } from '../types';
+
+export async function getMyReviews(params?: ReviewListParameters) {
+  const user = await getAccount();
+  return await getReviews({
+    ...params,
+    query: {
+      ...params?.query,
+      'filter[user_ids]': user.id
+    }
+  });
+}
 
 export async function getReviews(params?: ReviewListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/reviews', {
