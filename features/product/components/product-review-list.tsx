@@ -12,7 +12,7 @@ export async function ProductReviewList({ productId }: Props) {
       'filter[product_ids]': productId
     }
   });
-  const reviewsCount = reviews.meta.total_count ?? 0;
+  const reviewsCount = reviews?.meta?.total_count ?? 0;
 
   return (
     <>
