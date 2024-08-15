@@ -20,6 +20,8 @@ export const getShipmentStateTitle = (order: Order) => {
 
 export const getTabValue = (status: string) => {
   switch (status) {
+    case 'all':
+      return 'すべて';
     case 'ready':
     case 'pending':
       return '発送予定';

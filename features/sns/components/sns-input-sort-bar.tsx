@@ -330,7 +330,7 @@ export function SnsInputSortBar({ onSortChange, onFilterChange }: SnsInputSortBa
         </Command>
 
         <Select onValueChange={handleSortChange}>
-          <SelectTrigger className="mt-[8px] h-[48px] w-[300px] rounded-full border-[1px] border-bibinBlue-100 bg-paleFrostBlue px-[24px] py-[4px] text-[14px] font-semibold text-bibinBlue-100 md:mt-0">
+          <SelectTrigger className="mt-[8px] h-[48px] w-fit rounded-full border-[1px] border-bibinBlue-100 bg-paleFrostBlue px-[24px] py-[4px] text-[14px] font-semibold text-bibinBlue-100 md:mt-0 md:w-[350px]">
             {`並べ替え: ${sortOption}`}
           </SelectTrigger>
           <SelectContent>

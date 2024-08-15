@@ -70,7 +70,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <div className="bg-paleFrostBlue px-[24px]">
         <Breadcrumb menus={breadcrumbMenus} />
       </div>
-      <div className="flex bg-paleFrostBlue">
+      <div className="flex bg-paleFrostBlue pb-[48px]">
         <div className="hidden md:block">
           <AccountSideBar />
         </div>
