@@ -35,7 +35,7 @@ export function SnsUserListDetailCard({ user, products }: SnsUserListDetailCardP
       <div className="mb-4 flex items-center md:items-start">
         <Link
           href={`/user-detail/${uniqueKey}`}
-          className="relative mr-4 h-16 w-16 flex-shrink-0 rounded-full md:h-[84px] md:w-[84px]"
+          className="relative mr-4 h-[84px] w-[88px] flex-shrink-0 rounded-full md:h-[154px] md:w-[160px]"
         >
           <Image src={avatarUrl} alt={'avatar'} className="rounded-full" fill objectFit="cover" />
         </Link>

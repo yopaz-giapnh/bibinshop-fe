@@ -89,7 +89,7 @@ export default function LoginForm() {
               ログイン
             </Typography>
 
-            <div>
+            <div className="mb-[24px]">
               <EmailFormField control={form.control} />
               <PasswordFormField control={form.control} />
               <div className="flex justify-end">

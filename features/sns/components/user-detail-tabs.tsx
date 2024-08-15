@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { FilteredReviews } from './filterd-reviews';
+import ProfileProductEmptyView from './profile-product-empty-view';
 
 type Props = {
   currentPage: number;
@@ -79,7 +80,11 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
               <FilteredReviews reviews={reviews.data} />
             ) : (
               <div className="mx-[8px]">
-                <ProductOverview products={purchasedProducts.data} columns={4} />
+                {purchasedProducts.data.length === 0 ? (
+                  <ProfileProductEmptyView />
+                ) : (
+                  <ProductOverview products={purchasedProducts.data} columns={4} />
+                )}
               </div>
             )}
           </Suspense>

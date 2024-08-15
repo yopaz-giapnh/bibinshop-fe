@@ -108,7 +108,7 @@ export const UserDetailProfileStats = ({
           }}
         />
       </div>
-      <div className="mx-[8px] mb-4 flex max-w-screen-sm flex-wrap md:mx-0">
+      <div className="mx-[8px] mb-4 flex w-full max-w-screen-sm flex-wrap px-[16px] md:mx-0 md:px-0">
         {tags.map((tag, index) => (
           <Tag key={index} text={tag} />
         ))}

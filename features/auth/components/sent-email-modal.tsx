@@ -94,21 +94,21 @@ export const SentEmailModal = forwardRef<SentEmailModalRef, { email: string }>((
           </form>
         </DialogContent>
         <DialogContent
-          className="flex w-11/12 flex-col items-center justify-center md:hidden"
+          className="flex h-[90%] w-11/12 flex-col items-center justify-center md:hidden"
           hideCloseButton
         >
-          <img src={EmailSentGif.src} />
+          <img src={EmailSentGif.src} className="h-[100px] w-[200px]" />
           <Typography
             as="bold"
             element="p"
-            className="mb-[24px] text-center text-[20px] text-black-90"
+            className="mb-[12px] text-center text-[20px] text-black-90"
           >
             入力したアドレスにメールを送信しました
           </Typography>
-          <Typography as="bold" element="p" className="mb-[24px] text-[14px] text-bibinGreen-100">
+          <Typography as="bold" element="p" className="mb-[12px] text-[14px] text-bibinGreen-100">
             {email}
           </Typography>
-          <Typography as="caption" element="p" className="mb-[24px] text-[14px] text-black-90">
+          <Typography as="caption" element="p" className="mb-[12px] text-[14px] text-black-90">
             入力いただいたメールアドレスに確認のメールが送信されます。メールが届いていない場合は、迷惑メールフォルダをご確認ください。
           </Typography>
           <form action={action} className="w-full">

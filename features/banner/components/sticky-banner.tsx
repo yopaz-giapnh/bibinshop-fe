@@ -34,6 +34,7 @@ type Props = {
 export function StickyBanner({ isSignedIn }: Props) {
   const router = useRouter();
   const [concerns, setConcerns] = useState<Concerns | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [openProfileFormModal, setOpenProfileFormModal] = useState(false);
   const [openProfileFormHairModal, setOpenProfileFormHairModal] = useState(false);
@@ -46,28 +47,32 @@ export function StickyBanner({ isSignedIn }: Props) {
   const [birthYear, setBirthYear] = useState<number | undefined>();
 
   const fetchConcerns = async () => {
+    setIsLoading(true);
     try {
       const data = await getConcerns();
       setConcerns(data ? data : undefined);
     } catch (error) {
       () => {};
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchConcerns();
-
-    if (concerns) return;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (!concerns) {
+    if (!isLoading && !concerns) {
       setOpen(true);
     }
-  }, [concerns]);
+  }, [concerns, isLoading]);
 
   const { toast } = useToast();
+
+  if (isLoading) {
+    return null; // Or return a loading indicator if preferred
+  }
 
   if (concerns) {
     return null;
@@ -89,6 +94,7 @@ export function StickyBanner({ isSignedIn }: Props) {
         title: 'プロフィールを作成しました',
         icon: <Check className="h-6 w-6" />
       });
+      fetchConcerns();
     } catch (error) {
       toast({
         title: 'プロフィールの更新中にエラーが発生しました。後でもう一度お試しください。',

@@ -55,12 +55,12 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
   });
 
   return (
-    <div>
-      <div className="flex items-center pl-[16px] md:ml-[24px] md:mr-0 md:justify-normal md:pl-0">
-        <div className="relative h-[88px] w-[88px] md:h-[160px] md:w-[160px]">
+    <div className="h-full">
+      <div className="flex h-[90px] pl-[16px] md:ml-[24px] md:mr-0 md:h-fit md:justify-normal md:pl-0">
+        <div className="relative h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]">
           <Image src={avatarUrl} className="rounded-full" fill alt={'avatar'} objectFit="cover" />
         </div>
-        <div className="ml-[16px] flex flex-col justify-between">
+        <div className="ml-[16px] flex flex-col items-start justify-between">
           <div className="items-center md:flex">
             <Typography
               as="bold"
