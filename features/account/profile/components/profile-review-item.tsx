@@ -5,6 +5,7 @@ import { getProductImageUrl } from '@/features/product/utils';
 import { addReviewFeedback, removeReviewFeedback } from '@/features/review/actions';
 import Rating from '@/features/review/components/rating';
 import { Review } from '@/features/review/types';
+import { useAuth } from '@/hooks/use-auth';
 import { formatDateString } from '@/utils/date';
 import { ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
@@ -20,6 +21,7 @@ export function ProfileReviewItem({ review }: ReviewProps) {
   const [isFeedback, setIsFeedback] = useState(!!review.attributes.feedback_id);
   const [account, setAccount] = useState<User | null>(null);
   const isCurrentUser = account?.id === review?.relationships?.user?.data?.id;
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     async function fetchAccount() {
@@ -99,7 +101,7 @@ export function ProfileReviewItem({ review }: ReviewProps) {
           </Typography>
         </div>
       </div>
-      {!isCurrentUser && (
+      {!isCurrentUser && isLoggedIn && (
         <div className="mt-[16px] flex justify-end">
           <button className="flex items-center space-x-2" onClick={handleFeedbackToggle}>
             <ThumbsUp
