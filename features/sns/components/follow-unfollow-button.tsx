@@ -8,6 +8,8 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/hooks/use-auth';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useRouter } from 'next/navigation';
 import { startTransition, useCallback, useState } from 'react';
@@ -18,29 +20,41 @@ type Props = {
   unique_key: string;
   isFollowing: boolean;
 };
+
 export default function FollowUnfollowButton({ username, unique_key, isFollowing }: Props) {
   const [following, setFollowing] = useState(isFollowing);
   const router = useRouter();
+  const { toast } = useToast();
+  const { isLoggedIn } = useAuth();
+
   const refreshUserDetails = useCallback(() => {
     startTransition(() => {
       router.refresh();
     });
   }, [router]);
 
+  const handleFollow = async () => {
+    if (!isLoggedIn) {
+      toast({
+        title: 'ログインが必要です',
+        description: 'フォローするにはログインしてください。',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    await follow({ unique_key }).then(
+      () => {
+        setFollowing(true);
+        refreshUserDetails();
+      },
+      () => {}
+    );
+  };
+
   if (!following) {
     return (
-      <Button
-        className="ml-auto"
-        onClick={async () =>
-          await follow({ unique_key }).then(
-            () => {
-              setFollowing(true);
-              refreshUserDetails();
-            },
-            () => {}
-          )
-        }
-      >
+      <Button className="ml-auto" onClick={handleFollow}>
         フォローする
       </Button>
     );
