@@ -1,5 +1,3 @@
-'use client';
-
 import { Typography } from '@/components/ui/typography';
 import Image from 'next/image';
 
@@ -42,8 +40,8 @@ export const CouponCard: React.FC<CouponCardProps> = ({
           </Typography>
         </div>
       )}
-      <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-        <div className="absolute left-1/2 top-6 flex w-11/12 -translate-x-1/2 transform flex-col items-start md:bottom-3 md:top-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-between p-4">
+        <div className="mt-[20px] flex w-11/12 flex-col items-start">
           <Typography
             as="bold"
             element="p"
@@ -55,8 +53,8 @@ export const CouponCard: React.FC<CouponCardProps> = ({
             {subtitle}
           </Typography>
         </div>
-        <div className="absolute bottom-16 left-1/2 flex w-10/12 -translate-x-1/2 transform flex-col items-center border-t border-dashed border-bibinBlue-100 md:bottom-28 md:w-11/12" />
-        <div className="absolute bottom-2 left-1/2 flex w-11/12 -translate-x-1/2 transform flex-col items-start md:bottom-6">
+        <div className="flex w-11/12 flex-col items-center border-t border-dashed border-bibinBlue-100" />
+        <div className="flex w-11/12 flex-col items-start md:bottom-6">
           <Typography as="caption" element="p" className="text-center text-[12px]">
             {validUntil}
           </Typography>
