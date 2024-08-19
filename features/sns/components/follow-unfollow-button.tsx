@@ -8,12 +8,15 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useRouter } from 'next/navigation';
-import { startTransition, useCallback, useState } from 'react';
+import { startTransition, useCallback, useRef, useState } from 'react';
 import { follow, unfollow } from '../actions';
+import {
+  NewRegistrationMediationModal,
+  NewRegistrationMediationModalRef
+} from './new-registration-mediation-modal';
 
 type Props = {
   username: string;
@@ -24,8 +27,8 @@ type Props = {
 export default function FollowUnfollowButton({ username, unique_key, isFollowing }: Props) {
   const [following, setFollowing] = useState(isFollowing);
   const router = useRouter();
-  const { toast } = useToast();
   const { isLoggedIn } = useAuth();
+  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
 
   const refreshUserDetails = useCallback(() => {
     startTransition(() => {
@@ -35,11 +38,7 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
 
   const handleFollow = async () => {
     if (!isLoggedIn) {
-      toast({
-        title: 'ログインが必要です',
-        description: 'フォローするにはログインしてください。',
-        variant: 'destructive'
-      });
+      newRegistrationMediationModalRef.current?.open();
       return;
     }
 
@@ -54,9 +53,12 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
 
   if (!following) {
     return (
-      <Button className="ml-auto" onClick={handleFollow}>
-        フォローする
-      </Button>
+      <>
+        <Button className="ml-auto" onClick={handleFollow}>
+          フォローする
+        </Button>
+        <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
+      </>
     );
   }
   return (
