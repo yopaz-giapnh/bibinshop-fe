@@ -29,12 +29,13 @@ export function OrderOverview({ cart }: Props) {
           </Typography>
         </div>
 
+        {/* TODO: BE接続時動作確認 */}
         {!!promoTotal && (
           <div className="mt-4 flex justify-between">
             <Typography as="caption" element="p" className="text-black-90">
-              {`割引金額`}
+              {`割引額`}
             </Typography>
-            <Typography as="caption" element="p" className="text-black-90">
+            <Typography as="caption" element="p" className="text-bibinBlue-100">
               {promoTotal}
             </Typography>
           </div>
