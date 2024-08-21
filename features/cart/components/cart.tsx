@@ -20,7 +20,9 @@ export async function Cart() {
           <CartItemList cart={cart} />
         </div>
         <div className="flex flex-none flex-col gap-4 md:w-[424px]">
-          <ApplyCouponButton />
+          <div className="hidden w-full md:block">
+            <ApplyCouponButton />
+          </div>
           <OrderOverview cart={cart} />
 
           {/* TODO: 本来は、支払い方法を取得できたほうがいい？ */}

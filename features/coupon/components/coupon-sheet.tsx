@@ -165,7 +165,7 @@ export const CouponSheet = forwardRef<CouponSheetRef>((_, ref) => {
 
   return (
     <Sheet open={isOpen}>
-      <SheetContent onBackgroundClick={onClose}>
+      <SheetContent onBackgroundClick={onClose} className="w-11/12 md:w-1/4">
         <div className="flex h-full flex-col">
           <div className="flex justify-between border-b border-black-10 p-[24px]">
             <Typography as="title" element="h1" className="text-text-80">
