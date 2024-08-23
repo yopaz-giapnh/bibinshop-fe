@@ -5,6 +5,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
 import { displayPromoTotal } from '@/features/cart/utils';
+import { PointInfoPopover } from '@/features/point-balance/components/point-info-popover';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateCheckout } from '../actions';
 import { useCheckout } from './checkout-ctx';
@@ -70,6 +71,7 @@ export function OrderOverview({ cart, canOrder }: Props) {
         <Typography as="caption" element="p" className="text-black-90">
           獲得予定<span className="text-bibinBlue-100"> 100 </span>ポイント
         </Typography>
+        <PointInfoPopover />
       </div>
 
       {canOrder && (
