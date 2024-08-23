@@ -10,6 +10,7 @@ import {
   CircleDollarSign,
   CreditCard,
   FileText,
+  History,
   LogOut,
   MapPin,
   ShieldPlus,
@@ -87,6 +88,11 @@ export default function AccountSideBar() {
           }
         ]
       : []),
+    {
+      href: '/account/browse-products',
+      icon: <History className="h-6 w-6" color="black" />,
+      label: '閲覧履歴'
+    },
     {
       href: '/account/address',
       icon: <MapPin className="h-6 w-6" color="black" />,

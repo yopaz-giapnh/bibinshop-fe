@@ -47,6 +47,10 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
       href: '/account/point-balance'
     },
     {
+      title: '閲覧履歴',
+      href: '/account/browse-products'
+    },
+    {
       title: 'お届け先住所',
       href: '/account/address'
     },

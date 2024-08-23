@@ -4,7 +4,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { addItem } from '@/features/cart/actions';
 import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
-import { BadgeAlert, Check } from 'lucide-react';
+import { BadgeAlert, Check, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '../types';
@@ -12,9 +12,10 @@ import { Product } from '../types';
 type Props = {
   product: Product;
   imageSize: number;
+  showDeleteButton?: boolean;
 };
 
-export function ProductCard({ product, imageSize }: Props) {
+export function ProductCard({ product, imageSize, showDeleteButton = false }: Props) {
   const { toast } = useToast();
 
   const defaultVariant = product.relationships.default_variant?.data;
@@ -38,17 +39,25 @@ export function ProductCard({ product, imageSize }: Props) {
 
   return (
     <Link className="flex flex-col" href={`/products/${product.attributes.slug}`} passHref>
-      <Image
-        src={product.images[0]?.url || '/placeholder-product-image.png'}
-        alt={product.attributes.name || ''}
-        width={imageSize}
-        height={imageSize}
-        className={'h-full rounded-[5px] object-cover'}
-        style={{
-          height: imageSize,
-          width: imageSize
-        }}
-      />
+      <div className="relative">
+        {/* TODO: 閲覧履歴を削除するAPIを作成する */}
+        {showDeleteButton && (
+          <button className="absolute right-2 top-2 z-10 rounded-full text-gray-100 shadow-xl">
+            <X className="h-[32px] w-[32px] rounded-full shadow-xl md:h-[56px] md:w-[56px]" />
+          </button>
+        )}
+        <Image
+          src={product.images[0]?.url || '/placeholder-product-image.png'}
+          alt={product.attributes.name || ''}
+          width={imageSize}
+          height={imageSize}
+          className={'h-full rounded-[5px] object-cover'}
+          style={{
+            height: imageSize,
+            width: imageSize
+          }}
+        />
+      </div>
       <Typography
         as="xSmall"
         element="p"
