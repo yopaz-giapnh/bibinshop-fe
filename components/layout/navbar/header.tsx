@@ -3,6 +3,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
 import { getTaxons } from '@/features/taxon/actions';
+import { Heart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ComponentProps, Suspense } from 'react';
@@ -19,7 +20,7 @@ export function Header({ isSignedIn, getTaxons }: Props) {
   return (
     <div>
       {!isSignedIn && (
-        <div className="bg-bibinViolet-100 w-full">
+        <div className="w-full bg-bibinViolet-100">
           <Typography as="bold" element="p" className="text-center text-[14px] text-white-base">
             bibin Shop 新規ユーザー10%OFF クーポンゲット！
           </Typography>
@@ -51,6 +52,12 @@ export function Header({ isSignedIn, getTaxons }: Props) {
           </Link>
           <div className="mr-[6px] hidden h-[40px] w-[1px] bg-gray-200 md:block" />
           <AccountMenu isSignedIn={isSignedIn} getAccount={isSignedIn ? getAccount() : null} />
+          <Link href="/favorite-products" className="flex md:ml-6">
+            <Heart className="h-6 w-6" />
+            <Typography as="small" element="p" className="ml-1 hidden md:block">
+              お気に入り
+            </Typography>
+          </Link>
           <Suspense fallback={<LoadingSpinner />}>
             <CartMenu />
           </Suspense>

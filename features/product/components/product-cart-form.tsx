@@ -13,7 +13,7 @@ import Rating from '@/features/review/components/rating';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { cn } from '@/lib/utils';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
-import { BadgeAlert, Check, ShoppingCart } from 'lucide-react';
+import { BadgeAlert, Check, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -42,6 +42,7 @@ export function ProductCartForm({ product, getCart }: Props) {
     if (!state) {
       return;
     }
+    //TODO: 購入制限toastを表示するロジック追加
 
     if (state.success) {
       if (isPc) {
@@ -79,6 +80,14 @@ export function ProductCartForm({ product, getCart }: Props) {
           icon: <Check className="h-6 w-6" />
         });
       });
+  };
+
+  const onPressFavorite = () => {
+    // TODO: お気に入りに追加するAPIを呼び出す
+    toast({
+      title: 'お気に入りに追加しました',
+      icon: <Check className="h-6 w-6" />
+    });
   };
 
   return (
@@ -182,24 +191,31 @@ export function ProductCartForm({ product, getCart }: Props) {
           </div>
         </div>
 
-        <form className="hidden md:block" action={action}>
-          <AddToCartButton />
-        </form>
+        <div className="flex items-center">
+          <form className="hidden md:block" action={action}>
+            <AddToCartButton />
+          </form>
+          <button className="ml-2" onClick={onPressFavorite}>
+            <Heart className="h-12 w-12 rounded-full border-[1px] p-2" />
+          </button>
+        </div>
       </div>
 
       <Suspense>
         <CartSheet ref={cartSheetRef} getCart={getCart} />
       </Suspense>
 
-      <form
-        className="fixed bottom-0 z-50 ml-[-16px] flex w-screen items-center justify-between border-t-[1px] bg-white-base px-4 py-2 md:hidden"
-        action={action}
-      >
-        <AddToCartButton />
-        <Link href="/cart">
+      <div className="fixed bottom-0 z-50 ml-[-16px] flex w-full items-center justify-between border-t-[1px] bg-white-base px-4 py-2 md:hidden">
+        <form action={action} className="w-full">
+          <AddToCartButton />
+        </form>
+        <button className="ml-2" onClick={onPressFavorite}>
+          <Heart className="h-10 w-10 rounded-full border-[1px] p-2" />
+        </button>
+        <Link href="/cart" className="ml-2">
           <ShoppingCart className="h-8 w-8" />
         </Link>
-      </form>
+      </div>
     </>
   );
 }
@@ -208,12 +224,7 @@ function AddToCartButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button
-      size="lg"
-      variant="lg"
-      className="h-[45px] w-[calc(100vw-80px)] md:w-[350px]"
-      disabled={pending}
-    >
+    <Button size="lg" variant="lg" className="h-[45px] w-full md:w-[350px]" disabled={pending}>
       {pending ? <LoadingSpinner /> : 'カートに追加'}
     </Button>
   );
