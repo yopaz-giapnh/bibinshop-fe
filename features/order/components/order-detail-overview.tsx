@@ -29,6 +29,7 @@ export function OrderDetailOverview({ item }: Props) {
             {item.attributes.display_item_total}
           </Typography>
         </div>
+        {/* TODO: BE接続時動作確認 */}
         {!!promoTotal && (
           <div className="flex justify-between">
             <Typography
@@ -36,17 +37,34 @@ export function OrderDetailOverview({ item }: Props) {
               element="p"
               className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
             >
-              {`割引金額`}
+              割引金額
             </Typography>
             <Typography
               as="caption"
               element="p"
-              className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+              className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
             >
               {promoTotal}
             </Typography>
           </div>
         )}
+        {/* TODO: BE接続時動作確認 */}
+        <div className="flex justify-between">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+          >
+            ポイント利用
+          </Typography>
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
+          >
+            -1,000円
+          </Typography>
+        </div>
         <div className="flex justify-between">
           <Typography
             as="caption"

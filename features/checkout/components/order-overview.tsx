@@ -34,6 +34,7 @@ export function OrderOverview({ cart, canOrder }: Props) {
         </Typography>
       </div>
 
+      {/* TODO: BE接続時動作確認 */}
       {!!promoTotal && (
         <div className="mt-4 flex justify-between">
           <Typography as="caption" element="p" className="text-black-90">
@@ -45,6 +46,16 @@ export function OrderOverview({ cart, canOrder }: Props) {
         </div>
       )}
 
+      {/* TODO: BE接続時動作確認 */}
+      <div className="mt-4 flex justify-between">
+        <Typography as="caption" element="p" className="text-black-90">
+          ポイント利用
+        </Typography>
+        <Typography as="caption" element="p" className="text-bibinBlue-100">
+          -1,000円
+        </Typography>
+      </div>
+
       <div className="mt-4 flex items-center justify-between border-t border-t-black-10 pt-2 md:py-2 md:pt-0">
         <Typography as="caption" element="p" className="text-black-90">
           小計
@@ -53,6 +64,14 @@ export function OrderOverview({ cart, canOrder }: Props) {
           {cart.attributes.display_total}
         </Typography>
       </div>
+
+      {/* TODO: BE接続時動作確認 */}
+      <div className="flex w-full items-center justify-center pt-2 md:pb-2">
+        <Typography as="caption" element="p" className="text-black-90">
+          獲得予定<span className="text-bibinBlue-100"> 100 </span>ポイント
+        </Typography>
+      </div>
+
       {canOrder && (
         <form
           action={action}
@@ -66,6 +85,7 @@ export function OrderOverview({ cart, canOrder }: Props) {
               {cart.attributes.display_item_total}
             </Typography>
           </div>
+
           <OrderConfirmButton disabled={!canOrder} />
         </form>
       )}

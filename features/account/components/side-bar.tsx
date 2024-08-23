@@ -48,8 +48,7 @@ export default function AccountSideBar() {
       label: 'クーポン'
     },
     {
-      // TODO:ポイント残高に置き換える
-      href: '/account/coupon',
+      href: '/account/point-balance',
       icon: <CircleDollarSign className="h-6 w-6" color="white" />,
       label: 'ポイント残高'
     }
@@ -76,6 +75,15 @@ export default function AccountSideBar() {
             href: '/account/coupon',
             icon: <FileText className="h-6 w-6" color="black" />,
             label: 'クーポン'
+          }
+        ]
+      : []),
+    ...(isPc
+      ? [
+          {
+            href: '/account/point-balance',
+            icon: <CircleDollarSign className="h-6 w-6" color="black" />,
+            label: 'ポイント残高'
           }
         ]
       : []),
@@ -146,7 +154,7 @@ export default function AccountSideBar() {
 
   return (
     <div className="w-full flex-col items-center bg-paleFrostBlue md:w-[400px] md:pl-[24px]">
-      <div className="flex w-full md:hidden">
+      <div className="flex w-full pt-4 md:hidden">
         {sideNavTopButtons.map((button) => (
           <SideNavTopButton
             key={button.label}

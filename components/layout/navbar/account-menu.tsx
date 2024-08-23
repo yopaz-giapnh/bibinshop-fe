@@ -43,6 +43,10 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
       href: '/account/coupon'
     },
     {
+      title: 'ポイント残高',
+      href: '/account/point-balance'
+    },
+    {
       title: 'お届け先住所',
       href: '/account/address'
     },

@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <>
       <Menu />
-      <div className="mt-auto pb-[19px] pt-[42px] md:px-[150px]">
+      <div className="mt-auto pb-[70px] pt-[42px] md:px-[150px] md:pb-[19px]">
         <Links />
         <div className="mt-12">
           <Copyright />
