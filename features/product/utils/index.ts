@@ -1,6 +1,7 @@
 import { LineItem } from '@/features/cart/types';
 import {
   CalculatorSchema,
+  CancellationRequestSchema,
   ImageSchema,
   ProductPropertySchema,
   ProductSchema,
@@ -30,6 +31,12 @@ export function isTaxonImageSchema(includedObject: unknown): includedObject is T
 
 export function isVariantSchema(includedObject: unknown): includedObject is VariantSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'variant';
+}
+
+export function isCancellationReuqestSchema(
+  includedObject: unknown
+): includedObject is CancellationRequestSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'cancellation_request';
 }
 
 export function isProductPropertySchema(
