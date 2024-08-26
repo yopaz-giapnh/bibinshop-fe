@@ -26,6 +26,7 @@ export default function OrderHistoryDetail({ order }: Props) {
         <OrderDetail
           className="md:h-screen-calc md:px-[36px]"
           orderNumber={order.attributes.number}
+          enableCancel
         />
       )}
     </>

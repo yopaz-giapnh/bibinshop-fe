@@ -46,6 +46,18 @@ export default function OrderHistoryListInfo({ order }: OrderHistoryListInfoProp
         </div>
         <OrderHistoryInfoDetail label="注文番号:" value={order.attributes.number || ''} />
       </div>
+      {order.cancellationRequests.length > 0 && (
+        <OrderHistoryInfoDetail
+          label="キャンセル状況:"
+          value={
+            order.cancellationRequests[0].attributes.state === 'APPROVED'
+              ? 'キャンセル済み'
+              : order.cancellationRequests[0].attributes.state === 'REJECTED'
+                ? 'キャンセル不可'
+                : 'キャンセル中'
+          }
+        />
+      )}
       <Link
         href={`/account/orders/${order.attributes.number}`}
         passHref

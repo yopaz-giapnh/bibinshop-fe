@@ -18,8 +18,8 @@ import {
 import { cn } from '@/lib/utils';
 import { formatDateString } from '@/utils/date';
 import { useEffect, useRef, useState } from 'react';
-import { Order } from '../types';
 import { sortLineItemsByShipment } from '../utils';
+import { CancelOrderButton } from './order-cancel-button';
 import { OrderDetailAddress } from './order-detail-address';
 import { OrderDetailOverview } from './order-detail-overview';
 import { OrderDetailPaymentMethod } from './order-detail-payment-method';
@@ -28,6 +28,7 @@ import OrderDetailSection from './order-detail-section';
 type Props = {
   className?: string;
   orderNumber: string;
+  enableCancel?: boolean;
 };
 
 async function fetchOrderData(orderNumber: string) {
@@ -35,8 +36,10 @@ async function fetchOrderData(orderNumber: string) {
   return order;
 }
 
-export function OrderDetail({ className, orderNumber }: Props) {
-  const [order, setOrder] = useState<Order | null>(null);
+export function OrderDetail({ className, orderNumber, enableCancel }: Props) {
+  const [order, setOrder] = useState<NonNullable<
+    Awaited<ReturnType<typeof fetchOrderData>>
+  > | null>(null);
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
@@ -69,13 +72,16 @@ export function OrderDetail({ className, orderNumber }: Props) {
     <>
       <div className={cn('w-full overflow-y-auto', className)}>
         <OrderDetailSection title={`注文番号：${order.attributes.number}`}>
-          <Typography
-            as="caption"
-            element="p"
-            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px] md:text-[16px]"
-          >
-            {`注文時間：${formatDateString(order.attributes.created_at)}`}
-          </Typography>
+          <div className="flex">
+            <Typography
+              as="caption"
+              element="p"
+              className="mt-[8px] w-full text-[14px] text-black-90 md:mt-[16px] md:text-[16px]"
+            >
+              {`注文時間：${formatDateString(order.attributes.created_at)}`}
+            </Typography>
+            {enableCancel && <CancelOrderButton order={order} />}
+          </div>
         </OrderDetailSection>
         <OrderDetailOverview item={order} />
         <Typography

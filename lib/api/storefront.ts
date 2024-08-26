@@ -778,6 +778,13 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/cancels': {
+    /**
+     * Cancel an Order
+     * @description Cancels an order.
+     */
+    post: operations['cancel-order'];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -1020,6 +1027,9 @@ export interface components {
         vendors?: {
           data?: components['schemas']['Relation'][];
         };
+        cancellation_requests?: {
+          data?: components['schemas']['Relation'][];
+        };
       };
     };
     /** Cart Includes */
@@ -1033,7 +1043,8 @@ export interface components {
       | components['schemas']['DigitalLink']
       | components['schemas']['Product']
       | components['schemas']['Address']
-      | components['schemas']['Image'];
+      | components['schemas']['Image']
+      | components['schemas']['OrderCancelRequest'];
     /**
      * CMS Page
      * @description The CMS Page model contains page data for Standard pages, Feature Pages and Homepages.
@@ -2533,6 +2544,24 @@ export interface components {
         recommended_products?: {
           data?: components['schemas']['Product'][];
         };
+      };
+    };
+    OrderCancelPayload: {
+      /** @example I changed my mind */
+      reason: string;
+      /** @example 1 */
+      order_id: string;
+    };
+    OrderCancelRequest: {
+      /** @example 1 */
+      id: string;
+      /** @enum {string} */
+      type: 'cancellation_request';
+      attributes: {
+        /** @example I changed my mind */
+        reason: string;
+        /** @enum {string} */
+        state: 'PENDING' | 'APPROVED' | 'REJECTED';
       };
     };
   };
@@ -5202,6 +5231,25 @@ export interface operations {
         content: never;
       };
       403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Cancel an Order
+   * @description Cancels an order.
+   */
+  'cancel-order': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': components['schemas']['OrderCancelPayload'];
+      };
+    };
+    responses: {
+      /** @description Requested order cancellation has been successfully submitted. */
+      201: {
+        content: never;
+      };
+      403: components['responses']['Forbidden'];
+      422: components['responses']['UnprocessableEntity'];
     };
   };
 }

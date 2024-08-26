@@ -5,7 +5,12 @@ import { isAddressSchema, isShippmentSchema } from '@/features/address/utils';
 import { CartIncludes, CartSchema } from '@/features/cart/types';
 import { isLineItemIncludes } from '@/features/cart/utils';
 import { isCreditCardSchema, isPaymentSchema } from '@/features/payment/utils';
-import { isImageSchema, isProductSchema, isVariantSchema } from '@/features/product/utils';
+import {
+  isCancellationReuqestSchema,
+  isImageSchema,
+  isProductSchema,
+  isVariantSchema
+} from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { isNotFound } from '@/utils/api';
 import { revalidateTag } from 'next/cache';
@@ -31,7 +36,8 @@ const includes = [
   // 'vendors.banner_image',
   // 'vendor_totals',
   //shipment related
-  'shipments.selected_shipping_rate'
+  'shipments.selected_shipping_rate',
+  'cancellation_requests'
 ].join(',');
 
 export async function getAccountOrders({
@@ -74,6 +80,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
   const allVariants = included?.filter(isVariantSchema) || [];
   const allImages = included?.filter(isImageSchema) || [];
   const allProducts = included?.filter(isProductSchema) || [];
+  const allCancellationRequests = included?.filter(isCancellationReuqestSchema) || [];
 
   return orders.map((order) => {
     const lineItems = allLineItems.filter((item) =>
@@ -107,6 +114,11 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
     const products = allProducts.filter((product) =>
       variants.map((variant) => variant.relationships.product?.data?.id).includes(product.id)
     );
+    const cancellationRequests = allCancellationRequests.filter((cancellationRequest) =>
+      order.relationships.cancellation_requests?.data
+        ?.map((i) => i?.id)
+        .includes(cancellationRequest.id)
+    );
 
     return {
       ...order,
@@ -117,7 +129,8 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
       shipments,
       variants,
       images,
-      products
+      products,
+      cancellationRequests
     };
   });
 }
@@ -158,6 +171,7 @@ export async function getOrder(order_number: string) {
   const variants = included?.filter(isVariantSchema) || [];
   const images = included?.filter(isImageSchema) || [];
   const products = included?.filter(isProductSchema) || [];
+  const cancellationRequests = included?.filter(isCancellationReuqestSchema) || [];
 
   return {
     ...order,
@@ -168,7 +182,8 @@ export async function getOrder(order_number: string) {
     shipments,
     variants,
     images,
-    products
+    products,
+    cancellationRequests
   };
 }
 

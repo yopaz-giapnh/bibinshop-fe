@@ -9,6 +9,8 @@ export type TaxonSchema = components['schemas']['Taxon'];
 
 export type VariantSchema = components['schemas']['Variant'];
 
+export type CancellationRequestSchema = components['schemas']['OrderCancelRequest'];
+
 export type ShippingMethodSchema = components['schemas']['ShippingMethod'];
 
 export type ShippingMethod = ShippingMethodSchema & {
