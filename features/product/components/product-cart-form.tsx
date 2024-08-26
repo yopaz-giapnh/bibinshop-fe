@@ -3,7 +3,6 @@
 import { Share } from '@/components/icons/share';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { addItem, getCart } from '@/features/cart/actions';
@@ -11,10 +10,10 @@ import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
 import Rating from '@/features/review/components/rating';
 import { useIsPc } from '@/hooks/use-is-pc';
-import { cn } from '@/lib/utils';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { BadgeAlert, Check, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product } from '../types';
@@ -27,9 +26,18 @@ type Props = {
 export function ProductCartForm({ product, getCart }: Props) {
   const isPc = useIsPc();
   const { toast } = useToast();
+  const router = useRouter();
+  const path = usePathname();
+  const params = useSearchParams();
 
   const { defaultVariant } = product;
-  const [selectedVariant, setSelectedVariant] = useState(defaultVariant);
+  const [selectedVariant, setSelectedVariant] = useState(() => {
+    const vid = params.get('variantId');
+    if (vid) {
+      return product.variants.find((variant) => variant.id === vid) || defaultVariant;
+    }
+    return defaultVariant;
+  });
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const [state, formAction] = useFormState(addItem, null);
@@ -37,6 +45,20 @@ export function ProductCartForm({ product, getCart }: Props) {
     variantId: selectedVariant?.id || '',
     quantity: selectedQuantity
   });
+
+  useEffect(() => {
+    const vid = params.get('variantId');
+    if (!vid) {
+      setSelectedVariant(defaultVariant);
+      return;
+    }
+    const variant = product.variants.find((variant) => variant.id === vid);
+    if (!variant || !variant.attributes.purchasable) {
+      router.push(`${path}`);
+      return;
+    }
+    setSelectedVariant(variant);
+  }, [params]);
 
   useEffect(() => {
     if (!state) {
@@ -138,31 +160,41 @@ export function ProductCartForm({ product, getCart }: Props) {
           )}
         </div>
 
-        <ScrollArea className="whitespace-nowrap md:w-[40vw]">
-          <div className="flex gap-1">
-            {product.variants.map((variant) => {
-              const isSelected = variant.id === selectedVariant?.id;
-
+        <div className="flex gap-1">
+          {product.variants.map((variant) => {
+            if (variant.id === selectedVariant?.id) {
               return (
-                <button
+                <VariantPill
                   key={variant.id}
-                  className={cn(
-                    'flex rounded-[6px] border border-black-10 bg-white-base p-4 md:mt-0 md:w-fit',
-                    isSelected && 'border-2 border-bibinBlue-100'
-                  )}
+                  state="selected"
+                  text={variant.attributes.options_text}
                   onClick={() => {
-                    setSelectedVariant(variant);
+                    router.push(`${path}?variantId=${variant.id}`);
                   }}
-                >
-                  <Typography as="boldSmall" element="p" className="text-black-70">
-                    {variant.attributes.options_text}
-                  </Typography>
-                </button>
+                />
               );
-            })}
-          </div>
-          <ScrollBar orientation="horizontal" className="pt-[8px]" />
-        </ScrollArea>
+            } else if (variant.attributes.purchasable) {
+              return (
+                <VariantPill
+                  key={variant.id}
+                  state="available"
+                  text={variant.attributes.options_text}
+                  onClick={() => {
+                    router.push(`${path}?variantId=${variant.id}`);
+                  }}
+                />
+              );
+            } else {
+              return (
+                <VariantPill
+                  key={variant.id}
+                  state="unavailable"
+                  text={variant.attributes.options_text}
+                />
+              );
+            }
+          })}
+        </div>
 
         <div className="flex items-center py-2">
           <Typography as="boldSmall" element="p" className="text-black-70">
@@ -217,4 +249,55 @@ function AddToCartButton() {
       {pending ? <LoadingSpinner /> : 'カートに追加'}
     </Button>
   );
+}
+
+type VariantState = 'selected' | 'available' | 'unavailable';
+type VairantPillParams = {
+  state: VariantState;
+  text?: string;
+  onClick?: () => void;
+};
+function VariantPill({ state, text, onClick }: VairantPillParams) {
+  switch (state) {
+    case 'unavailable':
+      return (
+        <Typography
+          className="mx-1 flex h-8 items-center whitespace-nowrap rounded-full bg-[#000000]/5 p-2 text-[#000000]/20"
+          element="div"
+          as="small"
+        >
+          {text}
+        </Typography>
+      );
+    case 'available':
+      return (
+        <Typography
+          className="mx-1 flex h-8 items-center whitespace-nowrap rounded-full border border-[#000000]/50  bg-[#FFFFFF] p-2 text-[#000000]/50"
+          element="div"
+          as="small"
+          style={{
+            cursor: 'pointer'
+          }}
+          onClick={onClick}
+        >
+          {text}
+        </Typography>
+      );
+    case 'selected':
+      return (
+        <Typography
+          className="mx-1 flex h-8 items-center whitespace-nowrap rounded-full bg-[#000000]/80 p-2 text-[#FFFFFF]"
+          element="div"
+          as="small"
+          style={{
+            cursor: 'pointer'
+          }}
+          onClick={onClick}
+        >
+          {text}
+        </Typography>
+      );
+    default:
+      return <></>;
+  }
 }

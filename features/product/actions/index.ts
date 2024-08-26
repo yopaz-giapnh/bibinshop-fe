@@ -103,9 +103,7 @@ const reshapeProduct = ({
   const productProperties = productIncluded?.filter(isProductPropertySchema) || [];
   const allVariants = productIncluded?.filter(isVariantSchema) || [];
   // TODO: 購入不可な場合は表示するかどうか
-  const variants = allVariants.filter(
-    (variant) => !variant.attributes.is_master && variant.attributes.purchasable
-  );
+  const variants = allVariants.filter((variant) => !variant.attributes.is_master);
   const defaultVariant = allVariants.find(
     (variant) => variant.id === product.relationships.default_variant?.data?.id
   );
