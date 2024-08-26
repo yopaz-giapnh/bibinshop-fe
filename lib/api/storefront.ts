@@ -17,7 +17,7 @@ export interface paths {
     post: operations['account-creation'];
     /**
      * Update an Account
-     * @description Updates the users account details. This endpoint requires the [Spree Auth Devise](https://github.com/spree/spree_auth_devise) gem to be installed.
+     * @description Updates the users account details. This endpoint requires the [Spree Auth Devise](https://github.com/spree/spree_auth_devise) gem to be installed. When changing password, current_password is required.
      */
     patch: operations['account-updates'];
   };
@@ -3197,7 +3197,7 @@ export interface operations {
   };
   /**
    * Update an Account
-   * @description Updates the users account details. This endpoint requires the [Spree Auth Devise](https://github.com/spree/spree_auth_devise) gem to be installed.
+   * @description Updates the users account details. This endpoint requires the [Spree Auth Devise](https://github.com/spree/spree_auth_devise) gem to be installed. When changing password, current_password is required.
    */
   'account-updates': {
     requestBody: {
@@ -3216,9 +3216,11 @@ export interface operations {
             bill_address_id?: string;
             /** @example 1 */
             ship_address_id?: string;
-            /** @example spree123 */
+            /** @example old_password123 */
+            current_password?: string;
+            /** @example new_password123 */
             password?: string;
-            /** @example spree123 */
+            /** @example new_password123 */
             password_confirmation?: string;
             nickname?: string;
             /** @enum {string} */

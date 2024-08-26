@@ -28,8 +28,7 @@ type Props = {
 export default function SecurityDetail({ getAccount }: Props) {
   const account = use(getAccount);
   const [showEditPasswordForm, setShowEditPasswordForm] = useState(false);
-  // TODO:BE側のRequest bodyに無いため一旦コメントアウト
-  // const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showNewPasswordConfirm, setShowNewPasswordConfirm] = useState(false);
 
@@ -114,14 +113,13 @@ export default function SecurityDetail({ getAccount }: Props) {
         <Form {...form}>
           <form action={action}>
             <div className="mt-[16px] w-full md:w-2/5">
-              {/* TODO:BE側のRequest bodyに無いため一旦コメントアウト */}
-              {/* <TogglePasswordInput
-                  label="古いパスワード"
-                  showPassword={showCurrentPassword}
-                  toggleShowPassword={() => setShowCurrentPassword((prev) => !prev)}
-                  control={control}
-                  name="password"
-                /> */}
+              <TogglePasswordInput
+                label="古いパスワード"
+                showPassword={showCurrentPassword}
+                toggleShowPassword={() => setShowCurrentPassword((prev) => !prev)}
+                control={control}
+                name="password"
+              />
               <TogglePasswordInput
                 label="新しいパスワード"
                 showPassword={showNewPassword}
