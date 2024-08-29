@@ -785,6 +785,20 @@ export interface paths {
      */
     post: operations['cancel-order'];
   };
+  '/api/v2/storefront/search/{search_term}': {
+    /**
+     * autocomplete search
+     * @description Returns a list of autocomplete terms that match the search term. Currently only product names are included.
+     */
+    get: operations['autocomplete-search'];
+  };
+  '/api/v2/storefront/popular_searches': {
+    /**
+     * List Top Popular 6 Searches in the last 2 hours period.
+     * @description Returns a list of top 6 popular searches in the last 2 hours period. The list is sorted by the number of searches in descending order. This list updates at every even hour.
+     */
+    get: operations['popular-searches'];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -2563,6 +2577,21 @@ export interface components {
         /** @enum {string} */
         state: 'PENDING' | 'APPROVED' | 'REJECTED';
       };
+    };
+    AutocompleteSearchResult: {
+      id: string;
+      /** @enum {string} */
+      type: 'search';
+      attributes: {
+        name: string;
+      };
+    };
+    AutocompleteSearchArray: components['schemas']['AutocompleteSearchResult'][];
+    PopularSearch: {
+      /** @example t-shirt */
+      term: string;
+      /** @example 10 */
+      count: number;
     };
   };
   responses: {
@@ -5250,6 +5279,42 @@ export interface operations {
       };
       403: components['responses']['Forbidden'];
       422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * autocomplete search
+   * @description Returns a list of autocomplete terms that match the search term. Currently only product names are included.
+   */
+  'autocomplete-search': {
+    parameters: {
+      path: {
+        /** @description The search term to autocomplete */
+        search_term: string;
+      };
+    };
+    responses: {
+      /** @description Successful response */
+      200: {
+        content: {
+          'application/vnd.api+json': {
+            data: components['schemas']['AutocompleteSearchArray'];
+          };
+        };
+      };
+    };
+  };
+  /**
+   * List Top Popular 6 Searches in the last 2 hours period.
+   * @description Returns a list of top 6 popular searches in the last 2 hours period. The list is sorted by the number of searches in descending order. This list updates at every even hour.
+   */
+  'popular-searches': {
+    responses: {
+      /** @description Successful response */
+      200: {
+        content: {
+          'application/vnd.api+json': components['schemas']['PopularSearch'][];
+        };
+      };
     };
   };
 }

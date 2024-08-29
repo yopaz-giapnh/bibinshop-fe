@@ -1,6 +1,7 @@
 'use client';
 
 import { Typography } from '@/components/ui/typography';
+import { getAutoComplete } from '@/features/search/actions';
 import { SearchIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRecentSearches } from './use-recent-search';
@@ -11,18 +12,21 @@ type Props = {
 export function SearchResuts({ text }: Props) {
   const { search } = useRecentSearches();
 
-  const [searchResults, setSearchResults] = useState<Array<string>>([]);
+  const [autoCompleteOptions, setAutoCompleteOptions] = useState<
+    Awaited<ReturnType<typeof getAutoComplete>>
+  >([]);
+
   useEffect(() => {
-    //todo: fetch from server.
-    const arr = new Array(5).fill(0);
-    const res = arr.map((v, i) => `${text}-${i}`);
-    res.push('testing');
-    setSearchResults(res);
+    const fn = async () => {
+      const res = await getAutoComplete(text);
+      setAutoCompleteOptions(res);
+    };
+    fn();
   }, [text]);
 
   return (
     <div className="my-2 flex w-full flex-col justify-start gap-2 px-4 pb-2">
-      {searchResults.map((res, idx) => {
+      {autoCompleteOptions.map((res, idx) => {
         let start = res.indexOf(text);
         if (start < 0) start = res.length;
         const end = start + text.length;

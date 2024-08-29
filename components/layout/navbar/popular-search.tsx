@@ -1,16 +1,23 @@
 'use client';
 
 import { Typography } from '@/components/ui/typography';
+import { getPopularSearches } from '@/features/search/actions';
 import { useEffect, useState } from 'react';
 import { useRecentSearches } from './use-recent-search';
 
 export function PopularSearch() {
-  const [tags, setTags] = useState<Array<string>>([]);
   const { search } = useRecentSearches();
 
+  const [popularSearches, setPopularSearches] = useState<
+    Awaited<ReturnType<typeof getPopularSearches>>
+  >([]);
+
   useEffect(() => {
-    //load popular keywords here.
-    setTags(['word1', 'word2', 'word3']);
+    const fn = async () => {
+      const res = await getPopularSearches();
+      setPopularSearches(res);
+    };
+    fn();
   }, []);
 
   return (
@@ -18,16 +25,17 @@ export function PopularSearch() {
       <Typography element="p" as="bold" className="m-2">
         人気ワード
       </Typography>
-      <div className="flex flex-row text-xs">
-        {tags.map((t, idx) => (
+      <div className="flex flex-wrap text-xs">
+        {popularSearches.map((item, idx) => (
           <div
             key={idx}
             className="text-black/50 mx-1 my-1 flex w-fit min-w-fit flex-row items-center rounded-full bg-[#000000]/[0.08] p-1"
-            onClick={() => search(t)}
+            onClick={() => search(item.term)}
             style={{ cursor: 'pointer' }}
           >
             <Typography element="p" className="mx-1">
-              {t}
+              {item.isHot && '🔥'}
+              {item.term}
             </Typography>
           </div>
         ))}
