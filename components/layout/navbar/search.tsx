@@ -38,8 +38,7 @@ export function Search() {
         <CommandInput
           placeholder="アゼライン酸10美容液"
           className="w-full rounded-[44px] border-2 border-bibinBlue-100"
-          // TODO: BEとのAPI接続後にコメントin
-          // onFocus={() => setIsOpen(true)}
+          onFocus={() => setIsOpen(true)}
           onBlur={() => (isPc ? setTimeout(() => setIsOpen(false), 150) : () => {})}
           onValueChange={(v) => {
             setSearchValue(v);
