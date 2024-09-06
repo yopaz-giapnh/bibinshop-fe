@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
+import { ApplyCouponButton } from '@/features/coupon/components/apply-coupon-button';
 import Link from 'next/link';
 import { Cart } from '../types';
 import { displayPromoTotal } from '../utils';
@@ -29,12 +30,13 @@ export function OrderOverview({ cart }: Props) {
           </Typography>
         </div>
 
+        {/* TODO: BE接続時動作確認 */}
         {!!promoTotal && (
           <div className="mt-4 flex justify-between">
             <Typography as="caption" element="p" className="text-black-90">
-              {`割引金額`}
+              {`割引額`}
             </Typography>
-            <Typography as="caption" element="p" className="text-black-90">
+            <Typography as="caption" element="p" className="text-bibinBlue-100">
               {promoTotal}
             </Typography>
           </div>
@@ -55,8 +57,8 @@ export function OrderOverview({ cart }: Props) {
         </Link>
       </div>
 
-      <div className="fixed bottom-0 ml-[-8px] flex w-screen justify-between border-t-[1px] bg-white-base px-4 py-2 md:hidden">
-        <div className="flex items-center">
+      <div className="fixed bottom-0 ml-[-8px] flex w-screen flex-col justify-between border-t-[1px] bg-white-base px-4 py-2 md:hidden">
+        <div className="flex items-center justify-between">
           <Typography as="caption" element="p" className="text-black-90">
             小計
           </Typography>
@@ -64,11 +66,14 @@ export function OrderOverview({ cart }: Props) {
             {cart.attributes.display_item_total}
           </Typography>
         </div>
-        <Link href="/checkout" passHref>
-          <Button size="default" variant="lg" className="h-[45px] w-[160px] md:w-[202px]">
-            購入する
-          </Button>
-        </Link>
+        <div className="mt-2 flex items-center">
+          <ApplyCouponButton />
+          <Link href="/checkout" passHref>
+            <Button size="default" variant="lg" className="ml-2 h-[45px] w-[200px] md:w-[202px]">
+              購入する
+            </Button>
+          </Link>
+        </div>
       </div>
     </>
   );

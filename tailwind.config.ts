@@ -65,6 +65,9 @@ const config = {
         bibinGreen: {
           100: '#00B69B'
         },
+        bibinViolet: {
+          100: '#5260FF'
+        },
         black: {
           base: 'black',
           10: 'rgba(0, 0, 0, 0.10)',

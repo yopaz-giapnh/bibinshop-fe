@@ -1,3 +1,4 @@
+import { ApplyCouponButton } from '@/features/coupon/components/apply-coupon-button';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
 import { getCart } from '../actions';
 import { CartEmpty } from './cart-empty';
@@ -19,6 +20,9 @@ export async function Cart() {
           <CartItemList cart={cart} />
         </div>
         <div className="flex flex-none flex-col gap-4 md:w-[424px]">
+          <div className="hidden w-full md:block">
+            <ApplyCouponButton />
+          </div>
           <OrderOverview cart={cart} />
 
           {/* TODO: 本来は、支払い方法を取得できたほうがいい？ */}

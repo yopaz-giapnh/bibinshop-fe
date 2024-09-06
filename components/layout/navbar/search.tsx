@@ -1,4 +1,5 @@
 'use client';
+
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { ChevronLeft } from 'lucide-react';
@@ -8,7 +9,11 @@ import { RecentSearch } from './recent-search';
 import { SearchResuts } from './search-results';
 import { useRecentSearches } from './use-recent-search';
 
-export function Search() {
+type Props = {
+  isSignedIn: boolean;
+};
+
+export function Search({ isSignedIn }: Props) {
   const [searchValue, setSearchValue] = useState('');
   const { search } = useRecentSearches();
 
@@ -20,7 +25,7 @@ export function Search() {
       className={
         (isOpen
           ? 'absolute left-0 top-0 z-50 h-screen w-screen pt-[15px] md:h-fit md:max-h-[300px] md:w-[462px] md:pt-[89px]'
-          : 'absolute top-3 z-50 h-[48px] w-[172px]') +
+          : `absolute ${isSignedIn ? 'top-3' : 'top-9'} z-50 h-[48px] w-[172px]`) +
         ' md:static md:left-auto md:top-auto md:flex md:w-[456px]'
       }
       value={searchValue}
@@ -36,7 +41,7 @@ export function Search() {
           <ChevronLeft size={32} />
         </button>
         <CommandInput
-          placeholder="アゼライン酸10美容液"
+          placeholder={isPc ? 'アゼライン酸10美容液' : 'アゼライン酸'}
           className="w-full rounded-[44px] border-2 border-bibinBlue-100"
           onFocus={() => setIsOpen(true)}
           onBlur={() => (isPc ? setTimeout(() => setIsOpen(false), 150) : () => {})}

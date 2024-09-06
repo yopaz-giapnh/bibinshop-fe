@@ -7,9 +7,10 @@ import { ProductCard } from './product-card';
 
 type Props = {
   columns: 4 | 5;
+  showDeleteButton?: boolean;
 } & { products: ComponentProps<typeof ProductCard>['product'][] };
 
-export function ProductGrid({ columns, products }: Props) {
+export function ProductGrid({ columns, products, showDeleteButton = false }: Props) {
   const { width } = useWindowSize();
   const imageSize = width / columns;
   const spImageSize = width / 2;
@@ -23,6 +24,7 @@ export function ProductGrid({ columns, products }: Props) {
             key={product.id}
             product={product}
             imageSize={isPc ? imageSize : spImageSize}
+            showDeleteButton={showDeleteButton}
           />
         );
       })}

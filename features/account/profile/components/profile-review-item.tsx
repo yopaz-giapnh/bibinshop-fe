@@ -5,11 +5,15 @@ import { getProductImageUrl } from '@/features/product/utils';
 import { addReviewFeedback, removeReviewFeedback } from '@/features/review/actions';
 import Rating from '@/features/review/components/rating';
 import { Review } from '@/features/review/types';
+import {
+  NewRegistrationMediationModal,
+  NewRegistrationMediationModalRef
+} from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import { formatDateString } from '@/utils/date';
 import { ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getAccount } from '../actions';
 import { User } from '../types';
 
@@ -22,6 +26,7 @@ export function ProfileReviewItem({ review }: ReviewProps) {
   const [account, setAccount] = useState<User | null>(null);
   const isCurrentUser = account?.id === review?.relationships?.user?.data?.id;
   const { isLoggedIn } = useAuth();
+  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
 
   useEffect(() => {
     async function fetchAccount() {
@@ -37,6 +42,10 @@ export function ProfileReviewItem({ review }: ReviewProps) {
   }, []);
 
   const handleFeedbackToggle = async () => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
+    }
     try {
       if (isFeedback) {
         const feedbackId = review.attributes.feedback_id;
@@ -101,7 +110,7 @@ export function ProfileReviewItem({ review }: ReviewProps) {
           </Typography>
         </div>
       </div>
-      {!isCurrentUser && isLoggedIn && (
+      {!isCurrentUser && (
         <div className="mt-[16px] flex justify-end">
           <button className="flex items-center space-x-2" onClick={handleFeedbackToggle}>
             <ThumbsUp
@@ -117,6 +126,7 @@ export function ProfileReviewItem({ review }: ReviewProps) {
           </button>
         </div>
       )}
+      <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
     </div>
   );
 }
