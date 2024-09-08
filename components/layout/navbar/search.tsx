@@ -5,9 +5,12 @@ import { useIsPc } from '@/hooks/use-is-pc';
 import { ChevronLeft } from 'lucide-react';
 import { useState } from 'react';
 import { PopularSearch } from './popular-search';
-import { RecentSearch } from './recent-search';
 import { SearchResuts } from './search-results';
 import { useRecentSearches } from './use-recent-search';
+
+import dynamic from 'next/dynamic';
+
+const RecentSearch = dynamic(() => import('./recent-search'), { ssr: false });
 
 type Props = {
   isSignedIn: boolean;

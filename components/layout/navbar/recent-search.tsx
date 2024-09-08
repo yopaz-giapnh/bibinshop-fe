@@ -45,3 +45,5 @@ export function RecentSearch() {
     </>
   );
 }
+// Required for dynamic import
+export default RecentSearch;
