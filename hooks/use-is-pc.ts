@@ -1,5 +1,9 @@
-import { useMediaQuery } from 'usehooks-ts';
+import { useEffect, useState } from 'react';
 
 export function useIsPc() {
-  return useMediaQuery('(min-width: 768px)');
+  const [isPc, setIsPc] = useState<boolean>(false);
+  useEffect(() => {
+    setIsPc(window.matchMedia('(min-width: 768px)').matches);
+  }, []);
+  return isPc;
 }
