@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { NavigationMenuList } from '@radix-ui/react-navigation-menu';
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
-import React, { use } from 'react';
+import React, { FC, use } from 'react';
 import { useFormStatus } from 'react-dom';
 
 type Props = {
@@ -63,6 +63,7 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
       href: '/account/security'
     }
   ];
+  const acc = getAccount ? use(getAccount) : null;
 
   return isSignedIn ? (
     <form action={logout}>
@@ -70,15 +71,21 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="px-[-8px]">
-              <AccountLink />
+              <AccountLink user={acc} />
             </NavigationMenuTrigger>
             <NavigationMenuContent className="hidden md:block">
               <ul className="w-[201px] md:grid-cols-1">
                 <UserName getAccount={getAccount} />
                 <Separator />
-                {components.map((component) => (
-                  <ListItem key={component.title} title={component.title} href={component.href} />
-                ))}
+                {components.map((component) =>
+                  component.title === 'メッセージ' && acc?.attributes.unread_notifications_count ? (
+                    <ListItem key={component.title} title={component.title} href={component.href}>
+                      <div className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500"></div>
+                    </ListItem>
+                  ) : (
+                    <ListItem key={component.title} title={component.title} href={component.href} />
+                  )
+                )}
                 <Separator />
 
                 <SignOut />
@@ -103,7 +110,9 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
   );
 }
 
-const AccountLink = () => {
+const AccountLink: FC<{
+  user: Awaited<ReturnType<typeof getAccount>> | null;
+}> = ({ user }) => {
   const { pending } = useFormStatus();
 
   return (
@@ -113,7 +122,31 @@ const AccountLink = () => {
           <LoadingSpinner />
         ) : (
           <>
-            <UserRound className="h-6 w-6" />
+            <UserRound className="h-6 w-6" />{' '}
+            {(user?.attributes?.unread_notifications_count || null) && (
+              <span
+                style={{
+                  position: 'relative',
+                  width: '12px',
+                  height: '12px',
+                  borderRadius: '100%',
+                  backgroundColor: 'white',
+                  left: -12,
+                  top: -4
+                }}
+              >
+                <span
+                  style={{
+                    position: 'absolute',
+                    left: 2,
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '100%',
+                    backgroundColor: 'red'
+                  }}
+                />
+              </span>
+            )}
             <Typography as="small" element="p" className="ml-1">
               アカウント管理
             </Typography>
@@ -175,6 +208,7 @@ const ListItem = React.forwardRef<
         >
           <Typography as="caption" element="p" className="text-black-50">
             {title}
+            {props.children}
           </Typography>
         </Link>
       </NavigationMenuLink>
