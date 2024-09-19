@@ -5817,7 +5817,11 @@ export interface operations {
       200: {
         content: {
           'application/vnd.api+json': {
+<<<<<<< HEAD
             data?: components['schemas']['Cart'];
+=======
+            data?: components['schemas']['Order'];
+>>>>>>> 36e4073 (generate type)
           };
         };
       };
