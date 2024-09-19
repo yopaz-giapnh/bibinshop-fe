@@ -132,6 +132,20 @@ export interface paths {
       };
     };
   };
+  '/api/v2/storefront/account/recently_viewed': {
+    /**
+     * List all Recently Viewed Products
+     * @description Returns a list of recently viewed products for the current user.
+     */
+    get: operations['recently-viewed-products'];
+  };
+  '/api/v2/storefront/account/recently_viewed/{id}': {
+    /**
+     * Remove a Recently Viewed Product
+     * @description Removes a specified product from the recently viewed list for the current user.
+     */
+    delete: operations['remove-recently-viewed'];
+  };
   '/api/v2/storefront/account/shipments/{id}/received': {
     /**
      * Mark Shipment as Received
@@ -152,6 +166,39 @@ export interface paths {
      * @description Deletes a social link for the current user.
      */
     delete: operations['delete-social-link'];
+  };
+  '/api/v2/storefront/account/favorites': {
+    /**
+     * List all Favorites
+     * @description Returns a list of favorites for the current user.
+     */
+    get: operations['favorites-list'];
+    /**
+     * Create a Favorite
+     * @description Adds a product to the current user's favorites.
+     */
+    post: operations['create-favorite'];
+  };
+  '/api/v2/storefront/account/favorites/{id}': {
+    /**
+     * Remove a Favorite
+     * @description Removes a specified favorite for the current user.
+     */
+    delete: operations['remove-favorite'];
+  };
+  '/api/v2/storefront/account/points': {
+    /**
+     * Retrieve Points aquisition history
+     * @description Returns the current user's points aquisition history.
+     */
+    get: operations['points-aquire-history'];
+  };
+  '/api/v2/storefront/account/point_history': {
+    /**
+     * Retrieve Points usage history
+     * @description Returns the current user's points usage history.
+     */
+    get: operations['points-usage-history'];
   };
   '/api/v2/storefront/account_confirmations': {
     /**
@@ -267,6 +314,20 @@ export interface paths {
      */
     delete: operations['remove-all-coupon-codes'];
   };
+  '/api/v2/storefront/cart/add_coupon': {
+    /**
+     * Add a Coupon
+     * @description Adds a coupon to the current cart.
+     */
+    patch: operations['add-coupon'];
+  };
+  '/api/v2/storefront/cart/remove_coupon': {
+    /**
+     * Remove a Coupon
+     * @description Removes a coupon from the current cart.
+     */
+    patch: operations['remove-coupon'];
+  };
   '/api/v2/storefront/cart/estimate_shipping_rates': {
     /**
      * List Estimated Shipping Rates
@@ -287,6 +348,12 @@ export interface paths {
      * @description Changes the cart currency and recalculates the cart values.
      */
     patch: operations['change-currency'];
+  };
+  '/api/v2/storefront/cart/points': {
+    /** @description Removes the points from the current cart. */
+    delete: operations['remove-points'];
+    /** @description Sets the amount of points to be used in the current cart. */
+    patch: operations['set-points'];
   };
   '/api/v2/storefront/checkout': {
     /**
@@ -785,6 +852,20 @@ export interface paths {
      */
     post: operations['cancel-order'];
   };
+  '/api/v2/storefront/coupons': {
+    /**
+     * List Coupons
+     * @description Returns a list of coupons.
+     */
+    get: operations['list-coupons'];
+  };
+  '/api/v2/storefront/coupons/apply': {
+    /**
+     * Redeem a Coupon
+     * @description Redeem a coupon by code to the current user.
+     */
+    post: operations['apply-coupon'];
+  };
   '/api/v2/storefront/search/{search_term}': {
     /**
      * autocomplete search
@@ -1180,6 +1261,40 @@ export interface components {
     };
     /** Country Includes */
     CountryIncludes: components['schemas']['State'];
+    /**
+     * Coupon
+     * @description The Coupon model holds information about a discount code that can be applied to an order.
+     */
+    Coupon: {
+      /** @example 1 */
+      id: string;
+      /** @default coupon */
+      type: string;
+      attributes: {
+        /** @example 10% off your first order */
+        title: string;
+        /** @example 10% off your first order */
+        description: string;
+        /**
+         * Format: date-time
+         * @example 2026-06-24T00:00:00Z
+         */
+        expires_at?: string;
+        /** @example 1 */
+        usage_limit: number;
+        /** @example SPREE10 */
+        code: string;
+        /** @example 10 */
+        amount: number;
+        /**
+         * @example FIXED
+         * @enum {string}
+         */
+        coupon_type: 'FIXED' | 'PERCENTAGE';
+        /** @enum {string} */
+        status?: 'expired' | 'not_started' | 'not_available' | 'usage_limit_reached' | 'active';
+      };
+    };
     /** Credit Card */
     CreditCard: {
       /** @example 1 */
@@ -2058,6 +2173,10 @@ export interface components {
         nickname?: string;
         /** @enum {string} */
         sex?: 'not_known' | 'male' | 'female' | 'not_applicable';
+        /** @example 100 */
+        available_points?: number;
+        /** @example 2 */
+        unread_notifications_count?: number;
       };
       relationships: {
         /** @description Default billing address associated with this Account */
@@ -2303,6 +2422,39 @@ export interface components {
         };
       };
     };
+    /**
+     * Favorite
+     * @description The Favorite model.
+     */
+    Favorite: {
+      /** @example 1 */
+      id: string;
+      /** @default favorite */
+      type: string;
+      relationships: {
+        user?: {
+          data?: components['schemas']['Relation'];
+        };
+        variant?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
+    /**
+     * Favorite Payload
+     * @description The Favorite Payload model to add a favorite.
+     */
+    FavoritePayload: {
+      favorite: {
+        /** @example 1 */
+        variant_id: string;
+      };
+    };
+    /** Favorite Includes */
+    FavoriteIncludes:
+      | components['schemas']['Product']
+      | components['schemas']['Variant']
+      | components['schemas']['ProductIncludes'];
     /**
      * @example {
      *   "product_id": 1,
@@ -2578,6 +2730,24 @@ export interface components {
         state: 'PENDING' | 'APPROVED' | 'REJECTED';
       };
     };
+    /** RecentlyViewed */
+    RecentlyViewed: {
+      id: string;
+      /** @default recently_viewed */
+      type: string;
+      attributes: {
+        /**
+         * Format: date-time
+         * @example 2020-02-16T07:14:54.617Z
+         */
+        created_at: string;
+      };
+      relationships: {
+        product?: {
+          data?: components['schemas']['Relation'][];
+        };
+      };
+    };
     AutocompleteSearchResult: {
       id: string;
       /** @enum {string} */
@@ -2593,8 +2763,66 @@ export interface components {
       /** @example 10 */
       count: number;
     };
+    Point: {
+      id: string;
+      /** @enum {string} */
+      type: 'point';
+      attributes: {
+        /** @example 100 */
+        amount: number;
+        /** @example 0 */
+        used_amount: number;
+        /** @example 100 */
+        available: number;
+        /**
+         * Format: date-time
+         * @example 2020-02-16T07:14:54.617Z
+         */
+        expires_at: string;
+        /**
+         * Format: date-time
+         * @example 2020-02-16T07:14:54.617Z
+         */
+        created_at: string;
+        /**
+         * Format: date-time
+         * @example 2020-02-16T07:14:54.617Z
+         */
+        updated_at: string;
+      };
+      relationships: {
+        order?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
+    PointTransaction: {
+      id: string;
+      /** @enum {string} */
+      type: 'point_transaction';
+      attributes: {
+        /** @example 100 */
+        amount: number;
+        /** @enum {string} */
+        reason: 'EXPIRE USE';
+        /**
+         * Format: date-time
+         * @example 2020-02-16T07:14:54.617Z
+         */
+        created_at: string;
+      };
+      relationships: {
+        order?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
   };
   responses: {
+    /** @description 200 Success - The request was successful. */
+    EmptyOk: {
+      content: never;
+    };
     /** @description 404 Not Found - Resource not found. */
     NotFound: {
       content: {
@@ -2944,6 +3172,56 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns the `favorite` object. */
+    Favorite: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Favorite'];
+          included?: components['schemas']['FavoriteIncludes'][];
+        };
+      };
+    };
+    /** @description 200 Success - Returns an array of `favorite` objects. */
+    FavoriteList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Favorite'][];
+          included?: components['schemas']['FavoriteIncludes'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
+    /** @description 200 Success - Returns an array of `product` objects. */
+    RecentlyViewedList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['RecentlyViewed'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
+    /** @description 200 Success - Returns an array of `point` objects. */
+    PointsList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['Point'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
+    /** @description 200 Success - Returns an array of `point_usage` objects. */
+    PointsTransactionList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['PointTransaction'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
+        };
+      };
+    };
   };
   parameters: {
     /**
@@ -3182,6 +3460,8 @@ export interface components {
     ConfirmationToken: string;
     /** @description The confirmation token received in the email. */
     ResetPasswordToken: string;
+    /** @example variant,variant.product */
+    FavoriteIncludeParam?: string;
   };
   requestBodies: never;
   headers: never;
@@ -3606,6 +3886,43 @@ export interface operations {
     };
   };
   /**
+   * List all Recently Viewed Products
+   * @description Returns a list of recently viewed products for the current user.
+   */
+  'recently-viewed-products': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['ProductIncludeParam'];
+        'fields[product]'?: components['parameters']['SparseFieldsProduct'];
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+    };
+    responses: {
+      200: components['responses']['RecentlyViewedList'];
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Remove a Recently Viewed Product
+   * @description Removes a specified product from the recently viewed list for the current user.
+   */
+  'remove-recently-viewed': {
+    parameters: {
+      path: {
+        /** @description The ID of the history entry you wish to remove. */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description 204 Success No Content Returned - Requested Product has been removed from the Recently Viewed list */
+      204: {
+        content: never;
+      };
+      404: components['responses']['NotFound'];
+    };
+  };
+  /**
    * Mark Shipment as Received
    * @description Marks a shipment as received by the customer.
    */
@@ -3681,6 +3998,90 @@ export interface operations {
         content: never;
       };
       404: components['responses']['NotFound'];
+    };
+  };
+  /**
+   * List all Favorites
+   * @description Returns a list of favorites for the current user.
+   */
+  'favorites-list': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['FavoriteIncludeParam'];
+      };
+    };
+    responses: {
+      200: components['responses']['FavoriteList'];
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Create a Favorite
+   * @description Adds a product to the current user's favorites.
+   */
+  'create-favorite': {
+    parameters: {
+      query?: {
+        include?: components['parameters']['FavoriteIncludeParam'];
+      };
+    };
+    requestBody: {
+      content: {
+        'application/vnd.api+json': components['schemas']['FavoritePayload'];
+      };
+    };
+    responses: {
+      200: components['responses']['Favorite'];
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Remove a Favorite
+   * @description Removes a specified favorite for the current user.
+   */
+  'remove-favorite': {
+    parameters: {
+      path: {
+        /** @description The ID of the `variant favorit` you wish to remove. */
+        id: string;
+      };
+    };
+    responses: {
+      200: components['responses']['Favorite'];
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+    };
+  };
+  /**
+   * Retrieve Points aquisition history
+   * @description Returns the current user's points aquisition history.
+   */
+  'points-aquire-history': {
+    parameters: {
+      query?: {
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+    };
+    responses: {
+      200: components['responses']['PointsList'];
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Retrieve Points usage history
+   * @description Returns the current user's points usage history.
+   */
+  'points-usage-history': {
+    parameters: {
+      query?: {
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+    };
+    responses: {
+      200: components['responses']['PointsTransactionList'];
+      403: components['responses']['Forbidden'];
     };
   };
   /**
@@ -4017,6 +4418,46 @@ export interface operations {
     };
   };
   /**
+   * Add a Coupon
+   * @description Adds a coupon to the current cart.
+   */
+  'add-coupon': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          /** @example 5 */
+          coupon_id: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: never;
+      };
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * Remove a Coupon
+   * @description Removes a coupon from the current cart.
+   */
+  'remove-coupon': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          /** @example 3 */
+          coupon_id: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: never;
+      };
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
    * List Estimated Shipping Rates
    * @description Returns a list of shipping rates for the current cart. The rates given are only estimates and can vary from the final shipping rates.
    */
@@ -4071,6 +4512,30 @@ export interface operations {
     responses: {
       200: components['responses']['Cart'];
       403: components['responses']['Forbidden'];
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /** @description Removes the points from the current cart. */
+  'remove-points': {
+    responses: {
+      200: components['responses']['EmptyOk'];
+      401: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /** @description Sets the amount of points to be used in the current cart. */
+  'set-points': {
+    parameters: {
+      query: {
+        /** @description The amount of points to be used. */
+        amount: number;
+      };
+    };
+    responses: {
+      200: components['responses']['EmptyOk'];
+      401: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
       422: components['responses']['UnprocessableEntity'];
     };
   };
@@ -5278,6 +5743,58 @@ export interface operations {
         content: never;
       };
       403: components['responses']['Forbidden'];
+      422: components['responses']['UnprocessableEntity'];
+    };
+  };
+  /**
+   * List Coupons
+   * @description Returns a list of coupons.
+   */
+  'list-coupons': {
+    parameters: {
+      query?: {
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
+      };
+    };
+    responses: {
+      /** @description Successful response */
+      200: {
+        content: {
+          'application/vnd.api+json': {
+            data?: components['schemas']['Coupon'][];
+            meta?: components['schemas']['ListMeta'];
+            links?: components['schemas']['ListLinks'];
+          };
+        };
+      };
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Redeem a Coupon
+   * @description Redeem a coupon by code to the current user.
+   */
+  'apply-coupon': {
+    requestBody: {
+      content: {
+        'application/vnd.api+json': {
+          /** @description The coupon code to apply. */
+          code?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Coupon successfully applied */
+      200: {
+        content: {
+          'application/vnd.api+json': {
+            data?: components['schemas']['Cart'];
+          };
+        };
+      };
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
       422: components['responses']['UnprocessableEntity'];
     };
   };
