@@ -4,6 +4,7 @@ import { BackButton } from '@/components/button/back-button';
 import { Pagination } from '@/components/ui/pagination';
 import { Typography } from '@/components/ui/typography';
 import { useRef } from 'react';
+import { getCoupons } from '../actions';
 import { CouponCard } from './coupon-card';
 import { CouponCodeInputModal, CouponCodeInputModalRef } from './coupon-code-input-modal';
 import CouponListEmptyView from './coupon-list-empty-view';
@@ -67,6 +68,12 @@ const coupons: CouponInfo[] = [
 
 export default function Coupon() {
   const couponCodeInputModalRef = useRef<CouponCodeInputModalRef>(null);
+  const myCoupons = async () => {
+    const couponData = await getCoupons();
+    return couponData;
+  };
+
+  console.log(myCoupons(), '---------------');
 
   return (
     <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">

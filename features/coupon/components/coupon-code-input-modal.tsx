@@ -18,6 +18,7 @@ import { Check } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { applyCoupon } from '../actions';
 
 export type CouponCodeInputModalRef = {
   open: () => void;
@@ -47,8 +48,7 @@ export const CouponCodeInputModal = forwardRef<CouponCodeInputModalRef>((_, ref)
   }));
 
   const onSubmit = async (values: FormValues) => {
-    // TODO: ここでクーポンコードの検証や適用のロジックを実装
-    console.log(values);
+    applyCoupon(values.couponCode);
     toast({
       title: 'クーポンが追加されました',
       icon: <Check className="h-6 w-6" />
