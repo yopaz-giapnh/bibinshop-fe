@@ -40,6 +40,58 @@ export function ProductCartForm({ product, getCart }: Props) {
   });
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>(() => {
+    return (
+      selectedVariant?.relationships.option_values?.data?.reduce(
+        (acc, vov) => {
+          for (const optionType of product.optionTypes) {
+            if (product.optionsMap[optionType.id].some((o) => o.id === vov?.id)) {
+              acc[optionType.id] = vov!.id;
+            }
+          }
+          return acc;
+        },
+        {} as Record<string, string | null>
+      ) ?? {}
+    );
+  });
+  useEffect(() => {
+    //update selected variant when options change
+    const variant = product.variants.find((variant) => {
+      return (
+        variant.attributes.purchasable &&
+        variant.relationships.option_values?.data?.every((vov) => {
+          for (const optionType of product.optionTypes) {
+            if (selectedOptions[optionType.id] == vov?.id) {
+              return true;
+            }
+          }
+          return false;
+        })
+      );
+    });
+    if (variant) {
+      router.push(`${path}?variantId=${variant.id}`);
+    }
+  }, [selectedOptions]);
+  useEffect(() => {
+    //update selected options when variant changes
+    // this is for reactivity when unavailable variant combination is selected
+    setSelectedOptions((prev) => {
+      const newOptions = { ...prev };
+      if (selectedVariant) {
+        selectedVariant.relationships.option_values?.data?.forEach((vov) => {
+          for (const optionType of product.optionTypes) {
+            if (product.optionsMap[optionType.id].some((o) => o.id === vov?.id)) {
+              newOptions[optionType.id] = vov!.id;
+            }
+          }
+        });
+      }
+      return newOptions;
+    });
+  }, [selectedVariant]);
+
   const [state, formAction] = useFormState(addItem, null);
   const action = formAction.bind(null, {
     variantId: selectedVariant?.id || '',
@@ -169,41 +221,88 @@ export function ProductCartForm({ product, getCart }: Props) {
           )}
         </div>
 
-        <div className="flex gap-1">
-          {product.variants.map((variant) => {
-            if (variant.id === selectedVariant?.id) {
-              return (
-                <VariantPill
-                  key={variant.id}
-                  state="selected"
-                  text={variant.attributes.options_text}
-                  onClick={() => {
-                    router.push(`${path}?variantId=${variant.id}`);
-                  }}
-                />
-              );
-            } else if (variant.attributes.purchasable) {
-              return (
-                <VariantPill
-                  key={variant.id}
-                  state="available"
-                  text={variant.attributes.options_text}
-                  onClick={() => {
-                    router.push(`${path}?variantId=${variant.id}`);
-                  }}
-                />
-              );
-            } else {
-              return (
-                <VariantPill
-                  key={variant.id}
-                  state="unavailable"
-                  text={variant.attributes.options_text}
-                />
-              );
-            }
-          })}
-        </div>
+        {product.optionTypes.map((optionType) => (
+          <div key={optionType.id}>
+            <div className="flex gap-1">
+              <Typography as="boldSmall" element="p" className="text-black-70">
+                {optionType.attributes.presentation}:{' '}
+                {selectedOptions[optionType.attributes.presentation]}
+              </Typography>
+            </div>
+            <div className="flex gap-1">
+              {product.optionsMap[optionType.id].map((optionValue) => {
+                const contextOptions = { ...selectedOptions, [optionType.id]: optionValue.id };
+                // if no variant satisfies the condition, the option is disabled
+                if (
+                  !product.variants.some(
+                    (variant) =>
+                      variant.attributes.purchasable &&
+                      variant.relationships.option_values?.data?.every((vov) => {
+                        for (const optionType of product.optionTypes) {
+                          if (contextOptions[optionType.id] == vov?.id) {
+                            return true;
+                          }
+                        }
+                        return false;
+                      })
+                  )
+                ) {
+                  return (
+                    <VariantPill
+                      key={optionValue.id}
+                      state="unavailable"
+                      text={optionValue.attributes.presentation}
+                      onClick={() => {
+                        //if any other combination allows this option, select it
+                        const variant = product.variants.find((variant) => {
+                          console.log('Checking variant: ', variant);
+                          return (
+                            variant.attributes.purchasable &&
+                            variant.relationships.option_values?.data?.some(
+                              (vov) => vov?.id === optionValue.id
+                            )
+                          );
+                        });
+                        console.log(variant);
+                        if (variant) {
+                          router.push(`${path}?variantId=${variant.id}`);
+                        }
+                      }}
+                    />
+                  );
+                }
+                if (selectedOptions[optionType.id] === optionValue.id) {
+                  return (
+                    <VariantPill
+                      key={optionValue.id}
+                      state="selected"
+                      text={optionValue.attributes.presentation}
+                      onClick={() => {
+                        setSelectedOptions((prev) => ({
+                          ...prev,
+                          [optionType.id]: null
+                        }));
+                      }}
+                    />
+                  );
+                }
+                return (
+                  <VariantPill
+                    key={optionValue.id}
+                    state="available"
+                    text={optionValue.attributes.presentation}
+                    onClick={() => {
+                      setSelectedOptions((prev) => ({
+                        ...prev,
+                        [optionType.id]: optionValue.id
+                      }));
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ))}
 
         <div className="flex items-center py-2">
           <Typography as="boldSmall" element="p" className="text-black-70">
@@ -276,6 +375,10 @@ function VariantPill({ state, text, onClick }: VairantPillParams) {
           className="mx-1 flex h-8 items-center whitespace-nowrap rounded-full bg-[#000000]/5 p-2 text-[#000000]/20"
           element="div"
           as="small"
+          style={{
+            cursor: 'pointer'
+          }}
+          onClick={onClick}
         >
           {text}
         </Typography>

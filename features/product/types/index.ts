@@ -7,6 +7,10 @@ export type ProductPropertySchema = components['schemas']['ProductProperty'];
 
 export type TaxonSchema = components['schemas']['Taxon'];
 
+export type OptionTypeSchema = components['schemas']['OptionType'];
+
+export type OptionValueSchema = components['schemas']['OptionValue'];
+
 export type VariantSchema = components['schemas']['Variant'];
 
 export type CancellationRequestSchema = components['schemas']['OrderCancelRequest'];
@@ -45,4 +49,7 @@ export type Product = ProductSchema & {
   productProperties: ProductPropertySchema[];
   variants: VariantSchema[];
   defaultVariant?: VariantSchema;
+  optionTypes: OptionTypeSchema[];
+  optionValues: OptionValueSchema[];
+  optionsMap: Record<string, OptionValueSchema[]>;
 };
