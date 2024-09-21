@@ -316,10 +316,18 @@ export function ProductCartForm({ product, getCart }: Props) {
                 setSelectedQuantity(quantity);
               }}
               onIncrease={() => {
-                setSelectedQuantity(selectedQuantity + 1);
+                setSelectedQuantity(
+                  Math.min(selectedQuantity + 1, selectedVariant?.attributes.total_on_hand ?? 0)
+                );
               }}
             />
           </div>
+          {selectedVariant?.attributes.total_on_hand !== undefined &&
+            selectedVariant.attributes.total_on_hand < 20 && (
+              <Typography as="boldSmall" element="p" className="ml-2 text-red-500">
+                {`残り在庫: ${selectedVariant?.attributes.total_on_hand}`}
+              </Typography>
+            )}
         </div>
 
         <div className="flex items-center">

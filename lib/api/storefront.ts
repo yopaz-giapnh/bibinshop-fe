@@ -1726,6 +1726,7 @@ export interface components {
         stars?: number;
         reviews_count?: number;
         order_count?: number;
+        total_on_hand?: number;
       };
       relationships: {
         /** @description List of Product Variants, excluding Master Variant */
@@ -2255,6 +2256,8 @@ export interface components {
         /** @description Indicates if Variant is in stock */
         in_stock?: boolean;
         backorderable?: boolean;
+        /** @example 10 */
+        total_on_hand?: number;
       };
       relationships: {
         product?: {
