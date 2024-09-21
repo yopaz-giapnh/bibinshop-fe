@@ -1600,11 +1600,36 @@ export interface components {
       type: string;
       attributes: {
         /** @example color */
-        name?: string;
+        name: string;
         /** @example Color */
-        presentation?: string;
+        presentation: string;
         /** @example 1 */
-        position?: number;
+        position: number;
+      };
+      relationships: {
+        option_values?: {
+          data?: components['schemas']['Relation'][];
+        };
+      };
+    };
+    /** Option Value */
+    OptionValue: {
+      /** @example 1 */
+      id: string;
+      /** @default option_value */
+      type: string;
+      attributes: {
+        /** @example red */
+        name: string;
+        /** @example Red */
+        presentation: string;
+        /** @example 1 */
+        position: number;
+      };
+      relationships: {
+        option_type?: {
+          data?: components['schemas']['Relation'];
+        };
       };
     };
     /** Payment */

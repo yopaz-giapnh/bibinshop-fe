@@ -16,6 +16,8 @@ import {
 import {
   isCalculatorSchema,
   isImageSchema,
+  isOptionTypeSchema,
+  isOptionValueSchema,
   isProductPropertySchema,
   isTaxonSchema,
   isVariantSchema
@@ -69,7 +71,8 @@ export async function getProduct(product_slug: string) {
         product_slug
       },
       query: {
-        include: 'images,product_properties,vendor,variants,default_variant',
+        include:
+          'images,product_properties,vendor,variants,default_variant,option_types,option_types.option_values',
         'filter[in_stock]': true
       }
     },
@@ -102,6 +105,25 @@ const reshapeProduct = ({
   const taxons = productIncluded?.filter(isTaxonSchema) || [];
   const productProperties = productIncluded?.filter(isProductPropertySchema) || [];
   const allVariants = productIncluded?.filter(isVariantSchema) || [];
+  const optionTypes = (productIncluded?.filter(isOptionTypeSchema) || []).sort(
+    (a, b) => a.attributes.position - b.attributes.position
+  );
+  const optionValues = (productIncluded?.filter(isOptionValueSchema) || []).sort(
+    (a, b) => a.attributes.position - b.attributes.position
+  );
+  const optionsMap = optionTypes.reduce(
+    (acc, optionType) => {
+      const values = optionValues.filter(
+        (value) => value.relationships.option_type?.data?.id === optionType.id
+      );
+
+      return {
+        ...acc,
+        [optionType.id]: values
+      };
+    },
+    {} as Record<string, typeof optionValues>
+  );
   // TODO: 購入不可な場合は表示するかどうか
   const variants = allVariants.filter((variant) => !variant.attributes.is_master);
   const defaultVariant = allVariants.find(
@@ -115,7 +137,10 @@ const reshapeProduct = ({
     taxons,
     productProperties,
     variants,
-    defaultVariant
+    defaultVariant,
+    optionTypes,
+    optionValues,
+    optionsMap
   };
 };
 
@@ -125,7 +150,8 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
       query: {
         'filter[taxons]': taxonIds.join(','),
         page: Number(page || 1),
-        include: 'images,vendor,product_properties,default_variant'
+        include:
+          'images,vendor,product_properties,default_variant,option_types,option_types.option_values'
       }
     },
     fetch: (request) => {
@@ -162,10 +188,16 @@ const reshapeProducts = ({
     const productProperties = (productIncluded?.filter(isProductPropertySchema) || []).filter((p) =>
       product.relationships.product_properties?.data?.map((pp) => pp?.id).includes(p.id)
     );
+    const optionTypes = (productIncluded?.filter(isOptionTypeSchema) || []).filter((ot) =>
+      product.relationships.option_types?.data?.map((otd) => otd?.id).includes(ot.id)
+    );
+    const optionValues = (productIncluded?.filter(isOptionValueSchema) || []).filter((ov) =>
+      optionTypes.some((ot) => ov.relationships.option_type?.data?.id === ot.id)
+    );
 
     return reshapeProduct({
       product,
-      productIncluded: [...imageIncluded, ...productProperties]
+      productIncluded: [...imageIncluded, ...productProperties, ...optionTypes, ...optionValues]
     });
   });
 

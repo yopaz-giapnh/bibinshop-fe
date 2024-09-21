@@ -3,6 +3,8 @@ import {
   CalculatorSchema,
   CancellationRequestSchema,
   ImageSchema,
+  OptionTypeSchema,
+  OptionValueSchema,
   ProductPropertySchema,
   ProductSchema,
   ShippingMethod,
@@ -31,6 +33,14 @@ export function isTaxonImageSchema(includedObject: unknown): includedObject is T
 
 export function isVariantSchema(includedObject: unknown): includedObject is VariantSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'variant';
+}
+
+export function isOptionTypeSchema(includedObject: unknown): includedObject is OptionTypeSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'option_type';
+}
+
+export function isOptionValueSchema(includedObject: unknown): includedObject is OptionValueSchema {
+  return hasProperty(includedObject, 'type') && includedObject.type === 'option_value';
 }
 
 export function isCancellationReuqestSchema(
