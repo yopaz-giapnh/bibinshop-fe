@@ -17,10 +17,11 @@ import { Typography } from '@/components/ui/typography';
 import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup } from '@radix-ui/react-radio-group';
-import { Check, X } from 'lucide-react';
+import { BadgeAlert, Check, X } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { applyCoupon } from '../actions';
 import { CouponSheetItem } from './coupon-sheet-item';
 
 export type CouponSheetRef = {
@@ -133,12 +134,19 @@ export const CouponSheet = forwardRef<CouponSheetRef>((_, ref) => {
   const onClose = () => setIsOpen(false);
 
   const onSubmit = async (values: FormValues) => {
-    // TODO: ここでクーポンコードの検証や適用のロジックを実装
-    console.log(values);
-    toast({
-      title: 'クーポンが追加されました',
-      icon: <Check className="h-6 w-6" />
-    });
+    const { success, message } = await applyCoupon(values.couponCode);
+    if (success) {
+      toast({
+        title: message,
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      toast({
+        title: message,
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
   };
 
   const form = useForm<FormValues>({

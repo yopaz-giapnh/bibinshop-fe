@@ -26,12 +26,15 @@ export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache 
 }
 
 export async function applyCoupon(couponCode: string) {
-  const { error, data } = await apiClient.POST('/api/v2/storefront/coupons/apply', {
-    body: { code: couponCode }
-  });
-
-  if (error) {
-    throw error;
+  try {
+    const { error } = await apiClient.POST('/api/v2/storefront/coupons/apply', {
+      body: { code: couponCode }
+    });
+    if (error) {
+      throw error;
+    }
+    return { success: true, message: 'クーポンが追加されました' };
+  } catch (error) {
+    return { success: false, message: 'クーポンの追加に失敗しました' };
   }
-  return data;
 }

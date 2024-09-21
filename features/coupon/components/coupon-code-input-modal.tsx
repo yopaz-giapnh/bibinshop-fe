@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Check } from 'lucide-react';
+import { BadgeAlert, Check } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -48,11 +48,19 @@ export const CouponCodeInputModal = forwardRef<CouponCodeInputModalRef>((_, ref)
   }));
 
   const onSubmit = async (values: FormValues) => {
-    applyCoupon(values.couponCode);
-    toast({
-      title: 'クーポンが追加されました',
-      icon: <Check className="h-6 w-6" />
-    });
+    const { success, message } = await applyCoupon(values.couponCode);
+    if (success) {
+      toast({
+        title: message,
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      toast({
+        title: message,
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
     setIsOpen(false);
   };
 
