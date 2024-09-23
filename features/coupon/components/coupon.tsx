@@ -12,6 +12,7 @@ import CouponListEmptyView from './coupon-list-empty-view';
 type Props = {
   getCoupons: ReturnType<typeof getCoupons>;
 };
+
 export default function Coupon({ getCoupons }: Props) {
   const couponCodeInputModalRef = useRef<CouponCodeInputModalRef>(null);
   const myCoupons = use(getCoupons);

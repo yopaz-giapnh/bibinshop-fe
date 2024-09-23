@@ -18,10 +18,11 @@ import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup } from '@radix-ui/react-radio-group';
 import { BadgeAlert, Check, X } from 'lucide-react';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, use, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { applyCoupon } from '../actions';
+import { applyCoupon, getCoupons } from '../actions';
+import { CouponSchema } from '../types';
 import { CouponSheetItem } from './coupon-sheet-item';
 
 export type CouponSheetRef = {
@@ -35,99 +36,21 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-// クーポン情報の型定義
-interface CouponInfo {
-  id: string;
-  code: string;
-  title: string;
-  description: string;
-  discount: string;
-  expirationDate: string;
-  isSelectable: boolean;
-}
+type Props = {
+  getCoupons: ReturnType<typeof getCoupons>;
+};
 
-// デモデータ
-const demoCoupons: CouponInfo[] = [
-  {
-    id: '1',
-    code: 'SUMMER10',
-    title: '夏季限定10%オフ',
-    description: '7,000円以上購入で使用可能(特価商品を除く)',
-    discount: '10% OFF',
-    expirationDate: '2024/08/31まで',
-    isSelectable: true
-  },
-  {
-    id: '2',
-    code: 'WELCOME20',
-    title: '新規会員登録20%オフ',
-    description: '3,000円以上購入で使用可能(特価商品を除く)',
-    discount: '20% OFF',
-    expirationDate: '2024/12/31まで',
-    isSelectable: false
-  },
-  {
-    id: '3',
-    code: 'BIGSALE30',
-    title: '大型セール30%オフ',
-    description: '5,000円以上購入で使用可能(特価商品を除く)',
-    discount: '30% OFF',
-    expirationDate: '2024/09/30まで',
-    isSelectable: true
-  },
-  {
-    id: '4',
-    code: 'BIGSALE30',
-    title: '大型セール30%オフ',
-    description: '5,000円以上購入で使用可能(特価商品を除く)',
-    discount: '30% OFF',
-    expirationDate: '2024/09/30まで',
-    isSelectable: true
-  },
-  {
-    id: '5',
-    code: 'BIGSALE30',
-    title: '大型セール30%オフ',
-    description: '5,000円以上購入で使用可能(特価商品を除く)',
-    discount: '30% OFF',
-    expirationDate: '2024/09/30まで',
-    isSelectable: true
-  },
-  {
-    id: '6',
-    code: 'BIGSALE30',
-    title: '大型セール30%オフ',
-    description: '5,000円以上購入で使用可能(特価商品を除く)',
-    discount: '30% OFF',
-    expirationDate: '2024/09/30まで',
-    isSelectable: true
-  },
-  {
-    id: '7',
-    code: 'BIGSALE30',
-    title: '大型セール30%オフ',
-    description: '5,000円以上購入で使用可能(特価商品を除く)',
-    discount: '30% OFF',
-    expirationDate: '2024/09/30まで',
-    isSelectable: true
-  },
-  {
-    id: '8',
-    code: 'BIGSALE30',
-    title: '大型セール30%オフ',
-    description: '5,000円以上購入で使用可能(特価商品を除く)',
-    discount: '30% OFF',
-    expirationDate: '2024/09/30まで',
-    isSelectable: true
-  }
-];
-
-export const CouponSheet = forwardRef<CouponSheetRef>((_, ref) => {
+export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCouponId, setSelectedCouponId] = useState<string | null>(null);
+  const [coupons, setCoupons] = useState<CouponSchema[]>([]);
+  const fetchCoupons = getCoupons ? use(getCoupons) : [];
 
   useImperativeHandle(ref, () => ({
-    open: () => setIsOpen(true),
+    open: async () => {
+      setIsOpen(true);
+      setCoupons(fetchCoupons || []);
+    },
     close: () => setIsOpen(false)
   }));
 
@@ -211,7 +134,7 @@ export const CouponSheet = forwardRef<CouponSheetRef>((_, ref) => {
               </form>
             </Form>
           </div>
-          {demoCoupons.length === 0 ? (
+          {coupons.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center">
               <BibiVacantFace />
               <Typography as="small" element="p" className="mt-[24px] text-[16px] text-black-90">
@@ -238,7 +161,7 @@ export const CouponSheet = forwardRef<CouponSheetRef>((_, ref) => {
                     className="flex-grow overflow-hidden"
                   >
                     <div className="flex flex-col">
-                      {demoCoupons.map((coupon) => (
+                      {coupons.map((coupon) => (
                         <div key={coupon.id}>
                           <CouponSheetItem coupon={coupon} />
                           <div className="border-b" />

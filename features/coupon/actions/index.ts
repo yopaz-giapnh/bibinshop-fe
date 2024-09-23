@@ -22,7 +22,7 @@ export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache 
 
   const { data: coupons } = data;
 
-  return coupons;
+  return coupons || [];
 }
 
 export async function applyCoupon(couponCode: string) {

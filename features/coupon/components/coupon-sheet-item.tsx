@@ -1,17 +1,10 @@
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
 import Image from 'next/image';
-
-interface CouponInfo {
-  id: string;
-  title: string;
-  description: string;
-  // TODO: BE の仕様に合わせて修正
-  // isSelectable: boolean;
-}
+import { CouponSchema } from '../types';
 
 interface CouponSheetItemProps {
-  coupon: CouponInfo;
+  coupon: CouponSchema;
 }
 
 export const CouponSheetItem: React.FC<CouponSheetItemProps> = ({ coupon }) => {
@@ -38,13 +31,13 @@ export const CouponSheetItem: React.FC<CouponSheetItemProps> = ({ coupon }) => {
               />
               <div className="absolute inset-0 ml-4 flex items-center">
                 <Typography as="caption" element="p" className="text-black-90">
-                  {coupon.title}
+                  {coupon.attributes.title}
                 </Typography>
               </div>
             </div>
           </div>
           <Typography as="caption" element="p" className="pt-2 text-[14px] text-gray-500">
-            {coupon.description}
+            {coupon.attributes.description}
           </Typography>
         </div>
       </div>
