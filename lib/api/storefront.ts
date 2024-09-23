@@ -2258,6 +2258,8 @@ export interface components {
         backorderable?: boolean;
         /** @example 10 */
         total_on_hand?: number;
+        /** @example true */
+        is_favorite?: boolean;
       };
       relationships: {
         product?: {
