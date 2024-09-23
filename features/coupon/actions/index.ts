@@ -38,3 +38,17 @@ export async function applyCoupon(couponCode: string) {
     return { success: false, message: 'クーポンの追加に失敗しました' };
   }
 }
+
+export async function cartAddCoupon(couponId: string) {
+  try {
+    const { error } = await apiClient.PATCH('/api/v2/storefront/cart/add_coupon', {
+      body: { coupon_id: couponId }
+    });
+    if (error) {
+      throw error;
+    }
+    return { success: true, message: 'クーポンが追加されました' };
+  } catch (error) {
+    return { success: false, message: 'クーポンの追加に失敗しました' };
+  }
+}

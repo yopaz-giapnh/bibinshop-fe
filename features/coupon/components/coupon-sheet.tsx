@@ -21,7 +21,7 @@ import { BadgeAlert, Check, X } from 'lucide-react';
 import { forwardRef, use, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { applyCoupon, getCoupons } from '../actions';
+import { applyCoupon, cartAddCoupon, getCoupons } from '../actions';
 import { CouponSchema } from '../types';
 import { CouponSheetItem } from './coupon-sheet-item';
 
@@ -83,15 +83,25 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
     setSelectedCouponId(null);
   };
 
-  const handleCouponUse = () => {
-    // TODO: ここでクーポン適用のロジックを実装
-    // TODO: エラー時のtoastもじっそ
-    toast({
-      title: 'クーポンが適用されました',
-      icon: <Check className="h-6 w-6" />
-    });
-    clearSelectedCoupon();
-    onClose();
+  const handleCouponUse = async () => {
+    if (!selectedCouponId) return;
+    const { success } = await cartAddCoupon(selectedCouponId);
+    if (success) {
+      toast({
+        title: 'クーポンが適用されました',
+        icon: <Check className="h-6 w-6" />
+      });
+      clearSelectedCoupon();
+      onClose();
+    } else {
+      toast({
+        title: 'クーポンの追加に失敗しました',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+      clearSelectedCoupon();
+      onClose();
+    }
   };
 
   return (
