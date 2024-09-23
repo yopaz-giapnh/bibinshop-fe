@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import { addToFavorite, removeFromFavorite } from '../actions';
 import { Product } from '../types';
 
 type Props = {
@@ -39,6 +40,9 @@ export function ProductCartForm({ product, getCart }: Props) {
     return defaultVariant;
   });
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useState<boolean>(
+    () => selectedVariant?.attributes.is_favorite ?? false
+  );
 
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>(() => {
     return (
@@ -90,6 +94,9 @@ export function ProductCartForm({ product, getCart }: Props) {
       }
       return newOptions;
     });
+  }, [selectedVariant]);
+  useEffect(() => {
+    setIsFavorite(selectedVariant?.attributes.is_favorite ?? false);
   }, [selectedVariant]);
 
   const [state, formAction] = useFormState(addItem, null);
@@ -156,12 +163,22 @@ export function ProductCartForm({ product, getCart }: Props) {
       });
   };
 
-  const onPressFavorite = () => {
-    // TODO: お気に入りに追加するAPIを呼び出す
-    toast({
-      title: 'お気に入りに追加しました',
-      icon: <Check className="h-6 w-6" />
-    });
+  const onPressFavorite = async () => {
+    if (!selectedVariant) return;
+    if (isFavorite) {
+      await removeFromFavorite(selectedVariant.id);
+      toast({
+        title: 'お気に入りから削除しました',
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      await addToFavorite(selectedVariant.id);
+      toast({
+        title: 'お気に入りに追加しました',
+        icon: <Check className="h-6 w-6" />
+      });
+    }
+    setIsFavorite((prev) => !prev);
   };
 
   return (
@@ -335,7 +352,11 @@ export function ProductCartForm({ product, getCart }: Props) {
             <AddToCartButton />
           </form>
           <button className="ml-2" onClick={onPressFavorite}>
-            <Heart className="h-12 w-12 rounded-full border-[1px] p-2" />
+            <Heart
+              className="h-12 w-12 rounded-full border-[1px] p-2"
+              color={isFavorite ? 'red' : 'black'}
+              fill={isFavorite ? 'red' : 'white'}
+            />
           </button>
         </div>
       </div>

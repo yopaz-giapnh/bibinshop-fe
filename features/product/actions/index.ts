@@ -265,3 +265,32 @@ function reshapeShippingMethods({
     };
   });
 }
+
+export async function addToFavorite(variantId: string) {
+  const { data, error } = await apiClient.POST('/api/v2/storefront/account/favorites', {
+    body: {
+      favorite: {
+        variant_id: variantId
+      }
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function removeFromFavorite(variantId: string) {
+  const { error } = await apiClient.DELETE('/api/v2/storefront/account/favorites/{id}', {
+    params: {
+      path: {
+        id: variantId
+      }
+    }
+  });
+  if (error) {
+    throw error;
+  }
+}
