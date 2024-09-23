@@ -30,7 +30,7 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
       });
     } else {
       toast({
-        title: 'カートに追加できませんでした',
+        title: result.message,
         className: 'bg-error',
         icon: <BadgeAlert className="h-6 w-6" />
       });

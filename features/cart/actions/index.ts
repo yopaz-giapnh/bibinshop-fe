@@ -72,6 +72,13 @@ export async function addItem(
     }
   }
 
+  if (cart.attributes.item_count && cart.attributes.item_count >= 24) {
+    return {
+      success: false,
+      message: '申し訳ありませんが、上限に達しました。'
+    };
+  }
+
   try {
     const { error } = await apiClient.POST('/api/v2/storefront/cart/add_item', {
       body: {
