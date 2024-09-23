@@ -1,16 +1,13 @@
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
-import { Ban } from 'lucide-react';
 import Image from 'next/image';
 
 interface CouponInfo {
   id: string;
-  code: string;
   title: string;
   description: string;
-  discount: string;
-  expirationDate: string;
-  isSelectable: boolean;
+  // TODO: BE の仕様に合わせて修正
+  // isSelectable: boolean;
 }
 
 interface CouponSheetItemProps {
@@ -23,11 +20,12 @@ export const CouponSheetItem: React.FC<CouponSheetItemProps> = ({ coupon }) => {
       <div className="flex items-center justify-between">
         <div className="flex flex-col items-center">
           <div className="flex items-center">
-            {coupon.isSelectable ? (
+            <RadioGroupItem value={coupon.id} id={coupon.id} className="w-15 mr-2 h-5" />
+            {/* {coupon.isSelectable ? (
               <RadioGroupItem value={coupon.id} id={coupon.id} className="w-15 mr-2 h-5" />
             ) : (
               <Ban className="mr-2 h-9 w-9 text-gray-400" />
-            )}
+            )} */}
             <div className="relative">
               <Image
                 src="/small-coupon-background.png"
