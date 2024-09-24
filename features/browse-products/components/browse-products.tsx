@@ -1,12 +1,11 @@
 import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
-import { getProducts } from '@/features/product/actions';
+import { getBrowseHistory } from '@/features/product/actions';
 import { ProductGrid } from '@/features/product/components/product-grid';
 import { BrowseProductsEmptyView } from './browse-products-empty-view';
 
 export async function BrowseProducts() {
-  //TODO: 閲覧履歴を取得するAPIで商品取得する
-  const products = await getProducts();
+  const products = await getBrowseHistory();
 
   return (
     <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">
@@ -21,7 +20,7 @@ export async function BrowseProducts() {
         </Typography>
         <div className="h-7 w-7" />
       </div>
-      {products.data.length !== 0 ? (
+      {products.data.length === 0 ? (
         <BrowseProductsEmptyView />
       ) : (
         <div className="px-[8px] md:px-0">

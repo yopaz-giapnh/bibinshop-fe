@@ -294,3 +294,32 @@ export async function removeFromFavorite(variantId: string) {
     throw error;
   }
 }
+
+export async function getBrowseHistory(page?: number) {
+  const ids = await listProductBrowseHistory(page);
+  if (ids.length === 0) {
+    return { data: [] };
+  }
+
+  const product = await getProducts({ query: { 'filter[ids]': ids.join(',') } });
+
+  return product;
+}
+
+async function listProductBrowseHistory(page?: number) {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/account/recently_viewed', {
+    cache: 'no-cache',
+    params: {
+      query: {
+        page,
+        sort: '-updated_at'
+      }
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data.data.map((h) => h.attributes.product_id);
+}
