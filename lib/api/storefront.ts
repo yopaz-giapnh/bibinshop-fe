@@ -2766,11 +2766,18 @@ export interface components {
       /** @default recently_viewed */
       type: string;
       attributes: {
+        /** @example 1 */
+        product_id: string;
         /**
          * Format: date-time
          * @example 2020-02-16T07:14:54.617Z
          */
         created_at: string;
+        /**
+         * Format: date-time
+         * @example 2020-02-16T07:14:54.617Z
+         */
+        updated_at: string;
       };
       relationships: {
         product?: {
