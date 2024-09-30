@@ -48,8 +48,21 @@ export async function cartAddCoupon(couponId: string) {
       throw error;
     }
     return { success: true, message: 'クーポンが追加されました' };
-    // TODO: container にいれときたい
   } catch (error) {
     return { success: false, message: 'クーポンの追加に失敗しました' };
+  }
+}
+
+export async function cartRemoveCoupon(couponId: string) {
+  try {
+    const { error } = await apiClient.PATCH('/api/v2/storefront/cart/remove_coupon', {
+      body: { coupon_id: couponId }
+    });
+    if (error) {
+      throw error;
+    }
+    return { success: true, message: 'クーポンが取り消されました' };
+  } catch (error) {
+    return { success: false, message: 'クーポンの取り消しに失敗しました' };
   }
 }

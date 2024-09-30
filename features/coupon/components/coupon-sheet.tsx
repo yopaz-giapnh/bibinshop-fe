@@ -23,6 +23,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { applyCoupon, cartAddCoupon, getCoupons } from '../actions';
 import { CouponSchema } from '../types';
+import { useCoupon } from './coupon-ctx';
 import { CouponSheetItem } from './coupon-sheet-item';
 
 export type CouponSheetRef = {
@@ -45,6 +46,7 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
   const [selectedCouponId, setSelectedCouponId] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<CouponSchema[]>([]);
   const fetchCoupons = getCoupons ? use(getCoupons) : [];
+  const { setActiveCoupon, addActiveCoupon } = useCoupon();
 
   useImperativeHandle(ref, () => ({
     open: async () => {
@@ -91,6 +93,8 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
         title: 'クーポンが適用されました',
         icon: <Check className="h-6 w-6" />
       });
+      // 適応中のクーポンをセット
+      setActiveCoupon(coupons.find((coupon) => coupon.id === selectedCouponId) as CouponSchema);
       clearSelectedCoupon();
       onClose();
     } else {
