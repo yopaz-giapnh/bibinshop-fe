@@ -46,7 +46,7 @@ export const FirstCouponGetModal = forwardRef<FirstCouponGetModalRef>((_, ref) =
           <div className="absolute top-[60px] flex w-full justify-center md:top-[60px]">
             <BibiVacantFace />
           </div>
-          {/* TODO: これも？ */}
+          {/* TODO: @coupon これも？ */}
           <CouponCard
             title="[APPダウンロード]1,000円 OFF"
             description="7,000円以上購入で使用可能(特価商品を除く)"

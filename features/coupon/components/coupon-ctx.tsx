@@ -35,7 +35,7 @@ export function CouponProvider(props: React.PropsWithChildren) {
     return { success: false, message: 'クーポンの取り消しに失敗しました' };
   };
 
-  //   TODO: coupon これに置き換える？
+  //   TODO: @coupon これに置き換える？
   const addActiveCoupon = (coupon: CouponSchema) => {
     setActiveCoupon(coupon);
     cartAddCoupon(coupon.id);

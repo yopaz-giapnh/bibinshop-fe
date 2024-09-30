@@ -5,6 +5,7 @@ import { Typography } from '@/components/ui/typography';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
 import { Check } from 'lucide-react';
 import { Cart } from '../types';
+import { displayCouponPromoTotal } from '../utils';
 import { CartItemGroupByShop } from './cart-item-group-by-shop';
 
 type Props = {
@@ -20,7 +21,9 @@ export function CartItemList({ cart }: Props) {
           <div className="flex items-center">
             <Check className="mr-2 h-8 w-8 md:h-4 md:w-4" />
             <Typography as="title" element="h1" className="text-[14px] text-text-80">
-              クーポンを適用しています。 <span className="text-red-500">1,000円</span>を節約しよう！
+              クーポンを適用しています。
+              <span className="text-red-500">{displayCouponPromoTotal(cart, activeCoupon)}</span>
+              を節約しよう！
             </Typography>
           </div>
           <div>
@@ -28,7 +31,7 @@ export function CartItemList({ cart }: Props) {
               as="boldTitle"
               element="button"
               className="text-[14px] text-red-500"
-              // TODO: coupon トースト表示
+              // TODO: @coupon トースト表示
               onClick={removeActiveCoupon}
             >
               取消し

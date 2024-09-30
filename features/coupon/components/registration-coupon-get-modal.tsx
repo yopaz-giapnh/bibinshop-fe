@@ -47,7 +47,7 @@ export const RegistrationCouponGetModal = () => {
           <div className="absolute top-[100px] flex w-full justify-center md:top-[80px]">
             <BibiSmilingFace />
           </div>
-          {/* TODO: 初回登録クーポンどうするか？ */}
+          {/* TODO: @coupon 初回登録クーポンどうするか？ */}
           <CouponCard
             title="[APPダウンロード]1,000円 OFF"
             description="初回登録限定クーポン"

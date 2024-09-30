@@ -46,7 +46,7 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
   const [selectedCouponId, setSelectedCouponId] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<CouponSchema[]>([]);
   const fetchCoupons = getCoupons ? use(getCoupons) : [];
-  const { setActiveCoupon, addActiveCoupon } = useCoupon();
+  const { setActiveCoupon } = useCoupon();
 
   useImperativeHandle(ref, () => ({
     open: async () => {

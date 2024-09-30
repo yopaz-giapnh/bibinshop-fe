@@ -24,7 +24,7 @@ export async function Cart() {
           <div className="hidden w-full md:block">
             <ApplyCouponButton getCoupons={getCoupons()} />
           </div>
-          <OrderOverview cart={cart} />
+          <OrderOverview cart={cart} getCoupons={getCoupons()} />
 
           {/* TODO: 本来は、支払い方法を取得できたほうがいい？ */}
           <PaymentMethod />
