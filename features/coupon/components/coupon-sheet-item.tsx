@@ -14,6 +14,7 @@ export const CouponSheetItem: React.FC<CouponSheetItemProps> = ({ coupon }) => {
         <div className="flex flex-col items-center">
           <div className="flex items-center">
             <RadioGroupItem value={coupon.id} id={coupon.id} className="w-15 mr-2 h-5" />
+            {/* TODO: 最低金額の実装してから */}
             {/* {coupon.isSelectable ? (
               <RadioGroupItem value={coupon.id} id={coupon.id} className="w-15 mr-2 h-5" />
             ) : (

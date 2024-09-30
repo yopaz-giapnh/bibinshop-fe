@@ -23,3 +23,20 @@ export function displayPromoTotal(cart: CartSchema) {
 
   return `-${promoTotal.replace('-', '')}`;
 }
+
+// TODO: クーポンの割引額を表示する関数
+export function displayCouponPromoTotal(cart: CartSchema, couponId: string) {
+  const isPromotable = !!parseInt(cart.attributes.promo_total ?? '0');
+
+  if (!isPromotable) {
+    return '';
+  }
+
+  const promoTotal = cart.attributes.display_promo_total;
+
+  if (!promoTotal) {
+    return '';
+  }
+
+  return `-${promoTotal.replace('-', '')}`;
+}

@@ -51,7 +51,7 @@ export const RegistrationCouponGetModal = () => {
           <CouponCard
             title="[APPダウンロード]1,000円 OFF"
             description="初回登録限定クーポン"
-            expiresAt="2024年12月31日まで"
+            expiresAt="2024-12-31T00:00:00"
             code="BIBINSHOP2024"
           />
         </div>

@@ -48,6 +48,7 @@ export async function cartAddCoupon(couponId: string) {
       throw error;
     }
     return { success: true, message: 'クーポンが追加されました' };
+    // TODO: container にいれときたい
   } catch (error) {
     return { success: false, message: 'クーポンの追加に失敗しました' };
   }

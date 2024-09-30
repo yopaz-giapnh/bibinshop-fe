@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
+import { getCoupons } from '@/features/coupon/actions';
 import { ApplyCouponButton } from '@/features/coupon/components/apply-coupon-button';
 import Link from 'next/link';
 import { Cart } from '../types';
@@ -30,17 +31,17 @@ export function OrderOverview({ cart }: Props) {
           </Typography>
         </div>
 
-        {/* TODO: BE接続時動作確認 */}
-        {!!promoTotal && (
-          <div className="mt-4 flex justify-between">
-            <Typography as="caption" element="p" className="text-black-90">
-              {`割引額`}
-            </Typography>
-            <Typography as="caption" element="p" className="text-bibinBlue-100">
-              {promoTotal}
-            </Typography>
-          </div>
-        )}
+        {/* TODO: クーポンでもこれを利用したい */}
+        {/* {!!promoTotal && ( */}
+        <div className="mt-4 flex justify-between">
+          <Typography as="caption" element="p" className="text-black-90">
+            {`割引額`}
+          </Typography>
+          <Typography as="caption" element="p" className="text-bibinBlue-100">
+            {promoTotal}
+          </Typography>
+        </div>
+        {/* )} */}
 
         <div className="mt-4 flex items-center justify-between border-t border-t-black-10 pt-4 md:py-4 md:pt-0">
           <Typography as="caption" element="p" className="text-black-90">
@@ -67,7 +68,7 @@ export function OrderOverview({ cart }: Props) {
           </Typography>
         </div>
         <div className="mt-2 flex items-center">
-          <ApplyCouponButton />
+          <ApplyCouponButton getCoupons={getCoupons()} />
           <Link href="/checkout" passHref>
             <Button size="default" variant="lg" className="ml-2 h-[45px] w-[200px] md:w-[202px]">
               購入する
