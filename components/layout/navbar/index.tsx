@@ -1,5 +1,4 @@
 import * as session from '@/features/auth/utils/session';
-import { FirstCouponGetModal } from '@/features/coupon/components/first-coupon-get-modal';
 import { getTaxons } from '@/features/taxon/actions';
 import { Header } from './header';
 import { Menu } from './menu';
@@ -13,7 +12,8 @@ export async function Navbar() {
       <div className="hidden md:block">
         <Menu getTaxons={getTaxons()} />
       </div>
-      {isSignedIn && <FirstCouponGetModal />}
+      {/* TODO: @coupon 獲得した人には出したくない(BE で管理してもらう？) */}
+      {/* {isSignedIn && <FirstCouponGetModal />} */}
     </div>
   );
 }
