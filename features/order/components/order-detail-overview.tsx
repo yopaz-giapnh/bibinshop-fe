@@ -1,6 +1,9 @@
+'use client';
 import { Typography } from '@/components/ui/typography';
 import { CartSchema } from '@/features/cart/types';
-import { displayPromoTotal } from '@/features/cart/utils';
+import { displayCouponPromoTotal, displayTotal } from '@/features/cart/utils';
+import { useCoupon } from '@/features/coupon/components/coupon-ctx';
+import { useEffect, useState } from 'react';
 import OrderDetailSection from './order-detail-section';
 
 type Props = {
@@ -8,7 +11,12 @@ type Props = {
 };
 
 export function OrderDetailOverview({ item }: Props) {
-  const promoTotal = displayPromoTotal(item);
+  const { activeCoupon } = useCoupon();
+  const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(item, activeCoupon));
+  }, [activeCoupon, item, setCouponPromoTotal]);
 
   return (
     <OrderDetailSection title="注文概要">
@@ -29,8 +37,7 @@ export function OrderDetailOverview({ item }: Props) {
             {item.attributes.display_item_total}
           </Typography>
         </div>
-        {/* TODO: BE接続時動作確認 */}
-        {!!promoTotal && (
+        {!!couponPromoTotal && (
           <div className="flex justify-between">
             <Typography
               as="caption"
@@ -44,11 +51,11 @@ export function OrderDetailOverview({ item }: Props) {
               element="p"
               className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
             >
-              {promoTotal}
+              {couponPromoTotal}
             </Typography>
           </div>
         )}
-        {/* TODO: BE接続時動作確認 */}
+        {/* TODO: @point BE接続時動作確認 */}
         <div className="flex justify-between">
           <Typography
             as="caption"
@@ -95,7 +102,7 @@ export function OrderDetailOverview({ item }: Props) {
             element="p"
             className="mt-[8px] text-[20px] text-black-90 md:mt-[16px]"
           >
-            {item.attributes.display_total}
+            {activeCoupon ? displayTotal(item, activeCoupon) : item.attributes.display_item_total}
           </Typography>
         </div>
       </div>

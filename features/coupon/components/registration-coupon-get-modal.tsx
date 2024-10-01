@@ -47,13 +47,12 @@ export const RegistrationCouponGetModal = () => {
           <div className="absolute top-[100px] flex w-full justify-center md:top-[80px]">
             <BibiSmilingFace />
           </div>
+          {/* TODO: @coupon 初回登録クーポンどうするか？ */}
           <CouponCard
-            showLabel={true}
-            label="初回限定"
             title="[APPダウンロード]1,000円 OFF"
-            subtitle="7,000円以上購入で使用可能(特価商品を除く)"
-            validUntil="2024年10月31日まで"
-            couponCode="BIBINSHOP2024"
+            description="初回登録限定クーポン"
+            expiresAt="2024-12-31T00:00:00"
+            code="BIBINSHOP2024"
           />
         </div>
         <div className="w-4/5">

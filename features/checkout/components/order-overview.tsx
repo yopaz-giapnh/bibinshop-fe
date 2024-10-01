@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
-import { displayPromoTotal } from '@/features/cart/utils';
+import { displayCouponPromoTotal, displayTotal } from '@/features/cart/utils';
+import { useCoupon } from '@/features/coupon/components/coupon-ctx';
 import { PointInfoPopover } from '@/features/point-balance/components/point-info-popover';
+import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateCheckout } from '../actions';
 import { useCheckout } from './checkout-ctx';
@@ -22,7 +24,12 @@ export function OrderOverview({ cart, canOrder }: Props) {
     activeAddress && activeCreditCard
       ? formAction.bind(null, { address: activeAddress, creditCard: activeCreditCard })
       : undefined;
-  const promoTotal = displayPromoTotal(cart);
+  const { activeCoupon } = useCoupon();
+  const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(cart, activeCoupon));
+  }, [activeCoupon, cart, setCouponPromoTotal]);
 
   return (
     <>
@@ -35,19 +42,18 @@ export function OrderOverview({ cart, canOrder }: Props) {
         </Typography>
       </div>
 
-      {/* TODO: BE接続時動作確認 */}
-      {!!promoTotal && (
+      {!!couponPromoTotal && (
         <div className="mt-4 flex justify-between">
           <Typography as="caption" element="p" className="text-black-90">
             {`割引金額`}
           </Typography>
           <Typography as="caption" element="p" className="text-black-90">
-            {promoTotal}
+            {couponPromoTotal}
           </Typography>
         </div>
       )}
 
-      {/* TODO: BE接続時動作確認 */}
+      {/* TODO: @point BE接続時動作確認 */}
       <div className="mt-4 flex justify-between">
         <Typography as="caption" element="p" className="text-black-90">
           ポイント利用
@@ -62,11 +68,11 @@ export function OrderOverview({ cart, canOrder }: Props) {
           小計
         </Typography>
         <Typography as="title" element="p" className="text-black-90">
-          {cart.attributes.display_total}
+          {activeCoupon ? displayTotal(cart, activeCoupon) : cart.attributes.display_item_total}
         </Typography>
       </div>
 
-      {/* TODO: BE接続時動作確認 */}
+      {/* TODO: @point BE接続時動作確認 */}
       <div className="flex w-full items-center justify-center pt-2 md:pb-2">
         <Typography as="caption" element="p" className="text-black-90">
           獲得予定<span className="text-bibinBlue-100"> 100 </span>ポイント

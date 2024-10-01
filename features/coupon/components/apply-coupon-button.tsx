@@ -4,9 +4,14 @@ import { Typography } from '@/components/ui/typography';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { ChevronRight, Ticket } from 'lucide-react';
 import { useRef } from 'react';
+import { getCoupons } from '../actions';
 import { CouponSheet, CouponSheetRef } from './coupon-sheet';
 
-export function ApplyCouponButton() {
+type Props = {
+  getCoupons: ReturnType<typeof getCoupons>;
+};
+
+export function ApplyCouponButton({ getCoupons }: Props) {
   const couponSheetRef = useRef<CouponSheetRef>(null);
   const isPc = useIsPc();
 
@@ -41,7 +46,7 @@ export function ApplyCouponButton() {
           </Typography>
         </button>
       )}
-      <CouponSheet ref={couponSheetRef} />
+      <CouponSheet ref={couponSheetRef} getCoupons={getCoupons} />
     </>
   );
 }

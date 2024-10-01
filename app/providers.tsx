@@ -1,6 +1,7 @@
 'use client';
 
 import RegistrationCompleteModal from '@/features/auth/components/registration-complete-modal';
+import { CouponProvider } from '@/features/coupon/components/coupon-ctx';
 import { SessionProvider } from 'next-auth/react';
 import { PropsWithChildren, useEffect } from 'react';
 
@@ -20,10 +21,12 @@ export function Providers({ children }: PropsWithChildren) {
 
   return (
     <SessionProvider>
-      <>
-        {children}
-        <RegistrationCompleteModal />
-      </>
+      <CouponProvider>
+        <>
+          {children}
+          <RegistrationCompleteModal />
+        </>
+      </CouponProvider>
     </SessionProvider>
   );
 }
