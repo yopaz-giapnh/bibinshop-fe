@@ -14,3 +14,9 @@ export type MergedHistoryItem = {
   available?: number;
   expiresAt?: string | null;
 };
+
+export type AggregatedPointAcquisition = {
+  date: string;
+  totalAmount: number;
+  count: number;
+};

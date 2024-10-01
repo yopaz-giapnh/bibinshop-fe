@@ -3,7 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getPointAquisitionHistory, getPointUsageHistory } from '../actions';
-import mergePointHistory from '../util';
+import { aggregatedResult, mergePointHistory } from '../util';
+import PointExpirationEmptyView from './point-expiration-empty-view';
+import PointExpirationItem from './point-expiration-item';
 import PointHistoryEmptyView from './point-history-empty-view';
 import PointHistoryItem from './point-history-item';
 
@@ -16,8 +18,8 @@ const tabs = [
   {
     label: 'ポイント履歴',
     value: 'point-history'
-  }
-  // { label: '有効期限', value: 'expiration' }
+  },
+  { label: '有効期限', value: 'expiration' }
 ] as const;
 
 export async function PointBalanceTabs({ tabState }: Props) {
@@ -26,6 +28,10 @@ export async function PointBalanceTabs({ tabState }: Props) {
   const mergeHistoryData = mergePointHistory(pointAquisitonHistory, pointUsageHistory);
   // HACK: サンプルデータ
   // const mergeHistoryData = sampleMergedHistory;
+  const aggregatePointAcquisitionByDateData =
+    // aggregatePointAcquisitionByDate(pointAquisitonHistory);
+    aggregatedResult;
+
   return (
     <Tabs
       defaultValue={tabState}
@@ -74,24 +80,22 @@ export async function PointBalanceTabs({ tabState }: Props) {
                 )}
               </div>
             ) : (
-              // TODO: 有効期限の意図が不明のためコメントアウト
-              <></>
-              // <div>
-              //   {demoExpirationData.length === 0 ? (
-              //     <PointExpirationEmptyView />
-              //   ) : (
-              //     <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
-              //       {demoExpirationData.map((item, index) => (
-              //         <PointExpirationItem
-              //           key={index}
-              //           date={item.date}
-              //           points={item.points}
-              //           isLastItem={index === demoExpirationData.length - 1}
-              //         />
-              //       ))}
-              //     </div>
-              //   )}
-              // </div>
+              <div>
+                {aggregatePointAcquisitionByDateData.length === 0 ? (
+                  <PointExpirationEmptyView />
+                ) : (
+                  <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
+                    {aggregatePointAcquisitionByDateData.map((item, index) => (
+                      <PointExpirationItem
+                        key={index}
+                        date={item.date}
+                        points={item.totalAmount}
+                        isLastItem={index === aggregatePointAcquisitionByDateData.length - 1}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
           </Suspense>
         </TabsContent>

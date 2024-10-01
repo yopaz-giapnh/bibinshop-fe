@@ -1,7 +1,12 @@
-import { format, parseISO, subDays } from 'date-fns';
-import type { MergedHistoryItem, PointAquisitionHistory, PointUsageHistory } from '../types';
+import { format, isAfter, parseISO, startOfDay, subDays } from 'date-fns';
+import type {
+  AggregatedPointAcquisition,
+  MergedHistoryItem,
+  PointAquisitionHistory,
+  PointUsageHistory
+} from '../types';
 
-const mergePointHistory = (
+export const mergePointHistory = (
   acquisitionHistory: PointAquisitionHistory[],
   usageHistory: PointUsageHistory[]
 ): MergedHistoryItem[] => {
@@ -44,8 +49,81 @@ const mergePointHistory = (
   });
 };
 
-export default mergePointHistory;
+// 使用期限ごとのポイント集計配列
+export const aggregatePointAcquisitionByDate = (
+  history: PointAquisitionHistory[]
+): AggregatedPointAcquisition[] => {
+  const today = startOfDay(new Date());
+  const aggregatedData: { [date: string]: AggregatedPointAcquisition } = {};
 
+  history.forEach((item) => {
+    const expirationDate = parseISO(item.attributes.expires_at);
+
+    // 今日より後に期限が切れるものだけを処理
+    if (isAfter(expirationDate, today)) {
+      const date = format(parseISO(item.attributes.created_at), 'yyyy/MM/dd');
+      if (!aggregatedData[date]) {
+        aggregatedData[date] = { date, totalAmount: 0, count: 0 };
+      }
+      aggregatedData[date].totalAmount += item.attributes.amount;
+      aggregatedData[date].count += 1;
+    }
+  });
+
+  return Object.values(aggregatedData).sort((a, b) => b.date.localeCompare(a.date));
+};
+
+// HACK: サンプルデータ生成---------------
+// サンプルデータを使用した例
+const sampleHistory: PointAquisitionHistory[] = [
+  {
+    id: '1',
+    type: 'point',
+    attributes: {
+      amount: 100,
+      used_amount: 0,
+      available: 100,
+      expires_at: '2024-12-31T23:59:59Z',
+      created_at: '2023-05-01T10:00:00Z',
+      updated_at: '2023-05-01T10:00:00Z'
+    },
+    relationships: {
+      order: { data: { id: 'order2', type: 'order' } }
+    }
+  },
+  {
+    id: '2',
+    type: 'point',
+    attributes: {
+      amount: 50,
+      used_amount: 0,
+      available: 50,
+      expires_at: '2024-12-31T23:59:59Z',
+      created_at: '2023-05-01T14:30:00Z',
+      updated_at: '2023-05-01T14:30:00Z'
+    },
+    relationships: {
+      order: { data: { id: 'order2', type: 'order' } }
+    }
+  },
+  {
+    id: '3',
+    type: 'point',
+    attributes: {
+      amount: 75,
+      used_amount: 0,
+      available: 75,
+      expires_at: '2023-12-31T23:59:59Z',
+      created_at: '2023-05-02T09:15:00Z',
+      updated_at: '2023-05-02T09:15:00Z'
+    },
+    relationships: {
+      order: { data: { id: 'order2', type: 'order' } }
+    }
+  }
+];
+
+export const aggregatedResult = aggregatePointAcquisitionByDate(sampleHistory);
 // サンプルデータ生成のヘルパー関数
 const generateDate = (daysAgo: number) =>
   format(subDays(new Date(), daysAgo), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
