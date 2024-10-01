@@ -3,20 +3,20 @@ import React from 'react';
 type PointHistoryItemProps = {
   date: string;
   time: string;
-  title: string;
-  expirationDate: string;
-  points: number;
-  orderNumber?: string;
+  reason: string;
+  expiresAt?: string | null;
+  amount: number;
+  orderId?: string | null;
   isLastItem: boolean;
 };
 
 const PointHistoryItem: React.FC<PointHistoryItemProps> = ({
   date,
   time,
-  title,
-  expirationDate,
-  points,
-  orderNumber,
+  reason,
+  expiresAt,
+  amount,
+  orderId,
   isLastItem
 }) => {
   return (
@@ -28,27 +28,27 @@ const PointHistoryItem: React.FC<PointHistoryItemProps> = ({
             <div className="text-sm text-black-90">{time}</div>
           </div>
           <div className="flex flex-col items-start pl-[24px] text-right md:pl-[64px]">
-            <div className="font-semibold">{title}</div>
-            {expirationDate && (
-              <div className="mt-[4px] text-sm text-gray-500">使用期限: {expirationDate}</div>
+            <div className="font-semibold">{reason}</div>
+            {expiresAt && (
+              <div className="mt-[4px] text-sm text-gray-500">使用期限: {expiresAt}</div>
             )}
-            {orderNumber && (
+            {orderId && (
               <div className="mt-[4px] hidden text-sm text-gray-500 md:block">
-                注文番号: {orderNumber}
+                注文番号: {orderId}
               </div>
             )}
-            {orderNumber && (
+            {orderId && (
               <div className="mt-[4px] flex flex-col items-start md:hidden">
                 <div className="text-sm text-gray-500">注文番号:</div>
-                <div className="text-sm text-gray-500">{orderNumber}</div>
+                <div className="text-sm text-gray-500">{orderId}</div>
               </div>
             )}
           </div>
         </div>
         <div
-          className={`text-lg font-bold ${points > 0 ? 'text-bibinGreen-100' : 'text-black-90'}`}
+          className={`text-lg font-bold ${amount > 0 ? 'text-bibinGreen-100' : 'text-black-90'}`}
         >
-          {points}
+          {amount}
         </div>
       </div>
     </div>

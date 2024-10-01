@@ -2841,7 +2841,7 @@ export interface components {
         /** @example 100 */
         amount: number;
         /** @enum {string} */
-        reason: 'EXPIRE USE';
+        reason: 'EXPIRE' | 'USE';
         /**
          * Format: date-time
          * @example 2020-02-16T07:14:54.617Z
