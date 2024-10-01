@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getPointAquisitionHistory, getPointUsageHistory } from '../actions';
-import { aggregatedResult, mergePointHistory } from '../util';
+import { aggregatePointAcquisitionByDate, mergePointHistory } from '../util';
 import PointExpirationEmptyView from './point-expiration-empty-view';
 import PointExpirationItem from './point-expiration-item';
 import PointHistoryEmptyView from './point-history-empty-view';
@@ -29,8 +29,9 @@ export async function PointBalanceTabs({ tabState }: Props) {
   // HACK: サンプルデータ
   // const mergeHistoryData = sampleMergedHistory;
   const aggregatePointAcquisitionByDateData =
-    // aggregatePointAcquisitionByDate(pointAquisitonHistory);
-    aggregatedResult;
+    aggregatePointAcquisitionByDate(pointAquisitonHistory);
+  // HACK: サンプルデータ
+  // aggregatedResult;
 
   return (
     <Tabs
