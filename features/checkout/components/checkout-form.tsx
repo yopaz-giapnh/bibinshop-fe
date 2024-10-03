@@ -1,26 +1,41 @@
+'use client';
+
 import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
 import { Cart } from '@/features/cart/types';
+import { subtotalAfterCouponAmount } from '@/features/cart/utils';
+import { useCoupon } from '@/features/coupon/components/coupon-ctx';
 import { getAccountCreditCards } from '@/features/payment/actions';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
+import { getAvailablePoints } from '@/features/point-balance/actions';
+import { use } from 'react';
+import { CheckoutUsePointForm } from './CheckoutUsePointForm';
 import { CheckoutAddressForm } from './checkout-address-form';
 import { CheckoutCartForm } from './checkout-cart-form';
 import { CheckoutPaymentForm } from './checkout-payment-form';
-import { CheckoutUsePointForm } from './checkout-use-point-form';
 import { OrderOverview } from './order-overview';
 
 type Props = {
   cart: Cart;
+  getAccountAddresses: ReturnType<typeof getAccountAddresses>;
+  getAccountCreditCards: ReturnType<typeof getAccountCreditCards>;
+  getAvailablePoints: ReturnType<typeof getAvailablePoints>;
 };
 
-export async function CheckoutForm({ cart }: Props) {
-  const [addresses, creditCards] = await Promise.all([
-    getAccountAddresses(),
-    getAccountCreditCards()
-  ]);
+export function CheckoutForm({
+  cart,
+  getAccountAddresses,
+  getAccountCreditCards,
+  getAvailablePoints
+}: Props) {
+  const addresses = use(getAccountAddresses);
+  const creditCards = use(getAccountCreditCards);
+  const availablePoints = use(getAvailablePoints);
+
   const hasAddress = addresses.length > 0;
   const hasCreditCard = creditCards.length > 0;
   const canOrder = hasAddress && hasCreditCard;
+  const { activeCoupon } = useCoupon();
 
   return (
     <div className="mt-[16px] w-full md:mt-[22px] md:px-20">
@@ -59,8 +74,13 @@ export async function CheckoutForm({ cart }: Props) {
             >
               4. ポイント適用
             </Typography>
-            {!hasCreditCard && <div className="mb-4 h-full w-full bg-white-base" />}
-            {hasCreditCard && <CheckoutUsePointForm availablePoints={1000} />}
+            {availablePoints === 0 && <div className="mb-4 h-full w-full bg-white-base" />}
+            {availablePoints !== 0 && (
+              <CheckoutUsePointForm
+                availablePoints={availablePoints}
+                maxPoint={subtotalAfterCouponAmount(cart, activeCoupon)}
+              />
+            )}
           </div>
         </div>
         <div className="my-2 flex w-full flex-col gap-4 md:w-[424px] md:px-2">

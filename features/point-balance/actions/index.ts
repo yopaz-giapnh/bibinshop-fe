@@ -25,6 +25,39 @@ export async function getPointAquisitionHistory(params?: { page?: number; perPag
   return data.data || [];
 }
 
+export async function getAvailablePoints() {
+  const { response, error, data } = await apiClient.GET('/api/v2/storefront/account/points', {
+    query: {
+      page: 1,
+      per_page: 1
+    },
+    fetch: (request) => {
+      return fetch(request, { cache: 'no-cache' });
+    }
+  });
+
+  if (isNotFound(response)) {
+    return 0;
+  }
+
+  if (error) {
+    throw error;
+  }
+
+  // データが存在しない、または期待された形式でない場合の処理
+  if (!data || !Array.isArray(data.data) || data.data.length === 0) {
+    return 0;
+  }
+
+  // 型ガードを使用してデータの形式を確認
+  const firstItem = data.data[0];
+  if ('attributes' in firstItem && 'available' in firstItem.attributes) {
+    return firstItem.attributes.available || 0;
+  } else {
+    return 0;
+  }
+}
+
 export async function getPointUsageHistory(params?: { page?: number; perPage?: number }) {
   const { response, error, data } = await apiClient.GET(
     '/api/v2/storefront/account/point_history',
@@ -52,17 +85,20 @@ export async function getPointUsageHistory(params?: { page?: number; perPage?: n
 
 export async function patchCartPoints(pointAmount: number) {
   try {
-    await apiClient.PATCH(`/api/v2/storefront/cart/points`, {
+    const { error } = await apiClient.PATCH(`/api/v2/storefront/cart/points`, {
       params: {
         query: {
           amount: pointAmount
         }
       }
     });
+    if (error) {
+      throw error;
+    }
+    return { success: true, message: 'ポイントが適用されました' };
   } catch (error) {
     return { success: false, message: 'ポイントの適用に失敗しました' };
   }
-  return { success: true, message: 'ポイントが適用されました' };
 }
 
 export async function deleteCartPoints(pointAmount: number) {

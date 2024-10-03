@@ -60,12 +60,31 @@ export function couponPromoTotalAmount(cart: CartSchema, coupon: CouponSchema): 
 }
 
 // HACK: 本来はこっちで計算したくないが、現状の実装だとここで計算するしかない
-export function displayTotal(cart: CartSchema, coupon: CouponSchema): string {
+export function displayTotal(
+  cart: CartSchema,
+  coupon?: CouponSchema | null,
+  appliedPoints?: string | null
+): string {
   let total = convertCurrencyToNumber(cart.attributes.display_total || '0円');
   // クーポン金額を差し引く
-  total -= couponPromoTotalAmount(cart, coupon);
+  if (coupon) {
+    total -= couponPromoTotalAmount(cart, coupon);
+  }
+  // ポイントを差し引く
+  if (appliedPoints) {
+    total -= Number(appliedPoints);
+  }
 
   return convertNumberToCurrency(total) || '0円';
+}
+
+export function subtotalAfterCouponAmount(cart: CartSchema, coupon?: CouponSchema | null): number {
+  let total = convertCurrencyToNumber(cart.attributes.display_total || '0円');
+  // クーポン金額を差し引く
+  if (coupon) {
+    total -= couponPromoTotalAmount(cart, coupon);
+  }
+  return total | 0;
 }
 
 function convertCurrencyToNumber(currencyString: string): number {
@@ -84,7 +103,7 @@ function convertCurrencyToNumber(currencyString: string): number {
   return number;
 }
 
-function convertNumberToCurrency(number: number, currency: string = '円'): string {
+export function convertNumberToCurrency(number: number, currency: string = '円'): string {
   // 数値が有効かチェック
   if (isNaN(number) || !isFinite(number)) {
     console.error(`Invalid number: ${number}`);

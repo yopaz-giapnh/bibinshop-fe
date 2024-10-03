@@ -1,8 +1,13 @@
 'use client';
 import { Typography } from '@/components/ui/typography';
 import { CartSchema } from '@/features/cart/types';
-import { displayCouponPromoTotal, displayTotal } from '@/features/cart/utils';
+import {
+  convertNumberToCurrency,
+  displayCouponPromoTotal,
+  displayTotal
+} from '@/features/cart/utils';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
+import { usePoint } from '@/features/point-balance/components/point-ctx';
 import { useEffect, useState } from 'react';
 import OrderDetailSection from './order-detail-section';
 
@@ -13,6 +18,7 @@ type Props = {
 export function OrderDetailOverview({ item }: Props) {
   const { activeCoupon } = useCoupon();
   const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
+  const { appliedPoints } = usePoint();
 
   useEffect(() => {
     setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(item, activeCoupon));
@@ -55,23 +61,24 @@ export function OrderDetailOverview({ item }: Props) {
             </Typography>
           </div>
         )}
-        {/* TODO: @point BE接続時動作確認 */}
-        <div className="flex justify-between">
-          <Typography
-            as="caption"
-            element="p"
-            className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
-          >
-            ポイント利用
-          </Typography>
-          <Typography
-            as="caption"
-            element="p"
-            className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
-          >
-            -1,000円
-          </Typography>
-        </div>
+        {appliedPoints && (
+          <div className="flex justify-between">
+            <Typography
+              as="caption"
+              element="p"
+              className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
+            >
+              ポイント利用
+            </Typography>
+            <Typography
+              as="caption"
+              element="p"
+              className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
+            >
+              -{convertNumberToCurrency(Number(appliedPoints))}
+            </Typography>
+          </div>
+        )}
         <div className="flex justify-between">
           <Typography
             as="caption"
@@ -102,7 +109,7 @@ export function OrderDetailOverview({ item }: Props) {
             element="p"
             className="mt-[8px] text-[20px] text-black-90 md:mt-[16px]"
           >
-            {activeCoupon ? displayTotal(item, activeCoupon) : item.attributes.display_item_total}
+            {displayTotal(item, activeCoupon, appliedPoints)}
           </Typography>
         </div>
       </div>

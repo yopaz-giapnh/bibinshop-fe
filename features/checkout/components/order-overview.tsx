@@ -4,8 +4,13 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
-import { displayCouponPromoTotal, displayTotal } from '@/features/cart/utils';
+import {
+  convertNumberToCurrency,
+  displayCouponPromoTotal,
+  displayTotal
+} from '@/features/cart/utils';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
+import { usePoint } from '@/features/point-balance/components/point-ctx';
 import { PointInfoPopover } from '@/features/point-balance/components/point-info-popover';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -26,6 +31,7 @@ export function OrderOverview({ cart, canOrder }: Props) {
       : undefined;
   const { activeCoupon } = useCoupon();
   const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
+  const { appliedPoints } = usePoint();
 
   useEffect(() => {
     setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(cart, activeCoupon));
@@ -53,22 +59,23 @@ export function OrderOverview({ cart, canOrder }: Props) {
         </div>
       )}
 
-      {/* TODO: @point BE接続時動作確認 */}
-      <div className="mt-4 flex justify-between">
-        <Typography as="caption" element="p" className="text-black-90">
-          ポイント利用
-        </Typography>
-        <Typography as="caption" element="p" className="text-bibinBlue-100">
-          -1,000円
-        </Typography>
-      </div>
+      {appliedPoints && (
+        <div className="mt-4 flex justify-between">
+          <Typography as="caption" element="p" className="text-black-90">
+            ポイント利用
+          </Typography>
+          <Typography as="caption" element="p" className="text-bibinBlue-100">
+            -{convertNumberToCurrency(Number(appliedPoints))}
+          </Typography>
+        </div>
+      )}
 
       <div className="mt-4 flex items-center justify-between border-t border-t-black-10 pt-2 md:py-2 md:pt-0">
         <Typography as="caption" element="p" className="text-black-90">
           小計
         </Typography>
         <Typography as="title" element="p" className="text-black-90">
-          {activeCoupon ? displayTotal(cart, activeCoupon) : cart.attributes.display_item_total}
+          {displayTotal(cart, activeCoupon, appliedPoints)}
         </Typography>
       </div>
 
@@ -90,7 +97,7 @@ export function OrderOverview({ cart, canOrder }: Props) {
               小計
             </Typography>
             <Typography as="title" element="p" className="text-black-90">
-              {cart.attributes.display_item_total}
+              {displayTotal(cart, activeCoupon, appliedPoints)}
             </Typography>
           </div>
 
