@@ -1,5 +1,6 @@
+'use server';
 import { apiClient } from '@/config/api-client';
-import { ImageSchema, ProductIncludes, ProductSchema } from '@/features/product/types';
+import { ImageSchema, Product, ProductIncludes, ProductSchema } from '@/features/product/types';
 import {
   isImageSchema,
   isOptionTypeSchema,
@@ -135,3 +136,18 @@ const reshapeImages = (imageProductIncluded: ImageSchema[] | undefined) => {
     url: `${image.attributes.styles?.[image.attributes.styles.length - 1].url}`
   }));
 };
+
+export async function deleteFavorite(product: Product) {
+  const { error } = await apiClient.DELETE(`/api/v2/storefront/account/favorites/{id}`, {
+    params: {
+      path: {
+        id: product.id
+      }
+    }
+  });
+  console.log(error ? error.error : 'success');
+
+  if (error) {
+    throw error;
+  }
+}

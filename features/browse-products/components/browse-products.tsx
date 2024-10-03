@@ -1,6 +1,6 @@
 import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
-import { getBrowseHistory } from '@/features/product/actions';
+import { deleteHistoryEntry, getBrowseHistory } from '@/features/product/actions';
 import { ProductGrid } from '@/features/product/components/product-grid';
 import { BrowseProductsEmptyView } from './browse-products-empty-view';
 
@@ -24,7 +24,11 @@ export async function BrowseProducts() {
         <BrowseProductsEmptyView />
       ) : (
         <div className="px-[8px] md:px-0">
-          <ProductGrid columns={4} products={products.data} showDeleteButton />
+          <ProductGrid
+            columns={4}
+            products={products.data}
+            deleteButtonAction={deleteHistoryEntry}
+          />
         </div>
       )}
     </div>
