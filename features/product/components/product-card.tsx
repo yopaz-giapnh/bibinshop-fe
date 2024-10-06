@@ -99,7 +99,7 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
         )}
 
         <Typography as="xSmall" element="p" className="hidden text-black-70 md:flex">
-          {`${product.attributes.order_count} 個販売`}
+          {`${product.attributes.total_on_hand} 個販売`}
         </Typography>
       </div>
       <div className="mt-[2px] flex items-center">
