@@ -52,4 +52,5 @@ export type Product = ProductSchema & {
   optionTypes: OptionTypeSchema[];
   optionValues: OptionValueSchema[];
   optionsMap: Record<string, OptionValueSchema[]>;
+  activeVariant?: VariantSchema;
 };

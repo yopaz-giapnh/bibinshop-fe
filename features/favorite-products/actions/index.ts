@@ -1,5 +1,6 @@
 'use server';
 import { apiClient } from '@/config/api-client';
+import { ProductCard } from '@/features/product/components/product-card';
 import { ImageSchema, Product, ProductIncludes, ProductSchema } from '@/features/product/types';
 import {
   isImageSchema,
@@ -11,6 +12,7 @@ import {
   isVariantSchema
 } from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
+import { ComponentProps } from 'react';
 
 export async function getFavorites() {
   const { data, error } = await apiClient.GET('/api/v2/storefront/account/favorites', {
@@ -39,10 +41,22 @@ export async function getFavorites() {
       isOptionValueSchema(e)
   );
 
-  return reshapeProducts({
+  const reshaped = reshapeProducts({
     products: products as ProductSchema[],
     productIncluded: productIncluded as ProductIncludes[]
   });
+  return data.data
+    .map((f) => {
+      const prod = reshaped.find((p) => {
+        return p.variants.some((v) => v.id === f.relationships.variant?.data?.id);
+      });
+      if (!prod) {
+        return null;
+      }
+      prod.activeVariant = prod.variants.find((v) => v.id === f.relationships.variant?.data?.id);
+      return prod;
+    })
+    .filter((f): f is Product => f !== null);
 }
 
 const reshapeProducts = ({
@@ -65,10 +79,19 @@ const reshapeProducts = ({
     const optionValues = (productIncluded?.filter(isOptionValueSchema) || []).filter((ov) =>
       optionTypes.some((ot) => ov.relationships.option_type?.data?.id === ot.id)
     );
+    const variants = (productIncluded?.filter(isVariantSchema) || []).filter((v) =>
+      product.relationships.variants?.data?.map((vd) => vd?.id).includes(v.id)
+    );
 
     return reshapeProduct({
       product,
-      productIncluded: [...imageIncluded, ...productProperties, ...optionTypes, ...optionValues]
+      productIncluded: [
+        ...imageIncluded,
+        ...productProperties,
+        ...optionTypes,
+        ...optionValues,
+        ...variants
+      ]
     });
   });
 
@@ -81,7 +104,7 @@ const reshapeProduct = ({
 }: {
   product: ProductSchema;
   productIncluded: ProductIncludes[] | undefined;
-}) => {
+}): ComponentProps<typeof ProductCard>['product'] => {
   const imageIncluded = productIncluded?.filter(isImageSchema);
   const vendorIncluded = productIncluded?.filter(isVendorSchema)?.[0];
   const taxons = productIncluded?.filter(isTaxonSchema) || [];
@@ -141,11 +164,10 @@ export async function deleteFavorite(product: Product) {
   const { error } = await apiClient.DELETE(`/api/v2/storefront/account/favorites/{id}`, {
     params: {
       path: {
-        id: product.id
+        id: product.activeVariant?.id ?? product.defaultVariant?.id ?? product.id
       }
     }
   });
-  console.log(error ? error.error : 'success');
 
   if (error) {
     throw error;
