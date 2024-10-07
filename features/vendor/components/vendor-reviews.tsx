@@ -11,32 +11,36 @@ type Props = {
   vendor: Vendor;
 };
 
-export async function VendorReviews({ vendor }: Props) {
-  const avgReview = vendor.attributes.stars;
-  const reviewsCount = vendor.attributes.reviews_count;
-  const reviewsCountOnePercent = calculateReviewsCountPercent(
-    vendor.attributes.reviews_count_one,
-    reviewsCount
-  );
-  const reviewsCountTwoPercent = calculateReviewsCountPercent(
-    vendor.attributes.reviews_count_two,
-    reviewsCount
-  );
-  const reviewsCountThreePercent = calculateReviewsCountPercent(
-    vendor.attributes.reviews_count_three,
-    reviewsCount
-  );
-  const reviewsCountFourPercent = calculateReviewsCountPercent(
-    vendor.attributes.reviews_count_four,
-    reviewsCount
-  );
-  const reviewsCountFivePercent = calculateReviewsCountPercent(
-    vendor.attributes.reviews_count_five,
-    reviewsCount
-  );
+const useVendorReviewData = (vendor: Vendor) => {
+  const reviewsCount = vendor.attributes.reviews_count ?? 0;
+  const calculatePercent = (count: number) =>
+    parseFloat(calculateReviewsCountPercent(count, reviewsCount).toFixed(1));
+
+  return {
+    avgReview: vendor.attributes.stars,
+    reviewsCount,
+    reviewsCountPercents: [
+      calculatePercent(vendor.attributes.reviews_count_one ?? 0),
+      calculatePercent(vendor.attributes.reviews_count_two ?? 0),
+      calculatePercent(vendor.attributes.reviews_count_three ?? 0),
+      calculatePercent(vendor.attributes.reviews_count_four ?? 0),
+      calculatePercent(vendor.attributes.reviews_count_five ?? 0)
+    ]
+  };
+};
+
+const RatingProgressBar = ({ star, percent }: { star: number; percent: number }) => (
+  <div className="flex w-full items-center">
+    <Progress value={percent} className="mr-2 h-2 w-2/3 md:w-[100px]" />
+    <Rating star={star} readOnly parsent={percent} size={22} />
+  </div>
+);
+
+export function VendorReviews({ vendor }: Props) {
+  const { avgReview, reviewsCount, reviewsCountPercents } = useVendorReviewData(vendor);
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col justify-between">
       <div className="sticky top-[72px] z-40 mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:bg-white-base">
         {/* <Select>
           <SelectTrigger className="mx-1 w-fit rounded-full border-2 border-bibinBlue-100 bg-white-base text-xs font-bold text-bibinBlue-100">
@@ -54,43 +58,15 @@ export async function VendorReviews({ vendor }: Props) {
             {avgReview != null && <Rating star={avgReview} size={32} withLabel readOnly />}
           </div>
           <div className="flex w-full flex-col md:flex-row">
-            <div className="flex w-full flex-col md:w-[200px]">
-              <div>
-                <div className="flex w-full items-center justify-center">
-                  <Progress
-                    value={reviewsCountFivePercent}
-                    className="mr-2 h-2  w-full md:w-[100px]"
+            <div className="flex flex-col items-center md:items-start ">
+              <div className="w-full">
+                {[5, 4, 3, 2, 1].map((star, index) => (
+                  <RatingProgressBar
+                    key={star}
+                    star={star}
+                    percent={reviewsCountPercents[4 - index]}
                   />
-                  <Rating star={5} readOnly parsent={reviewsCountFivePercent} size={22} />
-                </div>
-                <div className="flex w-full items-center justify-center">
-                  <Progress
-                    value={reviewsCountFourPercent}
-                    className="mr-2 h-2  w-full md:w-[100px]"
-                  />
-                  <Rating star={4} readOnly parsent={reviewsCountFourPercent} size={22} />
-                </div>
-                <div className="flex w-full  items-center justify-center">
-                  <Progress
-                    value={reviewsCountThreePercent}
-                    className="mr-2 h-2  w-full md:w-[100px]"
-                  />
-                  <Rating star={3} readOnly parsent={reviewsCountThreePercent} size={22} />
-                </div>
-                <div className="flex w-full  items-center justify-center">
-                  <Progress
-                    value={reviewsCountTwoPercent}
-                    className="mr-2 h-2  w-full md:w-[100px]"
-                  />
-                  <Rating star={2} readOnly parsent={reviewsCountTwoPercent} size={22} />
-                </div>
-                <div className="flex w-full items-center  justify-center">
-                  <Progress
-                    value={reviewsCountOnePercent}
-                    className="mr-2 h-2  w-full md:w-[100px]"
-                  />
-                  <Rating star={1} readOnly parsent={reviewsCountOnePercent} size={22} />
-                </div>
+                ))}
               </div>
             </div>
             <div className="mt-6 md:ml-14">
