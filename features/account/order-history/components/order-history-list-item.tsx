@@ -102,9 +102,6 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
           variants: order.variants,
           images: order.images
         });
-        const variant = order.variants.find(
-          (variant) => variant.id === item.relationships.variant?.data?.id
-        );
 
         return (
           <div key={item.id}>
@@ -113,7 +110,6 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
                 item={item}
                 image={image}
                 status={getShipmentStateTitle(order) ?? undefined}
-                optionsText={variant?.attributes.options_text}
                 showPrice={false}
               />
             </div>
