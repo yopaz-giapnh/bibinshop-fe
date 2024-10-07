@@ -354,7 +354,7 @@ export function ProductCartForm({ product, getCart }: Props) {
           </form>
           <button className="ml-2" onClick={onPressFavorite}>
             <Heart
-              className="h-12 w-12 rounded-full border-[1px] p-2"
+              className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
               color={isFavorite ? 'red' : 'black'}
               fill={isFavorite ? 'red' : 'white'}
             />
