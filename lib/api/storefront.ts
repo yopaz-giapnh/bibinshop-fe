@@ -4045,6 +4045,8 @@ export interface operations {
     parameters: {
       query?: {
         include?: components['parameters']['FavoriteIncludeParam'];
+        page?: components['parameters']['PageParam'];
+        per_page?: components['parameters']['PerPageParam'];
       };
     };
     responses: {
