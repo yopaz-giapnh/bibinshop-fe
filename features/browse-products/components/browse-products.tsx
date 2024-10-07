@@ -1,11 +1,14 @@
 import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
+import Pagination from '@/features/pagination/components/pagination';
 import { deleteHistoryEntry, getBrowseHistory } from '@/features/product/actions';
 import { ProductGrid } from '@/features/product/components/product-grid';
 import { BrowseProductsEmptyView } from './browse-products-empty-view';
 
-export async function BrowseProducts() {
-  const products = await getBrowseHistory();
+export async function BrowseProducts({ searchParams }: { searchParams?: { page?: string } }) {
+  const { data: products, metadata } = await getBrowseHistory(
+    searchParams?.page ? parseInt(searchParams.page) : undefined
+  );
 
   return (
     <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">
@@ -20,15 +23,14 @@ export async function BrowseProducts() {
         </Typography>
         <div className="h-7 w-7" />
       </div>
-      {products.data.length === 0 ? (
+      {products.length === 0 ? (
         <BrowseProductsEmptyView />
       ) : (
         <div className="px-[8px] md:px-0">
-          <ProductGrid
-            columns={4}
-            products={products.data}
-            deleteButtonAction={deleteHistoryEntry}
-          />
+          <ProductGrid columns={4} products={products} deleteButtonAction={deleteHistoryEntry} />
+          {metadata.total_pages && metadata.total_pages > 1 && (
+            <Pagination totalPages={metadata.total_pages} />
+          )}
         </div>
       )}
     </div>

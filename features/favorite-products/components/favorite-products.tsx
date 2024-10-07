@@ -1,12 +1,15 @@
 'use server';
 import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
+import Pagination from '@/features/pagination/components/pagination';
 import { ProductGrid } from '@/features/product/components/product-grid';
 import { deleteFavorite, getFavorites } from '../actions';
 import { FavoriteProductsEmptyView } from './favorite-products-empty-view';
 
-export async function FavoriteProducts() {
-  const products = await getFavorites();
+export async function FavoriteProducts({ searchParams }: { searchParams?: { page?: string } }) {
+  const { data: products, metadata } = await getFavorites(
+    searchParams?.page ? parseInt(searchParams.page) : undefined
+  );
 
   return (
     <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] pt-[80px] md:p-[24px] md:pt-[150px]">
@@ -25,7 +28,10 @@ export async function FavoriteProducts() {
         <FavoriteProductsEmptyView />
       ) : (
         <div className="px-[8px] md:px-0">
-          <ProductGrid columns={5} products={products} deleteButtonAction={deleteFavorite} />
+          <ProductGrid columns={4} products={products} deleteButtonAction={deleteFavorite} />
+          {metadata.total_pages && metadata.total_pages > 1 && (
+            <Pagination totalPages={metadata.total_pages} />
+          )}
         </div>
       )}
     </div>

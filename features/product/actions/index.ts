@@ -297,14 +297,14 @@ export async function removeFromFavorite(variantId: string) {
 }
 
 export async function getBrowseHistory(page?: number) {
-  const ids = await listProductBrowseHistory(page);
+  const { ids, metadata } = await listProductBrowseHistory(page);
   if (ids.length === 0) {
-    return { data: [] };
+    return { data: [], metadata };
   }
 
   const product = await getProducts({ query: { 'filter[ids]': ids.join(',') } });
 
-  return product;
+  return { data: product.data, metadata };
 }
 
 async function listProductBrowseHistory(page?: number) {
@@ -313,6 +313,7 @@ async function listProductBrowseHistory(page?: number) {
     params: {
       query: {
         page,
+        per_page: 12,
         sort: '-updated_at'
       }
     }
@@ -322,7 +323,7 @@ async function listProductBrowseHistory(page?: number) {
     throw error;
   }
 
-  return data.data.map((h) => h.attributes.product_id);
+  return { ids: data.data.map((h) => h.attributes.product_id), metadata: data.meta };
 }
 
 export async function deleteHistoryEntry(product: Product) {

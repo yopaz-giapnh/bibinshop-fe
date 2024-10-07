@@ -14,10 +14,12 @@ import {
 import { isVendorSchema } from '@/features/vendor/utils';
 import { ComponentProps } from 'react';
 
-export async function getFavorites() {
+export async function getFavorites(page?: number) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/account/favorites', {
     params: {
       query: {
+        page,
+        per_page: 12,
         include:
           'variant,variant.product,variant.product.images,variant.product.vendor,variant.product.product_properties,variant.product.vendor.banner_image'
       }
@@ -45,18 +47,21 @@ export async function getFavorites() {
     products: products as ProductSchema[],
     productIncluded: productIncluded as ProductIncludes[]
   });
-  return data.data
-    .map((f) => {
-      const prod = reshaped.find((p) => {
-        return p.variants.some((v) => v.id === f.relationships.variant?.data?.id);
-      });
-      if (!prod) {
-        return null;
-      }
-      prod.activeVariant = prod.variants.find((v) => v.id === f.relationships.variant?.data?.id);
-      return prod;
-    })
-    .filter((f): f is Product => f !== null);
+  return {
+    data: data.data
+      .map((f) => {
+        const prod = reshaped.find((p) => {
+          return p.variants.some((v) => v.id === f.relationships.variant?.data?.id);
+        });
+        if (!prod) {
+          return null;
+        }
+        prod.activeVariant = prod.variants.find((v) => v.id === f.relationships.variant?.data?.id);
+        return prod;
+      })
+      .filter((f): f is Product => f !== null),
+    metadata: data.meta
+  };
 }
 
 const reshapeProducts = ({
