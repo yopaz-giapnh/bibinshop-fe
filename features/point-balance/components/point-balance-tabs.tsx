@@ -2,6 +2,8 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { getPointAquisitionHistory, getPointUsageHistory } from '../actions';
+import { aggregatePointAcquisitionByDate, mergePointHistory } from '../util';
 import PointExpirationEmptyView from './point-expiration-empty-view';
 import PointExpirationItem from './point-expiration-item';
 import PointHistoryEmptyView from './point-history-empty-view';
@@ -20,84 +22,17 @@ const tabs = [
   { label: '有効期限', value: 'expiration' }
 ] as const;
 
-// デモhistoryデータ
-const demoHistoryData = [
-  {
-    date: '2024/07/04',
-    time: '16:18:38',
-    title: 'ログインボーナス',
-    expirationDate: '2025/01/31',
-    points: 10
-  },
-  {
-    date: '2024/07/04',
-    time: '16:18:38',
-    title: 'ログインボーナス',
-    expirationDate: '2025/01/31',
-    points: 5
-  },
-  {
-    date: '2024/07/04',
-    time: '16:18:38',
-    title: 'ログインボーナス',
-    expirationDate: '2025/01/31',
-    points: 3
-  },
-  {
-    date: '2024/07/04',
-    time: '16:18:38',
-    title: 'ポイント失効',
-    expirationDate: '2024/07/03',
-    points: -100
-  },
-  {
-    date: '2024/07/04',
-    time: '16:18:38',
-    title: 'ポイント利用',
-    orderNumber: '#0123456789101112',
-    points: -1000
-  },
-  {
-    date: '2024/06/20',
-    time: '16:18:38',
-    title: '買い物ボーナス',
-    expirationDate: '2024/07/04',
-    points: 3000
-  },
-  {
-    date: '2024/06/01',
-    time: '16:18:38',
-    title: '初回登録ポイント',
-    expirationDate: '2024/07/03',
-    points: 100
-  }
-];
-
-// デモexpirationデータ
-const demoExpirationData = [
-  {
-    date: '2024/07/04',
-    points: 10
-  },
-  {
-    date: '2024/07/04',
-    points: 10
-  },
-  {
-    date: '2024/07/04',
-    points: 10
-  },
-  {
-    date: '2024/07/04',
-    points: 10
-  },
-  {
-    date: '2024/07/04',
-    points: 10
-  }
-];
-
 export async function PointBalanceTabs({ tabState }: Props) {
+  const pointAquisitonHistory = await getPointAquisitionHistory();
+  const pointUsageHistory = await getPointUsageHistory();
+  const mergeHistoryData = mergePointHistory(pointAquisitonHistory, pointUsageHistory);
+  // HACK: サンプルデータ
+  // const mergeHistoryData = sampleMergedHistory;
+  const aggregatePointAcquisitionByDateData =
+    aggregatePointAcquisitionByDate(pointAquisitonHistory);
+  // HACK: サンプルデータ
+  // aggregatedResult;
+
   return (
     <Tabs
       defaultValue={tabState}
@@ -126,20 +61,20 @@ export async function PointBalanceTabs({ tabState }: Props) {
           <Suspense fallback={<LoadingSpinner />}>
             {tab.value === 'point-history' ? (
               <div>
-                {demoHistoryData.length === 0 ? (
+                {mergeHistoryData.length === 0 ? (
                   <PointHistoryEmptyView />
                 ) : (
                   <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
-                    {demoHistoryData.map((item, index) => (
+                    {mergeHistoryData.map((item, index) => (
                       <PointHistoryItem
                         key={index}
                         date={item.date}
                         time={item.time}
-                        title={item.title}
-                        expirationDate={item.expirationDate || ''}
-                        points={item.points}
-                        orderNumber={item.orderNumber}
-                        isLastItem={index === demoHistoryData.length - 1}
+                        reason={item.reason}
+                        expiresAt={item.expiresAt}
+                        amount={item.amount}
+                        orderId={item.orderId}
+                        isLastItem={index === mergeHistoryData.length - 1}
                       />
                     ))}
                   </div>
@@ -147,16 +82,16 @@ export async function PointBalanceTabs({ tabState }: Props) {
               </div>
             ) : (
               <div>
-                {demoExpirationData.length === 0 ? (
+                {aggregatePointAcquisitionByDateData.length === 0 ? (
                   <PointExpirationEmptyView />
                 ) : (
                   <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
-                    {demoExpirationData.map((item, index) => (
+                    {aggregatePointAcquisitionByDateData.map((item, index) => (
                       <PointExpirationItem
                         key={index}
                         date={item.date}
-                        points={item.points}
-                        isLastItem={index === demoExpirationData.length - 1}
+                        points={item.totalAmount}
+                        isLastItem={index === aggregatePointAcquisitionByDateData.length - 1}
                       />
                     ))}
                   </div>

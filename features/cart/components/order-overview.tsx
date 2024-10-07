@@ -4,6 +4,7 @@ import { Typography } from '@/components/ui/typography';
 import type { getCoupons } from '@/features/coupon/actions';
 import { ApplyCouponButton } from '@/features/coupon/components/apply-coupon-button';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
+import { usePoint } from '@/features/point-balance/components/point-ctx';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Cart } from '../types';
@@ -17,6 +18,7 @@ type Props = {
 export function OrderOverview({ cart, getCoupons }: Props) {
   const { activeCoupon } = useCoupon();
   const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
+  const { appliedPoints } = usePoint();
 
   useEffect(() => {
     setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(cart, activeCoupon));
@@ -54,7 +56,7 @@ export function OrderOverview({ cart, getCoupons }: Props) {
             小計
           </Typography>
           <Typography as="title" element="p" className="text-black-90">
-            {activeCoupon ? displayTotal(cart, activeCoupon) : cart.attributes.display_item_total}
+            {displayTotal(cart, activeCoupon, appliedPoints)}
           </Typography>
         </div>
         <Link href="/checkout" passHref className="hidden md:block">
