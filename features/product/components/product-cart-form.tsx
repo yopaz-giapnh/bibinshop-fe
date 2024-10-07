@@ -236,6 +236,13 @@ export function ProductCartForm({ product, getCart }: Props) {
               </div>
             </>
           )}
+
+          {selectedVariant?.attributes.total_on_hand !== undefined &&
+            selectedVariant.attributes.total_on_hand < 20 && (
+              <Typography as="boldSmall" element="p" className="ml-2 text-red-500">
+                {`${selectedVariant?.attributes.total_on_hand}個販売`}
+              </Typography>
+            )}
         </div>
 
         {product.optionTypes.map((optionType) => (
@@ -339,12 +346,6 @@ export function ProductCartForm({ product, getCart }: Props) {
               }}
             />
           </div>
-          {selectedVariant?.attributes.total_on_hand !== undefined &&
-            selectedVariant.attributes.total_on_hand < 20 && (
-              <Typography as="boldSmall" element="p" className="ml-2 text-red-500">
-                {`残り在庫: ${selectedVariant?.attributes.total_on_hand}`}
-              </Typography>
-            )}
         </div>
 
         <div className="flex items-center">

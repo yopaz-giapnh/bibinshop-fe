@@ -19,6 +19,7 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
   const { toast } = useToast();
 
   const defaultVariant = product.relationships.default_variant?.data;
+  const available = product.attributes.total_on_hand ? true : false;
 
   const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -57,11 +58,20 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
             width: imageSize
           }}
         />
+        {!available && (
+          <div className="absolute bottom-0 z-10 w-full bg-[#000000] opacity-60">
+            <Typography as="title" element="p" className="text-center text-slate-100">
+              完売
+            </Typography>
+          </div>
+        )}
       </div>
       <Typography
         as="xSmall"
         element="p"
-        className="mt-1 overflow-hidden whitespace-normal break-words"
+        className={
+          'mt-1 overflow-hidden whitespace-normal break-words' + (!available && ' opacity-50')
+        }
         style={{
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
@@ -70,7 +80,7 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
       >
         {product.attributes.name}
       </Typography>
-      <div className="items-center gap-2 md:flex">
+      <div className={'items-center gap-2 md:flex' + (!available && ' opacity-50')}>
         <Typography as="xSmall" element="p" className="text-black-70 md:hidden">
           {`${product.attributes.order_count} 個販売`}
         </Typography>
@@ -99,10 +109,10 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
         )}
 
         <Typography as="xSmall" element="p" className="hidden text-black-70 md:flex">
-          {`${product.attributes.order_count} 個販売`}
+          {`${product.attributes.total_on_hand} 個販売`}
         </Typography>
       </div>
-      <div className="mt-[2px] flex items-center">
+      <div className={'mt-[2px] flex items-center' + (!available && ' opacity-50')}>
         {product.attributes.stars != null && (
           <Rating star={product.attributes.stars} size={16} readOnly />
         )}
@@ -110,7 +120,7 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
         <Typography as="xSmall" element="p" className="ml-1 text-sunburstYellow">
           {`(${product.attributes.reviews_count})`}
         </Typography>
-        <button onClick={addToCart} type="button">
+        <button onClick={available && addToCart} type="button" disabled={!available}>
           <Cart className="ml-2" />
         </button>
       </div>
