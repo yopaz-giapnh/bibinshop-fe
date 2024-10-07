@@ -6,6 +6,7 @@ import { isVendorSchema } from '@/features/vendor/utils';
 import { TAGS } from '../constants';
 import {
   ImageSchema,
+  Product,
   ProductIncludes,
   ProductSchema,
   ProductsListParameters,
@@ -322,4 +323,18 @@ async function listProductBrowseHistory(page?: number) {
   }
 
   return data.data.map((h) => h.attributes.product_id);
+}
+
+export async function deleteHistoryEntry(product: Product) {
+  const { error } = await apiClient.DELETE('/api/v2/storefront/account/recently_viewed/{id}', {
+    params: {
+      path: {
+        id: product.id
+      }
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
 }

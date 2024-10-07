@@ -1,7 +1,8 @@
+'use server';
 import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
 import { ProductGrid } from '@/features/product/components/product-grid';
-import { getFavorites } from '../actions';
+import { deleteFavorite, getFavorites } from '../actions';
 import { FavoriteProductsEmptyView } from './favorite-products-empty-view';
 
 export async function FavoriteProducts() {
@@ -24,7 +25,7 @@ export async function FavoriteProducts() {
         <FavoriteProductsEmptyView />
       ) : (
         <div className="px-[8px] md:px-0">
-          <ProductGrid columns={5} products={products} showDeleteButton />
+          <ProductGrid columns={5} products={products} deleteButtonAction={deleteFavorite} />
         </div>
       )}
     </div>

@@ -12,10 +12,10 @@ import { Product } from '../types';
 type Props = {
   product: Product;
   imageSize: number;
-  showDeleteButton?: boolean;
+  deleteButtonAction?: (product: Product) => Promise<void>;
 };
 
-export function ProductCard({ product, imageSize, showDeleteButton = false }: Props) {
+export function ProductCard({ product, imageSize, deleteButtonAction = undefined }: Props) {
   const { toast } = useToast();
 
   const defaultVariant = product.relationships.default_variant?.data;
@@ -42,8 +42,15 @@ export function ProductCard({ product, imageSize, showDeleteButton = false }: Pr
     <Link className="flex flex-col" href={`/products/${product.attributes.slug}`} passHref>
       <div className="relative">
         {/* TODO: 閲覧履歴を削除するAPIを作成する */}
-        {showDeleteButton && (
-          <button className="absolute right-2 top-2 z-10 rounded-full text-gray-100 shadow-xl">
+        {deleteButtonAction && (
+          <button
+            className="absolute right-2 top-2 z-10 rounded-full text-gray-100 shadow-xl"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              deleteButtonAction(product);
+            }}
+          >
             <X className="h-[32px] w-[32px] rounded-full shadow-xl md:h-[56px] md:w-[56px]" />
           </button>
         )}

@@ -2,19 +2,29 @@
 
 import { useIsPc } from '@/hooks/use-is-pc';
 import { useWindowSize } from '@/hooks/use-window-size';
-import { ComponentProps, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import { ComponentProps, ReactNode, useCallback } from 'react';
+import { Product } from '../types';
 import { ProductCard } from './product-card';
 
 type Props = {
   columns: 4 | 5;
-  showDeleteButton?: boolean;
+  deleteButtonAction?: (product: Product) => Promise<void>;
 } & { products: ComponentProps<typeof ProductCard>['product'][] };
 
-export function ProductGrid({ columns, products, showDeleteButton = false }: Props) {
+export function ProductGrid({ columns, products, deleteButtonAction = undefined }: Props) {
+  const router = useRouter();
   const { width } = useWindowSize();
   const imageSize = width / columns;
   const spImageSize = width / 2;
   const isPc = useIsPc();
+
+  const deletAction = useCallback(async (product: Product) => {
+    if (deleteButtonAction) {
+      await deleteButtonAction(product);
+      router.refresh();
+    }
+  }, []);
 
   return (
     <Wrapper columns={columns}>
@@ -24,7 +34,7 @@ export function ProductGrid({ columns, products, showDeleteButton = false }: Pro
             key={product.id}
             product={product}
             imageSize={isPc ? imageSize : spImageSize}
-            showDeleteButton={showDeleteButton}
+            deleteButtonAction={deleteButtonAction ? deletAction : undefined}
           />
         );
       })}
