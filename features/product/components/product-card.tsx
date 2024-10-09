@@ -66,7 +66,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
           }}
         />
         {!available && (
-          <div className="absolute bottom-0 z-10 w-full bg-[#000000] opacity-60">
+          <div className="absolute bottom-0 z-10 w-full rounded-b-[6px] bg-[#000000] opacity-60">
             <Typography as="title" element="p" className="text-center text-slate-100">
               完売
             </Typography>
@@ -88,47 +88,67 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
         {product.attributes.name}
       </Typography>
       <div className={'items-center gap-2 md:flex' + (!available && ' opacity-50')}>
-        <Typography as="xSmall" element="p" className="text-black-70 md:hidden">
-          {`${product.attributes.order_count} 個販売`}
+        <Typography
+          as="xSmall"
+          element="p"
+          className={`md:hidden ${
+            product.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
+          }`}
+        >
+          {product.attributes.total_on_hand === 0
+            ? '完売'
+            : `${product.attributes.total_on_hand} 個販売`}
         </Typography>
 
-        <Typography as="bold" element="p" className="text-bibinBlue-100">
-          {formatedPrice(product.attributes.price)}
-        </Typography>
+        <div className="mt-[4px] flex w-full items-end justify-between">
+          <Typography as="bold" element="p" className="text-bibinBlue-100">
+            {formatedPrice(product.attributes.price)}
+          </Typography>
 
-        {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (
-          <>
-            <div className="relative flex items-center justify-center">
-              <Typography as="small" element="p" className="text-black-20">
-                {formatedPrice(product.attributes.compare_at_price)}
-              </Typography>
-              <div className="absolute h-[1px] w-full bg-black-20" />
-            </div>
-            <div className="flex items-center rounded-[4px] border border-lightRed px-1 py-[0.5px]">
-              <Typography as="xSmall" element="p" className="text-lightRed">
-                {`-${calculateDiscountPercentage(
-                  product.attributes.price,
-                  product.attributes.compare_at_price
-                )}%`}
-              </Typography>
-            </div>
-          </>
-        )}
-
-        <Typography as="xSmall" element="p" className="hidden text-black-70 md:flex">
-          {`${product.attributes.total_on_hand} 個販売`}
-        </Typography>
+          {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (
+            <>
+              <div className="relative flex items-center justify-center">
+                <Typography as="small" element="p" className="text-black-20">
+                  {formatedPrice(product.attributes.compare_at_price)}
+                </Typography>
+                <div className="absolute h-[1px] w-full bg-black-20" />
+              </div>
+              <div className="flex items-center rounded-[4px] border border-lightRed px-1 py-[0.5px]">
+                <Typography as="xSmall" element="p" className="text-lightRed">
+                  {`-${calculateDiscountPercentage(
+                    product.attributes.price,
+                    product.attributes.compare_at_price
+                  )}%`}
+                </Typography>
+              </div>
+            </>
+          )}
+          <Typography
+            as="xSmall"
+            element="p"
+            className={`hidden md:flex ${
+              product.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
+            }`}
+          >
+            {product.attributes.total_on_hand === 0
+              ? '完売'
+              : `${product.attributes.total_on_hand} 個販売`}
+          </Typography>
+        </div>
       </div>
-      <div className={'mt-[2px] flex items-center' + (!available && ' opacity-50')}>
-        {product.attributes.stars != null && (
-          <Rating star={product.attributes.stars} size={16} readOnly />
-        )}
-
-        <Typography as="xSmall" element="p" className="ml-1 text-sunburstYellow">
-          {`(${product.attributes.reviews_count})`}
-        </Typography>
-        <button onClick={available && addToCart} type="button" disabled={!available}>
-          <Cart className="ml-2" />
+      <div
+        className={'mt-[4px] flex items-center justify-between ' + (!available && ' opacity-50')}
+      >
+        <div className="flex items-center">
+          {product.attributes.stars != null && (
+            <Rating star={product.attributes.stars} size={16} readOnly />
+          )}
+          <Typography as="xSmall" element="p" className=" text-sunburstYellow">
+            {`(${product.attributes.reviews_count})`}
+          </Typography>
+        </div>
+        <button onClick={addToCart} type="button" disabled={!available}>
+          <Cart />
         </button>
       </div>
     </Link>
