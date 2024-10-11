@@ -1,5 +1,5 @@
-import MasterCard from '@/assets/payment/small-master-card.svg';
-import Visa from '@/assets/payment/small-visa.svg';
+import MasterCard from '@/assets/payment/master-card.svg';
+import Visa from '@/assets/payment/visa.svg';
 import { hasProperty } from '@/utils/type';
 import { CreditCard, PaymentSchema, ShippmentSchema } from '../types';
 
