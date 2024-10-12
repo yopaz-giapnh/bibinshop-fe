@@ -174,7 +174,7 @@ function Form({ onClose, iconLayout }: Props) {
           <FormLabel>カード番号</FormLabel>
           <div className="mt-2 rounded-md border border-input px-4">
             <CardNumberElement
-              options={cardOptions}
+              options={{ ...cardOptions, showIcon: true }}
               onChange={(event) => handleCardChange(event, 'cardNumber')}
             />
           </div>
