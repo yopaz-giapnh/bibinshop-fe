@@ -131,12 +131,12 @@ export async function completeCheckout() {
     }
 
     cookies().set(COOKIES.checkoutCompletedOrderNumber, cart.attributes.number, {
-      maxAge: 1
+      maxAge: 60 * 10 // 10 minutes
     });
-
-    revalidateTag(CART_TAGS.cart);
   } catch (error) {
     console.error(error);
+  } finally {
+    revalidateTag(CART_TAGS.cart);
   }
 
   redirect('/checkout/complete');
