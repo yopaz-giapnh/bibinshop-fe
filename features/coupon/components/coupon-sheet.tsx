@@ -18,6 +18,7 @@ import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup } from '@radix-ui/react-radio-group';
 import { BadgeAlert, Check, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { forwardRef, use, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -47,6 +48,7 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
   const [coupons, setCoupons] = useState<CouponSchema[]>([]);
   const fetchCoupons = getCoupons ? use(getCoupons) : [];
   const { setActiveCoupon } = useCoupon();
+  const router = useRouter();
 
   useImperativeHandle(ref, () => ({
     open: async () => {
@@ -65,6 +67,7 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
         title: message,
         icon: <Check className="h-6 w-6" />
       });
+      router.refresh();
     } else {
       toast({
         title: message,

@@ -15,6 +15,7 @@ import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BadgeAlert, Check } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -34,6 +35,7 @@ type FormValues = z.infer<typeof formSchema>;
 export const CouponCodeInputModal = forwardRef<CouponCodeInputModalRef>((_, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -54,6 +56,7 @@ export const CouponCodeInputModal = forwardRef<CouponCodeInputModalRef>((_, ref)
         title: message,
         icon: <Check className="h-6 w-6" />
       });
+      router.refresh();
     } else {
       toast({
         title: message,
