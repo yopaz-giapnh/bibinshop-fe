@@ -87,7 +87,7 @@ export function subtotalAfterCouponAmount(cart: CartSchema, coupon?: CouponSchem
   return total | 0;
 }
 
-function convertCurrencyToNumber(currencyString: string): number {
+export function convertCurrencyToNumber(currencyString: string): number {
   // 通貨記号と桁区切りのカンマを取り除く
   const cleanedString = currencyString.replace(/[^\d.-]/g, '');
 

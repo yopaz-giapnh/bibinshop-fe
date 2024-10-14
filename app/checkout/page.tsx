@@ -5,7 +5,7 @@ import { getAccountAddresses } from '@/features/address/actions';
 import { getCart } from '@/features/cart/actions';
 import { CheckoutForm } from '@/features/checkout/components/checkout-form';
 import { getAccountCreditCards } from '@/features/payment/actions';
-import { getAvailablePoints } from '@/features/point-balance/actions';
+import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -38,6 +38,7 @@ export default async function Page() {
               getAccountAddresses={getAccountAddresses()}
               getAccountCreditCards={getAccountCreditCards()}
               getAvailablePoints={getAvailablePoints()}
+              getPointsRate={getPointsRate()}
             />
           </Suspense>
         </div>

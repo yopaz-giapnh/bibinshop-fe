@@ -5,6 +5,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
 import {
+  convertCurrencyToNumber,
   convertNumberToCurrency,
   displayCouponPromoTotal,
   displayTotal
@@ -20,9 +21,10 @@ import { useCheckout } from './checkout-ctx';
 type Props = {
   cart: Cart;
   canOrder: boolean;
+  pointsRate: number;
 };
 
-export function OrderOverview({ cart, canOrder }: Props) {
+export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
   const { activeAddress, activeCreditCard } = useCheckout();
   const [, formAction] = useFormState(updateCheckout, null);
   const action =
@@ -82,7 +84,13 @@ export function OrderOverview({ cart, canOrder }: Props) {
       {/* TODO: @point BE接続時動作確認 */}
       <div className="flex w-full items-center justify-center pt-2 md:pb-2">
         <Typography as="caption" element="p" className="text-black-90">
-          獲得予定<span className="text-bibinBlue-100"> 100 </span>ポイント
+          獲得予定
+          <span className="text-bibinBlue-100">
+            {' '}
+            {convertCurrencyToNumber(displayTotal(cart, activeCoupon, appliedPoints)) *
+              pointsRate}{' '}
+          </span>
+          ポイント
         </Typography>
         <PointInfoPopover />
       </div>
