@@ -72,7 +72,7 @@ export async function addItem(
     }
   }
 
-  if (cart.attributes.item_count && cart.attributes.item_count >= 24) {
+  if (cart.attributes.item_count && cart.attributes.item_count + quantity >= 24) {
     return {
       success: false,
       message: '申し訳ありませんが、上限に達しました。'
