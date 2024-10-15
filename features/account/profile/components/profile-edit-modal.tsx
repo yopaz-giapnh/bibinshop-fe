@@ -222,7 +222,7 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   name="nickname"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>名前</FormLabel>
+                      <FormLabel>ニックネーム</FormLabel>
                       <FormControl>
                         <Input
                           {...field}

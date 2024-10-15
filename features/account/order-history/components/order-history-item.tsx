@@ -8,7 +8,6 @@ type OrderHistoryItemProps = {
   item: LineItem;
   image: ImageSchema | undefined;
   status?: string;
-  optionsText?: string;
   showBuyAgain?: boolean;
   showPrice?: boolean;
 };
@@ -21,14 +20,11 @@ export default function OrderHistoryItem({
   item,
   image,
   status,
-  optionsText,
-  showBuyAgain = true,
-  showPrice = true
+  showBuyAgain = true
 }: OrderHistoryItemProps) {
   const isUnpaid = status === '発送予定';
   const variantId = item.relationships.variant?.data?.id;
   const imageUrl = image?.attributes.styles?.[image?.attributes.styles?.length - 1].url;
-  const price = item?.attributes.display_total;
 
   return (
     <div className="flex py-[16px]">
@@ -36,38 +32,31 @@ export default function OrderHistoryItem({
         <Image src={imageUrl || '/placeholder-product-image.png'} fill alt={''} />
       </div>
       <div className="ml-[8px] flex flex-col justify-between">
-        <Typography
-          as="bold"
-          element="p"
-          className="max-w-overflow-hidden max-w-[230px] whitespace-normal break-words text-[14px] text-black-90 md:max-w-full"
-          style={{
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 2,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}
-        >
-          {item.attributes.name}
-        </Typography>
-        {showPrice && (
+        <div>
           <Typography
             as="bold"
             element="p"
-            className="text-[14px] text-bibinBlue-100 md:max-w-full"
+            className="max-w-overflow-hidden max-w-[230px] whitespace-normal break-words text-[14px] text-black-90 md:max-w-full"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
           >
-            {price}
+            {item.attributes.name}
           </Typography>
-        )}
-        {!!optionsText && (
-          <Typography
-            as="small"
-            element="p"
-            className="mb-2 mt-[4px] text-[12px] text-black-70 md:mb-0"
-          >
-            {optionsText}
-          </Typography>
-        )}
+          {item.attributes.options_text && (
+            <Typography
+              as="small"
+              element="p"
+              className="mb-2 mt-[4px] text-[12px] text-black-70 md:mb-0"
+            >
+              {item.attributes.options_text}
+            </Typography>
+          )}
+        </div>
         {!isUnpaid && !!variantId && showBuyAgain && (
           <BuyAgainModal
             variantIds={[variantId]}

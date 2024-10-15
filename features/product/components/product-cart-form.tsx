@@ -203,17 +203,17 @@ export function ProductCartForm({ product, getCart }: Props) {
             </button>
           </div>
 
-          <div className="mt-[5px] flex items-center">
+          <div className="mt-[5px] flex w-fit items-center justify-start">
             {product.attributes.stars != null && (
               <Rating star={product.attributes.stars} size={16} readOnly />
             )}
-            <Typography as="xSmall" element="p" className="ml-2 text-sunburstYellow">
+            <Typography as="xSmall" element="p" className="text-sunburstYellow">
               {`(${product.attributes.reviews_count})`}
             </Typography>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex items-end gap-2">
           <Typography as="boldXLarge" element="p" className="text-bibinBlue-100">
             {formatedPrice(selectedVariant?.attributes.price)}
           </Typography>
@@ -237,12 +237,19 @@ export function ProductCartForm({ product, getCart }: Props) {
             </>
           )}
 
-          {selectedVariant?.attributes.total_on_hand !== undefined &&
-            selectedVariant.attributes.total_on_hand < 20 && (
-              <Typography as="boldSmall" element="p" className="ml-2 text-red-500">
-                {`${selectedVariant?.attributes.total_on_hand}個販売`}
-              </Typography>
-            )}
+          {selectedVariant?.attributes.total_on_hand !== undefined && (
+            <Typography
+              as="boldSmall"
+              element="p"
+              className={`ml-2 ${
+                selectedVariant.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
+              }`}
+            >
+              {selectedVariant.attributes.total_on_hand === 0
+                ? '完売'
+                : `${selectedVariant.attributes.total_on_hand}個販売`}
+            </Typography>
+          )}
         </div>
 
         {product.optionTypes.map((optionType) => (
@@ -354,7 +361,7 @@ export function ProductCartForm({ product, getCart }: Props) {
           </form>
           <button className="ml-2" onClick={onPressFavorite}>
             <Heart
-              className="h-12 w-12 rounded-full border-[1px] p-2"
+              className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
               color={isFavorite ? 'red' : 'black'}
               fill={isFavorite ? 'red' : 'white'}
             />

@@ -1,7 +1,13 @@
 'use client';
 
-import MasterCard from '@/assets/payment/small-master-card.svg';
-import Visa from '@/assets/payment/small-visa.svg';
+import Amex from '@/assets/payment/amex.svg';
+import Cup from '@/assets/payment/cup.svg';
+import Diners from '@/assets/payment/diners.svg';
+import Discover from '@/assets/payment/discover.svg';
+import Eftops from '@/assets/payment/eftops.svg';
+import Jcb from '@/assets/payment/jcb.svg';
+import MasterCard from '@/assets/payment/master-card.svg';
+import Visa from '@/assets/payment/visa.svg';
 import { Button } from '@/components/ui/button';
 import {
   Form as FormComponent,
@@ -16,7 +22,6 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { createCart, getCart } from '@/features/cart/actions';
-import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CardCvcElement,
@@ -36,10 +41,9 @@ import { FormValues, formSchema } from '../types';
 
 type Props = {
   onClose?: () => void;
-  iconLayout?: 'center' | 'left';
 };
 
-function Form({ onClose, iconLayout }: Props) {
+function Form({ onClose }: Props) {
   const stripe = useStripe();
   const elements = useElements();
   const { toast } = useToast();
@@ -145,15 +149,15 @@ function Form({ onClose, iconLayout }: Props) {
   return (
     <FormComponent {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="mx-auto w-full space-y-6">
-        <div
-          className={cn(
-            'mb-4 flex items-center space-x-4',
-            iconLayout === 'center' && 'justify-center',
-            iconLayout === 'left' && 'justify-start'
-          )}
-        >
+        <div className="mt-4 grid grid-cols-5 gap-x-4 gap-y-6">
           <Visa />
           <MasterCard />
+          <Jcb />
+          <Amex />
+          <Diners />
+          <Discover />
+          <Cup />
+          <Eftops />
         </div>
 
         <FormField

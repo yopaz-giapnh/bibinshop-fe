@@ -29,6 +29,7 @@ export default function Rating({
   const [isHovered, setIsHovered] = useState(false);
   const arr = [1, 2, 3, 4, 5];
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const calcRes = (amount: number, _: React.MouseEvent<HTMLSpanElement>) => {
     // TODO: BEが小数点対応していないため
     return amount;
@@ -61,7 +62,7 @@ export default function Rating({
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex w-full items-center gap-2">
       <div
         className="relative inline-block select-none items-center"
         style={{
@@ -123,7 +124,7 @@ export default function Rating({
           ({count})
         </Typography>
       ) : null}
-      {parsent != null && <>{parsent}%</>}
+      <div className="flex w-1/5 justify-end">{parsent != null && <>{parsent}%</>}</div>
     </div>
   );
 }

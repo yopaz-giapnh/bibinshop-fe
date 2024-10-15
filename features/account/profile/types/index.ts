@@ -20,7 +20,7 @@ export type User = UserSchema & {
 export type UserSex = UserSchema['attributes']['sex'];
 
 export const formSchema = z.object({
-  nickname: z.string().min(1, '名前を入力してください').optional(),
+  nickname: z.string().min(1, 'ニックネームを入力してください').optional(),
   sex: z.enum(['male', 'female', 'not_applicable', 'not_known']).optional(),
   birthyear: z
     .string()

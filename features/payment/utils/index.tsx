@@ -1,19 +1,32 @@
-import MasterCard from '@/assets/payment/small-master-card.svg';
-import Visa from '@/assets/payment/small-visa.svg';
+import Amex from '@/assets/payment/amex.svg';
+import Cup from '@/assets/payment/cup.svg';
+import Diners from '@/assets/payment/diners.svg';
+import Discover from '@/assets/payment/discover.svg';
+import Eftops from '@/assets/payment/eftops.svg';
+import Jcb from '@/assets/payment/jcb.svg';
+import MasterCard from '@/assets/payment/master-card.svg';
+import Visa from '@/assets/payment/visa.svg';
 import { hasProperty } from '@/utils/type';
 import { CreditCard, PaymentSchema, ShippmentSchema } from '../types';
 
-// TODO: アイコンを追加する
 export function getCreditCardBrandIcon(creditCard: CreditCard) {
   switch (creditCard.attributes.cc_type) {
     case 'visa':
       return <Visa />;
-    case 'mastercard':
+    case 'master':
       return <MasterCard />;
     case 'amex':
-      return <MasterCard />;
+      return <Amex />;
+    case 'diners':
+      return <Diners />;
+    case 'discover':
+      return <Discover />;
+    case 'jcb':
+      return <Jcb />;
+    case 'unionpay':
+      return <Cup />;
     default:
-      return <MasterCard />;
+      return <Eftops />;
   }
 }
 

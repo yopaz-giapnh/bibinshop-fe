@@ -1,3 +1,9 @@
+import Amex from '@/assets/payment/amex.svg';
+import Cup from '@/assets/payment/cup.svg';
+import Diners from '@/assets/payment/diners.svg';
+import Discover from '@/assets/payment/discover.svg';
+import Eftops from '@/assets/payment/eftops.svg';
+import Jcb from '@/assets/payment/jcb.svg';
 import MasterCard from '@/assets/payment/master-card.svg';
 import Visa from '@/assets/payment/visa.svg';
 import { Typography } from '@/components/ui/typography';
@@ -9,9 +15,15 @@ export function PaymentMethod() {
         支払い方法
       </Typography>
 
-      <div className="mt-4 flex gap-4">
+      <div className="mt-4 grid grid-cols-5 gap-x-4 gap-y-6">
         <Visa />
         <MasterCard />
+        <Jcb />
+        <Amex />
+        <Diners />
+        <Discover />
+        <Cup />
+        <Eftops />
       </div>
     </div>
   );
