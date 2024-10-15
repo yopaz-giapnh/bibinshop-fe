@@ -115,3 +115,13 @@ export async function deleteCartPoints(pointAmount: number) {
   }
   return { success: true, message: 'ポイントが取消されました' };
 }
+
+export async function getPointsRate() {
+  const { data, error } = await apiClient.GET(`/api/v2/storefront/account/points_rate`, {
+    params: {}
+  });
+  if (error) {
+    return 0;
+  }
+  return data.earn_rate || 0;
+}

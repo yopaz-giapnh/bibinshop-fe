@@ -7,7 +7,7 @@ import { subtotalAfterCouponAmount } from '@/features/cart/utils';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
 import { getAccountCreditCards } from '@/features/payment/actions';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
-import { getAvailablePoints } from '@/features/point-balance/actions';
+import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
 import { use } from 'react';
 import { CheckoutUsePointForm } from './CheckoutUsePointForm';
 import { CheckoutAddressForm } from './checkout-address-form';
@@ -20,17 +20,20 @@ type Props = {
   getAccountAddresses: ReturnType<typeof getAccountAddresses>;
   getAccountCreditCards: ReturnType<typeof getAccountCreditCards>;
   getAvailablePoints: ReturnType<typeof getAvailablePoints>;
+  getPointsRate: ReturnType<typeof getPointsRate>;
 };
 
 export function CheckoutForm({
   cart,
   getAccountAddresses,
   getAccountCreditCards,
-  getAvailablePoints
+  getAvailablePoints,
+  getPointsRate
 }: Props) {
   const addresses = use(getAccountAddresses);
   const creditCards = use(getAccountCreditCards);
   const availablePoints = use(getAvailablePoints);
+  const pointsRate = use(getPointsRate);
 
   const hasAddress = addresses.length > 0;
   const hasCreditCard = creditCards.length > 0;
@@ -88,7 +91,7 @@ export function CheckoutForm({
             <Typography as="title" element="p" className="text-[16px] text-text-100 md:text-[24px]">
               注文概要
             </Typography>
-            <OrderOverview cart={cart} canOrder={canOrder} />
+            <OrderOverview cart={cart} canOrder={canOrder} pointsRate={pointsRate} />
           </div>
           <div className="hidden md:flex">
             <PaymentMethod />

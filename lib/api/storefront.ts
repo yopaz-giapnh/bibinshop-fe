@@ -200,6 +200,13 @@ export interface paths {
      */
     get: operations['points-usage-history'];
   };
+  '/api/v2/storefront/account/points_rate': {
+    /**
+     * Retrieve Points Rate
+     * @description Returns the current user's points rate.
+     */
+    get: operations['points-rate'];
+  };
   '/api/v2/storefront/account_confirmations': {
     /**
      * Send Account Confirmation Instructions
@@ -3259,6 +3266,24 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns the `points_rate` object. */
+    PointsRate: {
+      content: {
+        'application/vnd.api+json': {
+          /** @example 0.1 */
+          earn_rate: number;
+        };
+      };
+    };
+    /** @description 200 Success - Returns the `coupon` object. */
+    AddCouponResponse: {
+      content: {
+        'application/vnd.api+json': {
+          /** @example 10 */
+          amount: number;
+        };
+      };
+    };
   };
   parameters: {
     /**
@@ -4124,6 +4149,16 @@ export interface operations {
     };
   };
   /**
+   * Retrieve Points Rate
+   * @description Returns the current user's points rate.
+   */
+  'points-rate': {
+    responses: {
+      200: components['responses']['PointsRate'];
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
    * Send Account Confirmation Instructions
    * @description Sends confirmation instructions to the given email address.
    */
@@ -4470,9 +4505,7 @@ export interface operations {
       };
     };
     responses: {
-      200: {
-        content: never;
-      };
+      200: components['responses']['AddCouponResponse'];
       422: components['responses']['UnprocessableEntity'];
     };
   };
