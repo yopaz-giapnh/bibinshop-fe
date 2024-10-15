@@ -28,7 +28,7 @@ type Props = {
  */
 export default async function MessageSeeMoreModal({ message }: Props) {
   const action = () => {
-    getAccountMessageDetail.bind(null, { id: message.id });
+    getAccountMessageDetail({ id: message.id });
   };
 
   const vendorId = message.attributes.notificationable?.vendor_id;
