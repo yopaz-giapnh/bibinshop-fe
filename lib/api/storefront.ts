@@ -1309,7 +1309,7 @@ export interface components {
          * @example visa
          * @enum {string}
          */
-        cc_type?: 'visa' | 'mastercard' | 'amex';
+        cc_type?: 'visa' | 'master' | 'amex' | 'discover' | 'diners' | 'jcb' | 'unionpay';
         /**
          * @description Last 4 digits of CC number
          * @example 1111
@@ -4771,7 +4771,7 @@ export interface operations {
             /** @description Payment source authorization token, more details for [Stripe implementation](https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token) */
             gateway_payment_profile_id: string;
             /** @enum {string} */
-            cc_type?: 'visa' | 'mastercard' | 'amex';
+            cc_type?: 'visa' | 'master' | 'amex' | 'discover' | 'diners' | 'jcb' | 'unionpay';
             /** @description Last 4 digits of CC number */
             last_digits?: string;
             /** @description Expiration date month */
