@@ -57,8 +57,15 @@ export default function SignupForm() {
     }
   }, [state]);
 
-  const googleAction = () => {
-    authenticateByGoogle.bind(null, { callbackUrl });
+  const googleAction = async (): Promise<void> => {
+    try {
+      const result = await authenticateByGoogle({ callbackUrl });
+      if (!result?.success) {
+        console.error('Google authentication failed:', result?.message);
+      }
+    } catch (error) {
+      console.error('Google authentication failed:', error);
+    }
   };
 
   return (
