@@ -57,7 +57,9 @@ export default function LoginForm() {
     }
   }, [state]);
 
-  const googleAction = authenticateByGoogle.bind(null, { callbackUrl });
+  const googleAction = async () => {
+    authenticateByGoogle.bind(null, { callbackUrl });
+  };
 
   return (
     <div>
