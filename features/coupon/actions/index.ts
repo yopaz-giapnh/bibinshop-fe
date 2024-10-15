@@ -20,7 +20,7 @@ export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache 
     throw error;
   }
 
-  const { data: coupons } = data;
+  const coupons = data.data?.filter((coupon) => coupon.attributes.status === 'active') || [];
 
   return coupons || [];
 }

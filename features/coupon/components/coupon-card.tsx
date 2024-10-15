@@ -53,7 +53,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ title, description, expi
               {formatExpirationDate(expiresAt)}
             </Typography>
           )}
-          <div className="border-1 mt-[2px] flex w-full items-center justify-center rounded-md bg-white-base p-1 md:p-2">
+          <div className="border-1 mt-[2px] flex w-[440px] items-center justify-center rounded-md bg-white-base p-1 md:p-2">
             <Typography as="boldSmall" element="p" className="text-center text-gray-500">
               コード：
             </Typography>
