@@ -57,7 +57,9 @@ export default function SignupForm() {
     }
   }, [state]);
 
-  const googleAction = authenticateByGoogle.bind(null, { callbackUrl });
+  const googleAction = () => {
+    authenticateByGoogle.bind(null, { callbackUrl });
+  };
 
   return (
     <div>
