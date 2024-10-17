@@ -1298,8 +1298,16 @@ export interface components {
          * @enum {string}
          */
         coupon_type: 'FIXED' | 'PERCENTAGE';
+        /** @example 100 */
+        minimum_total: number;
         /** @enum {string} */
-        status?: 'expired' | 'not_started' | 'not_available' | 'usage_limit_reached' | 'active';
+        status:
+          | 'expired'
+          | 'not_started'
+          | 'not_available'
+          | 'usage_limit_reached'
+          | 'active'
+          | 'abailable';
       };
     };
     /** Credit Card */
