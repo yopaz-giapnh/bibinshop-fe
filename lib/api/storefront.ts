@@ -1307,7 +1307,7 @@ export interface components {
           | 'not_available'
           | 'usage_limit_reached'
           | 'active'
-          | 'abailable';
+          | 'available';
       };
     };
     /** Credit Card */
