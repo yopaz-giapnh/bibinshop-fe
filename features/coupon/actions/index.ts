@@ -5,24 +5,29 @@ import { isNotFound } from '@/utils/api';
 import { TAGS } from '../constants';
 
 export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache } = {}) {
-  const { response, error, data } = await apiClient.GET('/api/v2/storefront/coupons', {
-    params: {},
-    fetch: (request) => {
-      return fetch(request, { next: { tags: [TAGS.coupon] }, cache });
+  try {
+    const { response, error, data } = await apiClient.GET('/api/v2/storefront/coupons', {
+      params: {},
+      fetch: (request) => {
+        return fetch(request, { next: { tags: [TAGS.coupon] }, cache });
+      }
+    });
+
+    if (isNotFound(response)) {
+      return [];
     }
-  });
 
-  if (isNotFound(response)) {
-    return null;
+    if (error) {
+      throw error;
+    }
+
+    const coupons = data.data?.filter((coupon) => coupon.attributes.status === 'available') || [];
+
+    return coupons;
+  } catch (error) {
+    console.error('Error fetching coupons:', error);
+    return [];
   }
-
-  if (error) {
-    throw error;
-  }
-
-  const coupons = data.data?.filter((coupon) => coupon.attributes.status === 'available') || [];
-
-  return coupons || [];
 }
 
 export async function applyCoupon(couponCode: string) {
