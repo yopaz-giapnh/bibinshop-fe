@@ -116,7 +116,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
               </Typography>
 
               {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (
-                <>
+                <div className="hidden md:flex">
                   <div className="relative ml-2 flex items-center justify-center">
                     <Typography as="small" element="p" className="text-black-20">
                       {formatedPrice(product.attributes.compare_at_price)}
@@ -131,7 +131,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
                       )}%`}
                     </Typography>
                   </div>
-                </>
+                </div>
               )}
             </div>
             <Typography
@@ -146,6 +146,24 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
                 : `${product.attributes.total_on_hand} 個販売`}
             </Typography>
           </div>
+          {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (
+            <div className="bg-red flex md:hidden">
+              <div className="relative flex items-center justify-center">
+                <Typography as="small" element="p" className="text-black-20">
+                  {formatedPrice(product.attributes.compare_at_price)}
+                </Typography>
+                <div className="absolute h-[1px] w-full bg-black-20" />
+              </div>
+              <div className="ml-2 flex items-center rounded-[4px] border border-lightRed px-1 py-[0.5px]">
+                <Typography as="xSmall" element="p" className="text-lightRed">
+                  {`-${calculateDiscountPercentage(
+                    product.attributes.price,
+                    product.attributes.compare_at_price
+                  )}%`}
+                </Typography>
+              </div>
+            </div>
+          )}
         </div>
         <div
           className={'mt-[4px] flex items-center justify-between ' + (!available && ' opacity-50')}

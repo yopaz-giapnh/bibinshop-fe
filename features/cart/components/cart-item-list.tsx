@@ -14,16 +14,23 @@ type Props = {
 
 export function CartItemList({ cart }: Props) {
   const { activeCoupon, removeActiveCoupon } = useCoupon();
+
   return (
     <div className="flex flex-col gap-4">
       {activeCoupon && (
         <div className="flex items-center justify-between rounded-[6px] border border-indigo-200 bg-indigo-100  px-[11px] py-[10px]">
           <div className="flex items-center">
             <Check className="mr-2 h-8 w-8 md:h-4 md:w-4" />
-            <Typography as="title" element="h1" className="text-[14px] text-text-80">
-              クーポンを適用しています。
-              <span className="text-red-500">{displayCouponPromoTotal(cart, activeCoupon)}</span>
-              を節約しよう！
+            <Typography
+              as="title"
+              element="h1"
+              className="flex flex-col text-[14px] text-text-80 md:flex-row"
+            >
+              <span>クーポンを適用しています。</span>
+              <span>
+                <span className="text-red-500">{displayCouponPromoTotal(cart, activeCoupon)}</span>
+                を節約しよう！
+              </span>
             </Typography>
           </div>
           <div>
