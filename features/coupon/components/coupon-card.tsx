@@ -34,15 +34,31 @@ export const CouponCard: React.FC<CouponCardProps> = ({ title, description, expi
         </div>
       )} */}
       <div className="absolute inset-0 flex flex-col items-center justify-between p-4">
-        <div className="mt-[20px] flex w-11/12 flex-col items-start">
+        <div className="mt-[15px] flex w-full flex-col justify-start">
           <Typography
             as="bold"
             element="p"
-            className="text-center text-[18px] text-bibinViolet-100 md:text-[24px]"
+            className="w-full overflow-hidden text-[18px] text-bibinViolet-100 md:text-[24px]"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 1
+            }}
           >
             {title}
           </Typography>
-          <Typography as="caption" element="p" className="mt-1 text-center text-[14px] md:mt-2">
+          <Typography
+            as="caption"
+            element="p"
+            className="mt-1 w-full overflow-hidden text-[14px] md:mt-2"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {description}
           </Typography>
         </div>
@@ -53,7 +69,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ title, description, expi
               {formatExpirationDate(expiresAt)}
             </Typography>
           )}
-          <div className="border-1 mt-[2px] flex w-[440px] items-center justify-center rounded-md bg-white-base p-1 md:p-2">
+          <div className="border-1 mt-[2px] flex w-full items-center justify-center rounded-md bg-white-base p-1 md:p-2">
             <Typography as="boldSmall" element="p" className="text-center text-gray-500">
               コード：
             </Typography>

@@ -77,8 +77,8 @@ export function OrderOverview({ cart, getCoupons }: Props) {
         </div>
         <div className="mt-2 flex items-center">
           <ApplyCouponButton getCoupons={getCoupons} />
-          <Link href="/checkout" passHref>
-            <Button size="default" variant="lg" className="ml-2 h-[45px] w-[200px] md:w-[202px]">
+          <Link href="/checkout" passHref className="w-full">
+            <Button size="default" variant="lg" className="ml-2 h-[45px] w-full">
               購入する
             </Button>
           </Link>

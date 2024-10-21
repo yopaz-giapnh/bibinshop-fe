@@ -30,8 +30,19 @@ export const CouponSheetItem: React.FC<CouponSheetItemProps> = ({ coupon }) => {
                   objectFit: 'cover'
                 }}
               />
-              <div className="absolute inset-0 ml-4 flex items-center">
-                <Typography as="caption" element="p" className="text-black-90">
+              <div className="absolute inset-0 ml-3 flex items-center">
+                <Typography
+                  as="caption"
+                  element="p"
+                  className="text-black-90 "
+                  style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}
+                >
                   {coupon.attributes.title}
                 </Typography>
               </div>
