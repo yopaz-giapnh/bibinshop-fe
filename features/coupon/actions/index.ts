@@ -3,6 +3,7 @@
 import { apiClient } from '@/config/api-client';
 import { isNotFound } from '@/utils/api';
 import { TAGS } from '../constants';
+import { CouponSchema } from '../types';
 
 export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache } = {}) {
   try {
@@ -30,17 +31,23 @@ export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache 
   }
 }
 
-export async function applyCoupon(couponCode: string) {
+type ApplyCouponResult = {
+  success: boolean;
+  message: string;
+  coupon: CouponSchema | null;
+};
+
+export async function applyCoupon(couponCode: string): Promise<ApplyCouponResult> {
   try {
-    const { error } = await apiClient.POST('/api/v2/storefront/coupons/apply', {
+    const { error, data } = await apiClient.POST('/api/v2/storefront/coupons/apply', {
       body: { code: couponCode }
     });
     if (error) {
       throw error;
     }
-    return { success: true, message: 'クーポンが追加されました' };
+    return { success: true, message: 'クーポンが追加されました', coupon: data.data };
   } catch (error) {
-    return { success: false, message: 'クーポンの追加に失敗しました' };
+    return { success: false, message: 'クーポンの追加に失敗しました', coupon: null };
   }
 }
 

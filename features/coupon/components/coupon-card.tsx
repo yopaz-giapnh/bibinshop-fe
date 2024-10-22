@@ -15,7 +15,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ title, description, expi
       <Image
         src="/coupon-background.png"
         alt="Coupon"
-        width={540}
+        width={840}
         height={200}
         style={{
           objectFit: 'cover'
@@ -63,7 +63,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ title, description, expi
           </Typography>
         </div>
         <div className="flex w-11/12 flex-col items-center border-t border-dashed border-bibinBlue-100" />
-        <div className="flex w-11/12 flex-col items-start md:bottom-6">
+        <div className="flex w-full flex-col items-start md:bottom-6">
           {expiresAt && (
             <Typography as="caption" element="p" className="text-center text-[12px]">
               {formatExpirationDate(expiresAt)}

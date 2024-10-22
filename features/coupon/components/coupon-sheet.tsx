@@ -58,16 +58,26 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
     close: () => setIsOpen(false)
   }));
 
-  const onClose = () => setIsOpen(false);
+  const onClose = () => {
+    setIsOpen(false);
+    form.reset();
+  };
 
   const onSubmit = async (values: FormValues) => {
-    const { success, message } = await applyCoupon(values.couponCode);
-    if (success) {
+    const { success, message, coupon } = await applyCoupon(values.couponCode);
+    if (success && coupon) {
       toast({
         title: message,
         icon: <Check className="h-6 w-6" />
       });
       router.refresh();
+      form.reset();
+
+      // 新しいクーポンを既存のリストに追加
+      setCoupons((prevCoupons) => [...prevCoupons, coupon]);
+
+      // オプション: 新しく追加されたクーポンを自動的に選択
+      setSelectedCouponId(coupon.id);
     } else {
       toast({
         title: message,
