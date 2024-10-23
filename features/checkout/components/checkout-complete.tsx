@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
+import { ResetCouponClient } from '@/features/coupon/components/reset-coupon-client';
 import { OrderDetail } from '@/features/order/components/order-detail';
 import { redirectToTop } from '@/utils/navigation';
 import { cookies } from 'next/headers';
@@ -17,6 +18,7 @@ export default async function CheckoutComplete() {
   return (
     <div className="h-full w-full bg-paleFrostBlue">
       <div className="mx-auto flex w-full flex-col items-center px-2 md:px-[272px] md:pt-[24px] ">
+        <ResetCouponClient />
         <Typography
           as="boldTitle"
           element="h2"

@@ -10,6 +10,7 @@ export const CouponContext = React.createContext<{
     message: string;
   }>;
   addActiveCoupon: (coupon: CouponSchema) => void;
+  resetActiveCoupon: () => void;
 }>({
   activeCoupon: null,
   setActiveCoupon: () => {},
@@ -18,7 +19,8 @@ export const CouponContext = React.createContext<{
   > => {
     return { success: false, message: '' };
   },
-  addActiveCoupon: () => {}
+  addActiveCoupon: () => {},
+  resetActiveCoupon: () => {}
 });
 
 export function CouponProvider(props: React.PropsWithChildren) {
@@ -35,15 +37,24 @@ export function CouponProvider(props: React.PropsWithChildren) {
     return { success: false, message: 'クーポンの取り消しに失敗しました' };
   };
 
-  //   TODO: @coupon これに置き換える？
   const addActiveCoupon = (coupon: CouponSchema) => {
     setActiveCoupon(coupon);
     cartAddCoupon(coupon.id);
   };
 
+  const resetActiveCoupon = () => {
+    setActiveCoupon(null);
+  };
+
   return (
     <CouponContext.Provider
-      value={{ activeCoupon, setActiveCoupon, removeActiveCoupon, addActiveCoupon }}
+      value={{
+        activeCoupon,
+        setActiveCoupon,
+        removeActiveCoupon,
+        addActiveCoupon,
+        resetActiveCoupon
+      }}
     >
       {props.children}
     </CouponContext.Provider>
