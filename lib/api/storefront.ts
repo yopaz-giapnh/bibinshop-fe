@@ -2826,6 +2826,8 @@ export interface components {
         used_amount: number;
         /** @example 100 */
         available: number;
+        /** @example R653163382 */
+        order_number: string;
         /**
          * Format: date-time
          * @example 2020-02-16T07:14:54.617Z
@@ -2857,6 +2859,8 @@ export interface components {
         amount: number;
         /** @enum {string} */
         reason: 'EXPIRE' | 'USE';
+        /** @example R653163382 */
+        order_number?: string;
         /**
          * Format: date-time
          * @example 2020-02-16T07:14:54.617Z
