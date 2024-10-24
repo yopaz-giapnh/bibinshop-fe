@@ -1,9 +1,9 @@
+'use server';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -28,6 +28,7 @@ type Props = {
  */
 export default async function MessageSeeMoreModal({ message }: Props) {
   const action = () => {
+    'use server';
     getAccountMessageDetail({ id: message.id });
   };
 
@@ -39,63 +40,61 @@ export default async function MessageSeeMoreModal({ message }: Props) {
 
   return (
     <Dialog>
-      <DialogDescription>
-        <DialogTrigger asChild>
-          <form action={action}>
-            <Button className="border border-bibinBlue-100 bg-white-base">
-              <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
-                もっと見る
-              </Typography>
-            </Button>
-          </form>
-        </DialogTrigger>
-        <DialogContent className="flex w-[592px] flex-col items-center justify-center">
-          <DialogHeader>
-            <DialogTitle>{message.attributes.title}</DialogTitle>
-          </DialogHeader>
-          <Typography as="caption" element="p" className="mb-[4px] text-[12px] text-charcoalGray">
-            {date}
-          </Typography>
-          {vendor && vendor.attributes.stars != null && (
-            <Link
-              href={`/vendors/${vendor.id}`}
-              passHref
-              className="flex items-center rounded-[6px] border-[1px] p-[16px]"
-            >
-              <Image
-                alt=""
-                src={vendorImageUrl}
-                width={40}
-                height={40}
-                className="relative rounded-[4px]"
-              />
-              <Typography
-                as="boldSmall"
-                element="p"
-                className="ml-[16px] mr-[8px] text-[12px] text-black-90"
-              >
-                {message.attributes.title}
-              </Typography>
-              <Rating star={vendor.attributes.stars} size={16} readOnly />
-              <Typography as="small" element="p" className="ml-[5px] text-[12px] text-black-90">
-                {vendor.attributes.stars}
-              </Typography>
-            </Link>
-          )}
-          <Typography
-            as="small"
-            element="p"
-            className="ml-[5px] max-h-[200px] overflow-y-auto text-[12px] text-black-90 md:max-h-[350px]"
+      <DialogTrigger asChild type="button">
+        <form action={action}>
+          <Button className="border border-bibinBlue-100 bg-white-base">
+            <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
+              もっと見る
+            </Typography>
+          </Button>
+        </form>
+      </DialogTrigger>
+      <DialogContent className="flex w-[592px] flex-col items-center justify-center">
+        <DialogHeader>
+          <DialogTitle>{message.attributes.title}</DialogTitle>
+        </DialogHeader>
+        <Typography as="caption" element="p" className="mb-[4px] text-[12px] text-charcoalGray">
+          {date}
+        </Typography>
+        {vendor && vendor.attributes.stars != null && (
+          <Link
+            href={`/vendors/${vendor.id}`}
+            passHref
+            className="flex items-center rounded-[6px] border-[1px] p-[16px]"
           >
-            {message.attributes.content}
-          </Typography>
-          <DialogClose asChild>
-            <Button type="submit" size="lg" variant="lg" className="mt-[24px] w-11/12 md:w-[392px]">
-              確認する
-            </Button>
-          </DialogClose>
-        </DialogContent>
-      </DialogDescription>
+            <Image
+              alt=""
+              src={vendorImageUrl}
+              width={40}
+              height={40}
+              className="relative rounded-[4px]"
+            />
+            <Typography
+              as="boldSmall"
+              element="p"
+              className="ml-[16px] mr-[8px] text-[12px] text-black-90"
+            >
+              {message.attributes.title}
+            </Typography>
+            <Rating star={vendor.attributes.stars} size={16} readOnly />
+            <Typography as="small" element="p" className="ml-[5px] text-[12px] text-black-90">
+              {vendor.attributes.stars}
+            </Typography>
+          </Link>
+        )}
+        <Typography
+          as="small"
+          element="p"
+          className="ml-[5px] max-h-[200px] overflow-y-auto text-[12px] text-black-90 md:max-h-[350px]"
+        >
+          {message.attributes.content}
+        </Typography>
+        <DialogClose asChild>
+          <Button type="submit" size="lg" variant="lg" className="mt-[24px] w-11/12 md:w-[392px]">
+            確認する
+          </Button>
+        </DialogClose>
+      </DialogContent>
     </Dialog>
   );
 }
