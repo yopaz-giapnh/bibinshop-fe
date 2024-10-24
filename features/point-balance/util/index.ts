@@ -61,7 +61,7 @@ export const aggregatePointAcquisitionByDate = (
 
     // 今日より後に期限が切れるものだけを処理
     if (isAfter(expirationDate, today)) {
-      const date = format(parseISO(item.attributes.created_at), 'yyyy/MM/dd');
+      const date = format(parseISO(item.attributes.expires_at), 'yyyy/MM/dd');
       if (!aggregatedData[date]) {
         aggregatedData[date] = { date, totalAmount: 0, count: 0 };
       }
