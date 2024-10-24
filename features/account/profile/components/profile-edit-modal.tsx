@@ -35,7 +35,7 @@ import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, PencilRuler } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { useForm, useFormState } from 'react-hook-form';
 import {
@@ -45,7 +45,7 @@ import {
   updateSocialLink,
   uploadAvatar
 } from '../actions';
-import { FormValues, User, UserSex, formSchema } from '../types';
+import { FormValues, User, formSchema } from '../types';
 import { isUserSex } from '../utils';
 import ProfileFormHairModal from './profile-form-hair-modal';
 import ProfileFormModal from './profile-form-modal';
@@ -63,7 +63,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
   const [socialLinks, setSocialLinks] = useState<Record<string, string>>({});
   const [openProfileFormHairModal, setOpenProfileFormHairModal] = useState(false);
   const [openProfileFormModal, setOpenProfileFormModal] = useState(false);
-  const [selectedSex, setSelectedSex] = useState<UserSex>(sex);
   const [skinType, setSkinType] = useState<SkinType | undefined>(concerns?.skinType);
   const [personalColor, setPersonalColor] = useState<PersonalColor | undefined>(
     concerns?.personalColor
@@ -73,31 +72,19 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
   const [healthConcerns, setHealthConcerns] = useState<HealthConcern>(
     concerns?.healthConcerns || []
   );
-  const [birthyear, setBirthyear] = useState<number | undefined>(concerns?.birthyear);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       nickname: nickname || '',
-      birthyear: concerns?.birthyear?.toString() || ''
+      sex: sex,
+      birthyear: concerns?.birthyear?.toString() || '',
+      instagram: '',
+      x: '',
+      facebook: ''
     },
     mode: 'onBlur'
   });
-
-  const resetForm = useCallback(() => {
-    form.reset({
-      nickname: nickname || '',
-      sex: selectedSex,
-      instagram: socialLinks.instagram || '',
-      x: socialLinks.x || '',
-      birthyear: birthyear?.toString() || '',
-      facebook: socialLinks.facebook || ''
-    });
-  }, [form, nickname, selectedSex, socialLinks, birthyear]);
-
-  useEffect(() => {
-    resetForm();
-  }, [resetForm]);
 
   useEffect(() => {
     const links: Record<string, string> = {};
@@ -110,13 +97,22 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
     form.setValue('instagram', links.instagram || '');
     form.setValue('x', links.x || '');
     form.setValue('facebook', links.facebook || '');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account.socialLinks]);
+  }, [account.socialLinks, form]);
+
+  const handleSexChange = (value: string) => {
+    if (isUserSex(value)) {
+      form.setValue('sex', value);
+    }
+  };
+
+  const handleBirthyearChange = (value: string) => {
+    form.setValue('birthyear', value);
+  };
 
   const handleSubmit = async (formData: FormValues) => {
     const accountUpdateResult = await updateAccount(null, formData);
     const profileUpdateResult = await updateProfile(null, {
-      birthyear: birthyear,
+      birthyear: parseInt(formData.birthyear ?? '0'),
       skin_type: skinType,
       personal_color: personalColor,
       health_concerns: healthConcerns,
@@ -153,7 +149,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
       }
 
       setIsOpen(false);
-      resetForm();
       toast({
         title: 'プロフィールを更新しました',
         icon: <Check className="h-6 w-6" />
@@ -189,7 +184,7 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
         onOpenChange={(open) => {
           setIsOpen(open);
           if (!open) {
-            resetForm();
+            form.reset();
           }
         }}
       >
@@ -211,12 +206,10 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                 <DialogTitle className="text-[16px] md:text-[20px]">プロフィール編集</DialogTitle>
               </DialogHeader>
               <Form {...form}>
-                {/* プロフィール写真 */}
                 <form className="relative mt-[16px] flex" action={uploadAvatar}>
                   <AvatarUpload account={account} />
                 </form>
 
-                {/* ニックネーム */}
                 <FormField
                   control={form.control}
                   name="nickname"
@@ -238,56 +231,57 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   )}
                 />
 
-                {/* 性別 */}
                 <div className="mt-[16px] w-full">
                   <Typography as="bold" element="p" className="mb-[8px] text-[14px] text-black-90">
                     性別
                   </Typography>
-                  <RadioGroup
-                    value={selectedSex}
-                    onValueChange={(value) => {
-                      if (isUserSex(value)) {
-                        setSelectedSex(value);
-                        form.setValue('sex', value);
-                        form.trigger('sex');
-                      }
-                    }}
-                    className="mt-[4px] flex justify-between md:justify-normal"
-                  >
-                    <div className="flex items-center md:mr-[40px]">
-                      <RadioGroupItem value="female" id="r1" className=" focus" />
-                      <Typography
-                        as="xSmall"
-                        element="p"
-                        className="ml-[8px] text-[14px] text-black-90"
+                  <FormField
+                    control={form.control}
+                    name="sex"
+                    render={({ field }) => (
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={(value) => {
+                          handleSexChange(value);
+                          field.onChange(value);
+                        }}
+                        className="mt-[4px] flex justify-between md:justify-normal"
                       >
-                        女性
-                      </Typography>
-                    </div>
-                    <div className="flex items-center md:mr-[40px]">
-                      <RadioGroupItem value="male" id="r2" />
-                      <Typography
-                        as="xSmall"
-                        element="p"
-                        className="ml-[8px] text-[14px] text-black-90"
-                      >
-                        男性
-                      </Typography>
-                    </div>
-                    <div className="mr-[40px] flex items-center">
-                      <RadioGroupItem value="not_applicable" id="r3" />
-                      <Typography
-                        as="xSmall"
-                        element="p"
-                        className="ml-[8px] text-[14px] text-black-90"
-                      >
-                        その他
-                      </Typography>
-                    </div>
-                  </RadioGroup>
+                        <div className="flex items-center md:mr-[40px]">
+                          <RadioGroupItem value="female" id="r1" className=" focus" />
+                          <Typography
+                            as="xSmall"
+                            element="p"
+                            className="ml-[8px] text-[14px] text-black-90"
+                          >
+                            女性
+                          </Typography>
+                        </div>
+                        <div className="flex items-center md:mr-[40px]">
+                          <RadioGroupItem value="male" id="r2" />
+                          <Typography
+                            as="xSmall"
+                            element="p"
+                            className="ml-[8px] text-[14px] text-black-90"
+                          >
+                            男性
+                          </Typography>
+                        </div>
+                        <div className="mr-[40px] flex items-center">
+                          <RadioGroupItem value="not_applicable" id="r3" />
+                          <Typography
+                            as="xSmall"
+                            element="p"
+                            className="ml-[8px] text-[14px] text-black-90"
+                          >
+                            その他
+                          </Typography>
+                        </div>
+                      </RadioGroup>
+                    )}
+                  />
                 </div>
 
-                {/* 生まれた年 */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
@@ -303,11 +297,8 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                             maxLength={4}
                             onChange={(e) => {
                               const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                              handleBirthyearChange(value);
                               field.onChange(value);
-                              setBirthyear(value ? parseInt(value, 10) : undefined);
-                            }}
-                            onBlur={() => {
-                              field.onBlur();
                             }}
                           />
                         </FormControl>
@@ -317,7 +308,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   />
                 </div>
 
-                {/* Instagram URL */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
@@ -330,7 +320,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                             {...field}
                             type="url"
                             defaultValue={socialLinks.instagram}
-                            // HACK: インスタの共有リンクはデフォルトでクエリパラメータがついてるためクエリを削除する処理を追加した
                             onChange={(e) => {
                               const rawValue = e.target.value;
                               const cleanedValue = rawValue ? removeQueryParams(rawValue) : '';
@@ -351,7 +340,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   />
                 </div>
 
-                {/* X URL */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
@@ -376,7 +364,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   />
                 </div>
 
-                {/* Facebook URL */}
                 <div className="mt-[16px] w-full">
                   <FormField
                     control={form.control}
@@ -401,7 +388,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   />
                 </div>
 
-                {/* 肌の悩み */}
                 <div className="mt-[16px] w-full">
                   <div className="flex h-[24px] items-center">
                     <Typography as="bold" element="p" className="text-[14px] text-black-90">
@@ -424,7 +410,6 @@ export default function ProfileEditModal({ account, skinTags, hairTags, concerns
                   </div>
                 </div>
 
-                {/* 頭皮・毛髪の悩み、健康の悩み */}
                 <div className="mt-[16px] w-full">
                   <div className="mt-[16px] w-full">
                     <div className="flex h-[24px] items-center">

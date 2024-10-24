@@ -38,6 +38,7 @@ export function ProductCartForm({ product, getCart }: Props) {
   const params = useSearchParams();
 
   const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
+  const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
 
   const { defaultVariant } = product;
   const variantId = params.get('variantId');
@@ -245,13 +246,9 @@ export function ProductCartForm({ product, getCart }: Props) {
             <Typography
               as="boldSmall"
               element="p"
-              className={`ml-2 ${
-                selectedVariant.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
-              }`}
+              className={`ml-2 ${!available ? 'text-red-500' : 'text-black-70'}`}
             >
-              {selectedVariant.attributes.total_on_hand === 0
-                ? '完売'
-                : `${selectedVariant.attributes.total_on_hand}個販売`}
+              {!available ? '完売' : `${selectedVariant.attributes.total_on_hand}個販売`}
             </Typography>
           )}
         </div>
