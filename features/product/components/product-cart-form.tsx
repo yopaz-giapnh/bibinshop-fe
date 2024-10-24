@@ -8,15 +8,20 @@ import { useToast } from '@/components/ui/use-toast';
 import { addItem, getCart } from '@/features/cart/actions';
 import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
+import { addToFavorite, removeFromFavorite } from '@/features/favorite-products/actions';
 import Rating from '@/features/review/components/rating';
+import {
+  NewRegistrationMediationModal,
+  NewRegistrationMediationModalRef
+} from '@/features/sns/components/new-registration-mediation-modal';
+import { useAuth } from '@/hooks/use-auth';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { BadgeAlert, Check, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useOptimistic, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { addToFavorite, removeFromFavorite } from '../actions';
 import { Product } from '../types';
 
 type Props = {
@@ -26,24 +31,25 @@ type Props = {
 
 export function ProductCartForm({ product, getCart }: Props) {
   const isPc = useIsPc();
+  const { isLoggedIn } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
   const path = usePathname();
   const params = useSearchParams();
 
-  const { defaultVariant } = product;
-  const [selectedVariant, setSelectedVariant] = useState(() => {
-    const vid = params.get('variantId');
-    if (vid) {
-      return product.variants.find((variant) => variant.id === vid) || defaultVariant;
-    }
-    return defaultVariant;
-  });
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const [isFavorite, setIsFavorite] = useState<boolean>(
-    () => selectedVariant?.attributes.is_favorite ?? false
-  );
+  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
 
+  const { defaultVariant } = product;
+  const variantId = params.get('variantId');
+  const selectedVariant =
+    product.variants.find((variant) => variant.id === variantId) || defaultVariant;
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useOptimistic(
+    selectedVariant?.attributes.is_favorite ?? false,
+    (_, newState: boolean) => {
+      return newState;
+    }
+  );
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>(() => {
     return (
       selectedVariant?.relationships.option_values?.data?.reduce(
@@ -77,7 +83,9 @@ export function ProductCartForm({ product, getCart }: Props) {
     if (variant) {
       router.push(`${path}?variantId=${variant.id}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOptions]);
+
   useEffect(() => {
     //update selected options when variant changes
     // this is for reactivity when unavailable variant combination is selected
@@ -94,9 +102,7 @@ export function ProductCartForm({ product, getCart }: Props) {
       }
       return newOptions;
     });
-  }, [selectedVariant]);
-  useEffect(() => {
-    setIsFavorite(selectedVariant?.attributes.is_favorite ?? false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariant]);
 
   const [state, formAction] = useFormState(addItem, null);
@@ -104,20 +110,6 @@ export function ProductCartForm({ product, getCart }: Props) {
     variantId: selectedVariant?.id || '',
     quantity: selectedQuantity
   });
-
-  useEffect(() => {
-    const vid = params.get('variantId');
-    if (!vid) {
-      setSelectedVariant(defaultVariant);
-      return;
-    }
-    const variant = product.variants.find((variant) => variant.id === vid);
-    if (!variant || !variant.attributes.purchasable) {
-      router.push(`${path}`);
-      return;
-    }
-    setSelectedVariant(variant);
-  }, [params]);
 
   useEffect(() => {
     if (!state) {
@@ -163,22 +155,34 @@ export function ProductCartForm({ product, getCart }: Props) {
       });
   };
 
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
   const onPressFavorite = async () => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
+    }
+
     if (!selectedVariant) return;
+
+    setIsFavoriteLoading(true);
+
+    // SC側のrevalidateをまたずに、お気に入りは、楽観的更新を行う
     if (isFavorite) {
+      setIsFavorite(false);
       await removeFromFavorite(selectedVariant.id);
       toast({
         title: 'お気に入りから削除しました',
         icon: <Check className="h-6 w-6" />
       });
     } else {
+      setIsFavorite(true);
       await addToFavorite(selectedVariant.id);
       toast({
         title: 'お気に入りに追加しました',
         icon: <Check className="h-6 w-6" />
       });
     }
-    setIsFavorite((prev) => !prev);
+    setIsFavoriteLoading(false);
   };
 
   return (
@@ -363,11 +367,17 @@ export function ProductCartForm({ product, getCart }: Props) {
             <AddToCartButton />
           </form>
           <button className="ml-2" onClick={onPressFavorite}>
-            <Heart
-              className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
-              color={isFavorite ? 'red' : 'black'}
-              fill={isFavorite ? 'red' : 'white'}
-            />
+            {isFavoriteLoading ? (
+              <div className="hidden h-12 w-12 items-center justify-center rounded-full border-[1px] md:flex">
+                <LoadingSpinner size={18} />
+              </div>
+            ) : (
+              <Heart
+                className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
+                color={isFavorite ? 'red' : 'black'}
+                fill={isFavorite ? 'red' : 'white'}
+              />
+            )}
           </button>
         </div>
       </div>
@@ -381,12 +391,24 @@ export function ProductCartForm({ product, getCart }: Props) {
           <AddToCartButton />
         </form>
         <button className="ml-2" onClick={onPressFavorite}>
-          <Heart className="h-10 w-10 rounded-full border-[1px] p-2" />
+          {isFavoriteLoading ? (
+            <div className="flex h-10 w-10 items-center justify-center rounded-full border-[1px]">
+              <LoadingSpinner size={14} />
+            </div>
+          ) : (
+            <Heart
+              className="h-10 w-10 rounded-full border-[1px] p-2"
+              color={isFavorite ? 'red' : 'black'}
+              fill={isFavorite ? 'red' : 'white'}
+            />
+          )}
         </button>
         <Link href="/cart" className="ml-2">
           <ShoppingCart className="h-8 w-8" />
         </Link>
       </div>
+
+      <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
     </>
   );
 }

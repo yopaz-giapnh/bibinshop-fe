@@ -8,13 +8,18 @@ import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { addItem } from '@/features/cart/actions';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
+import { addToFavorite, removeFromFavorite } from '@/features/favorite-products/actions';
 import Rating from '@/features/review/components/rating';
+import {
+  NewRegistrationMediationModal,
+  NewRegistrationMediationModalRef
+} from '@/features/sns/components/new-registration-mediation-modal';
+import { useAuth } from '@/hooks/use-auth';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { BadgeAlert, Check, Heart } from 'lucide-react';
 import Image from 'next/image';
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useOptimistic, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { addToFavorite, removeFromFavorite } from '../actions';
 import { Product } from '../types';
 
 export type ProductVariantModalRef = {
@@ -28,14 +33,20 @@ type Props = {
 
 // TODO: ProductCartFormとロジックがほとんど一緒なので、共通化してもいいかも
 export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ product }, ref) => {
+  const { isLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+
+  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
 
   const { defaultVariant } = product;
   const [selectedVariant, setSelectedVariant] = useState(defaultVariant);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const [isFavorite, setIsFavorite] = useState<boolean>(
-    () => selectedVariant?.attributes.is_favorite ?? false
+  const [isFavorite, setIsFavorite] = useOptimistic(
+    selectedVariant?.attributes.is_favorite ?? false,
+    (_, newState: boolean) => {
+      return newState;
+    }
   );
 
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>(() => {
@@ -72,10 +83,6 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
       setSelectedVariant(variant);
     }
   }, [selectedOptions, product.variants, product.optionTypes]);
-
-  useEffect(() => {
-    setIsFavorite(selectedVariant?.attributes.is_favorite ?? false);
-  }, [selectedVariant]);
 
   const [state, formAction] = useFormState(addItem, null);
   const action = formAction.bind(null, {
@@ -122,21 +129,27 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
   };
 
   const onPressFavorite = async () => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
+    }
+
     if (!selectedVariant) return;
     if (isFavorite) {
+      setIsFavorite(false);
       await removeFromFavorite(selectedVariant.id);
       toast({
         title: 'お気に入りから削除しました',
         icon: <Check className="h-6 w-6" />
       });
     } else {
+      setIsFavorite(true);
       await addToFavorite(selectedVariant.id);
       toast({
         title: 'お気に入りに追加しました',
         icon: <Check className="h-6 w-6" />
       });
     }
-    setIsFavorite((prev) => !prev);
   };
 
   useImperativeHandle(ref, () => ({
@@ -291,6 +304,7 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
                 fill={isFavorite ? 'red' : 'white'}
               />
             </button>
+            <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
           </div>
         </div>
       </DialogContent>

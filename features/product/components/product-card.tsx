@@ -1,6 +1,7 @@
 'use client';
 
 import { Cart } from '@/components/icons/cart';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { addItem } from '@/features/cart/actions';
@@ -9,7 +10,7 @@ import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/util
 import { BadgeAlert, Check, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Product } from '../types';
 import { ProductVariantModal, ProductVariantModalRef } from './product-variant-modal';
 
@@ -25,6 +26,17 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
 
   const defaultVariant = product.relationships.default_variant?.data;
   const available = product.attributes.total_on_hand ? true : false;
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (deleteButtonAction) {
+      setIsDeleting(true);
+      await deleteButtonAction(product);
+      setIsDeleting(false);
+    }
+  };
 
   const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -53,14 +65,17 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
         <div className="relative">
           {deleteButtonAction && (
             <button
-              className="absolute right-2 top-2 z-10 rounded-full text-gray-100 shadow-xl"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                deleteButtonAction(product);
-              }}
+              className="bg-white absolute right-2 top-2 z-10 rounded-full text-gray-100 shadow-xl"
+              onClick={handleDelete}
+              disabled={isDeleting}
             >
-              <X className="h-[32px] w-[32px] rounded-full shadow-xl md:h-[56px] md:w-[56px]" />
+              {isDeleting ? (
+                <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full shadow-xl md:h-[56px] md:w-[56px]">
+                  <LoadingSpinner size={24} />
+                </div>
+              ) : (
+                <X className="h-[32px] w-[32px] rounded-full shadow-xl md:h-[56px] md:w-[56px]" />
+              )}
             </button>
           )}
           <Image
