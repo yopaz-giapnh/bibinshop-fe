@@ -21,7 +21,7 @@ export const mergePointHistory = (
         amount: item.attributes.amount,
         // TOOD: @point 獲得ポイントの理由は、現状は買い物ポイントのみのため、固定値を返す
         reason: 'ポイント獲得',
-        orderId: null,
+        orderId: item.attributes.order_number,
         expiresAt: format(parseISO(item.attributes.expires_at), 'yyyy/MM/dd')
       };
     }),
@@ -34,7 +34,7 @@ export const mergePointHistory = (
         time: format(date, 'HH:mm:ss'),
         amount: item.attributes.amount * -1,
         reason: item.attributes.reason === 'USE' ? 'ポイント利用' : 'ポイント失効',
-        orderId: item.relationships.order?.data?.id || null,
+        orderId: item.attributes.order_number ?? null,
         usedAmount: undefined,
         available: undefined,
         expiresAt: null
@@ -83,6 +83,7 @@ const sampleHistory: PointAquisitionHistory[] = [
       amount: 100,
       used_amount: 0,
       available: 100,
+      order_number: 'Rxxxxxxxx',
       expires_at: '2024-12-31T23:59:59Z',
       created_at: '2023-05-01T10:00:00Z',
       updated_at: '2023-05-01T10:00:00Z'
@@ -98,6 +99,7 @@ const sampleHistory: PointAquisitionHistory[] = [
       amount: 50,
       used_amount: 0,
       available: 50,
+      order_number: 'Rxxxxxxxx',
       expires_at: '2024-12-31T23:59:59Z',
       created_at: '2023-05-01T14:30:00Z',
       updated_at: '2023-05-01T14:30:00Z'
@@ -113,6 +115,7 @@ const sampleHistory: PointAquisitionHistory[] = [
       amount: 75,
       used_amount: 0,
       available: 75,
+      order_number: 'Rxxxxxxxx',
       expires_at: '2023-12-31T23:59:59Z',
       created_at: '2023-05-02T09:15:00Z',
       updated_at: '2023-05-02T09:15:00Z'
@@ -165,6 +168,7 @@ const sampleAcquisitionHistory: PointAquisitionHistory[] = [
       amount: 30,
       used_amount: 30,
       available: 0,
+      order_number: 'Rxxxxxxxx',
       created_at: generateDate(4),
       expires_at: generateDate(-30), // 30日後
       updated_at: generateDate(4)
@@ -180,6 +184,7 @@ const sampleAcquisitionHistory: PointAquisitionHistory[] = [
       amount: 20,
       used_amount: 20,
       available: 0,
+      order_number: 'Rxxxxxxxx',
       created_at: generateDate(2),
       expires_at: generateDate(-60), // 60日後
       updated_at: generateDate(4)
