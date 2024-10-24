@@ -25,7 +25,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
   const modalRef = useRef<ProductVariantModalRef>(null);
 
   const defaultVariant = product.relationships.default_variant?.data;
-  const available = product.attributes.total_on_hand ? true : false;
+  const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
 
   const [isDeleting, setIsDeleting] = useState(false);
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -115,13 +115,9 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
           <Typography
             as="xSmall"
             element="p"
-            className={`md:hidden ${
-              product.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
-            }`}
+            className={`md:hidden ${!available ? 'text-red-500' : 'text-black-70'}`}
           >
-            {product.attributes.total_on_hand === 0
-              ? '完売'
-              : `${product.attributes.total_on_hand} 個販売`}
+            {!available ? '完売' : `${product.attributes.total_on_hand} 個販売`}
           </Typography>
 
           <div className="mt-[4px] flex w-full items-end justify-between">
@@ -156,9 +152,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
                 product.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
               }`}
             >
-              {product.attributes.total_on_hand === 0
-                ? '完売'
-                : `${product.attributes.total_on_hand} 個販売`}
+              {!available ? '完売' : `${product.attributes.total_on_hand} 個販売`}
             </Typography>
           </div>
           {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (

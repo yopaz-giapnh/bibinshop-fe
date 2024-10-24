@@ -48,6 +48,7 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
       return newState;
     }
   );
+  const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
 
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>(() => {
     return (
@@ -231,13 +232,9 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
               <Typography
                 as="boldSmall"
                 element="p"
-                className={`ml-2 ${
-                  product.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
-                }`}
+                className={`ml-2 ${!available ? 'text-red-500' : 'text-black-70'}`}
               >
-                {product.attributes.total_on_hand === 0
-                  ? '完売'
-                  : `${product.attributes.total_on_hand}個販売`}
+                {!available ? '完売' : `${product.attributes.total_on_hand}個販売`}
               </Typography>
             )}
           </div>
