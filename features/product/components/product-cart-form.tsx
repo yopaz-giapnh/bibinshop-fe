@@ -348,7 +348,10 @@ export function ProductCartForm({ product, getCart }: Props) {
               }}
               onIncrease={() => {
                 setSelectedQuantity(
-                  Math.min(selectedQuantity + 1, selectedVariant?.attributes.total_on_hand ?? 0)
+                  Math.min(
+                    selectedQuantity + 1,
+                    Math.min(23, selectedVariant?.attributes.total_on_hand ?? 0)
+                  )
                 );
               }}
             />
