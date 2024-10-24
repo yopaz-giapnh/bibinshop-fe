@@ -45,7 +45,8 @@ export async function applyCoupon(couponCode: string): Promise<ApplyCouponResult
     if (error) {
       throw error;
     }
-    return { success: true, message: 'クーポンが追加されました', coupon: data.data };
+    const coupon = data.data as unknown as CouponSchema;
+    return { success: true, message: 'クーポンが追加されました', coupon };
   } catch (error) {
     return { success: false, message: 'クーポンの追加に失敗しました', coupon: null };
   }
