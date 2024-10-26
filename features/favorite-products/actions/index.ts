@@ -1,7 +1,6 @@
 'use server';
 
 import { apiClient } from '@/config/api-client';
-import { TAGS as PRODUCT_TAGS } from '@/features/product/constants';
 import { Product, ProductIncludes, ProductSchema } from '@/features/product/types';
 import {
   isImageSchema,
@@ -97,8 +96,8 @@ export async function addToFavorite(variantId: string) {
   } catch (e) {
     console.error(e);
   } finally {
+    revalidateTag(FAVORITE_PRODUCTS_TAGS.isFavorite);
     revalidateTag(FAVORITE_PRODUCTS_TAGS.favoriteProducts);
-    revalidateTag(PRODUCT_TAGS.products);
   }
 }
 
@@ -118,7 +117,23 @@ export async function removeFromFavorite(variantId: string) {
   } catch (e) {
     console.error(e);
   } finally {
+    revalidateTag(FAVORITE_PRODUCTS_TAGS.isFavorite);
     revalidateTag(FAVORITE_PRODUCTS_TAGS.favoriteProducts);
-    revalidateTag(PRODUCT_TAGS.products);
   }
+}
+
+export async function getIsFavorite(variantId: string) {
+  const { data, error } = await apiClient.GET(`/api/v2/storefront/account/favorites/check`, {
+    params: {
+      query: {
+        variant_id: variantId
+      }
+    }
+  });
+
+  if (error) {
+    return false;
+  }
+
+  return !!data?.is_favorite;
 }

@@ -1,3 +1,4 @@
 export const TAGS = {
-  favoriteProducts: 'favorite-products'
+  favoriteProducts: 'favorite-products',
+  isFavorite: 'is-favorite'
 };

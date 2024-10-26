@@ -54,3 +54,5 @@ export type Product = ProductSchema & {
   optionsMap: Record<string, OptionValueSchema[]>;
   activeVariant?: VariantSchema;
 };
+
+export type VariantState = 'selected' | 'available' | 'unavailable';

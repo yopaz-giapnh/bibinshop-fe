@@ -186,6 +186,13 @@ export interface paths {
      */
     delete: operations['remove-favorite'];
   };
+  '/api/v2/storefront/account/favorites/check': {
+    /**
+     * Check if a variant is favorited
+     * @description Returns whether the specified variant is favorited by the current user.
+     */
+    get: operations['check-favorite'];
+  };
   '/api/v2/storefront/account/points': {
     /**
      * Retrieve Points aquisition history
@@ -1100,6 +1107,26 @@ export interface components {
          * @enum {string|null}
          */
         payment_state?: 'balance_due' | 'credit_owed' | 'failed' | 'paid' | 'void' | null;
+        /**
+         * @description Total points used by this order
+         * @example 100
+         */
+        points?: number;
+        /**
+         * @description Total points used by this order in money format
+         * @example 100 JPY
+         */
+        display_points?: string;
+        /**
+         * @description Total discount amount from coupons
+         * @example 100
+         */
+        coupons_total?: number;
+        /**
+         * @description Total discount amount from coupons in money format
+         * @example 100 JPY
+         */
+        display_coupons_total?: string;
       };
       relationships: {
         line_items?: {
@@ -2273,8 +2300,6 @@ export interface components {
         backorderable?: boolean;
         /** @example 10 */
         total_on_hand?: number;
-        /** @example true */
-        is_favorite?: boolean;
       };
       relationships: {
         product?: {
@@ -4129,6 +4154,29 @@ export interface operations {
     };
   };
   /**
+   * Check if a variant is favorited
+   * @description Returns whether the specified variant is favorited by the current user.
+   */
+  'check-favorite': {
+    parameters: {
+      query: {
+        /** @description The ID of the variant to check */
+        variant_id: string;
+      };
+    };
+    responses: {
+      /** @description Successful response */
+      200: {
+        content: {
+          'application/vnd.api+json': {
+            /** @description Whether the variant is favorited by the current user */
+            is_favorite?: boolean;
+          };
+        };
+      };
+    };
+  };
+  /**
    * Retrieve Points aquisition history
    * @description Returns the current user's points aquisition history.
    */
@@ -4517,7 +4565,7 @@ export interface operations {
       };
     };
     responses: {
-      200: components['responses']['AddCouponResponse'];
+      200: components['responses']['Cart'];
       422: components['responses']['UnprocessableEntity'];
     };
   };
@@ -4535,9 +4583,7 @@ export interface operations {
       };
     };
     responses: {
-      200: {
-        content: never;
-      };
+      200: components['responses']['Cart'];
       422: components['responses']['UnprocessableEntity'];
     };
   };
@@ -4602,7 +4648,7 @@ export interface operations {
   /** @description Removes the points from the current cart. */
   'remove-points': {
     responses: {
-      200: components['responses']['EmptyOk'];
+      200: components['responses']['Cart'];
       401: components['responses']['Forbidden'];
       404: components['responses']['NotFound'];
       422: components['responses']['UnprocessableEntity'];
@@ -4617,7 +4663,7 @@ export interface operations {
       };
     };
     responses: {
-      200: components['responses']['EmptyOk'];
+      200: components['responses']['Cart'];
       401: components['responses']['Forbidden'];
       404: components['responses']['NotFound'];
       422: components['responses']['UnprocessableEntity'];

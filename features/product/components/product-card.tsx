@@ -11,6 +11,7 @@ import { BadgeAlert, Check, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
+import { getProduct } from '../actions';
 import { Product } from '../types';
 import { ProductVariantModal, ProductVariantModalRef } from './product-variant-modal';
 
@@ -38,10 +39,17 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
     }
   };
 
+  const [isLoadingCart, setIsLoadingCart] = useState(false);
   const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsLoadingCart(true);
+
     if (product.relationships.variants?.data && product.relationships.variants?.data?.length > 0) {
-      modalRef.current?.open();
+      // FIXME: taxonsだとdefaultVariantが取得できないので、詳細のAPIで取得している
+      const p = await getProduct(product.id);
+      if (p) {
+        modalRef.current?.open(p);
+      }
     } else {
       const result = await addItem(null, { variantId: defaultVariant?.id || '', quantity: 1 });
       if (result.success) {
@@ -57,6 +65,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
         });
       }
     }
+    setIsLoadingCart(false);
   };
 
   return (
@@ -185,8 +194,19 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
               {`(${product.attributes.reviews_count})`}
             </Typography>
           </div>
-          <button onClick={addToCart} type="button" disabled={!available}>
-            <Cart />
+          <button
+            onClick={addToCart}
+            type="button"
+            disabled={!available || isLoadingCart}
+            className="flex items-center justify-center"
+          >
+            {isLoadingCart ? (
+              <div className="flex h-6 w-[36px] items-center justify-center rounded-full border-[1px]">
+                <LoadingSpinner size={10} />
+              </div>
+            ) : (
+              <Cart />
+            )}
           </button>
         </div>
       </Link>

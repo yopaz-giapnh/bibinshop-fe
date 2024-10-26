@@ -8,7 +8,11 @@ import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { addItem } from '@/features/cart/actions';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
-import { addToFavorite, removeFromFavorite } from '@/features/favorite-products/actions';
+import {
+  addToFavorite,
+  getIsFavorite,
+  removeFromFavorite
+} from '@/features/favorite-products/actions';
 import Rating from '@/features/review/components/rating';
 import {
   NewRegistrationMediationModal,
@@ -18,12 +22,18 @@ import { useAuth } from '@/hooks/use-auth';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { BadgeAlert, Check, Heart } from 'lucide-react';
 import Image from 'next/image';
-import { forwardRef, useEffect, useImperativeHandle, useOptimistic, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { Product } from '../types';
+import { Product, VariantSchema, VariantState } from '../types';
+import {
+  filterOptionValues,
+  findNewVariant,
+  getOptionState,
+  getSelectedOptionPresentation
+} from '../utils/product';
 
 export type ProductVariantModalRef = {
-  open: () => void;
+  open: (product: Product) => void;
   close: () => void;
 };
 
@@ -32,58 +42,38 @@ type Props = {
 };
 
 // TODO: ProductCartFormとロジックがほとんど一緒なので、共通化してもいいかも
-export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ product }, ref) => {
+export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_, ref) => {
   const { isLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
 
   const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
 
-  const { defaultVariant } = product;
-  const [selectedVariant, setSelectedVariant] = useState(defaultVariant);
+  const [product, setProduct] = useState<Product>();
+  const [selectedVariant, setSelectedVariant] = useState<VariantSchema>();
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const [isFavorite, setIsFavorite] = useOptimistic(
-    selectedVariant?.attributes.is_favorite ?? false,
-    (_, newState: boolean) => {
-      return newState;
-    }
-  );
-  const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
 
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>(() => {
-    return (
-      selectedVariant?.relationships.option_values?.data?.reduce(
-        (acc, vov) => {
-          for (const optionType of product.optionTypes) {
-            if (product.optionsMap[optionType.id].some((o) => o.id === vov?.id)) {
-              acc[optionType.id] = vov!.id;
-            }
-          }
-          return acc;
-        },
-        {} as Record<string, string | null>
-      ) ?? {}
-    );
-  });
-
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+  // バリエーションごとのお気に入りの同期
   useEffect(() => {
-    const variant = product.variants.find((variant) => {
-      return (
-        variant.attributes.purchasable &&
-        variant.relationships.option_values?.data?.every((vov) => {
-          for (const optionType of product.optionTypes) {
-            if (selectedOptions[optionType.id] == vov?.id) {
-              return true;
-            }
-          }
-          return false;
-        })
-      );
-    });
-    if (variant) {
-      setSelectedVariant(variant);
+    if (!selectedVariant) {
+      setIsFavoriteLoading(false);
+      return;
     }
-  }, [selectedOptions, product.variants, product.optionTypes]);
+
+    const syncIsFavorite = async () => {
+      setIsFavoriteLoading(true);
+      const isFavorite = await getIsFavorite(selectedVariant?.id ?? '');
+      setIsFavorite(isFavorite);
+      setIsFavoriteLoading(false);
+    };
+    syncIsFavorite();
+  }, [selectedVariant]);
+
+  const available = product?.attributes.total_on_hand
+    ? product.attributes.total_on_hand > 0
+    : false;
 
   const [state, formAction] = useFormState(addItem, null);
   const action = formAction.bind(null, {
@@ -136,6 +126,9 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
     }
 
     if (!selectedVariant) return;
+
+    setIsFavoriteLoading(true);
+
     if (isFavorite) {
       setIsFavorite(false);
       await removeFromFavorite(selectedVariant.id);
@@ -151,12 +144,47 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
         icon: <Check className="h-6 w-6" />
       });
     }
+
+    setIsFavoriteLoading(false);
   };
 
   useImperativeHandle(ref, () => ({
-    open: () => setIsOpen(true),
-    close: () => setIsOpen(false)
+    open: (product: Product) => {
+      setProduct(product);
+      if (product.defaultVariant) {
+        setSelectedVariant(product.defaultVariant);
+      }
+      setIsOpen(true);
+    },
+    close: () => {
+      setIsOpen(false);
+      setProduct(undefined);
+    }
   }));
+
+  const handleOptionClick = (clickedOptionId: string) => {
+    if (!product) {
+      return;
+    }
+
+    const newVariant = findNewVariant({
+      clickedOptionId,
+      product,
+      selectedVariant
+    });
+
+    if (newVariant) {
+      // 新しいバリアントが見つかった場合、selectedVariantを更新
+      setSelectedVariant(newVariant);
+    } else {
+      // 一致するバリアントが見つからない場合、選択をクリアする
+      setSelectedVariant(undefined);
+    }
+  };
+
+  if (!product) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -244,25 +272,27 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
               <div className="flex gap-1">
                 <Typography as="boldSmall" element="p" className="text-black-70">
                   {optionType.attributes.presentation}:{' '}
-                  {selectedOptions[optionType.attributes.presentation]}
+                  {getSelectedOptionPresentation({ optionType, selectedVariant, product })}
                 </Typography>
               </div>
               <div className="flex gap-1">
-                {product.optionsMap[optionType.id].map((optionValue) => (
-                  <VariantPill
-                    key={optionValue.id}
-                    state={
-                      selectedOptions[optionType.id] === optionValue.id ? 'selected' : 'available'
-                    }
-                    text={optionValue.attributes.presentation}
-                    onClick={() => {
-                      setSelectedOptions((prev) => ({
-                        ...prev,
-                        [optionType.id]: optionValue.id
-                      }));
-                    }}
-                  />
-                ))}
+                {filterOptionValues({
+                  optionTypeId: optionType.id,
+                  product
+                }).map((option) => {
+                  return (
+                    <VariantPill
+                      key={option.id}
+                      state={getOptionState({
+                        optionValueId: option.id,
+                        selectedVariant,
+                        variants: product.variants
+                      })}
+                      text={option.attributes.presentation}
+                      onClick={() => handleOptionClick(option.id)}
+                    />
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -295,12 +325,19 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>(({ 
               <AddToCartButton />
             </form>
             <button className="ml-2" onClick={onPressFavorite}>
-              <Heart
-                className="h-12 w-12 rounded-full border-[1px] p-2"
-                color={isFavorite ? 'red' : 'black'}
-                fill={isFavorite ? 'red' : 'white'}
-              />
+              {isFavoriteLoading ? (
+                <div className="hidden h-12 w-12 items-center justify-center rounded-full border-[1px] md:flex">
+                  <LoadingSpinner size={18} />
+                </div>
+              ) : (
+                <Heart
+                  className="h-12 w-12 rounded-full border-[1px] p-2"
+                  color={isFavorite ? 'red' : 'black'}
+                  fill={isFavorite ? 'red' : 'white'}
+                />
+              )}
             </button>
+
             <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
           </div>
         </div>
@@ -321,7 +358,6 @@ function AddToCartButton() {
   );
 }
 
-type VariantState = 'selected' | 'available' | 'unavailable';
 type VairantPillParams = {
   state: VariantState;
   text?: string;

@@ -8,7 +8,11 @@ import { useToast } from '@/components/ui/use-toast';
 import { addItem, getCart } from '@/features/cart/actions';
 import { CartSheet, CartSheetRef } from '@/features/cart/components/cart-sheet';
 import { QuantityAdjustmentButtons } from '@/features/cart/components/quantity-adjustment-buttons';
-import { addToFavorite, removeFromFavorite } from '@/features/favorite-products/actions';
+import {
+  addToFavorite,
+  getIsFavorite,
+  removeFromFavorite
+} from '@/features/favorite-products/actions';
 import Rating from '@/features/review/components/rating';
 import {
   NewRegistrationMediationModal,
@@ -19,10 +23,15 @@ import { useIsPc } from '@/hooks/use-is-pc';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { BadgeAlert, Check, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useOptimistic, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { Product } from '../types';
+import { Product, VariantSchema, VariantState } from '../types';
+import {
+  filterOptionValues,
+  findNewVariant,
+  getOptionState,
+  getSelectedOptionPresentation
+} from '../utils/product';
 
 type Props = {
   product: Product;
@@ -33,77 +42,29 @@ export function ProductCartForm({ product, getCart }: Props) {
   const isPc = useIsPc();
   const { isLoggedIn } = useAuth();
   const { toast } = useToast();
-  const router = useRouter();
-  const path = usePathname();
-  const params = useSearchParams();
+
+  const { defaultVariant } = product;
+
+  const [selectedVariant, setSelectedVariant] = useState<VariantSchema | undefined>(defaultVariant);
 
   const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
 
-  const { defaultVariant } = product;
-  const variantId = params.get('variantId');
-  const selectedVariant =
-    product.variants.find((variant) => variant.id === variantId) || defaultVariant;
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const [isFavorite, setIsFavorite] = useOptimistic(
-    selectedVariant?.attributes.is_favorite ?? false,
-    (_, newState: boolean) => {
-      return newState;
-    }
-  );
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>(() => {
-    return (
-      selectedVariant?.relationships.option_values?.data?.reduce(
-        (acc, vov) => {
-          for (const optionType of product.optionTypes) {
-            if (product.optionsMap[optionType.id].some((o) => o.id === vov?.id)) {
-              acc[optionType.id] = vov!.id;
-            }
-          }
-          return acc;
-        },
-        {} as Record<string, string | null>
-      ) ?? {}
-    );
-  });
-  useEffect(() => {
-    //update selected variant when options change
-    const variant = product.variants.find((variant) => {
-      return (
-        variant.attributes.purchasable &&
-        variant.relationships.option_values?.data?.every((vov) => {
-          for (const optionType of product.optionTypes) {
-            if (selectedOptions[optionType.id] == vov?.id) {
-              return true;
-            }
-          }
-          return false;
-        })
-      );
-    });
-    if (variant) {
-      router.push(`${path}?variantId=${variant.id}`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedOptions]);
 
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+  // バリエーションごとのお気に入りの同期
   useEffect(() => {
-    //update selected options when variant changes
-    // this is for reactivity when unavailable variant combination is selected
-    setSelectedOptions((prev) => {
-      const newOptions = { ...prev };
-      if (selectedVariant) {
-        selectedVariant.relationships.option_values?.data?.forEach((vov) => {
-          for (const optionType of product.optionTypes) {
-            if (product.optionsMap[optionType.id].some((o) => o.id === vov?.id)) {
-              newOptions[optionType.id] = vov!.id;
-            }
-          }
-        });
-      }
-      return newOptions;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!selectedVariant) return;
+
+    const syncIsFavorite = async () => {
+      setIsFavoriteLoading(true);
+      const isFavorite = await getIsFavorite(selectedVariant?.id ?? '');
+      setIsFavorite(isFavorite);
+      setIsFavoriteLoading(false);
+    };
+    syncIsFavorite();
   }, [selectedVariant]);
 
   const [state, formAction] = useFormState(addItem, null);
@@ -156,7 +117,6 @@ export function ProductCartForm({ product, getCart }: Props) {
       });
   };
 
-  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
   const onPressFavorite = async () => {
     if (!isLoggedIn) {
       newRegistrationMediationModalRef.current?.open();
@@ -184,6 +144,22 @@ export function ProductCartForm({ product, getCart }: Props) {
       });
     }
     setIsFavoriteLoading(false);
+  };
+
+  const handleOptionClick = (clickedOptionId: string) => {
+    const newVariant = findNewVariant({
+      clickedOptionId,
+      product,
+      selectedVariant
+    });
+
+    if (newVariant) {
+      // 新しいバリアントが見つかった場合、selectedVariantを更新
+      setSelectedVariant(newVariant);
+    } else {
+      // 一致するバリアントが見つからない場合、選択をクリアする
+      setSelectedVariant(undefined);
+    }
   };
 
   return (
@@ -258,77 +234,24 @@ export function ProductCartForm({ product, getCart }: Props) {
             <div className="flex gap-1">
               <Typography as="boldSmall" element="p" className="text-black-70">
                 {optionType.attributes.presentation}:{' '}
-                {selectedOptions[optionType.attributes.presentation]}
+                {getSelectedOptionPresentation({ optionType, selectedVariant, product })}
               </Typography>
             </div>
             <div className="flex gap-1">
-              {product.optionsMap[optionType.id].map((optionValue) => {
-                const contextOptions = { ...selectedOptions, [optionType.id]: optionValue.id };
-                // if no variant satisfies the condition, the option is disabled
-                if (
-                  !product.variants.some(
-                    (variant) =>
-                      variant.attributes.purchasable &&
-                      variant.relationships.option_values?.data?.every((vov) => {
-                        for (const optionType of product.optionTypes) {
-                          if (contextOptions[optionType.id] == vov?.id) {
-                            return true;
-                          }
-                        }
-                        return false;
-                      })
-                  )
-                ) {
-                  return (
-                    <VariantPill
-                      key={optionValue.id}
-                      state="unavailable"
-                      text={optionValue.attributes.presentation}
-                      onClick={() => {
-                        //if any other combination allows this option, select it
-                        const variant = product.variants.find((variant) => {
-                          console.log('Checking variant: ', variant);
-                          return (
-                            variant.attributes.purchasable &&
-                            variant.relationships.option_values?.data?.some(
-                              (vov) => vov?.id === optionValue.id
-                            )
-                          );
-                        });
-                        console.log(variant);
-                        if (variant) {
-                          router.push(`${path}?variantId=${variant.id}`);
-                        }
-                      }}
-                    />
-                  );
-                }
-                if (selectedOptions[optionType.id] === optionValue.id) {
-                  return (
-                    <VariantPill
-                      key={optionValue.id}
-                      state="selected"
-                      text={optionValue.attributes.presentation}
-                      onClick={() => {
-                        setSelectedOptions((prev) => ({
-                          ...prev,
-                          [optionType.id]: null
-                        }));
-                      }}
-                    />
-                  );
-                }
+              {filterOptionValues({
+                optionTypeId: optionType.id,
+                product
+              }).map((option) => {
                 return (
                   <VariantPill
-                    key={optionValue.id}
-                    state="available"
-                    text={optionValue.attributes.presentation}
-                    onClick={() => {
-                      setSelectedOptions((prev) => ({
-                        ...prev,
-                        [optionType.id]: optionValue.id
-                      }));
-                    }}
+                    key={option.id}
+                    state={getOptionState({
+                      optionValueId: option.id,
+                      selectedVariant,
+                      variants: product.variants
+                    })}
+                    text={option.attributes.presentation}
+                    onClick={() => handleOptionClick(option.id)}
                   />
                 );
               })}
@@ -420,7 +343,6 @@ function AddToCartButton() {
   );
 }
 
-type VariantState = 'selected' | 'available' | 'unavailable';
 type VairantPillParams = {
   state: VariantState;
   text?: string;
