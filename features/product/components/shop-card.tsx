@@ -37,7 +37,7 @@ export async function ShopCard({ vendorId }: Props) {
           <Link href={`/vendors/${vendor.id}`}>
             <Button className="hidden h-[40px] w-[211px] items-center border border-bibinBlue-100 bg-white-base p-[8px] md:block">
               <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
-                全ての商品を見る({vendor.relationships.products?.data?.length})
+                全ての商品を見る({vendor.attributes.available_products_count || 0})
               </Typography>
             </Button>
           </Link>
@@ -46,7 +46,7 @@ export async function ShopCard({ vendorId }: Props) {
       <Link href={`/vendors/${vendor.id}`}>
         <Button className="flex h-[40px] w-full items-center border border-bibinBlue-100 bg-white-base p-[8px] md:hidden">
           <Typography as="boldSmall" element="p" className="text-bibinBlue-100">
-            全ての商品を見る({vendor.relationships.products?.data?.length})
+            全ての商品を見る({vendor.attributes.available_products_count || 0})
           </Typography>
         </Button>
       </Link>

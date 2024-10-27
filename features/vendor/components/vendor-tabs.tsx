@@ -18,7 +18,7 @@ type VendorTabsProps = {
  * @returns JSX.Element
  */
 export default async function VendorTabs({ vendor, searchParams }: VendorTabsProps) {
-  const productsCount = vendor.relationships.products?.data?.length;
+  const productsCount = vendor.attributes.available_products_count || 0;
   const avgReview = vendor.attributes.stars;
 
   const tabs = [

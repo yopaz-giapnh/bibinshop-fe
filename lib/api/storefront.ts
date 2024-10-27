@@ -2396,6 +2396,7 @@ export interface components {
         reviews_count_five?: number;
         stars?: number;
         reviews_count?: number;
+        available_products_count?: number;
       };
       relationships: {
         /** @description List of Product Properties */
