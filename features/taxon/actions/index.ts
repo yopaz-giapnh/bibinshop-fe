@@ -14,7 +14,7 @@ export async function getTaxons(params?: TaxonsListParameters) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.taxons] } });
+      return fetch(request, { next: { tags: [TAGS.taxons] }, cache: 'no-store' });
     }
   });
 
@@ -39,7 +39,7 @@ export async function getRootTaxons(fields: string[] = ['']) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.taxons] } });
+      return fetch(request, { next: { tags: [TAGS.taxons] }, cache: 'no-store' });
     }
   });
 

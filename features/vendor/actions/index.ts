@@ -15,7 +15,7 @@ export async function getVendor(vendorId: string) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.vendors] } });
+      return fetch(request, { next: { tags: [TAGS.vendors] }, cache: 'no-store' });
     }
   });
 

@@ -31,7 +31,7 @@ export async function getReviews(params?: ReviewListParameters) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.reviews] } });
+      return fetch(request, { next: { tags: [TAGS.reviews] }, cache: 'no-store' });
     }
   });
 

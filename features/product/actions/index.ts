@@ -23,7 +23,7 @@ export async function getProducts(params?: ProductsListParameters) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.products] } });
+      return fetch(request, { next: { tags: [TAGS.products] }, cache: 'no-store' });
     }
   });
 
@@ -67,7 +67,7 @@ export async function getProduct(product_slug: string) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.products] } });
+      return fetch(request, { next: { tags: [TAGS.products] }, cache: 'no-store' });
     }
   });
 
@@ -94,7 +94,7 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.products] } });
+      return fetch(request, { next: { tags: [TAGS.products] }, cache: 'no-store' });
     }
   });
 
@@ -127,7 +127,7 @@ export async function getShippingMethods() {
       }
     },
     fetch: (request) => {
-      return fetch(request, { next: { revalidate: 86400, tags: [TAGS.shippingMethods] } });
+      return fetch(request, { next: { tags: [TAGS.shippingMethods] }, cache: 'no-store' });
     }
   });
 
