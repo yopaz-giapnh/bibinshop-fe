@@ -14,7 +14,6 @@ type Props = {
 export function ApplyCouponButton({ getCoupons }: Props) {
   const couponSheetRef = useRef<CouponSheetRef>(null);
   const { activeCoupon } = useCoupon();
-  console.log('activeCoupon', !activeCoupon);
 
   return (
     <>

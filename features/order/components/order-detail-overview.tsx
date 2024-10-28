@@ -1,14 +1,6 @@
 'use client';
 import { Typography } from '@/components/ui/typography';
 import { CartSchema } from '@/features/cart/types';
-import {
-  convertNumberToCurrency,
-  displayCouponPromoTotal,
-  displayTotal
-} from '@/features/cart/utils';
-import { useCoupon } from '@/features/coupon/components/coupon-ctx';
-import { usePoint } from '@/features/point-balance/components/point-ctx';
-import { useEffect, useState } from 'react';
 import OrderDetailSection from './order-detail-section';
 
 type Props = {
@@ -16,14 +8,6 @@ type Props = {
 };
 
 export function OrderDetailOverview({ item }: Props) {
-  const { activeCoupon } = useCoupon();
-  const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
-  const { appliedPoints } = usePoint();
-
-  useEffect(() => {
-    setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(item, activeCoupon));
-  }, [activeCoupon, item, setCouponPromoTotal]);
-
   return (
     <OrderDetailSection title="注文概要">
       <div className="w-full md:w-1/2">
@@ -43,7 +27,7 @@ export function OrderDetailOverview({ item }: Props) {
             {item.attributes.display_item_total}
           </Typography>
         </div>
-        {!!couponPromoTotal && (
+        {!!item.attributes.coupons_total && (
           <div className="flex justify-between">
             <Typography
               as="caption"
@@ -57,11 +41,11 @@ export function OrderDetailOverview({ item }: Props) {
               element="p"
               className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
             >
-              {couponPromoTotal}
+              - {item.attributes.display_coupons_total}
             </Typography>
           </div>
         )}
-        {appliedPoints && (
+        {!!item.attributes.points && (
           <div className="flex justify-between">
             <Typography
               as="caption"
@@ -75,7 +59,7 @@ export function OrderDetailOverview({ item }: Props) {
               element="p"
               className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
             >
-              -{convertNumberToCurrency(Number(appliedPoints))}
+              - {item.attributes.display_points}
             </Typography>
           </div>
         )}
@@ -109,7 +93,7 @@ export function OrderDetailOverview({ item }: Props) {
             element="p"
             className="mt-[8px] text-[20px] text-black-90 md:mt-[16px]"
           >
-            {displayTotal(item, activeCoupon, appliedPoints)}
+            {item.attributes.display_total}
           </Typography>
         </div>
       </div>

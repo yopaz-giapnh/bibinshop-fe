@@ -5,7 +5,6 @@ import { Typography } from '@/components/ui/typography';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
 import { Check } from 'lucide-react';
 import { Cart } from '../types';
-import { displayCouponPromoTotal } from '../utils';
 import { CartItemGroupByShop } from './cart-item-group-by-shop';
 
 type Props = {
@@ -28,7 +27,7 @@ export function CartItemList({ cart }: Props) {
             >
               <span>クーポンを適用しています。</span>
               <span>
-                <span className="text-red-500">{displayCouponPromoTotal(cart, activeCoupon)}</span>
+                <span className="text-red-500">{cart.attributes.display_coupons_total}</span>
                 を節約しよう！
               </span>
             </Typography>

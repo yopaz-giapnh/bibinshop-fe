@@ -1,3 +1,4 @@
 export const COOKIES = {
-  checkoutCompletedOrderNumber: 'checkoutCompletedOrderNumber'
+  checkoutCompletedOrderNumber: 'checkoutCompletedOrderNumber',
+  activeCouponId: 'activeCouponId'
 };

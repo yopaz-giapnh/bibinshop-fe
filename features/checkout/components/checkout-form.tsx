@@ -3,8 +3,6 @@
 import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
 import { Cart } from '@/features/cart/types';
-import { subtotalAfterCouponAmount } from '@/features/cart/utils';
-import { useCoupon } from '@/features/coupon/components/coupon-ctx';
 import { getAccountCreditCards } from '@/features/payment/actions';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
@@ -38,7 +36,6 @@ export function CheckoutForm({
   const hasAddress = addresses.length > 0;
   const hasCreditCard = creditCards.length > 0;
   const canOrder = hasAddress && hasCreditCard;
-  const { activeCoupon } = useCoupon();
 
   return (
     <div className="mt-[16px] w-full md:mt-[22px] md:px-20">
@@ -81,7 +78,7 @@ export function CheckoutForm({
             {availablePoints !== 0 && (
               <CheckoutUsePointForm
                 availablePoints={availablePoints}
-                maxPoint={subtotalAfterCouponAmount(cart, activeCoupon)}
+                maxPoint={Number(cart.attributes.total)}
               />
             )}
           </div>

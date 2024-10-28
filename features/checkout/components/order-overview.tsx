@@ -4,16 +4,7 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
-import {
-  convertCurrencyToNumber,
-  convertNumberToCurrency,
-  displayCouponPromoTotal,
-  displayTotal
-} from '@/features/cart/utils';
-import { useCoupon } from '@/features/coupon/components/coupon-ctx';
-import { usePoint } from '@/features/point-balance/components/point-ctx';
 import { PointInfoPopover } from '@/features/point-balance/components/point-info-popover';
-import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateCheckout } from '../actions';
 import { useCheckout } from './checkout-ctx';
@@ -31,13 +22,6 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
     activeAddress && activeCreditCard
       ? formAction.bind(null, { address: activeAddress, creditCard: activeCreditCard })
       : undefined;
-  const { activeCoupon } = useCoupon();
-  const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
-  const { appliedPoints } = usePoint();
-
-  useEffect(() => {
-    setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(cart, activeCoupon));
-  }, [activeCoupon, cart, setCouponPromoTotal]);
 
   return (
     <>
@@ -50,24 +34,24 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
         </Typography>
       </div>
 
-      {!!couponPromoTotal && (
+      {!!cart.attributes.coupons_total && (
         <div className="mt-4 flex justify-between">
           <Typography as="caption" element="p" className="text-black-90">
             {`割引金額`}
           </Typography>
-          <Typography as="caption" element="p" className="text-black-90">
-            {couponPromoTotal}
+          <Typography as="caption" element="p" className="text-bibinBlue-100">
+            - {cart.attributes.display_coupons_total}
           </Typography>
         </div>
       )}
 
-      {appliedPoints && (
+      {!!cart.attributes.points && (
         <div className="mt-4 flex justify-between">
           <Typography as="caption" element="p" className="text-black-90">
             ポイント利用
           </Typography>
           <Typography as="caption" element="p" className="text-bibinBlue-100">
-            -{convertNumberToCurrency(Number(appliedPoints))}
+            - {cart.attributes.display_points}
           </Typography>
         </div>
       )}
@@ -77,23 +61,23 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
           小計
         </Typography>
         <Typography as="title" element="p" className="text-black-90">
-          {displayTotal(cart, activeCoupon, appliedPoints)}
+          {cart.attributes.display_total}
         </Typography>
       </div>
 
-      {/* TODO: @point BE接続時動作確認 */}
-      <div className="flex w-full items-center justify-center pt-2 md:pb-2">
-        <Typography as="caption" element="p" className="text-black-90">
-          獲得予定
-          <span className="text-bibinBlue-100">
-            {' '}
-            {convertCurrencyToNumber(displayTotal(cart, activeCoupon, appliedPoints)) *
-              pointsRate}{' '}
-          </span>
-          ポイント
-        </Typography>
-        <PointInfoPopover />
-      </div>
+      {!!cart.attributes.total && (
+        <div className="flex w-full items-center justify-center pt-2 md:pb-2">
+          <Typography as="caption" element="p" className="text-black-90">
+            獲得予定
+            <span className="text-bibinBlue-100">
+              {' '}
+              {Math.floor(Number(cart.attributes.total) * pointsRate)}{' '}
+            </span>
+            ポイント
+          </Typography>
+          <PointInfoPopover />
+        </div>
+      )}
 
       {canOrder && (
         <form
@@ -105,7 +89,7 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
               小計
             </Typography>
             <Typography as="title" element="p" className="text-black-90">
-              {displayTotal(cart, activeCoupon, appliedPoints)}
+              {cart.attributes.display_total}
             </Typography>
           </div>
 

@@ -2,7 +2,8 @@
 
 import { apiClient } from '@/config/api-client';
 import { isNotFound } from '@/utils/api';
-import { TAGS } from '../constants';
+import { cookies } from 'next/headers';
+import { COOKIES, TAGS } from '../constants';
 import { CouponSchema } from '../types';
 
 export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache } = {}) {
@@ -60,6 +61,8 @@ export async function cartAddCoupon(couponId: string) {
     if (error) {
       throw error;
     }
+    // Cookie にクーポン ID を保存
+    cookies().set(COOKIES.activeCouponId, couponId);
     return { success: true, message: 'クーポンが追加されました' };
   } catch (error) {
     return { success: false, message: 'クーポンの追加に失敗しました' };
@@ -74,6 +77,8 @@ export async function cartRemoveCoupon(couponId: string) {
     if (error) {
       throw error;
     }
+    // Cookie からクーポン ID を削除
+    cookies().delete(COOKIES.activeCouponId);
     return { success: true, message: 'クーポンが取り消されました' };
   } catch (error) {
     return { success: false, message: 'クーポンの取り消しに失敗しました' };

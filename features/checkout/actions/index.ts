@@ -133,6 +133,8 @@ export async function completeCheckout() {
     cookies().set(COOKIES.checkoutCompletedOrderNumber, cart.attributes.number, {
       maxAge: 60 * 10 // 10 minutes
     });
+    // 適応中のクーポンを削除
+    cookies().delete(COOKIES.activeCouponId);
   } catch (error) {
     console.error(error);
   } finally {

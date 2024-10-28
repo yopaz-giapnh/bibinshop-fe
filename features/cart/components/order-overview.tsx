@@ -3,12 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import type { getCoupons } from '@/features/coupon/actions';
 import { ApplyCouponButton } from '@/features/coupon/components/apply-coupon-button';
-import { useCoupon } from '@/features/coupon/components/coupon-ctx';
-import { usePoint } from '@/features/point-balance/components/point-ctx';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { Cart } from '../types';
-import { displayCouponPromoTotal, displayTotal } from '../utils';
 
 type Props = {
   cart: Cart;
@@ -16,14 +12,6 @@ type Props = {
 };
 
 export function OrderOverview({ cart, getCoupons }: Props) {
-  const { activeCoupon } = useCoupon();
-  const [couponPromoTotal, setCouponPromoTotal] = useState<string | null>(null);
-  const { appliedPoints } = usePoint();
-
-  useEffect(() => {
-    setCouponPromoTotal(activeCoupon && displayCouponPromoTotal(cart, activeCoupon));
-  }, [activeCoupon, cart, setCouponPromoTotal]);
-
   return (
     <>
       <div className="w-full rounded-[6px] bg-white-base px-4 py-[19px] shadow-base">
@@ -40,13 +28,13 @@ export function OrderOverview({ cart, getCoupons }: Props) {
           </Typography>
         </div>
 
-        {!!couponPromoTotal && (
+        {!!cart.attributes.coupons_total && (
           <div className="mt-4 flex justify-between">
             <Typography as="caption" element="p" className="text-black-90">
               {`割引額`}
             </Typography>
             <Typography as="caption" element="p" className="text-bibinBlue-100">
-              {couponPromoTotal}
+              - {cart.attributes.display_coupons_total}
             </Typography>
           </div>
         )}
@@ -56,7 +44,7 @@ export function OrderOverview({ cart, getCoupons }: Props) {
             小計
           </Typography>
           <Typography as="title" element="p" className="text-black-90">
-            {displayTotal(cart, activeCoupon, appliedPoints)}
+            {cart.attributes.display_total}
           </Typography>
         </div>
         <Link href="/checkout" passHref className="hidden md:block">
@@ -72,7 +60,7 @@ export function OrderOverview({ cart, getCoupons }: Props) {
             小計
           </Typography>
           <Typography as="title" element="p" className="ml-[4px] text-black-90">
-            {cart.attributes.display_item_total}
+            {cart.attributes.display_total}
           </Typography>
         </div>
         <div className="mt-2 flex items-center">
