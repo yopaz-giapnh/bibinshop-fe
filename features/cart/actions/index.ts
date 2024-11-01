@@ -102,7 +102,7 @@ export async function addItem(
 
     return {
       success: false,
-      message: isClientError(e) ? e.error : 'カートに追加に失敗しました'
+      message: isClientError(e) ? e.error : 'カートの追加に失敗しました'
     };
   }
 }
