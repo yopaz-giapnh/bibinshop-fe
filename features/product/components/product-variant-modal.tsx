@@ -240,10 +240,13 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
             {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (
               <>
                 <div className="relative flex items-center justify-center">
-                  <Typography as="small" element="p" className="text-black-20">
+                  <Typography
+                    as="small"
+                    element="p"
+                    className="text-black-20 line-through decoration-1"
+                  >
                     {formatedPrice(product.attributes.compare_at_price)}
                   </Typography>
-                  <div className="absolute h-[1px] w-full bg-black-20" />
                 </div>
                 <div className="flex items-center rounded-[4px] border border-lightRed px-1 py-[0.5px]">
                   <Typography as="xSmall" element="p" className="text-lightRed">
