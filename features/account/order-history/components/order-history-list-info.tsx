@@ -46,7 +46,8 @@ export default function OrderHistoryListInfo({ order }: OrderHistoryListInfoProp
         </div>
         <OrderHistoryInfoDetail label="注文番号:" value={order.attributes.number || ''} />
       </div>
-      {order.cancellationRequests.length > 0 && (
+      {/* TODO:キャンセル/返品に関する仕様決まり次第コメントイン */}
+      {/* {order.cancellationRequests.length > 0 && (
         <OrderHistoryInfoDetail
           label="キャンセル状況:"
           value={
@@ -57,7 +58,7 @@ export default function OrderHistoryListInfo({ order }: OrderHistoryListInfoProp
                 : 'キャンセル中'
           }
         />
-      )}
+      )} */}
       <Link
         href={`/account/orders/${order.attributes.number}`}
         passHref
