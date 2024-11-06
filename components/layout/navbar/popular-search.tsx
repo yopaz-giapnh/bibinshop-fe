@@ -5,8 +5,19 @@ import { getPopularSearches } from '@/features/search/actions';
 import { useEffect, useState } from 'react';
 import { useRecentSearches } from './use-recent-search';
 
-export function PopularSearch() {
+type Props = {
+  onSearch?: (text: string) => void;
+};
+
+export function PopularSearch({ onSearch }: Props) {
   const { search } = useRecentSearches();
+
+  const handleSearch = (text: string) => {
+    if (onSearch) {
+      onSearch(text);
+    }
+    search(text);
+  };
 
   const [popularSearches, setPopularSearches] = useState<
     Awaited<ReturnType<typeof getPopularSearches>>
@@ -30,7 +41,7 @@ export function PopularSearch() {
           <div
             key={idx}
             className="text-black/50 mx-1 my-1 flex w-fit min-w-fit flex-row items-center rounded-full bg-[#000000]/[0.08] p-1"
-            onClick={() => search(item.term)}
+            onClick={() => handleSearch(item.term)}
             style={{ cursor: 'pointer' }}
           >
             <Typography element="p" className="mx-1">

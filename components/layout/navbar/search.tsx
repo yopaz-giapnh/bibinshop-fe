@@ -23,6 +23,12 @@ export function Search({ isSignedIn }: Props) {
   const isPc = useIsPc();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const handleSearch = (text: string) => {
+    setSearchValue(text);
+    search(text);
+    setIsOpen(false);
+  };
+
   return (
     <Command
       className={
@@ -46,17 +52,17 @@ export function Search({ isSignedIn }: Props) {
         <CommandInput
           placeholder={isPc ? 'アゼライン酸10美容液' : 'アゼライン酸'}
           className="w-full rounded-[44px] border-2 border-bibinBlue-100"
+          value={searchValue}
           onFocus={() => setIsOpen(true)}
           onBlur={() => (isPc ? setTimeout(() => setIsOpen(false), 150) : () => {})}
           onValueChange={(v) => {
             setSearchValue(v);
           }}
           disableButton={searchValue === ''}
-          onHandleClick={() => search(searchValue)}
+          onHandleClick={() => handleSearch(searchValue)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && searchValue !== '') {
-              search(searchValue);
-              setIsOpen(false);
+              handleSearch(searchValue);
             }
           }}
         />
@@ -66,8 +72,8 @@ export function Search({ isSignedIn }: Props) {
           <SearchResuts text={searchValue} />
         ) : (
           <div className="px-4 pb-2">
-            <RecentSearch />
-            <PopularSearch />
+            <RecentSearch onSearch={handleSearch} />
+            <PopularSearch onSearch={handleSearch} />
           </div>
         )}
       </CommandList>
