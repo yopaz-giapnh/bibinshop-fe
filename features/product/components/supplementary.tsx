@@ -1,7 +1,5 @@
-import { ArrowBack } from '@/components/icons/arrow-back';
 import { FastShipping } from '@/components/icons/fast-shipping';
 import { Typography } from '@/components/ui/typography';
-import Link from 'next/link';
 import { getShippingMethods } from '../actions';
 import { Product } from '../types';
 import { getDisplayShippingCost } from '../utils';
@@ -37,13 +35,15 @@ export async function Supplementary({ product }: Props) {
         </div>
       </div>
 
-      <div className="mt-5 flex flex-col">
+      {/* TODO:キャンセル/返品に関する仕様決まり次第コメントイン */}
+      {/* <div className="mt-5 flex flex-col">
         <div className="flex items-center">
           <ArrowBack />
           <Typography as="boldSmall" element="p" className="ml-1 text-bibinBlue-100">
             返品
           </Typography>
         </div>
+
         <div className="mt-1 flex items-center">
           <Typography as="xSmall" element="p" className="text-black-50">
             キャンセル/返品/払い戻しに関する事項
@@ -54,7 +54,7 @@ export async function Supplementary({ product }: Props) {
             </Typography>
           </Link>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
