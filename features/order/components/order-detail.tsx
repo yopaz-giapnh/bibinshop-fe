@@ -19,7 +19,6 @@ import { cn } from '@/lib/utils';
 import { formatDateString } from '@/utils/date';
 import { useEffect, useRef, useState } from 'react';
 import { sortLineItemsByShipment } from '../utils';
-import { CancelOrderButton } from './order-cancel-button';
 import { OrderDetailAddress } from './order-detail-address';
 import { OrderDetailOverview } from './order-detail-overview';
 import { OrderDetailPaymentMethod } from './order-detail-payment-method';
@@ -36,7 +35,7 @@ async function fetchOrderData(orderNumber: string) {
   return order;
 }
 
-export function OrderDetail({ className, orderNumber, enableCancel }: Props) {
+export function OrderDetail({ className, orderNumber }: Props) {
   const [order, setOrder] = useState<NonNullable<
     Awaited<ReturnType<typeof fetchOrderData>>
   > | null>(null);
@@ -80,7 +79,8 @@ export function OrderDetail({ className, orderNumber, enableCancel }: Props) {
             >
               {`注文時間：${formatDateString(order.attributes.created_at)}`}
             </Typography>
-            {enableCancel && <CancelOrderButton order={order} />}
+            {/* TODO:キャンセル/返品に関する仕様決まり次第コメントイン */}
+            {/* {enableCancel && <CancelOrderButton order={order} />} */}
           </div>
         </OrderDetailSection>
         <OrderDetailOverview item={order} />
