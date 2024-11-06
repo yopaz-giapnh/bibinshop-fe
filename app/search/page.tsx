@@ -58,19 +58,14 @@ async function ProductOverviewWithPagination({ searchParams }: Props) {
     params.query['filter[taxons]'] = taxons;
   }
   const products = await getProducts(params);
-
-  // 在庫がある商品のみをフィルタリング
-  const availableProducts = products.data.filter(
-    (product) => product.attributes.total_on_hand && product.attributes.total_on_hand > 0
-  );
   const totalPages = products.meta.total_pages;
 
   return (
     <div className="flex h-full flex-col">
       <FiltersDisplay taxons={taxons} prices={prices} getTaxons={getTaxons()} />
-      {availableProducts.length ? (
+      {products.data.length ? (
         <div className="mt-6">
-          <ProductOverview products={availableProducts} columns={4} totalPages={totalPages} />
+          <ProductOverview products={products.data} columns={4} totalPages={totalPages} />
         </div>
       ) : (
         <div className="mt-6 flex h-full w-full items-center justify-center">

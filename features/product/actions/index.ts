@@ -90,7 +90,8 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
         'filter[taxons]': taxonIds.join(','),
         page: Number(page || 1),
         include:
-          'images,vendor,product_properties,default_variant,option_types,option_types.option_values'
+          'images,vendor,product_properties,default_variant,option_types,option_types.option_values',
+        'filter[in_stock]': true
       }
     },
     fetch: (request) => {
