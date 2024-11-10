@@ -28,7 +28,7 @@ export function CartItemList({ cart }: Props) {
               <span>クーポンを適用しています。</span>
               <span>
                 <span className="text-red-500">{cart.attributes.display_coupons_total}</span>
-                を節約しよう！
+                割引中！
               </span>
             </Typography>
           </div>
