@@ -83,7 +83,7 @@ export async function getProduct(product_slug: string) {
   });
 }
 
-export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
+export async function getProductsOnTaxons(taxonIds: string[], page?: string, sort_by?: string) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
     params: {
       query: {
@@ -91,7 +91,8 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string) {
         page: Number(page || 1),
         include:
           'images,vendor,product_properties,default_variant,option_types,option_types.option_values',
-        'filter[in_stock]': true
+        'filter[in_stock]': true,
+        ...(sort_by && { sort_by })
       }
     },
     fetch: (request) => {

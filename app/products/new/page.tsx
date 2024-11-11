@@ -13,7 +13,7 @@ export default async function Page({ searchParams }: { searchParams?: { page?: s
     return notFound();
   }
 
-  const products = await getProductsOnTaxons([newTaxonId], currentPage);
+  const products = await getProductsOnTaxons([newTaxonId], currentPage, 'newest-first');
   const totalPages = products.meta.total_pages;
 
   return (
