@@ -82,6 +82,10 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
   });
 
   useEffect(() => {
+    setSelectedQuantity(1);
+  }, [selectedVariant]);
+
+  useEffect(() => {
     if (!state) {
       return;
     }
@@ -265,14 +269,14 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
                 element="p"
                 className={`ml-2 ${!available ? 'text-red-500' : 'text-black-70'}`}
               >
-                {!available ? '完売' : `${product.attributes.total_on_hand}個販売`}
+                {!available ? '完売' : `${selectedVariant?.attributes.total_on_hand}個販売`}
               </Typography>
             )}
           </div>
 
           {product.optionTypes.map((optionType) => (
             <div key={optionType.id}>
-              <div className="flex gap-1">
+              <div className="flex gap-1 pb-[8px]">
                 <Typography as="boldSmall" element="p" className="text-black-70">
                   {optionType.attributes.presentation}:{' '}
                   {getSelectedOptionPresentation({ optionType, selectedVariant, product })}

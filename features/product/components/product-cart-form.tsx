@@ -74,6 +74,10 @@ export function ProductCartForm({ product, getCart }: Props) {
   });
 
   useEffect(() => {
+    setSelectedQuantity(1);
+  }, [selectedVariant]);
+
+  useEffect(() => {
     if (!state) {
       return;
     }
@@ -234,7 +238,7 @@ export function ProductCartForm({ product, getCart }: Props) {
 
         {product.optionTypes.map((optionType) => (
           <div key={optionType.id}>
-            <div className="flex gap-1">
+            <div className="flex gap-1 pb-[8px]">
               <Typography as="boldSmall" element="p" className="text-black-70">
                 {optionType.attributes.presentation}:{' '}
                 {getSelectedOptionPresentation({ optionType, selectedVariant, product })}
