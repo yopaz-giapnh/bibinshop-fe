@@ -181,8 +181,7 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
       // 新しいバリアントが見つかった場合、selectedVariantを更新
       setSelectedVariant(newVariant);
     } else {
-      // 一致するバリアントが見つからない場合、選択をクリアする
-      setSelectedVariant(undefined);
+      return;
     }
   };
 
@@ -378,10 +377,6 @@ function VariantPill({ state, text, onClick }: VairantPillParams) {
           className="mx-1 flex h-8 items-center whitespace-nowrap rounded-full bg-[#000000]/5 p-2 text-[#000000]/20"
           element="div"
           as="small"
-          style={{
-            cursor: 'pointer'
-          }}
-          onClick={onClick}
         >
           {text}
         </Typography>
