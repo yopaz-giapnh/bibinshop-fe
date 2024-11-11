@@ -68,9 +68,16 @@ export async function getFavorites(page?: number) {
           return null;
         }
 
+        const productSpecificIncluded = productIncluded?.filter((include) => {
+          if (isImageSchema(include)) {
+            return product.relationships.images?.data?.some((img) => img?.id === include.id);
+          }
+          return true;
+        });
+
         return reshapeProduct({
           product: product as ProductSchema,
-          productIncluded: productIncluded as ProductIncludes[]
+          productIncluded: productSpecificIncluded as ProductIncludes[]
         });
       })
       .filter(Boolean) as Product[],
