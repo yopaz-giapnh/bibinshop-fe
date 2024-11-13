@@ -5,6 +5,7 @@ import type { getCoupons } from '@/features/coupon/actions';
 import { ApplyCouponButton } from '@/features/coupon/components/apply-coupon-button';
 import Link from 'next/link';
 import { Cart } from '../types';
+import { calculateOnlyProductsTotal } from '../utils/calculate-only-products-total';
 
 type Props = {
   cart: Cart;
@@ -43,8 +44,11 @@ export function OrderOverview({ cart, getCoupons }: Props) {
           <Typography as="caption" element="p" className="text-black-90">
             小計
           </Typography>
-          <Typography as="title" element="p" className="text-black-90">
-            {cart.attributes.display_total}
+          <Typography as="title" element="p" className="ml-[4px] text-black-90">
+            {calculateOnlyProductsTotal(
+              cart.attributes.total || '',
+              cart.attributes.ship_total || ''
+            )}
           </Typography>
         </div>
         <Link href="/checkout" passHref className="hidden md:block">
@@ -60,7 +64,10 @@ export function OrderOverview({ cart, getCoupons }: Props) {
             小計
           </Typography>
           <Typography as="title" element="p" className="ml-[4px] text-black-90">
-            {cart.attributes.display_total}
+            {calculateOnlyProductsTotal(
+              cart.attributes.total || '',
+              cart.attributes.ship_total || ''
+            )}
           </Typography>
         </div>
         <div className="mt-2 flex items-center">
