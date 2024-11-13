@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
+import { calculateOnlyProductsTotal } from '@/features/cart/utils/calculate-only-products-total';
 import { PointInfoPopover } from '@/features/point-balance/components/point-info-popover';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateCheckout } from '../actions';
@@ -60,8 +61,11 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
         <Typography as="caption" element="p" className="text-black-90">
           小計
         </Typography>
-        <Typography as="title" element="p" className="text-black-90">
-          {cart.attributes.display_total}
+        <Typography as="title" element="p" className="ml-[4px] text-black-90">
+          {calculateOnlyProductsTotal(
+            cart.attributes.total || '',
+            cart.attributes.ship_total || ''
+          )}
         </Typography>
       </div>
 
@@ -85,11 +89,14 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
           className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between border-t-[1px] bg-white-base p-[8px] px-[16px] md:hidden"
         >
           <div className="flex w-1/2 items-center">
-            <Typography as="caption" element="p" className="mr-[4px] text-black-90">
+            <Typography as="caption" element="p" className="text-black-90">
               小計
             </Typography>
-            <Typography as="title" element="p" className="text-black-90">
-              {cart.attributes.display_total}
+            <Typography as="title" element="p" className="ml-[4px] text-black-90">
+              {calculateOnlyProductsTotal(
+                cart.attributes.total || '',
+                cart.attributes.ship_total || ''
+              )}
             </Typography>
           </div>
 
