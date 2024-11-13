@@ -42,10 +42,14 @@ export function CouponProvider(props: React.PropsWithChildren) {
             setActiveCoupon(savedCoupon);
           } else {
             Cookies.remove(COOKIES.activeCouponId);
+            setActiveCoupon(null);
           }
+        } else {
+          setActiveCoupon(null);
         }
       } catch (e) {
         console.error('Error initializing coupons:', e);
+        setActiveCoupon(null);
       }
     };
 
