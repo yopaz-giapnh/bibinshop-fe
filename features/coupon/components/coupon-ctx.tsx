@@ -1,5 +1,7 @@
+import Cookies from 'js-cookie';
 import React from 'react';
-import { cartAddCoupon, cartRemoveCoupon } from '../actions';
+import { cartAddCoupon, cartRemoveCoupon, getCoupons } from '../actions';
+import { COOKIES } from '../constants';
 import { CouponSchema } from '../types';
 
 export const CouponContext = React.createContext<{
@@ -28,31 +30,31 @@ export function CouponProvider(props: React.PropsWithChildren) {
 
   // クーポン一覧の取得とCookieからの状態復元(ブラウザをリロードされた時用)
   // TODO: 現状、アクティブクーポンの取得の API がないためこの方法で実装しています
-  // React.useEffect(() => {
-  //   const initializeCoupons = async () => {
-  //     try {
-  //       const fetchedCoupons = await getCoupons();
-  //       const savedCouponId = Cookies.get(COOKIES.activeCouponId);
+  React.useEffect(() => {
+    const initializeCoupons = async () => {
+      try {
+        const fetchedCoupons = await getCoupons();
+        const savedCouponId = Cookies.get(COOKIES.activeCouponId);
 
-  //       if (savedCouponId) {
-  //         const savedCoupon = fetchedCoupons.find((coupon) => coupon.id === savedCouponId);
-  //         if (savedCoupon) {
-  //           setActiveCoupon(savedCoupon);
-  //         } else {
-  //           Cookies.remove(COOKIES.activeCouponId);
-  //           setActiveCoupon(null);
-  //         }
-  //       } else {
-  //         setActiveCoupon(null);
-  //       }
-  //     } catch (e) {
-  //       console.error('Error initializing coupons:', e);
-  //       setActiveCoupon(null);
-  //     }
-  //   };
+        if (savedCouponId) {
+          const savedCoupon = fetchedCoupons.find((coupon) => coupon.id === savedCouponId);
+          if (savedCoupon) {
+            setActiveCoupon(savedCoupon);
+          } else {
+            Cookies.remove(COOKIES.activeCouponId);
+            setActiveCoupon(null);
+          }
+        } else {
+          setActiveCoupon(null);
+        }
+      } catch (e) {
+        console.error('Error initializing coupons:', e);
+        setActiveCoupon(null);
+      }
+    };
 
-  //   initializeCoupons();
-  // }, []);
+    initializeCoupons();
+  }, []);
 
   const removeActiveCoupon = async () => {
     if (activeCoupon) {
