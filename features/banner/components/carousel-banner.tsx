@@ -56,10 +56,8 @@ export function CarouselBanner({ getBanners }: Props) {
           (banner) =>
             banner.linkUrl &&
             banner.imageUrl && (
-              // NOTE: "pl-[426px]は、カテゴリーメニューと同じ位置に設定"
               <CarouselItem
                 key={banner.id}
-                className="md:pl-[426px]"
                 style={{
                   backgroundColor: banner.backgroundColor
                 }}
@@ -70,7 +68,7 @@ export function CarouselBanner({ getBanners }: Props) {
                     alt={banner.title ?? 'banner'}
                     width={790}
                     height={370}
-                    className="hidden md:block"
+                    className="hidden w-full object-cover md:block"
                   />
                   <Image
                     src={banner.mobileImageUrl || banner.imageUrl}
