@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export function Menu() {
   return (
-    <div className="flex h-[114px] w-full items-center justify-center gap-5 bg-bibinBlue-100 pl-[16px] md:h-[194px] md:gap-16">
+    <div className="flex h-[114px] w-full items-center justify-center gap-5 bg-bibinBlue-100 pl-[16px] md:h-[124px] md:gap-16">
       <MenuItem href="/todo" icon={<Shipping />} label="配送について" />
       <Separator />
       <MenuItem href="/todo" icon={<Question />} label="サポート＆FAQ" />
