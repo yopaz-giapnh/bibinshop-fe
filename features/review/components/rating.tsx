@@ -62,7 +62,7 @@ export default function Rating({
   };
 
   return (
-    <div className="flex w-full items-center gap-2">
+    <div className="flex items-center gap-2">
       <div
         className="relative inline-block select-none items-center"
         style={{

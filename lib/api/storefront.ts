@@ -47,7 +47,7 @@ export interface paths {
   '/api/v2/storefront/account/profile': {
     /**
      * Create a User Profile
-     * @description Creates a new profile for the current user.
+     * @description Creates or updates a profile for the current user.
      */
     post: operations['create-user-profile'];
     /**
@@ -733,6 +733,124 @@ export interface paths {
      * @description Removes the specified "helpful" feedback from the review for the current user.
      */
     delete: operations['remove-review-feedback'];
+  };
+  '/api/v2/storefront/reviews/{review_id}/comments': {
+    /**
+     * レビューコメント一覧の取得
+     * @description 指定されたレビューに対するコメント一覧を取得します
+     */
+    get: {
+      parameters: {
+        query?: {
+          include?: components['parameters']['ReviewCommentIncludeParam'];
+          page?: components['parameters']['PageParam'];
+          per_page?: components['parameters']['PerPageParam'];
+        };
+        path: {
+          /** @description レビューID */
+          review_id: string;
+        };
+      };
+      responses: {
+        /** @description コメント一覧の取得に成功 */
+        200: {
+          content: {
+            'application/vnd.api+json': components['schemas']['ReviewCommentsList'];
+          };
+        };
+        404: components['responses']['NotFound'];
+      };
+    };
+    /**
+     * レビューコメントの投稿
+     * @description 指定されたレビューに対してコメントを投稿します
+     */
+    post: {
+      parameters: {
+        path: {
+          /** @description レビューID */
+          review_id: string;
+        };
+      };
+      requestBody: {
+        content: {
+          'application/vnd.api+json': {
+            review_comment?: components['schemas']['ReviewCommentPayload'];
+          };
+        };
+      };
+      responses: {
+        /** @description コメントの投稿に成功 */
+        200: {
+          content: {
+            'application/vnd.api+json': components['schemas']['ReviewComment'];
+          };
+        };
+        422: components['responses']['UnprocessableEntity'];
+      };
+    };
+    parameters: {
+      path: {
+        /** @description レビューID */
+        review_id: string;
+      };
+    };
+  };
+  '/api/v2/storefront/reviews/{review_id}/comments/{id}/feedbacks': {
+    /**
+     * コメントへの「参考になった」の追加
+     * @description 指定されたコメントに「参考になった」を追加します
+     */
+    post: {
+      parameters: {
+        path: {
+          /** @description レビューID */
+          review_id: string;
+          /** @description コメントID */
+          id: string;
+        };
+      };
+      responses: {
+        /** @description 「参考になった」の追加に成功 */
+        200: {
+          content: {
+            'application/vnd.api+json': components['schemas']['ReviewComment'];
+          };
+        };
+        404: components['responses']['NotFound'];
+      };
+    };
+    /**
+     * コメントへの「参考になった」の削除
+     * @description 指定されたコメントの「参考になった」を削除します
+     */
+    delete: {
+      parameters: {
+        path: {
+          /** @description レビューID */
+          review_id: string;
+          /** @description コメントID */
+          id: string;
+        };
+      };
+      responses: {
+        /** @description 「参考になった」の削除に成功 */
+        200: {
+          content: {
+            'application/vnd.api+json': components['schemas']['ReviewComment'];
+          };
+        };
+        404: components['responses']['NotFound'];
+      };
+    };
+    parameters: {
+      path: {
+        /** @description レビューID */
+        review_id: string;
+        /** @description コメントID */
+        id: string;
+      };
+    };
   };
   '/api/v2/storefront/shipping_methods': {
     /**
@@ -2462,9 +2580,21 @@ export interface components {
         rating?: number;
         /** @example Doe */
         review?: string | null;
+        feedback_reviews_count?: number;
+        review_comments_count?: number;
         created_at?: components['schemas']['Timestamp'];
         /** @example 1 */
         feedback_id?: string | null;
+        /** @description 使用感（テクスチャー、塗り心地）の評価 */
+        texture_rating?: number;
+        /** @description 仕上がり（見た目、フィット感）の評価 */
+        finish_rating?: number;
+        /** @description 効果実感（期待した効果が得られたか）の評価 */
+        effectiveness_rating?: number;
+        /** @description 持続性（効果や仕上がりの持続時間）の評価 */
+        longevity_rating?: number;
+        /** @description 使いやすさ（容器の使い勝手、操作性）の評価 */
+        usability_rating?: number;
       };
       relationships: {
         user?: {
@@ -2492,6 +2622,37 @@ export interface components {
           data?: components['schemas']['Relation'];
         };
       };
+    };
+    ReviewCommentPayload: {
+      /** @description コメント内容 */
+      content: string;
+    };
+    ReviewComment: {
+      data?: {
+        id: string;
+        /** @enum {string} */
+        type: 'review_comment';
+        attributes?: {
+          content?: string;
+          feedback_review_comments_count?: number;
+          /** Format: date-time */
+          created_at?: string;
+          helpful_by_current_user?: boolean;
+        };
+        relationships: {
+          user?: {
+            data?: components['schemas']['Relation'];
+          };
+          review?: {
+            data?: components['schemas']['Relation'];
+          };
+        };
+      };
+    };
+    ReviewCommentsList: {
+      data?: components['schemas']['ReviewComment'][];
+      meta?: components['schemas']['ListMeta'];
+      links?: components['schemas']['ListLinks'];
     };
     /**
      * Favorite
@@ -2526,16 +2687,18 @@ export interface components {
       | components['schemas']['Product']
       | components['schemas']['Variant']
       | components['schemas']['ProductIncludes'];
-    /**
-     * @example {
-     *   "product_id": 1,
-     *   "rating": 3,
-     *   "review": "細かいラメのザラつきは感じますが良い感じにキラキラしてて取れにくいし1回でツヤツヤしてます。"
-     * }
-     */
     ReviewPayload: {
       product_id: string;
-      rating: number;
+      /** @description 使用感（テクスチャー、塗り心地）の評価 */
+      texture_rating: number;
+      /** @description 仕上がり（見た目、フィット感）の評価 */
+      finish_rating: number;
+      /** @description 効果実感（期待した効果が得られたか）の評価 */
+      effectiveness_rating: number;
+      /** @description 持続性（効果や仕上がりの持続時間）の評価 */
+      longevity_rating: number;
+      /** @description 使いやすさ（容器の使い勝手、操作性）の評価 */
+      usability_rating: number;
       review?: string;
     };
     /** Review Includes */
@@ -3542,6 +3705,8 @@ export interface components {
     VendorIncludeParam?: string;
     /** @example user,product */
     ReviewIncludeParam?: string;
+    /** @example user,review */
+    ReviewCommentIncludeParam?: string;
     /**
      * @description Specify the fields you would like returned in the response body. [More information](https://jsonapi.org/format/#fetching-sparse-fieldsets).
      * @example rating,review
@@ -3674,7 +3839,7 @@ export interface operations {
   };
   /**
    * Create a User Profile
-   * @description Creates a new profile for the current user.
+   * @description Creates or updates a profile for the current user.
    */
   'create-user-profile': {
     requestBody: {

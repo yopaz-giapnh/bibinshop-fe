@@ -2,13 +2,15 @@
 
 import { apiClient } from '@/config/api-client';
 import { getAccount } from '@/features/account/profile/actions';
+import { UserAvatarSchema } from '@/features/account/profile/types';
+import { isUserAvatarSchema } from '@/features/account/profile/utils';
 import { UserSchema } from '@/features/account/types';
 import { isUserSchema } from '@/features/account/utils';
 import { ImageSchema, ProductSchema } from '@/features/product/types';
 import { isImageSchema, isProductSchema } from '@/features/product/utils';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
-import { ReviewListParameters, ReviewSchema } from '../types';
+import { ReviewCommentSchema, ReviewListParameters, ReviewSchema } from '../types';
 
 export async function getMyReviews(params?: ReviewListParameters) {
   const user = await getAccount();
@@ -26,7 +28,7 @@ export async function getReviews(params?: ReviewListParameters) {
     params: {
       ...params,
       query: {
-        include: 'product.images,user.images',
+        include: 'product.images,user.images,user.avatars',
         ...params?.query
       }
     },
@@ -44,13 +46,15 @@ export async function getReviews(params?: ReviewListParameters) {
   const users = included?.filter(isUserSchema) || [];
   const products = included?.filter(isProductSchema) || [];
   const images = included?.filter(isImageSchema) || [];
+  const avatars = included?.filter(isUserAvatarSchema) || [];
 
   return {
     data: reshapeReviews({
       reviews,
       users,
       products,
-      images
+      images,
+      avatars
     }),
     meta
   };
@@ -60,16 +64,19 @@ function reshapeReviews({
   reviews,
   users,
   products,
-  images
+  images,
+  avatars
 }: {
   reviews: ReviewSchema[];
   users: UserSchema[];
   products: ProductSchema[];
   images: ImageSchema[];
+  avatars: UserAvatarSchema[];
 }) {
   const userMap = new Map(users.map((user) => [user.id, user]));
   const productMap = new Map(products.map((product) => [product.id, product]));
   const imageMap = new Map(images.map((image) => [image.id, image]));
+  const avatarMap = new Map(avatars.map((avatar) => [avatar.id, avatar]));
 
   return reviews.map((review) => {
     const user = review.relationships.user?.data?.id
@@ -80,13 +87,30 @@ function reshapeReviews({
       : undefined;
     const images = product
       ? product.relationships.images?.data
-          ?.map((image) => imageMap.get(image?.id || ''))
+          ?.map((image: ImageSchema) => imageMap.get(image?.id || ''))
           .filter(isImageSchema) || []
       : [];
 
+    const userAvatars = user?.relationships?.avatars?.data || [];
+    const avatar = userAvatars.length > 0 ? avatarMap.get(userAvatars[0].id) : undefined;
+
+    const avatarUrl = avatar
+      ? avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url
+      : undefined;
+
     return {
       ...review,
-      user,
+      user: user
+        ? {
+            ...user,
+            avatar: avatar
+              ? {
+                  ...avatar,
+                  url: avatarUrl
+                }
+              : undefined
+          }
+        : undefined,
       product,
       images
     };
@@ -214,13 +238,16 @@ async function updateReview({
 
 export async function addReviewFeedback({ review_id }: { review_id: string }) {
   try {
-    const { error } = await apiClient.POST('/api/v2/storefront/reviews/{review_id}/feedbacks', {
-      params: {
-        path: {
-          review_id
+    const { data, error } = await apiClient.POST(
+      '/api/v2/storefront/reviews/{review_id}/feedbacks',
+      {
+        params: {
+          path: {
+            review_id
+          }
         }
       }
-    });
+    );
 
     if (error) {
       throw error;
@@ -229,7 +256,8 @@ export async function addReviewFeedback({ review_id }: { review_id: string }) {
     revalidateTag(TAGS.reviews);
     return {
       success: true,
-      message: 'フィードバックを追加しました'
+      message: 'フィードバックを追加しました',
+      data: data?.data
     };
   } catch (error) {
     console.error('フィードバック追加エラー:', error);
@@ -265,6 +293,194 @@ export async function removeReviewFeedback({ review_id, id }: { review_id: strin
     };
   } catch (error) {
     console.error('フィードバック削除エラー:', error);
+    return {
+      success: false,
+      message: 'フィードバックの削除に失敗しました'
+    };
+  }
+}
+
+export async function addReviewComment({
+  review_id,
+  content
+}: {
+  review_id: string;
+  content: string;
+}) {
+  try {
+    const { error } = await apiClient.POST('/api/v2/storefront/reviews/{review_id}/comments', {
+      params: {
+        path: {
+          review_id
+        }
+      },
+      body: {
+        review_comment: {
+          content
+        }
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    revalidateTag(TAGS.reviews);
+    return {
+      success: true,
+      message: 'コメントを投稿しました'
+    };
+  } catch (error) {
+    console.error('Comment post error:', error);
+
+    if (typeof error === 'object' && error !== null && 'error' in error) {
+      if (error.error === 'URLを含むコメントは投稿できません') {
+        return {
+          success: false,
+          message: 'URLを含むコメントは投稿できません'
+        };
+      }
+    }
+
+    return {
+      success: false,
+      message: 'コメントの投稿に失敗しました'
+    };
+  }
+}
+
+export async function getReviewComments({
+  review_id,
+  page = 1,
+  per_page = 10
+}: {
+  review_id: string;
+  page?: number;
+  per_page?: number;
+}) {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/reviews/{review_id}/comments', {
+    params: {
+      path: {
+        review_id
+      },
+      query: {
+        page,
+        per_page,
+        include: 'user,user.avatars'
+      }
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const users = data.included?.filter(isUserSchema) || [];
+  const avatars = data.included?.filter(isUserAvatarSchema) || [];
+
+  const reshapedComments = data?.data?.map((comment: ReviewCommentSchema) => {
+    const userId = comment?.relationships?.user?.data?.id;
+    const user = users.find((u: UserSchema) => u.id === userId);
+
+    const userAvatars = user?.relationships?.avatars?.data || [];
+    const avatar =
+      userAvatars.length > 0
+        ? avatars.find((a: UserAvatarSchema) => a.id === userAvatars[0].id)
+        : undefined;
+
+    const avatarUrl = avatar
+      ? avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url
+      : undefined;
+
+    return {
+      ...comment,
+      user: user
+        ? {
+            ...user,
+            avatar: {
+              url: avatarUrl || '/placeholder-product-image.png'
+            }
+          }
+        : undefined
+    };
+  });
+
+  return {
+    data: reshapedComments,
+    meta: data.meta,
+    links: data.links
+  };
+}
+
+export async function addCommentFeedback({
+  review_id,
+  comment_id
+}: {
+  review_id: string;
+  comment_id: string;
+}) {
+  try {
+    const { error } = await apiClient.POST(
+      '/api/v2/storefront/reviews/{review_id}/comments/{id}/feedbacks',
+      {
+        params: {
+          path: {
+            review_id,
+            id: comment_id
+          }
+        }
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    revalidateTag(TAGS.reviews);
+    return {
+      success: true,
+      message: 'フィードバックを追加しました'
+    };
+  } catch (error) {
+    console.error('Comment feedback add error:', error);
+    return {
+      success: false,
+      message: 'フィードバックの追加に失敗しました'
+    };
+  }
+}
+
+export async function removeCommentFeedback({
+  review_id,
+  comment_id
+}: {
+  review_id: string;
+  comment_id: string;
+}) {
+  try {
+    const { error } = await apiClient.DELETE(
+      '/api/v2/storefront/reviews/{review_id}/comments/{id}/feedbacks',
+      {
+        params: {
+          path: {
+            review_id,
+            id: comment_id
+          }
+        }
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+    revalidateTag(TAGS.reviews);
+
+    return {
+      success: true,
+      message: 'フィードバックを削除しました'
+    };
+  } catch (error) {
+    console.error('Comment feedback remove error:', error);
     return {
       success: false,
       message: 'フィードバックの削除に失敗しました'

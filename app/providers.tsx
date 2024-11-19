@@ -3,6 +3,7 @@
 import RegistrationCompleteModal from '@/features/auth/components/registration-complete-modal';
 import { CouponProvider } from '@/features/coupon/components/coupon-ctx';
 import { PointProvider } from '@/features/point-balance/components/point-ctx';
+import { FeedbackProvider } from '@/features/review/contexts/feedback-context';
 import { SessionProvider } from 'next-auth/react';
 import { PropsWithChildren, useEffect } from 'react';
 
@@ -24,10 +25,10 @@ export function Providers({ children }: PropsWithChildren) {
     <SessionProvider>
       <CouponProvider>
         <PointProvider>
-          <>
+          <FeedbackProvider>
             {children}
             <RegistrationCompleteModal />
-          </>
+          </FeedbackProvider>
         </PointProvider>
       </CouponProvider>
     </SessionProvider>
