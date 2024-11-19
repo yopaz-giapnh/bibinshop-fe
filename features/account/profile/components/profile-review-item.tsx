@@ -79,6 +79,10 @@ export function ProfileReviewItem({ review }: ReviewProps) {
           ・{formatDateString(review.attributes.created_at)}
         </Typography>
       </div>
+      {/* TODO: プロパティ設定 */}
+      {/* <Typography as="bold" element="p" className="mt-[8px] text-[14px] text-black-90">
+        色： TODO: プロパティ
+      </Typography> */}
       <Typography
         as="xSmall"
         element="p"
