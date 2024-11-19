@@ -10,7 +10,7 @@ import { ImageSchema, ProductSchema } from '@/features/product/types';
 import { isImageSchema, isProductSchema } from '@/features/product/utils';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
-import { ReviewCommentSchema, ReviewListParameters, ReviewSchema } from '../types';
+import { ReviewListParameters, ReviewSchema } from '../types';
 
 export async function getMyReviews(params?: ReviewListParameters) {
   const user = await getAccount();
@@ -87,32 +87,19 @@ function reshapeReviews({
       : undefined;
     const images = product
       ? product.relationships.images?.data
-          ?.map((image: ImageSchema) => imageMap.get(image?.id || ''))
+          ?.map((image) => imageMap.get(image?.id || ''))
           .filter(isImageSchema) || []
       : [];
 
     const userAvatars = user?.relationships?.avatars?.data || [];
     const avatar = userAvatars.length > 0 ? avatarMap.get(userAvatars[0].id) : undefined;
 
-    const avatarUrl = avatar
-      ? avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url
-      : undefined;
-
     return {
       ...review,
-      user: user
-        ? {
-            ...user,
-            avatar: avatar
-              ? {
-                  ...avatar,
-                  url: avatarUrl
-                }
-              : undefined
-          }
-        : undefined,
+      user,
       product,
-      images
+      images,
+      avatar
     };
   });
 }
@@ -167,7 +154,12 @@ async function writeReview({
       body: {
         review: {
           product_id: productId,
-          rating,
+          // TODO: 評価項目を修正する
+          texture_rating: rating,
+          finish_rating: rating,
+          effectiveness_rating: rating,
+          longevity_rating: rating,
+          usability_rating: rating,
           review
         }
       }
@@ -207,7 +199,12 @@ async function updateReview({
       body: {
         review: {
           product_id: productId,
-          rating,
+          // TODO: 評価項目を修正する
+          texture_rating: rating,
+          finish_rating: rating,
+          effectiveness_rating: rating,
+          longevity_rating: rating,
+          usability_rating: rating,
           review
         }
       },
@@ -254,6 +251,7 @@ export async function addReviewFeedback({ review_id }: { review_id: string }) {
     }
 
     revalidateTag(TAGS.reviews);
+
     return {
       success: true,
       message: 'フィードバックを追加しました',
@@ -378,15 +376,13 @@ export async function getReviewComments({
   const users = data.included?.filter(isUserSchema) || [];
   const avatars = data.included?.filter(isUserAvatarSchema) || [];
 
-  const reshapedComments = data?.data?.map((comment: ReviewCommentSchema) => {
+  const reshapedComments = data?.data?.map((comment) => {
     const userId = comment?.relationships?.user?.data?.id;
-    const user = users.find((u: UserSchema) => u.id === userId);
+    const user = users.find((u) => u.id === userId);
 
     const userAvatars = user?.relationships?.avatars?.data || [];
     const avatar =
-      userAvatars.length > 0
-        ? avatars.find((a: UserAvatarSchema) => a.id === userAvatars[0].id)
-        : undefined;
+      userAvatars.length > 0 ? avatars.find((a) => a.id === userAvatars[0].id) : undefined;
 
     const avatarUrl = avatar
       ? avatar.attributes?.styles?.[avatar.attributes.styles.length - 1]?.url

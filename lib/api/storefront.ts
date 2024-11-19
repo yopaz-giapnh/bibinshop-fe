@@ -2628,29 +2628,28 @@ export interface components {
       content: string;
     };
     ReviewComment: {
-      data?: {
-        id: string;
-        /** @enum {string} */
-        type: 'review_comment';
-        attributes?: {
-          content?: string;
-          feedback_review_comments_count?: number;
-          /** Format: date-time */
-          created_at?: string;
-          helpful_by_current_user?: boolean;
+      id: string;
+      /** @enum {string} */
+      type: 'review_comment';
+      attributes?: {
+        content?: string;
+        feedback_review_comments_count?: number;
+        /** Format: date-time */
+        created_at?: string;
+        helpful_by_current_user?: boolean;
+      };
+      relationships: {
+        user?: {
+          data?: components['schemas']['Relation'];
         };
-        relationships: {
-          user?: {
-            data?: components['schemas']['Relation'];
-          };
-          review?: {
-            data?: components['schemas']['Relation'];
-          };
+        review?: {
+          data?: components['schemas']['Relation'];
         };
       };
     };
     ReviewCommentsList: {
       data?: components['schemas']['ReviewComment'][];
+      included?: components['schemas']['ReviewCommentIncludes'][];
       meta?: components['schemas']['ListMeta'];
       links?: components['schemas']['ListLinks'];
     };
@@ -2687,6 +2686,11 @@ export interface components {
       | components['schemas']['Product']
       | components['schemas']['Variant']
       | components['schemas']['ProductIncludes'];
+    /** ReviewComment Includes */
+    ReviewCommentIncludes:
+      | components['schemas']['User']
+      | components['schemas']['Review']
+      | components['schemas']['UserAvatar'];
     ReviewPayload: {
       product_id: string;
       /** @description 使用感（テクスチャー、塗り心地）の評価 */
@@ -2702,10 +2706,13 @@ export interface components {
       review?: string;
     };
     /** Review Includes */
+    FeedbackReviewIncludes: components['schemas']['User'] | components['schemas']['Review'];
+    /** Review Includes */
     ReviewIncludes:
       | components['schemas']['User']
       | components['schemas']['Product']
-      | components['schemas']['Image'];
+      | components['schemas']['Image']
+      | components['schemas']['UserAvatar'];
     NotificationsList: components['schemas']['Notification'][];
     /**
      * Notification
@@ -3338,6 +3345,17 @@ export interface components {
         'application/vnd.api+json': {
           data: components['schemas']['Vendor'];
           included?: components['schemas']['VendorIncludes'][];
+        };
+      };
+    };
+    /** @description 200 Success - Returns an array of `feedback` objects. */
+    FeedbackReviewList: {
+      content: {
+        'application/vnd.api+json': {
+          data: components['schemas']['FeedbackReview'][];
+          included?: components['schemas']['FeedbackReviewIncludes'][];
+          meta: components['schemas']['ListMeta'];
+          links: components['schemas']['ListLinks'];
         };
       };
     };
@@ -5834,7 +5852,9 @@ export interface operations {
       /** @description Feedback successfully added */
       201: {
         content: {
-          'application/vnd.api+json': components['schemas']['FeedbackReview'];
+          'application/vnd.api+json': {
+            data?: components['schemas']['FeedbackReview'];
+          };
         };
       };
       403: components['responses']['Forbidden'];
