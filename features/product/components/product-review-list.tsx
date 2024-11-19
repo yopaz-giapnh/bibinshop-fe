@@ -1,71 +1,36 @@
-'use client';
-
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getReviews } from '@/features/review/actions';
-import {
-  AllReviewListModal,
-  AllReviewListModalRef
-} from '@/features/review/components/all-review-list-modal';
+import { AllReviewListModalWithButton } from '@/features/review/components/all-review-list-modal-with-button';
 import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
-import { SeeMoreReviewButton } from '@/features/review/components/see-more-review-button';
-import { Review } from '@/features/review/types';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense } from 'react';
 
 type Props = {
   productId: string;
 };
 
-export function ProductReviewList({ productId }: Props) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [reviewsCount, setReviewsCount] = useState(0);
-  const allReviewListModalRef = useRef<AllReviewListModalRef>(null);
-
-  useEffect(() => {
-    async function fetchReviews() {
-      try {
-        setIsLoading(true);
-        const fetchedReviews = await getReviews({
-          query: {
-            'filter[product_ids]': productId
-          }
-        });
-        setReviews(fetchedReviews.data);
-        setReviewsCount(fetchedReviews?.meta?.total_count ?? 0);
-      } finally {
-        setIsLoading(false);
-      }
+export async function ProductReviewList({ productId }: Props) {
+  const { data: reviews, meta } = await getReviews({
+    query: {
+      'filter[product_ids]': productId
     }
-    fetchReviews();
-  }, [productId]);
-
+  });
   const displayedReviews = reviews.slice(0, 3);
-
-  const handleSeeMoreClick = () => {
-    allReviewListModalRef.current?.open();
-  };
+  const reviewsCount = meta?.total_count ?? 0;
 
   return (
     <>
-      {isLoading ? (
-        <div className="flex justify-center py-4">
-          <LoadingSpinner />
-        </div>
-      ) : (
-        <>
-          <ReviewListWithAvator reviews={displayedReviews} />
-          {reviewsCount > 3 && (
-            <div className="mx-auto">
-              <SeeMoreReviewButton onClick={handleSeeMoreClick} />
-            </div>
-          )}
-          <AllReviewListModal
-            ref={allReviewListModalRef}
-            reviews={reviews}
-            reviewsCount={reviewsCount}
-          />
-        </>
-      )}
+      <Suspense fallback={<Loading />}>
+        <ReviewListWithAvator reviews={displayedReviews} />
+        <AllReviewListModalWithButton reviews={reviews} reviewsCount={reviewsCount} />
+      </Suspense>
     </>
+  );
+}
+
+function Loading() {
+  return (
+    <div className="flex justify-center py-4">
+      <LoadingSpinner />
+    </div>
   );
 }
