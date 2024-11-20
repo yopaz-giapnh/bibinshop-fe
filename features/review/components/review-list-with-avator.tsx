@@ -3,6 +3,11 @@
 import { Typography } from '@/components/ui/typography';
 import { formatDateString } from '@/utils/date';
 
+import {
+  NewRegistrationMediationModal,
+  NewRegistrationMediationModalRef
+} from '@/features/sns/components/new-registration-mediation-modal';
+import { useAuth } from '@/hooks/use-auth';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { Review } from '../types';
@@ -17,8 +22,26 @@ type Props = {
 };
 
 export function ReviewListWithAvator({ reviews }: Props) {
+  const { isLoggedIn } = useAuth();
+  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const { handleFeedbackToggle } = useReviewFeedback();
+
+  const handleReplyClick = (review: Review) => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
+    }
+    reviewCommentReplyModalRef.current?.open(review);
+  };
+
+  const handleFeedbackClick = (review?: Review) => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
+    }
+    handleFeedbackToggle(review);
+  };
 
   return (
     <div className="flex flex-col px-4 md:px-0">
@@ -75,13 +98,10 @@ export function ReviewListWithAvator({ reviews }: Props) {
                   {review.attributes.review}
                 </Typography>
                 <div className="mt-[16px] flex">
-                  <ReplyButton
-                    review={review}
-                    onClick={() => reviewCommentReplyModalRef.current?.open(review)}
-                  />
+                  <ReplyButton review={review} onClick={handleReplyClick} />
                   <FeedbackButton
                     isActive={!!review.attributes.feedback_id}
-                    onClick={() => handleFeedbackToggle(review)}
+                    onClick={handleFeedbackClick}
                     feedbackCount={review.attributes.feedback_reviews_count || 0}
                   />
                 </div>
@@ -91,6 +111,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
         })}
       </div>
       <ReviewCommentReplyModal ref={reviewCommentReplyModalRef} />
+      <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
     </div>
   );
 }

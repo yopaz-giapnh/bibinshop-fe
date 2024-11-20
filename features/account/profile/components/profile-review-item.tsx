@@ -11,6 +11,11 @@ import {
 } from '@/features/review/components/review-comment-reply-modal';
 import { Review } from '@/features/review/types';
 import { useReviewFeedback } from '@/features/review/utils';
+import {
+  NewRegistrationMediationModal,
+  NewRegistrationMediationModalRef
+} from '@/features/sns/components/new-registration-mediation-modal';
+import { useAuth } from '@/hooks/use-auth';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
 import { useRef } from 'react';
@@ -20,8 +25,26 @@ type ReviewProps = {
 };
 
 export function ProfileReviewItem({ review }: ReviewProps) {
+  const { isLoggedIn } = useAuth();
+  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const { handleFeedbackToggle } = useReviewFeedback();
+
+  const handleReplyClick = (review: Review) => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
+    }
+    reviewCommentReplyModalRef.current?.open(review);
+  };
+
+  const handleFeedbackClick = (review?: Review) => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
+    }
+    handleFeedbackToggle(review);
+  };
 
   return (
     <div>
@@ -66,18 +89,16 @@ export function ProfileReviewItem({ review }: ReviewProps) {
         </div>
       </div>
       <div className="mt-[16px] flex justify-start">
-        <ReplyButton
-          review={review}
-          onClick={() => reviewCommentReplyModalRef.current?.open(review)}
-        />
+        <ReplyButton review={review} onClick={handleReplyClick} />
         <FeedbackButton
           isActive={!!review.attributes.feedback_id}
-          onClick={handleFeedbackToggle}
+          onClick={handleFeedbackClick}
           className="flex items-center space-x-2"
           feedbackCount={review.attributes.feedback_reviews_count || 0}
         />
       </div>
       <ReviewCommentReplyModal ref={reviewCommentReplyModalRef} />
+      <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
     </div>
   );
 }
