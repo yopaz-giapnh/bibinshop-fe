@@ -31,10 +31,10 @@ export type ReviewCommentReplyModalRef = {
 export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_, ref) => {
   const { toast } = useToast();
   const {
-    feedbackStates,
-    feedbackCounts,
-    commentFeedbackStates,
-    commentFeedbackCounts,
+    feedback: {
+      reviews: { states: feedbackStates, counts: feedbackCounts },
+      comments: { states: commentFeedbackStates, counts: commentFeedbackCounts }
+    },
     initializeFeedback,
     initializeCommentFeedbacks,
     updateFeedbackState,
@@ -51,6 +51,10 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_
   const [review, setReview] = useState<Review | null>(null);
   const [replyText, setReplyText] = useState('');
   const [comments, setComments] = useState<ReviewCommentWithUser[]>([]);
+
+  const avatarUrl = review?.avatar
+    ? review.avatar.attributes?.styles?.[review.avatar.attributes.styles.length - 1]?.url
+    : undefined;
 
   // 無限スクロール処理
   useEffect(() => {
@@ -265,7 +269,7 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_
             <div className="flex w-full">
               <div className="mr-[8px] flex h-[40px] w-[40px] items-center justify-center rounded-[20px]">
                 <Image
-                  src={review.user?.avatar?.url || '/placeholder-product-image.png'}
+                  src={avatarUrl || '/placeholder-product-image.png'}
                   alt={review.user?.attributes.nickname ?? '匿名'}
                   width={40}
                   height={40}

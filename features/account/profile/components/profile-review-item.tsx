@@ -25,8 +25,9 @@ export function ProfileReviewItem({ review }: ReviewProps) {
   const { toast } = useToast();
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const {
-    feedbackStates,
-    feedbackCounts,
+    feedback: {
+      reviews: { states: feedbackStates, counts: feedbackCounts }
+    },
     initializeFeedback,
     updateFeedbackState,
     updateFeedbackCount

@@ -22,8 +22,9 @@ export function ReviewListWithAvator({ reviews }: Props) {
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const { toast } = useToast();
   const {
-    feedbackStates,
-    feedbackCounts,
+    feedback: {
+      reviews: { states: feedbackStates, counts: feedbackCounts }
+    },
     initializeFeedbacks,
     updateFeedbackState,
     updateFeedbackCount
