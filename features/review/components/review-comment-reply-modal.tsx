@@ -8,41 +8,23 @@ import { useToast } from '@/components/ui/use-toast';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import {
-  addCommentFeedback,
-  addReviewComment,
-  addReviewFeedback,
-  getReviewComments,
-  removeCommentFeedback,
-  removeReviewFeedback
-} from '../actions';
-import { useFeedback } from '../contexts/feedback-context';
+import { addReviewComment, getReviewComments } from '../actions';
 import { Review, ReviewCommentWithUser, ReviewCommentsListSchema } from '../types';
+import { useReviewFeedback } from '../utils';
 import { FeedbackButton } from './feedback-button';
 import Rating from './rating';
 import { ReviewCommentForm } from './review-comment-form';
 import { ReviewCommentListItem } from './review-comment-list-item';
 
 export type ReviewCommentReplyModalRef = {
+  review?: Review;
   open: (review: Review) => void;
   close: () => void;
 };
 
 export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_, ref) => {
   const { toast } = useToast();
-  const {
-    feedback: {
-      reviews: { states: feedbackStates, counts: feedbackCounts },
-      comments: { states: commentFeedbackStates, counts: commentFeedbackCounts }
-    },
-    initializeFeedback,
-    initializeCommentFeedbacks,
-    updateFeedbackState,
-    updateFeedbackCount,
-    updateCommentFeedbackState,
-    updateCommentFeedbackCount
-  } = useFeedback();
-
+  const { handleFeedbackToggle, handleCommentFeedbackToggle } = useReviewFeedback();
   const observerTarget = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -83,22 +65,6 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_
       }
     };
   }, [hasMore, isLoading, review, page]);
-
-  // フィードバックの初期化
-  useEffect(() => {
-    if (review) {
-      initializeFeedback(review);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [review]);
-
-  // コメントのフィードバックの初期化
-  useEffect(() => {
-    if (comments.length > 0) {
-      initializeCommentFeedbacks(comments);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comments]);
 
   // モーダル開閉時処理
   useImperativeHandle(ref, () => ({
@@ -144,6 +110,7 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_
     }
   };
 
+  // コメント投稿処理
   const handleSubmit = async () => {
     if (!review) return;
 
@@ -185,70 +152,10 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_
     }
   };
 
-  // レビューのフィードバックの処理
-  const handleFeedbackToggle = async () => {
-    if (!review) return;
-
-    const currentState = feedbackStates[review.id] || false;
-    const currentCount = feedbackCounts[review.id] || review.attributes.feedback_reviews_count || 0;
-
-    try {
-      if (currentState) {
-        const feedbackId = review.attributes.feedback_id;
-        if (feedbackId) {
-          const result = await removeReviewFeedback({ review_id: review.id, id: feedbackId });
-          if (result.success) {
-            review.attributes.feedback_id = undefined;
-            updateFeedbackState(review.id, false);
-            updateFeedbackCount(review.id, Math.max(0, currentCount - 1));
-            toast({ title: result.message });
-          }
-        }
-      } else {
-        const result = await addReviewFeedback({ review_id: review.id });
-        if (result.success && result.data?.id) {
-          review.attributes.feedback_id = result.data.id;
-          updateFeedbackState(review.id, true);
-          updateFeedbackCount(review.id, currentCount + 1);
-          toast({ title: result.message });
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling feedback:', error);
-    }
-  };
-
   // コメントのフィードバックの処理
-  const handleCommentFeedbackToggle = async (comment: ReviewCommentWithUser) => {
-    const currentState = commentFeedbackStates[comment.id] || false;
-    const newState = !currentState;
-    const currentCount = commentFeedbackCounts[comment.id] || 0;
-
-    try {
-      if (newState) {
-        const result = await addCommentFeedback({
-          review_id: review?.id || '',
-          comment_id: comment.id
-        });
-        if (result.success) {
-          updateCommentFeedbackState(comment.id, true);
-          updateCommentFeedbackCount(comment.id, currentCount + 1);
-          toast({ title: result.message });
-        }
-      } else {
-        const result = await removeCommentFeedback({
-          review_id: review?.id || '',
-          comment_id: comment.id
-        });
-        if (result.success) {
-          updateCommentFeedbackState(comment.id, false);
-          updateCommentFeedbackCount(comment.id, Math.max(0, currentCount - 1));
-          toast({ title: result.message });
-        }
-      }
-    } catch (error) {
-      console.error('Comment feedback toggle error:', error);
-    }
+  const handleCommentFeedback = async (comment: ReviewCommentWithUser) => {
+    if (!review) return;
+    await handleCommentFeedbackToggle(comment, review.id);
   };
 
   if (!review) return null;
@@ -312,9 +219,9 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_
                 </Typography>
                 <div className="mt-[8px]">
                   <FeedbackButton
-                    isActive={feedbackStates[review.id] || false}
+                    isActive={!!review.attributes.feedback_id}
                     onClick={handleFeedbackToggle}
-                    feedbackCount={feedbackCounts[review.id] || 0}
+                    feedbackCount={review.attributes.feedback_reviews_count || 0}
                   />
                 </div>
               </div>
@@ -332,9 +239,9 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef>((_
                     <ReviewCommentListItem
                       key={comment.id}
                       comment={comment}
-                      isFeedbackActive={commentFeedbackStates[comment.id] || false}
-                      onFeedbackToggle={() => handleCommentFeedbackToggle(comment)}
-                      feedbackCount={commentFeedbackCounts[comment.id] || 0}
+                      isFeedbackActive={!!comment.attributes?.helpful_by_current_user}
+                      onFeedbackToggle={() => handleCommentFeedback(comment)}
+                      feedbackCount={comment.attributes?.feedback_review_comments_count || 0}
                     />
                   ))}
                   {isLoading && (

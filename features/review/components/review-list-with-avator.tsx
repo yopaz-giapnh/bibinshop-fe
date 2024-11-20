@@ -1,14 +1,12 @@
 'use client';
 
 import { Typography } from '@/components/ui/typography';
-import { useToast } from '@/components/ui/use-toast';
 import { formatDateString } from '@/utils/date';
 
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
-import { addReviewFeedback, removeReviewFeedback } from '../actions';
-import { useFeedback } from '../contexts/feedback-context';
+import { useRef } from 'react';
 import { Review } from '../types';
+import { useReviewFeedback } from '../utils';
 import { FeedbackButton } from './feedback-button';
 import Rating from './rating';
 import { ReplyButton } from './reply-button';
@@ -20,54 +18,7 @@ type Props = {
 
 export function ReviewListWithAvator({ reviews }: Props) {
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
-  const { toast } = useToast();
-  const {
-    feedback: {
-      reviews: { states: feedbackStates, counts: feedbackCounts }
-    },
-    initializeFeedbacks,
-    updateFeedbackState,
-    updateFeedbackCount
-  } = useFeedback();
-
-  const handleFeedbackToggle = async (review?: Review) => {
-    if (!review) return;
-
-    const currentState = feedbackStates[review.id] || false;
-    const currentCount = feedbackCounts[review.id] || review.attributes.feedback_reviews_count || 0;
-
-    try {
-      if (currentState) {
-        const feedbackId = review.attributes.feedback_id;
-        if (feedbackId) {
-          const result = await removeReviewFeedback({ review_id: review.id, id: feedbackId });
-          if (result.success) {
-            review.attributes.feedback_id = undefined;
-            updateFeedbackState(review.id, false);
-            updateFeedbackCount(review.id, Math.max(0, currentCount - 1));
-            toast({ title: result.message });
-          }
-        }
-      } else {
-        const result = await addReviewFeedback({ review_id: review.id });
-        if (result.success && result.data?.id) {
-          review.attributes.feedback_id = result.data.id;
-          updateFeedbackState(review.id, true);
-          updateFeedbackCount(review.id, currentCount + 1);
-          toast({ title: result.message });
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling feedback:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (reviews.length > 0 && !Object.keys(feedbackStates).length) {
-      initializeFeedbacks(reviews);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reviews]);
+  const { handleFeedbackToggle } = useReviewFeedback();
 
   return (
     <div className="flex flex-col px-4 md:px-0">
@@ -129,9 +80,9 @@ export function ReviewListWithAvator({ reviews }: Props) {
                     onClick={() => reviewCommentReplyModalRef.current?.open(review)}
                   />
                   <FeedbackButton
-                    isActive={feedbackStates[review.id] || false}
+                    isActive={!!review.attributes.feedback_id}
                     onClick={() => handleFeedbackToggle(review)}
-                    feedbackCount={feedbackCounts[review.id] || 0}
+                    feedbackCount={review.attributes.feedback_reviews_count || 0}
                   />
                 </div>
               </div>
