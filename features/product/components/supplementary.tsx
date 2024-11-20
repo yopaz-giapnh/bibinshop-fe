@@ -35,7 +35,7 @@ export async function Supplementary({ product }: Props) {
         </div>
       </div>
 
-      {/* TODO:キャンセル/返品に関する仕様決まり次第コメントイン */}
+      {/* TODO:キャンセル/返品に関する仕様決まり次第コメントイン -> Nativeにも実装 (工藤) */}
       {/* <div className="mt-5 flex flex-col">
         <div className="flex items-center">
           <ArrowBack />
