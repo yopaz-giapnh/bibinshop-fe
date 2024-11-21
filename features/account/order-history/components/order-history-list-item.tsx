@@ -16,7 +16,7 @@ type OrderHistoryListItemProps = {
   setSelectedShipmentId: (id: string | null) => void;
   orderReceiptConfirmModalRef: React.RefObject<{ open: (id: string) => void }>;
   handleShowShippingInfo: (trackingNumber: string) => void;
-  reviews: Review[];
+  reviews?: Review[];
 };
 
 const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
@@ -34,7 +34,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
   const groupSlugs = extractSlugs([group]).filter((slug): slug is string => slug !== undefined);
 
   const isReviewed = group.items.some((item) =>
-    reviews.some(
+    reviews?.some(
       (review) => review.relationships.product?.data?.id === item.relationships.variant?.data?.id
     )
   );
