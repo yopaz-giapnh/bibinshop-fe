@@ -1,4 +1,5 @@
 import { Typography } from '@/components/ui/typography';
+import { getAccount } from '@/features/account/profile/actions';
 import { getReviews } from '@/features/review/actions';
 import { User } from '@/features/users/types';
 import Image from 'next/image';
@@ -7,6 +8,8 @@ import FollowUnfollowButton from './follow-unfollow-button';
 import { UserDetailProfileStats } from './user-detail-profile-stats';
 
 export default async function UserDetailProfile({ userDetail }: { userDetail: User }) {
+  const currentUser = await getAccount().catch(() => null);
+  const isMyProfile = currentUser?.attributes?.unique_key === userDetail.attributes.unique_key;
   const reviews = await getReviews({
     query: {
       'filter[user_ids]': userDetail.id
@@ -44,11 +47,13 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
           <Typography as="boldSmall" element="h2" className="mb-[8px] mr-[16px] text-[20px]">
             {nickname}
           </Typography>
-          <FollowUnfollowButton
-            username={nickname}
-            unique_key={userUniqueKey}
-            isFollowing={isFollowing}
-          />
+          {!isMyProfile && (
+            <FollowUnfollowButton
+              username={nickname}
+              unique_key={userUniqueKey}
+              isFollowing={isFollowing}
+            />
+          )}
         </div>
       </div>
       <div className="flex flex-col items-center md:ml-6 md:items-start">
@@ -56,11 +61,13 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
           <Typography as="boldSmall" element="h2" className="mr-[16px] text-[20px]">
             {nickname}
           </Typography>
-          <FollowUnfollowButton
-            username={nickname}
-            unique_key={userUniqueKey}
-            isFollowing={isFollowing}
-          />
+          {!isMyProfile && (
+            <FollowUnfollowButton
+              username={nickname}
+              unique_key={userUniqueKey}
+              isFollowing={isFollowing}
+            />
+          )}
         </div>
         <UserDetailProfileStats
           reviewsCount={reviewsCount}

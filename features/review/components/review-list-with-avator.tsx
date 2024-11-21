@@ -9,6 +9,7 @@ import {
 } from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { Review } from '../types';
 import { useReviewFeedback } from '../utils';
@@ -52,12 +53,16 @@ export function ReviewListWithAvator({ reviews }: Props) {
     <div className="flex flex-col px-4 md:px-0">
       <div className="mt-4 flex flex-col gap-6">
         {reviewList.map((review) => {
+          const userUniqueKey = review.user?.attributes.unique_key;
           const avatarUrl = review.avatar
             ? review.avatar.attributes?.styles?.[review.avatar.attributes.styles.length - 1]?.url
             : undefined;
           return (
             <div key={review.id} className="flex w-full">
-              <div className="flex h-[40px] w-[40px] items-center justify-center rounded-[20px]">
+              <Link
+                href={`/user-detail/${userUniqueKey}`}
+                className="flex h-[40px] w-[40px] items-center justify-center rounded-[20px]"
+              >
                 <Image
                   src={avatarUrl || '/placeholder-product-image.png'}
                   alt={review.user?.attributes.nickname ?? '匿名'}
@@ -65,7 +70,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
                   height={40}
                   className="rounded-full object-cover"
                 />
-              </div>
+              </Link>
               <div className="ml-3 md:ml-6">
                 <div className="flex items-center gap-2">
                   <Typography

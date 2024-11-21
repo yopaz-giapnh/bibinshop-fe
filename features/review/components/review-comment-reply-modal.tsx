@@ -7,6 +7,7 @@ import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
+import Link from 'next/link';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { addReviewComment, getReviewComments } from '../actions';
 import { Review, ReviewCommentWithUser } from '../types';
@@ -191,7 +192,10 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef, Pr
             <ScrollArea className="h-[400px] w-full">
               {/* メインレビュー */}
               <div className="flex w-full">
-                <div className="mr-[8px] flex h-[40px] w-[40px] items-center justify-center rounded-[20px]">
+                <Link
+                  className="mr-[8px] flex h-[40px] w-[40px] items-center justify-center rounded-[20px]"
+                  href={`/user-detail/${review?.user?.attributes.unique_key}`}
+                >
                   <Image
                     src={avatarUrl || '/placeholder-product-image.png'}
                     alt={review.user?.attributes.nickname ?? '匿名'}
@@ -199,7 +203,7 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef, Pr
                     height={40}
                     className="rounded-full object-cover"
                   />
-                </div>
+                </Link>
                 <div>
                   <Typography
                     as="boldSmall"
