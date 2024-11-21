@@ -67,7 +67,11 @@ export default function OrderHistoryList({ order, reviews }: OrderHistoryListPro
         shipmentId={selectedShipmentId}
         onConfirm={handleReceiptConfirm}
       />
-      <TryReviewWriteModal ref={tryReviewWriteModalRef} sortedLineItems={sortedLineItems} />
+      <TryReviewWriteModal
+        ref={tryReviewWriteModalRef}
+        sortedLineItems={sortedLineItems}
+        order={order}
+      />
       <OrderTrackerModal ref={orderTrackerModalRef} />
     </>
   );
