@@ -29,7 +29,7 @@ type Props = {
   className?: string;
   orderNumber: string;
   enableCancel?: boolean;
-  reviews: Review[];
+  reviews?: Review[];
 };
 
 async function fetchOrderData(orderNumber: string) {
