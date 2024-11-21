@@ -83,7 +83,7 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
           </Typography> */}
         </div>
       </div>
-      <div className="mt-[12px]">
+      <div className="mt-[12px] border-t border-gray-200 pt-[12px]">
         <Typography
           as="boldSmall"
           element="p"
@@ -93,7 +93,7 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
         </Typography>
         <Rating star={averageRating} readOnly size={27} />
       </div>
-      <div className="mt-[12px] space-y-4 border-b border-gray-200 pb-[12px]">
+      <div className="mt-[12px] border-b border-gray-200 pb-[12px]">
         <Typography as="boldSmall" element="p" className="text-[16px] text-black-90 md:text-[20px]">
           項目評価
         </Typography>
@@ -106,6 +106,7 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
           />
         ))}
       </div>
+
       <Typography
         as="small"
         element="p"

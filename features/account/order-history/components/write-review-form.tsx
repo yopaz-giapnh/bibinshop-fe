@@ -115,7 +115,7 @@ export default function WriteReviewForm({ products, reviews }: Props) {
   return (
     <form className="w-full" action={action}>
       <div className="flex w-full flex-col items-center">
-        <div className="w-full overflow-y-auto md:h-screen-calc">
+        <div className="w-full">
           {products.map((product) => (
             <WriteReviewItem
               key={product.id}
