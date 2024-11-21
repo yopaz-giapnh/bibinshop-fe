@@ -1,47 +1,36 @@
-'use client';
-
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getReviews } from '@/features/review/actions';
+import { AllReviewListModalWithButton } from '@/features/review/components/all-review-list-modal-with-button';
 import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
-import { SeeMoreReviewButton } from '@/features/review/components/see-more-review-button';
-import { Review } from '@/features/review/types';
-import { useEffect, useState } from 'react';
+import { Suspense } from 'react';
 
 type Props = {
   productId: string;
 };
 
-export function ProductReviewList({ productId }: Props) {
-  const [showAllReviews, setShowAllReviews] = useState(false);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [reviewsCount, setReviewsCount] = useState(0);
-
-  useEffect(() => {
-    async function fetchReviews() {
-      const fetchedReviews = await getReviews({
-        query: {
-          'filter[product_ids]': productId
-        }
-      });
-      setReviews(fetchedReviews.data);
-      setReviewsCount(fetchedReviews?.meta?.total_count ?? 0);
+export async function ProductReviewList({ productId }: Props) {
+  const { data: reviews, meta } = await getReviews({
+    query: {
+      'filter[product_ids]': productId
     }
-    fetchReviews();
-  }, [productId]);
-
-  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 3);
-
-  const handleSeeMoreClick = () => {
-    setShowAllReviews(true);
-  };
+  });
+  const displayedReviews = reviews.slice(0, 3);
+  const reviewsCount = meta?.total_count ?? 0;
 
   return (
     <>
-      <ReviewListWithAvator reviews={displayedReviews} />
-      {reviewsCount > 3 && !showAllReviews && (
-        <div className="mx-auto">
-          <SeeMoreReviewButton onClick={handleSeeMoreClick} />
-        </div>
-      )}
+      <Suspense fallback={<Loading />}>
+        <ReviewListWithAvator reviews={displayedReviews} />
+        <AllReviewListModalWithButton reviews={reviews} reviewsCount={reviewsCount} />
+      </Suspense>
     </>
+  );
+}
+
+function Loading() {
+  return (
+    <div className="flex justify-center py-4">
+      <LoadingSpinner />
+    </div>
   );
 }

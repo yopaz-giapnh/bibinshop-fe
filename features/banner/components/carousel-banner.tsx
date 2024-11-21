@@ -56,12 +56,7 @@ export function CarouselBanner({ getBanners }: Props) {
           (banner) =>
             banner.linkUrl &&
             banner.imageUrl && (
-              <CarouselItem
-                key={banner.id}
-                style={{
-                  backgroundColor: banner.backgroundColor
-                }}
-              >
+              <CarouselItem key={banner.id}>
                 <Link key={banner.id} href={banner.linkUrl} passHref>
                   <Image
                     src={banner.imageUrl}

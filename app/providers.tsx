@@ -24,10 +24,8 @@ export function Providers({ children }: PropsWithChildren) {
     <SessionProvider>
       <CouponProvider>
         <PointProvider>
-          <>
-            {children}
-            <RegistrationCompleteModal />
-          </>
+          {children}
+          <RegistrationCompleteModal />
         </PointProvider>
       </CouponProvider>
     </SessionProvider>

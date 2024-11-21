@@ -48,6 +48,11 @@ export const NewRegistrationMediationModal = forwardRef<NewRegistrationMediation
                 今すぐ会員登録
               </Button>
             </Link>
+            <Link href="/login" passHref>
+              <Typography as="caption" element="p" className="mt-4 text-center text-bibinBlue-100">
+                ログインはこちら
+              </Typography>
+            </Link>
           </div>
         </DialogContent>
       </Dialog>

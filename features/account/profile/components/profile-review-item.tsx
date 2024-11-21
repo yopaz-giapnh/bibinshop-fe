@@ -2,66 +2,51 @@
 
 import { Typography } from '@/components/ui/typography';
 import { getProductImageUrl } from '@/features/product/utils';
-import { addReviewFeedback, removeReviewFeedback } from '@/features/review/actions';
+import { FeedbackButton } from '@/features/review/components/feedback-button';
 import Rating from '@/features/review/components/rating';
+import { ReplyButton } from '@/features/review/components/reply-button';
+import {
+  ReviewCommentReplyModal,
+  ReviewCommentReplyModalRef
+} from '@/features/review/components/review-comment-reply-modal';
 import { Review } from '@/features/review/types';
+import { useReviewFeedback } from '@/features/review/utils';
 import {
   NewRegistrationMediationModal,
   NewRegistrationMediationModalRef
 } from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import { formatDateString } from '@/utils/date';
-import { ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import { getAccount } from '../actions';
-import { User } from '../types';
+import { useRef, useState } from 'react';
 
 type ReviewProps = {
   review: Review;
 };
 
-export function ProfileReviewItem({ review }: ReviewProps) {
-  const [isFeedback, setIsFeedback] = useState(!!review.attributes.feedback_id);
-  const [account, setAccount] = useState<User | null>(null);
-  const isCurrentUser = account?.id === review?.relationships?.user?.data?.id;
+export function ProfileReviewItem({ review: initialReview }: ReviewProps) {
   const { isLoggedIn } = useAuth();
   const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
+  const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
+  const { handleFeedbackToggle } = useReviewFeedback();
+  const [review, setReview] = useState(initialReview);
 
-  useEffect(() => {
-    async function fetchAccount() {
-      try {
-        const accountData = await getAccount();
-        setAccount(accountData);
-      } catch (error) {
-        console.error('Error fetching account:', error);
-      }
-    }
-
-    fetchAccount();
-  }, []);
-
-  const handleFeedbackToggle = async () => {
+  const handleReplyClick = (review: Review) => {
     if (!isLoggedIn) {
       newRegistrationMediationModalRef.current?.open();
       return;
     }
-    try {
-      if (isFeedback) {
-        const feedbackId = review.attributes.feedback_id;
-        if (feedbackId) {
-          await removeReviewFeedback({ review_id: review.id, id: feedbackId });
-          setIsFeedback(false);
-        } else {
-          return;
-        }
-      } else {
-        await addReviewFeedback({ review_id: review.id });
-        setIsFeedback(true);
-      }
-    } catch (error) {
-      console.error('Error toggling feedback:', error);
+    reviewCommentReplyModalRef.current?.open(review);
+  };
+
+  const handleFeedbackClick = () => {
+    if (!isLoggedIn) {
+      newRegistrationMediationModalRef.current?.open();
+      return;
     }
+    handleFeedbackToggle(review, (updatedReview) => {
+      setReview(updatedReview);
+    });
   };
 
   return (
@@ -72,10 +57,6 @@ export function ProfileReviewItem({ review }: ReviewProps) {
           ・{formatDateString(review.attributes.created_at)}
         </Typography>
       </div>
-      {/* TODO: プロパティ設定 */}
-      {/* <Typography as="bold" element="p" className="mt-[8px] text-[14px] text-black-90">
-        色： TODO: プロパティ
-      </Typography> */}
       <Typography
         as="xSmall"
         element="p"
@@ -110,22 +91,21 @@ export function ProfileReviewItem({ review }: ReviewProps) {
           </Typography>
         </div>
       </div>
-      {!isCurrentUser && (
-        <div className="mt-[16px] flex justify-end">
-          <button className="flex items-center space-x-2" onClick={handleFeedbackToggle}>
-            <ThumbsUp
-              className={`h-[16px] w-[16px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
-            />
-            <Typography
-              as="caption"
-              element="p"
-              className={`text-[14px] ${isFeedback ? 'text-bibinBlue-100' : 'text-black-90'}`}
-            >
-              参考になった
-            </Typography>
-          </button>
-        </div>
-      )}
+      <div className="mt-[16px] flex justify-start">
+        <ReplyButton review={review} onClick={handleReplyClick} />
+        <FeedbackButton
+          isActive={!!review.attributes.feedback_id}
+          onClick={handleFeedbackClick}
+          className="flex items-center space-x-2"
+          feedbackCount={review.attributes.feedback_reviews_count || 0}
+        />
+      </div>
+      <ReviewCommentReplyModal
+        ref={reviewCommentReplyModalRef}
+        onReviewUpdate={(updatedReview) => {
+          setReview(updatedReview);
+        }}
+      />
       <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
     </div>
   );
