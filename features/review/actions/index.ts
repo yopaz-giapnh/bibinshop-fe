@@ -120,7 +120,13 @@ export async function saveReviews(
           })
         : writeReview({
             productId: review.productId,
-            rating: review.rating,
+            ratings: {
+              texture: review.rating,
+              finish: review.rating,
+              effectiveness: review.rating,
+              longevity: review.rating,
+              usability: review.rating
+            },
             review: review.review
           })
     )
@@ -143,11 +149,17 @@ export async function saveReviews(
 
 async function writeReview({
   productId,
-  rating,
+  ratings,
   review
 }: {
   productId: string;
-  rating: number;
+  ratings: {
+    texture: number;
+    finish: number;
+    effectiveness: number;
+    longevity: number;
+    usability: number;
+  };
   review?: string;
 }) {
   try {
@@ -155,12 +167,11 @@ async function writeReview({
       body: {
         review: {
           product_id: productId,
-          // TODO: 評価項目を修正する
-          texture_rating: rating,
-          finish_rating: rating,
-          effectiveness_rating: rating,
-          longevity_rating: rating,
-          usability_rating: rating,
+          texture_rating: ratings.texture,
+          finish_rating: ratings.finish,
+          effectiveness_rating: ratings.effectiveness,
+          longevity_rating: ratings.longevity,
+          usability_rating: ratings.usability,
           review
         }
       }
@@ -200,7 +211,6 @@ async function updateReview({
       body: {
         review: {
           product_id: productId,
-          // TODO: 評価項目を修正する
           texture_rating: rating,
           finish_rating: rating,
           effectiveness_rating: rating,

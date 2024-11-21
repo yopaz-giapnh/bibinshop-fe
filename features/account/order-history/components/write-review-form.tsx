@@ -10,6 +10,7 @@ import { BadgeAlert, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import { DEFAULT_RATINGS } from '../constants';
 import WriteReviewItem from './write-review-item';
 
 type Props = {
@@ -19,26 +20,77 @@ type Props = {
 
 export type WriteReview = {
   productId: string;
-  rating: number;
+  ratings: {
+    texture: number;
+    finish: number;
+    effectiveness: number;
+    longevity: number;
+    usability: number;
+  };
   review?: string;
   reviewId?: string;
 };
 
 export default function WriteReviewForm({ products, reviews }: Props) {
+  const router = useRouter();
+  const [state, formAction] = useFormState(saveReviews, null);
   const [writeReviews, setWriteReviews] = useState<WriteReview[]>(
     reviews.map((review) => ({
       productId: review.product?.id || review.relationships.product?.data?.id || '',
-      rating: review.attributes.rating || 0,
+      ratings: {
+        texture: review.attributes.texture_rating || 1,
+        finish: review.attributes.finish_rating || 1,
+        effectiveness: review.attributes.effectiveness_rating || 1,
+        longevity: review.attributes.longevity_rating || 1,
+        usability: review.attributes.usability_rating || 1
+      },
       review: review.attributes.review || '',
       reviewId: review.id
     }))
   );
-  const isValid =
-    !!writeReviews.length && writeReviews.some((review) => !!review.rating && review.rating > 0);
 
-  const [state, formAction] = useFormState(saveReviews, null);
-  const action = formAction.bind(null, writeReviews);
-  const router = useRouter();
+  const isValid =
+    !!writeReviews.length &&
+    writeReviews.some((review) => {
+      const ratingValues = Object.values(review.ratings);
+      return ratingValues.some((rating) => rating > 0);
+    });
+
+  const action = formAction.bind(
+    null,
+    writeReviews.map((review) => ({
+      productId: review.productId,
+      rating: review.ratings.texture,
+      review: review.review
+    }))
+  );
+
+  const updateReview = (
+    prev: WriteReview[],
+    productId: string,
+    updateData: Partial<WriteReview>
+  ): WriteReview[] => {
+    const existingReviewIndex = prev.findIndex((review) => review.productId === productId);
+
+    if (existingReviewIndex !== -1) {
+      const updatedReviews = [...prev];
+      updatedReviews[existingReviewIndex] = {
+        ...updatedReviews[existingReviewIndex],
+        ...updateData
+      };
+      return updatedReviews;
+    }
+
+    return [
+      ...prev,
+      {
+        productId,
+        ratings: DEFAULT_RATINGS,
+        review: '',
+        ...updateData
+      }
+    ];
+  };
 
   useEffect(() => {
     if (!state) {
@@ -71,39 +123,11 @@ export default function WriteReviewForm({ products, reviews }: Props) {
               review={reviews.find(
                 (review) => review.relationships.product?.data?.id === product.id
               )}
-              onReviewStar={({ productId, star }) => {
-                setWriteReviews((prev) => {
-                  const existingReviewIndex = prev.findIndex(
-                    (review) => review.productId === productId
-                  );
-                  if (existingReviewIndex !== -1) {
-                    const updatedReviews = [...prev];
-                    updatedReviews[existingReviewIndex] = {
-                      ...updatedReviews[existingReviewIndex],
-                      rating: star || updatedReviews[existingReviewIndex].rating
-                    };
-                    return updatedReviews;
-                  } else {
-                    return [...prev, { productId, rating: star || 0, review: '' }];
-                  }
-                });
+              onReviewRatings={({ productId, ratings }) => {
+                setWriteReviews((prev) => updateReview(prev, productId, { ratings }));
               }}
               onReviewText={({ productId, text }) => {
-                setWriteReviews((prev) => {
-                  const existingReviewIndex = prev.findIndex(
-                    (review) => review.productId === productId
-                  );
-                  if (existingReviewIndex !== -1) {
-                    const updatedReviews = [...prev];
-                    updatedReviews[existingReviewIndex] = {
-                      ...updatedReviews[existingReviewIndex],
-                      review: text
-                    };
-                    return updatedReviews;
-                  } else {
-                    return [...prev, { productId, rating: 0, review: text }];
-                  }
-                });
+                setWriteReviews((prev) => updateReview(prev, productId, { review: text }));
               }}
             />
           ))}
