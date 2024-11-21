@@ -18,7 +18,7 @@ type Props = {
   reviews: Review[];
 };
 
-export type WriteReview = {
+type WriteReview = {
   productId: string;
   ratings: {
     texture: number;
@@ -28,12 +28,10 @@ export type WriteReview = {
     usability: number;
   };
   review?: string;
-  reviewId?: string;
 };
 
 export default function WriteReviewForm({ products, reviews }: Props) {
   const router = useRouter();
-  const [state, formAction] = useFormState(saveReviews, null);
   const [writeReviews, setWriteReviews] = useState<WriteReview[]>(
     reviews.map((review) => ({
       productId: review.product?.id || review.relationships.product?.data?.id || '',
@@ -49,16 +47,11 @@ export default function WriteReviewForm({ products, reviews }: Props) {
     }))
   );
 
-  const isValid =
-    !!writeReviews.length &&
-    writeReviews.some((review) => {
-      const ratingValues = Object.values(review.ratings);
-      return ratingValues.some((rating) => rating > 0);
-    });
-
-  const action = formAction.bind(
-    null,
-    writeReviews.map((review) => {
+  const formAction = async (
+    prevState: null | { success: boolean; message: string },
+    formData: FormData
+  ) => {
+    const reviews = writeReviews.map((review) => {
       const ratingValues = Object.values(review.ratings);
       const averageRating = Math.round(
         ratingValues.reduce((acc, curr) => acc + curr, 0) / ratingValues.length
@@ -67,15 +60,21 @@ export default function WriteReviewForm({ products, reviews }: Props) {
       return {
         productId: review.productId,
         rating: averageRating,
-        texture_rating: review.ratings.texture,
-        finish_rating: review.ratings.finish,
-        effectiveness_rating: review.ratings.effectiveness,
-        longevity_rating: review.ratings.longevity,
-        usability_rating: review.ratings.usability,
         review: review.review
       };
-    })
-  );
+    });
+
+    return await saveReviews(reviews);
+  };
+
+  const [state, action] = useFormState(formAction, null);
+
+  const isValid =
+    !!writeReviews.length &&
+    writeReviews.some((review) => {
+      const ratingValues = Object.values(review.ratings);
+      return ratingValues.some((rating) => rating > 0);
+    });
 
   const updateReview = (productId: string, updateData: Partial<WriteReview>): void => {
     setWriteReviews((prev) => {

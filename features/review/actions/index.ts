@@ -106,29 +106,21 @@ function reshapeReviews({
 }
 
 export async function saveReviews(
-  prevState: { success: boolean; message: string } | null,
-  reviews: { productId: string; rating: number; review?: string; reviewId?: string }[]
+  reviews: { productId: string; rating: number; review?: string }[]
 ) {
   const results = await Promise.all(
     reviews.map((review) =>
-      review.reviewId
-        ? updateReview({
-            productId: review.productId,
-            reviewId: review.reviewId,
-            rating: review.rating,
-            review: review.review
-          })
-        : writeReview({
-            productId: review.productId,
-            ratings: {
-              texture: review.rating,
-              finish: review.rating,
-              effectiveness: review.rating,
-              longevity: review.rating,
-              usability: review.rating
-            },
-            review: review.review
-          })
+      writeReview({
+        productId: review.productId,
+        ratings: {
+          texture: review.rating,
+          finish: review.rating,
+          effectiveness: review.rating,
+          longevity: review.rating,
+          usability: review.rating
+        },
+        review: review.review
+      })
     )
   );
 
@@ -191,55 +183,6 @@ async function writeReview({
     return {
       success: false,
       message: 'レビューの投稿に失敗しました'
-    };
-  }
-}
-
-async function updateReview({
-  productId,
-  reviewId,
-  rating,
-  review
-}: {
-  productId: string;
-  reviewId: string;
-  rating: number;
-  review?: string;
-}) {
-  try {
-    const { error } = await apiClient.PATCH(`/api/v2/storefront/reviews/{id}`, {
-      body: {
-        review: {
-          product_id: productId,
-          texture_rating: rating,
-          finish_rating: rating,
-          effectiveness_rating: rating,
-          longevity_rating: rating,
-          usability_rating: rating,
-          review
-        }
-      },
-      params: {
-        path: {
-          id: reviewId
-        }
-      }
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    return {
-      success: true,
-      message: 'レビューを更新しました'
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      success: false,
-      message: 'レビューの更新に失敗しました'
     };
   }
 }

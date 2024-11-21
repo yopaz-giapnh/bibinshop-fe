@@ -3,6 +3,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Typography } from '@/components/ui/typography';
 import { Order } from '@/features/order/types';
+import { getMyReviews } from '@/features/review/actions';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getAccountOrders } from '../actions';
@@ -27,6 +28,13 @@ const tabs = [
 export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
   const allOrders = await getAccountOrders({ page: currentPage });
   const filteredOrders = filterOrdersByTabState(allOrders.data, tabState);
+  const reviews = await getMyReviews({
+    query: {
+      'filter[product_ids]': filteredOrders
+        .flatMap((order) => order.lineItems.map((item) => item.relationships.variant?.data?.id))
+        .join(',')
+    }
+  });
 
   const getOrderCount = (state: string) => {
     return filterOrdersByTabState(allOrders.data, state).length;
@@ -88,6 +96,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
                 }}
                 status={tabState}
                 currentPage={currentPage}
+                reviews={reviews.data}
               />
             </Suspense>
           </TabsContent>

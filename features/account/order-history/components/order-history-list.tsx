@@ -6,6 +6,7 @@ import {
   TryReviewWriteModal,
   TryReviewWriteModalRef
 } from '@/features/review/components/try-review-write-modal';
+import { Review } from '@/features/review/types';
 import { useRef, useState } from 'react';
 import OrderHistoryListInfo from './order-history-list-info';
 import OrderHistoryListItem from './order-history-list-item';
@@ -17,9 +18,10 @@ import { OrderTrackerModal, OrderTrackerModalRef } from './order-tracker-modal';
 
 type OrderHistoryListProps = {
   order: Order;
+  reviews: Review[];
 };
 
-export default function OrderHistoryList({ order }: OrderHistoryListProps) {
+export default function OrderHistoryList({ order, reviews }: OrderHistoryListProps) {
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
@@ -54,6 +56,7 @@ export default function OrderHistoryList({ order }: OrderHistoryListProps) {
                 setSelectedShipmentId={setSelectedShipmentId}
                 orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
                 handleShowShippingInfo={handleShowShippingInfo}
+                reviews={reviews}
               />
             ))}
           </div>
