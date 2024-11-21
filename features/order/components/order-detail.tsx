@@ -15,6 +15,7 @@ import {
   TryReviewWriteModal,
   TryReviewWriteModalRef
 } from '@/features/review/components/try-review-write-modal';
+import { Review } from '@/features/review/types';
 import { cn } from '@/lib/utils';
 import { formatDateString } from '@/utils/date';
 import { useEffect, useRef, useState } from 'react';
@@ -28,6 +29,7 @@ type Props = {
   className?: string;
   orderNumber: string;
   enableCancel?: boolean;
+  reviews: Review[];
 };
 
 async function fetchOrderData(orderNumber: string) {
@@ -35,7 +37,7 @@ async function fetchOrderData(orderNumber: string) {
   return order;
 }
 
-export function OrderDetail({ className, orderNumber }: Props) {
+export function OrderDetail({ className, orderNumber, reviews }: Props) {
   const [order, setOrder] = useState<NonNullable<
     Awaited<ReturnType<typeof fetchOrderData>>
   > | null>(null);
@@ -102,6 +104,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
               setSelectedShipmentId={setSelectedShipmentId}
               orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
               handleShowShippingInfo={handleShowShippingInfo}
+              reviews={reviews}
             />
           ))}
         </div>
@@ -113,7 +116,11 @@ export function OrderDetail({ className, orderNumber }: Props) {
         shipmentId={selectedShipmentId}
         onConfirm={handleReceiptConfirm}
       />
-      <TryReviewWriteModal ref={tryReviewWriteModalRef} sortedLineItems={sortedLineItems} />
+      <TryReviewWriteModal
+        ref={tryReviewWriteModalRef}
+        sortedLineItems={sortedLineItems}
+        order={order}
+      />
       <OrderTrackerModal ref={orderTrackerModalRef} />
     </>
   );
