@@ -113,7 +113,6 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
       </div>
       <OrderReceiptConfirmModal
         ref={orderReceiptConfirmModalRef}
-        shipmentId={selectedShipmentId}
         onConfirm={handleReceiptConfirm}
       />
       <TryReviewWriteModal

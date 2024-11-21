@@ -4,6 +4,7 @@ import BibiSmilingFace from '@/assets/bibincban/smiling-face.svg';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
+import { receiveOrder } from '@/features/account/order-history/actions';
 import { SortedLineItemGroup } from '@/features/account/order-history/constants';
 import { Order } from '@/features/order/types';
 import { extractSlugs } from '@/features/order/utils';
@@ -25,16 +26,20 @@ export const TryReviewWriteModal = forwardRef<TryReviewWriteModalRef, TryReviewW
     const [isOpen, setIsOpen] = useState(false);
     const [selectedShipmentId, setSelectedShipmentId] = useState<string | null>(null);
 
+    const handleClose = async () => {
+      if (selectedShipmentId) {
+        await receiveOrder(selectedShipmentId);
+      }
+      setIsOpen(false);
+      setSelectedShipmentId(null);
+    };
+
     useImperativeHandle(ref, () => ({
       open: (shipmentId: string) => {
-        console.log('Opening modal with shipmentId:', shipmentId);
         setSelectedShipmentId(shipmentId);
         setIsOpen(true);
       },
-      close: () => {
-        setIsOpen(false);
-        setSelectedShipmentId(null);
-      }
+      close: handleClose
     }));
 
     const selectedGroup = sortedLineItems.find((group) => {
@@ -51,7 +56,7 @@ export const TryReviewWriteModal = forwardRef<TryReviewWriteModalRef, TryReviewW
       : [];
 
     return (
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[540px]">
           <Typography as="bold" element="p" className="pb-[24px] text-[20px] text-black-90">
             ご評価ありがとうございます！
@@ -65,7 +70,7 @@ export const TryReviewWriteModal = forwardRef<TryReviewWriteModalRef, TryReviewW
               className="h-[48px] w-[150px] border border-bibinBlue-100 bg-white-base md:h-[55px] md:w-[200px]"
               size="lg"
               variant="lg"
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               type="button"
             >
               <Typography as="bold" element="p" className="text-bibinBlue-100">
@@ -80,7 +85,7 @@ export const TryReviewWriteModal = forwardRef<TryReviewWriteModalRef, TryReviewW
                 className="h-[48px] w-[150px] md:h-[55px] md:w-[200px]"
                 size="lg"
                 variant="lg"
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
                 type="button"
               >
                 <Typography as="bold" element="p" className="text-white-base">
