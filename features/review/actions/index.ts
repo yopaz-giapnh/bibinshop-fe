@@ -8,6 +8,7 @@ import { UserSchema } from '@/features/account/types';
 import { isUserSchema } from '@/features/account/utils';
 import { ImageSchema, ProductSchema } from '@/features/product/types';
 import { isImageSchema, isProductSchema } from '@/features/product/utils';
+import { isClientError } from '@/utils/error';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import { ReviewListParameters, ReviewSchema } from '../types';
@@ -331,7 +332,7 @@ export async function addReviewComment({
   } catch (error) {
     console.error('Comment post error:', error);
 
-    if (typeof error === 'object' && error !== null && 'error' in error) {
+    if (isClientError(error)) {
       if (error.error === 'URLを含むコメントは投稿できません') {
         return {
           success: false,

@@ -9,7 +9,7 @@ import {
 } from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Review } from '../types';
 import { useReviewFeedback } from '../utils';
 import { FeedbackButton } from './feedback-button';
@@ -26,6 +26,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
   const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const { handleFeedbackToggle } = useReviewFeedback();
+  const [reviewList, setReviewList] = useState(reviews);
 
   const handleReplyClick = (review: Review) => {
     if (!isLoggedIn) {
@@ -35,18 +36,22 @@ export function ReviewListWithAvator({ reviews }: Props) {
     reviewCommentReplyModalRef.current?.open(review);
   };
 
-  const handleFeedbackClick = (review?: Review) => {
+  const handleFeedbackClick = (review: Review) => {
     if (!isLoggedIn) {
       newRegistrationMediationModalRef.current?.open();
       return;
     }
-    handleFeedbackToggle(review);
+    handleFeedbackToggle(review, (updatedReview) => {
+      setReviewList((prevReviews) =>
+        prevReviews.map((r) => (r.id === updatedReview.id ? updatedReview : r))
+      );
+    });
   };
 
   return (
     <div className="flex flex-col px-4 md:px-0">
       <div className="mt-4 flex flex-col gap-6">
-        {reviews.map((review) => {
+        {reviewList.map((review) => {
           const avatarUrl = review.avatar
             ? review.avatar.attributes?.styles?.[review.avatar.attributes.styles.length - 1]?.url
             : undefined;
@@ -101,7 +106,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
                   <ReplyButton review={review} onClick={handleReplyClick} />
                   <FeedbackButton
                     isActive={!!review.attributes.feedback_id}
-                    onClick={handleFeedbackClick}
+                    onClick={() => handleFeedbackClick(review)}
                     feedbackCount={review.attributes.feedback_reviews_count || 0}
                   />
                 </div>
@@ -110,7 +115,14 @@ export function ReviewListWithAvator({ reviews }: Props) {
           );
         })}
       </div>
-      <ReviewCommentReplyModal ref={reviewCommentReplyModalRef} />
+      <ReviewCommentReplyModal
+        ref={reviewCommentReplyModalRef}
+        onReviewUpdate={(updatedReview) => {
+          setReviewList((prevReviews) =>
+            prevReviews.map((r) => (r.id === updatedReview.id ? updatedReview : r))
+          );
+        }}
+      />
       <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
     </div>
   );

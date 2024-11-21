@@ -18,17 +18,18 @@ import {
 import { useAuth } from '@/hooks/use-auth';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 type ReviewProps = {
   review: Review;
 };
 
-export function ProfileReviewItem({ review }: ReviewProps) {
+export function ProfileReviewItem({ review: initialReview }: ReviewProps) {
   const { isLoggedIn } = useAuth();
   const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const { handleFeedbackToggle } = useReviewFeedback();
+  const [review, setReview] = useState(initialReview);
 
   const handleReplyClick = (review: Review) => {
     if (!isLoggedIn) {
@@ -38,12 +39,14 @@ export function ProfileReviewItem({ review }: ReviewProps) {
     reviewCommentReplyModalRef.current?.open(review);
   };
 
-  const handleFeedbackClick = (review?: Review) => {
+  const handleFeedbackClick = () => {
     if (!isLoggedIn) {
       newRegistrationMediationModalRef.current?.open();
       return;
     }
-    handleFeedbackToggle(review);
+    handleFeedbackToggle(review, (updatedReview) => {
+      setReview(updatedReview);
+    });
   };
 
   return (
@@ -97,7 +100,12 @@ export function ProfileReviewItem({ review }: ReviewProps) {
           feedbackCount={review.attributes.feedback_reviews_count || 0}
         />
       </div>
-      <ReviewCommentReplyModal ref={reviewCommentReplyModalRef} />
+      <ReviewCommentReplyModal
+        ref={reviewCommentReplyModalRef}
+        onReviewUpdate={(updatedReview) => {
+          setReview(updatedReview);
+        }}
+      />
       <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
     </div>
   );

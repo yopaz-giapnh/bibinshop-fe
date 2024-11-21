@@ -10,7 +10,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { getBanners } from '../actions';
-import { BannerSchema } from '../types';
 import { CarouselDots } from './carousel-dots';
 
 const slideInterval = 5000 as const;
@@ -54,21 +53,21 @@ export function CarouselBanner({ getBanners }: Props) {
     <Carousel setApi={setApi} className="w-full">
       <CarouselContent>
         {banners.map(
-          (banner: BannerSchema) =>
-            banner.attributes?.link &&
-            banner.attributes?.image && (
+          (banner) =>
+            banner.linkUrl &&
+            banner.imageUrl && (
               <CarouselItem key={banner.id}>
-                <Link key={banner.id} href={banner.attributes?.link} passHref>
+                <Link key={banner.id} href={banner.linkUrl} passHref>
                   <Image
-                    src={banner.attributes?.image}
-                    alt={banner.attributes?.title ?? 'banner'}
+                    src={banner.imageUrl}
+                    alt={banner.title ?? 'banner'}
                     width={790}
                     height={370}
                     className="hidden w-full object-cover md:block"
                   />
                   <Image
-                    src={banner.attributes?.mobile_image}
-                    alt={banner.attributes?.title ?? 'banner'}
+                    src={banner.mobileImageUrl || banner.imageUrl}
+                    alt={banner.title ?? 'banner'}
                     width={790}
                     height={370}
                     className="block md:hidden"

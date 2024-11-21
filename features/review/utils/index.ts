@@ -16,8 +16,11 @@ export const useReviewFeedback = () => {
   const { toast } = useToast();
 
   // レビューのフィードバックの処理
-  const handleFeedbackToggle = async (review?: Review) => {
-    if (!review) return;
+  const handleFeedbackToggle = async (
+    review?: Review,
+    onUpdate?: (updatedReview: Review) => void
+  ) => {
+    if (!review || !review.attributes) return;
 
     const hasFeedback = !!review.attributes.feedback_id;
     const currentCount = review.attributes.feedback_reviews_count || 0;
@@ -28,16 +31,30 @@ export const useReviewFeedback = () => {
         if (feedbackId) {
           const result = await removeReviewFeedback({ review_id: review.id, id: feedbackId });
           if (result.success) {
-            review.attributes.feedback_id = undefined;
-            review.attributes.feedback_reviews_count = Math.max(0, currentCount - 1);
+            const updatedReview = {
+              ...review,
+              attributes: {
+                ...review.attributes,
+                feedback_id: undefined,
+                feedback_reviews_count: Math.max(0, currentCount - 1)
+              }
+            };
+            onUpdate?.(updatedReview);
             toast({ title: result.message });
           }
         }
       } else {
         const result = await addReviewFeedback({ review_id: review.id });
         if (result.success && result.data?.id) {
-          review.attributes.feedback_id = result.data.id;
-          review.attributes.feedback_reviews_count = currentCount + 1;
+          const updatedReview = {
+            ...review,
+            attributes: {
+              ...review.attributes,
+              feedback_id: result.data.id,
+              feedback_reviews_count: currentCount + 1
+            }
+          };
+          onUpdate?.(updatedReview);
           toast({ title: result.message });
         }
       }
@@ -47,7 +64,11 @@ export const useReviewFeedback = () => {
   };
 
   // コメントのフィードバックの処理
-  const handleCommentFeedbackToggle = async (comment: ReviewCommentWithUser, reviewId: string) => {
+  const handleCommentFeedbackToggle = async (
+    comment: ReviewCommentWithUser,
+    reviewId: string,
+    onUpdate: (updatedComment: ReviewCommentWithUser) => void
+  ) => {
     if (!comment.attributes) return;
 
     const hasFeedback = !!comment.attributes.helpful_by_current_user;
@@ -60,8 +81,15 @@ export const useReviewFeedback = () => {
           comment_id: comment.id
         });
         if (result.success) {
-          comment.attributes.helpful_by_current_user = false;
-          comment.attributes.feedback_review_comments_count = Math.max(0, currentCount - 1);
+          const updatedComment = {
+            ...comment,
+            attributes: {
+              ...comment.attributes,
+              helpful_by_current_user: false,
+              feedback_review_comments_count: Math.max(0, currentCount - 1)
+            }
+          };
+          onUpdate(updatedComment);
           toast({ title: result.message });
         }
       } else {
@@ -70,8 +98,15 @@ export const useReviewFeedback = () => {
           comment_id: comment.id
         });
         if (result.success) {
-          comment.attributes.helpful_by_current_user = true;
-          comment.attributes.feedback_review_comments_count = currentCount + 1;
+          const updatedComment = {
+            ...comment,
+            attributes: {
+              ...comment.attributes,
+              helpful_by_current_user: true,
+              feedback_review_comments_count: currentCount + 1
+            }
+          };
+          onUpdate(updatedComment);
           toast({ title: result.message });
         }
       }
@@ -79,6 +114,5 @@ export const useReviewFeedback = () => {
       console.error('Comment feedback toggle error:', error);
     }
   };
-
   return { handleFeedbackToggle, handleCommentFeedbackToggle };
 };
