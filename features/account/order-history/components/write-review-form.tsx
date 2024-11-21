@@ -58,38 +58,48 @@ export default function WriteReviewForm({ products, reviews }: Props) {
 
   const action = formAction.bind(
     null,
-    writeReviews.map((review) => ({
-      productId: review.productId,
-      rating: review.ratings.texture,
-      review: review.review
-    }))
+    writeReviews.map((review) => {
+      const ratingValues = Object.values(review.ratings);
+      const averageRating = Math.round(
+        ratingValues.reduce((acc, curr) => acc + curr, 0) / ratingValues.length
+      );
+
+      return {
+        productId: review.productId,
+        rating: averageRating,
+        texture_rating: review.ratings.texture,
+        finish_rating: review.ratings.finish,
+        effectiveness_rating: review.ratings.effectiveness,
+        longevity_rating: review.ratings.longevity,
+        usability_rating: review.ratings.usability,
+        review: review.review
+      };
+    })
   );
 
-  const updateReview = (
-    prev: WriteReview[],
-    productId: string,
-    updateData: Partial<WriteReview>
-  ): WriteReview[] => {
-    const existingReviewIndex = prev.findIndex((review) => review.productId === productId);
+  const updateReview = (productId: string, updateData: Partial<WriteReview>): void => {
+    setWriteReviews((prev) => {
+      const existingReviewIndex = prev.findIndex((review) => review.productId === productId);
 
-    if (existingReviewIndex !== -1) {
-      const updatedReviews = [...prev];
-      updatedReviews[existingReviewIndex] = {
-        ...updatedReviews[existingReviewIndex],
-        ...updateData
-      };
-      return updatedReviews;
-    }
-
-    return [
-      ...prev,
-      {
-        productId,
-        ratings: DEFAULT_RATINGS,
-        review: '',
-        ...updateData
+      if (existingReviewIndex !== -1) {
+        const updatedReviews = [...prev];
+        updatedReviews[existingReviewIndex] = {
+          ...updatedReviews[existingReviewIndex],
+          ...updateData
+        };
+        return updatedReviews;
       }
-    ];
+
+      return [
+        ...prev,
+        {
+          productId,
+          ratings: DEFAULT_RATINGS,
+          review: '',
+          ...updateData
+        }
+      ];
+    });
   };
 
   useEffect(() => {
@@ -124,10 +134,10 @@ export default function WriteReviewForm({ products, reviews }: Props) {
                 (review) => review.relationships.product?.data?.id === product.id
               )}
               onReviewRatings={({ productId, ratings }) => {
-                setWriteReviews((prev) => updateReview(prev, productId, { ratings }));
+                updateReview(productId, { ratings });
               }}
               onReviewText={({ productId, text }) => {
-                setWriteReviews((prev) => updateReview(prev, productId, { review: text }));
+                updateReview(productId, { review: text });
               }}
             />
           ))}
