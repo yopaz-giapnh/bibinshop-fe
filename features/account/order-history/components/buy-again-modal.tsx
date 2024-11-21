@@ -60,10 +60,10 @@ export default function BuyAgainModal({ variantIds, buttonStyle, buttonTextStyle
         <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[640px]">
           <DialogHeader className="mt-[8px] flex flex-col items-center md:pt-0">
             <DialogTitle className="text-center text-[14px] md:text-[18px]">
-              買い物かごにもう一度この注文からのアイテムを
+              買い物かごにもう一度このアイテムを
             </DialogTitle>
             <DialogTitle className="text-center text-[14px] md:pt-[2px] md:text-[18px]">
-              を追加してもよろしいですか？
+              追加してもよろしいですか？
             </DialogTitle>
           </DialogHeader>
           <div className="flex w-full justify-around pt-[12px] md:w-[348px]">
