@@ -188,7 +188,7 @@ function Form({ onClose }: Props) {
         </div>
 
         <div className="flex space-x-4">
-          <div className="flex-1">
+          <div className="w-1/3 md:w-1/2">
             <FormLabel>有効期限</FormLabel>
             <div className="mt-2 rounded-md border border-input px-4">
               <CardExpiryElement
@@ -200,7 +200,7 @@ function Form({ onClose }: Props) {
               <p className="mt-2 text-sm font-medium text-destructive">{cardErrors.cardExpiry}</p>
             )}
           </div>
-          <div className="flex-1">
+          <div className="w-2/3 md:w-1/2">
             <FormLabel>セキュリティコード</FormLabel>
             <div className="mt-2 rounded-md border border-input px-4">
               <CardCvcElement
