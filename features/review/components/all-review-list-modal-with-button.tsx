@@ -17,20 +17,16 @@ export function AllReviewListModalWithButton({ reviews, reviewsCount }: Props) {
     allReviewListModalRef.current?.open();
   };
 
-  const existsReviews = reviewsCount > 1;
-
   return (
-    existsReviews && (
-      <>
-        <div className="mx-auto">
-          <SeeMoreReviewButton onClick={handleSeeMoreClick} />
-        </div>
-        <AllReviewListModal
-          ref={allReviewListModalRef}
-          reviews={reviews}
-          reviewsCount={reviewsCount}
-        />
-      </>
-    )
+    <>
+      <div className="mx-auto">
+        <SeeMoreReviewButton onClick={handleSeeMoreClick} />
+      </div>
+      <AllReviewListModal
+        ref={allReviewListModalRef}
+        reviews={reviews}
+        reviewsCount={reviewsCount}
+      />
+    </>
   );
 }

@@ -21,7 +21,9 @@ export async function ProductReviewList({ productId }: Props) {
     <>
       <Suspense fallback={<Loading />}>
         <ReviewListWithAvator reviews={displayedReviews} />
-        <AllReviewListModalWithButton reviews={reviews} reviewsCount={reviewsCount} />
+        {reviewsCount >= 3 && (
+          <AllReviewListModalWithButton reviews={reviews} reviewsCount={reviewsCount} />
+        )}
       </Suspense>
     </>
   );

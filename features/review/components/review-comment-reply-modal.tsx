@@ -193,7 +193,7 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef, Pr
               {/* メインレビュー */}
               <div className="flex w-full">
                 <Link
-                  className="mr-[8px] flex h-[40px] w-[40px] items-center justify-center rounded-[20px]"
+                  className="mr-[8px] h-[40px] w-[40px] flex-shrink-0 rounded-[20px]"
                   href={`/user-detail/${review?.user?.attributes.unique_key}`}
                 >
                   <Image
