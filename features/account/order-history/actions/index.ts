@@ -26,12 +26,12 @@ const includes = [
   'billing_address',
   'payments.source',
   'shipments',
-  // 'variants',
-  // 'variants.images',
-  // 'variants.product',
+  'variants',
+  'variants.images',
+  'variants.product',
   // 'variants.product.variants',
   // 'variants.product.product_properties',
-  //vendor related
+  //  vendor related
   // 'vendors',
   // 'vendors.banner_image',
   // 'vendor_totals',
@@ -104,6 +104,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
     const variants = allVariants.filter((variant) =>
       order.relationships.variants?.data?.map((i) => i?.id).includes(variant.id)
     );
+
     const images =
       allImages.filter((image) =>
         variants
@@ -111,6 +112,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
           .flat()
           .includes(image.id)
       ) || [];
+
     const products = allProducts.filter((product) =>
       variants.map((variant) => variant.relationships.product?.data?.id).includes(product.id)
     );

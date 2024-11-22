@@ -91,7 +91,7 @@ export function OrderDetail({ className, orderNumber }: Props) {
         >
           注文情報
         </Typography>
-        <div className="mt-[24px] w-full rounded-[6px] bg-white-base px-6 py-[19px] shadow-base">
+        <div className="mt-[24px] w-full rounded-[6px] bg-white-base px-6 shadow-base">
           {sortedLineItems.map((group, index, array) => (
             <OrderHistoryListItem
               key={index}
