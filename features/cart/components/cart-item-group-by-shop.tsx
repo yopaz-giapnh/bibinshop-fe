@@ -24,12 +24,40 @@ type Props = {
   shop: Shop;
 };
 
+type QuantityMap = Record<string, number>;
+
 export function CartItemGroupByShop({ shop }: Props) {
   const { variants, images } = shop;
   const [isLoading, setIsLoading] = useState(false);
+  const [quantities, setQuantities] = useState<QuantityMap>(() => {
+    return shop.lineItems.reduce((acc: QuantityMap, lineItem) => {
+      acc[lineItem.id] = lineItem.attributes.quantity || 1;
+      return acc;
+    }, {});
+  });
 
   const handleClick = () => {
     setIsLoading(true);
+  };
+
+  const handleQuantityChange = async (lineItem: LineItem, type: 'plus' | 'minus') => {
+    const currentQuantity = quantities[lineItem.id];
+    const newQuantity = type === 'plus' ? currentQuantity + 1 : Math.max(currentQuantity - 1, 1);
+
+    setQuantities((prev) => ({
+      ...prev,
+      [lineItem.id]: newQuantity
+    }));
+
+    try {
+      await updateItemQuantity({ lineItem, type });
+    } catch (error) {
+      setQuantities((prev) => ({
+        ...prev,
+        [lineItem.id]: currentQuantity
+      }));
+      console.error('数量の更新に失敗しました:', error);
+    }
   };
 
   return (
@@ -103,13 +131,9 @@ export function CartItemGroupByShop({ shop }: Props) {
                 <div className="flex gap-6">
                   {lineItem.attributes.quantity != null && (
                     <QuantityAdjustmentButtons
-                      quantity={lineItem.attributes.quantity}
-                      onIncrease={async () => {
-                        await updateItemQuantity({ lineItem, type: 'plus' });
-                      }}
-                      onDecrease={async () => {
-                        await updateItemQuantity({ lineItem, type: 'minus' });
-                      }}
+                      quantity={quantities[lineItem.id]}
+                      onIncrease={() => handleQuantityChange(lineItem, 'plus')}
+                      onDecrease={() => handleQuantityChange(lineItem, 'minus')}
                     />
                   )}
                   <div className="hidden md:block">

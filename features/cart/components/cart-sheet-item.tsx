@@ -1,8 +1,11 @@
+'use client';
+
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
 import { findImageFromLineItem, getProductImageUrl } from '@/features/product/utils';
 import { Trash } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 import { removeLineItem, updateItemQuantity } from '../actions';
 import { Cart, LineItem } from '../types';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
@@ -14,6 +17,7 @@ type Props = {
 
 export function CartSheetItem({ cart, lineItem }: Props) {
   const { variants, images } = cart;
+  const [quantity, setQuantity] = useState(lineItem.attributes.quantity || 1);
   const image = findImageFromLineItem({
     lineItem,
     variants,
@@ -44,11 +48,15 @@ export function CartSheetItem({ cart, lineItem }: Props) {
         <div className="flex w-full justify-between">
           {lineItem.attributes.quantity != null && (
             <QuantityAdjustmentButtons
-              quantity={lineItem.attributes.quantity}
+              quantity={quantity}
               onIncrease={async () => {
+                const newQuantity = quantity + 1;
+                setQuantity(newQuantity);
                 await updateItemQuantity({ lineItem, type: 'plus' });
               }}
               onDecrease={async () => {
+                const newQuantity = Math.max(quantity - 1, 1);
+                setQuantity(newQuantity);
                 await updateItemQuantity({ lineItem, type: 'minus' });
               }}
             />
