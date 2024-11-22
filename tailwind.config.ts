@@ -122,7 +122,7 @@ const config = {
         base: '0px 4px 10px 0px rgba(0, 0, 0, 0.03)'
       },
       height: {
-        'screen-calc': 'calc(100vh - 370px)',
+        'screen-calc': 'calc(100vh - 100px)',
         'modal-screen-calc': 'calc(100vh - 80px)',
         'default-screen-calc': 'calc((100vh - 120px) * 1.8)'
       }
