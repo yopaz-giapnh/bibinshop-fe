@@ -8,16 +8,16 @@ import Link from 'next/link';
 export function Copyright() {
   const SocialLinks = ({ id }: { id: string }) => (
     <>
-      {/* TODO: Facebookアカウント */}
+      {/* Facebookアカウント */}
       <Link
-        href="https://www.instagram.com/bibinews_/"
+        href="https://m.facebook.com/bibin2020/"
         target="_blank"
         rel="noopener noreferrer"
         passHref
       >
         <FacebookLogo id={id} />
       </Link>
-      {/* TODO: Xアカウント */}
+      {/* TODO: Xアカウント共有されたら修正 */}
       <Link
         href="https://www.instagram.com/bibinews_/"
         target="_blank"
@@ -26,7 +26,7 @@ export function Copyright() {
       >
         <XLogo id={id} />
       </Link>
-      {/* TODO: Instagramアカウント */}
+      {/* Instagramアカウント */}
       <Link
         href="https://www.instagram.com/bibinews_/"
         target="_blank"
