@@ -1,11 +1,8 @@
-'use client';
-
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { Typography } from '@/components/ui/typography';
 import { findImageFromLineItem, getProductImageUrl } from '@/features/product/utils';
 import { Trash } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
 import { removeLineItem, updateItemQuantity } from '../actions';
 import { Cart, LineItem } from '../types';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
@@ -17,7 +14,6 @@ type Props = {
 
 export function CartSheetItem({ cart, lineItem }: Props) {
   const { variants, images } = cart;
-  const [quantity, setQuantity] = useState(lineItem.attributes.quantity || 1);
   const image = findImageFromLineItem({
     lineItem,
     variants,
@@ -26,6 +22,13 @@ export function CartSheetItem({ cart, lineItem }: Props) {
   const variant = variants.find(
     (variant) => variant.id === lineItem.relationships.variant?.data?.id
   );
+
+  const handleQuantityChange = async (newQuantity: number) => {
+    await updateItemQuantity({
+      lineItem,
+      type: newQuantity > (lineItem.attributes.quantity || 1) ? 'plus' : 'minus'
+    });
+  };
 
   return (
     <div className="relative inline-flex items-center gap-[16px]">
@@ -48,17 +51,9 @@ export function CartSheetItem({ cart, lineItem }: Props) {
         <div className="flex w-full justify-between">
           {lineItem.attributes.quantity != null && (
             <QuantityAdjustmentButtons
-              quantity={quantity}
-              onIncrease={async () => {
-                const newQuantity = quantity + 1;
-                setQuantity(newQuantity);
-                await updateItemQuantity({ lineItem, type: 'plus' });
-              }}
-              onDecrease={async () => {
-                const newQuantity = Math.max(quantity - 1, 1);
-                setQuantity(newQuantity);
-                await updateItemQuantity({ lineItem, type: 'minus' });
-              }}
+              initialQuantity={lineItem.attributes.quantity}
+              onQuantityChange={handleQuantityChange}
+              quantitiyInStock={variant?.attributes.total_on_hand}
             />
           )}
 
