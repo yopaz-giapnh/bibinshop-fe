@@ -8,20 +8,18 @@ import { useState } from 'react';
 type Props = {
   initialQuantity: number;
   onQuantityChange: (newQuantity: number) => void;
-  maxQuantity?: number;
-  minQuantity?: number;
   quantitiyInStock?: number;
 };
 
 export function QuantityAdjustmentButtons({
   initialQuantity,
   onQuantityChange,
-  maxQuantity = 23,
-  minQuantity = 1,
   quantitiyInStock
 }: Props) {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(initialQuantity);
+  const maxQuantity = 23;
+  const minQuantity = 1;
   const isAtMinimum = quantity <= minQuantity;
 
   const handleIncrease = () => {
@@ -34,7 +32,7 @@ export function QuantityAdjustmentButtons({
     }
     if (quantity === maxQuantity) {
       toast({
-        title: '同じ商品は23個までしか購入できません。',
+        title: `同じ商品は${maxQuantity}個までしか購入できません。`,
         variant: 'destructive'
       });
       return;
