@@ -23,6 +23,13 @@ export function CartSheetItem({ cart, lineItem }: Props) {
     (variant) => variant.id === lineItem.relationships.variant?.data?.id
   );
 
+  const handleQuantityChange = async (newQuantity: number) => {
+    await updateItemQuantity({
+      lineItem,
+      type: newQuantity > (lineItem.attributes.quantity || 1) ? 'plus' : 'minus'
+    });
+  };
+
   return (
     <div className="relative inline-flex items-center gap-[16px]">
       <div className="relative h-[100px] w-[100px]">
@@ -44,13 +51,9 @@ export function CartSheetItem({ cart, lineItem }: Props) {
         <div className="flex w-full justify-between">
           {lineItem.attributes.quantity != null && (
             <QuantityAdjustmentButtons
-              quantity={lineItem.attributes.quantity}
-              onIncrease={async () => {
-                await updateItemQuantity({ lineItem, type: 'plus' });
-              }}
-              onDecrease={async () => {
-                await updateItemQuantity({ lineItem, type: 'minus' });
-              }}
+              initialQuantity={lineItem.attributes.quantity}
+              onQuantityChange={handleQuantityChange}
+              quantitiyInStock={variant?.attributes.total_on_hand}
             />
           )}
 

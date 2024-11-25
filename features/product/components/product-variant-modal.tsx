@@ -309,19 +309,11 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
             </Typography>
             <div className="ml-[23px]">
               <QuantityAdjustmentButtons
-                quantity={selectedQuantity}
-                onDecrease={() => {
-                  const quantity = Math.max(selectedQuantity - 1, 1);
-                  setSelectedQuantity(quantity);
+                initialQuantity={selectedQuantity}
+                onQuantityChange={(newQuantity) => {
+                  setSelectedQuantity(newQuantity);
                 }}
-                onIncrease={() => {
-                  setSelectedQuantity(
-                    Math.min(
-                      selectedQuantity + 1,
-                      Math.min(23, selectedVariant?.attributes.total_on_hand ?? 0)
-                    )
-                  );
-                }}
+                quantitiyInStock={selectedVariant?.attributes.total_on_hand}
               />
             </div>
           </div>

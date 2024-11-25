@@ -32,6 +32,17 @@ export function CartItemGroupByShop({ shop }: Props) {
     setIsLoading(true);
   };
 
+  const handleQuantityChange = async (lineItem: LineItem, newQuantity: number) => {
+    const currentQuantity = lineItem.attributes.quantity || 1;
+    const type = newQuantity > currentQuantity ? 'plus' : 'minus';
+
+    try {
+      await updateItemQuantity({ lineItem, type });
+    } catch (error) {
+      console.error('数量の更新に失敗しました:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
       <Link href={`/vendors/${shop.id}`} onClick={handleClick}>
@@ -103,13 +114,11 @@ export function CartItemGroupByShop({ shop }: Props) {
                 <div className="flex gap-6">
                   {lineItem.attributes.quantity != null && (
                     <QuantityAdjustmentButtons
-                      quantity={lineItem.attributes.quantity}
-                      onIncrease={async () => {
-                        await updateItemQuantity({ lineItem, type: 'plus' });
-                      }}
-                      onDecrease={async () => {
-                        await updateItemQuantity({ lineItem, type: 'minus' });
-                      }}
+                      initialQuantity={lineItem.attributes.quantity}
+                      onQuantityChange={(newQuantity) =>
+                        handleQuantityChange(lineItem, newQuantity)
+                      }
+                      quantitiyInStock={variant?.attributes.total_on_hand}
                     />
                   )}
                   <div className="hidden md:block">
