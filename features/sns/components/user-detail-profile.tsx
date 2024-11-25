@@ -1,5 +1,5 @@
 import { Typography } from '@/components/ui/typography';
-import { getAccount } from '@/features/account/profile/actions';
+import { getCurrentUser } from '@/features/auth/utils/session';
 import { getReviews } from '@/features/review/actions';
 import { User } from '@/features/users/types';
 import Image from 'next/image';
@@ -8,7 +8,7 @@ import FollowUnfollowButton from './follow-unfollow-button';
 import { UserDetailProfileStats } from './user-detail-profile-stats';
 
 export default async function UserDetailProfile({ userDetail }: { userDetail: User }) {
-  const currentUser = await getAccount().catch(() => null);
+  const currentUser = await getCurrentUser();
   const isMyProfile = currentUser?.attributes?.unique_key === userDetail.attributes.unique_key;
   const reviews = await getReviews({
     query: {
