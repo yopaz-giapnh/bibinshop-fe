@@ -15,12 +15,13 @@ type VendorHeaderProps = {
 export function VendorHeader({ vendor }: VendorHeaderProps) {
   return (
     <div className="flex flex-col md:my-6">
-      {/* TODO: image のサイズどうするか */}
-      <div className="relative h-[300px] w-full">
+      <div className="relative h-[200px] w-full md:h-[300px]">
         <Image
           src={getVendorBannerImageUrl(vendor.vendorBannerImage)}
-          className="mb-6"
+          className="mb-6 object-cover"
           fill
+          sizes="100vw"
+          priority
           alt={vendor.attributes.name || ''}
         />
       </div>
