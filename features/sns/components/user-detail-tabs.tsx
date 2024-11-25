@@ -1,5 +1,6 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Pagination from '@/features/pagination/components/pagination';
 import { getPurchasedProducts, getTaxonId } from '@/features/product/actions';
 import { ProductOverview } from '@/features/product/components/product-overview';
 import { getReviews } from '@/features/review/actions';
@@ -34,13 +35,15 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
   const reviews = await getReviews({
     query: {
       'filter[user_ids]': userDetail.id,
-      page: currentPage
+      page: currentPage,
+      per_page: 10
     }
   });
 
   const purchasedProducts = await getPurchasedProducts({
     orderedUserId: userDetail.id,
-    page: currentPage
+    page: currentPage,
+    perPage: 12
   });
 
   const newTaxonId = await getTaxonId('新着');
@@ -58,7 +61,12 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
         {tabs.map((tab) => (
           <Link
             key={tab.value}
-            href={`?state=${tab.value}`}
+            href={{
+              query: {
+                state: tab.value,
+                page: currentPage
+              }
+            }}
             passHref
             className="w-[120px] md:w-full"
           >
@@ -77,13 +85,22 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
         <TabsContent key={tab.value} value={tab.value} className="w-full">
           <Suspense fallback={<LoadingSpinner />}>
             {tab.value === 'review' ? (
-              <FilteredReviews reviews={reviews.data} />
+              <>
+                <FilteredReviews reviews={reviews.data} />
+                {reviews.meta?.total_pages && reviews.meta.total_pages > 1 && (
+                  <Pagination totalPages={reviews.meta.total_pages} />
+                )}
+              </>
             ) : (
               <div className="mx-[8px]">
                 {purchasedProducts.data.length === 0 ? (
                   <ProfileProductEmptyView />
                 ) : (
-                  <ProductOverview products={purchasedProducts.data} columns={4} />
+                  <ProductOverview
+                    products={purchasedProducts.data}
+                    columns={4}
+                    totalPages={purchasedProducts.meta.total_pages}
+                  />
                 )}
               </div>
             )}

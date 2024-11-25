@@ -8,7 +8,14 @@ import { Suspense } from 'react';
  * ユーザープロフィールホーム画面
  * @returns JSX.Element
  */
-export default async function Page() {
+export default function Page({
+  searchParams
+}: {
+  searchParams: {
+    state?: string;
+    page?: string;
+  };
+}) {
   return (
     <div className="mx-auto mb-[200px] flex w-full flex-col justify-center bg-paleFrostBlue py-[16px] md:mb-0 md:p-[24px]">
       <div className="mx-[8px] mb-[24px] flex w-full items-center justify-between md:hidden">
@@ -19,7 +26,7 @@ export default async function Page() {
         <div className="h-7 w-7" />
       </div>
       <Suspense fallback={<LoadingSpinner />}>
-        <ProfileDetail />
+        <ProfileDetail searchParams={searchParams} />
       </Suspense>
     </div>
   );

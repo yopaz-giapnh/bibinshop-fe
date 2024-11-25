@@ -9,13 +9,17 @@ import ProfileEditModal from './profile-edit-modal';
 
 type Props = {
   isSpHomeProfile?: boolean;
+  searchParams?: {
+    state?: string;
+    page?: string;
+  };
 };
 
 /**
  * ユーザープロフィール画像、名前、編集ボタンコンポーネント
  * @returns JSX.Element
  */
-export default async function ProfileDetail({ isSpHomeProfile = false }: Props) {
+export default async function ProfileDetail({ isSpHomeProfile = false, searchParams }: Props) {
   const account = await getAccount();
   const concerns = await getConcerns();
   const reviewsCount = account.relationships.reviews?.data?.length || 0;
@@ -25,6 +29,8 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
   const avatarUrl = account.avatar?.url || '/placeholder-product-image.png';
   const nickname = account.attributes.nickname || '名無し';
   const receivedFeedbackReviewsCount = account.attributes.received_feedback_reviews_count || 0;
+  const tabState = searchParams?.state || 'review';
+  const currentPage = Number(searchParams?.page) || 1;
 
   const allTags = getConcernTags({
     skin_type: concerns?.skinType,
@@ -109,7 +115,7 @@ export default async function ProfileDetail({ isSpHomeProfile = false }: Props) 
               socialLinks={socialLinks}
             />
           </div>
-          <UserDetailTabs tabState="review" currentPage={1} userDetail={account} />
+          <UserDetailTabs tabState={tabState} currentPage={currentPage} userDetail={account} />
         </>
       )}
     </div>
