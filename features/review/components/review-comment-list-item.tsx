@@ -2,6 +2,7 @@ import { Typography } from '@/components/ui/typography';
 import { formatDateString } from '@/utils/date';
 import { CornerDownRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ReviewCommentWithUser } from '../types';
 import { FeedbackButton } from './feedback-button';
 
@@ -22,13 +23,15 @@ export function ReviewCommentListItem({
     <div className="flex items-start space-x-3 pl-4">
       <CornerDownRight className="h-[16px] w-[16px] text-black-90" />
       <div className="flex h-[32px] w-[32px] items-center justify-center">
-        <Image
-          src={comment.user?.avatar?.url || '/placeholder-product-image.png'}
-          alt={comment.user?.attributes?.nickname ?? '匿名'}
-          width={32}
-          height={32}
-          className="rounded-full object-cover"
-        />
+        <Link href={`/user-detail/${comment.user?.attributes.unique_key}`}>
+          <Image
+            src={comment.user?.avatar?.url || '/placeholder-product-image.png'}
+            alt={comment.user?.attributes?.nickname ?? '匿名'}
+            width={32}
+            height={32}
+            className="rounded-full object-cover"
+          />
+        </Link>
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-2">

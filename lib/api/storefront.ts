@@ -1554,6 +1554,11 @@ export interface components {
        * @example 1080
        */
       height?: number;
+      /**
+       * @description Size of the image
+       * @example 100x100>
+       */
+      size?: string;
     };
     /** Pagination Links */
     ListLinks: {
@@ -1915,6 +1920,10 @@ export interface components {
         };
         /** @description The Primary Variant for this product */
         primary_variant?: {
+          data?: components['schemas']['Relation'];
+        };
+        /** @description The Vendor associated with this product */
+        vendor?: {
           data?: components['schemas']['Relation'];
         };
       };
@@ -2363,6 +2372,18 @@ export interface components {
         available_points?: number;
         /** @example 2 */
         unread_notifications_count?: number;
+        /** @example true */
+        followed_by_me?: boolean;
+        /** @example 5 */
+        followees_count?: number;
+        /** @example 10 */
+        followers_count?: number;
+        /** @example true */
+        following_me?: boolean;
+        /** @example 5 */
+        received_feedback_reviews_count?: number;
+        /** @example 1234567890 */
+        unique_key?: string;
       };
       relationships: {
         /** @description Default billing address associated with this Account */
@@ -3130,11 +3151,13 @@ export interface components {
       content: {
         'application/vnd.api+json': {
           data: components['schemas']['User'];
-          included?: (components['schemas']['Address'] &
-            components['schemas']['UserAvatar'] &
-            components['schemas']['Review'] &
-            components['schemas']['UserProfile'] &
-            components['schemas']['UserSocialLink'])[];
+          included?: (
+            | components['schemas']['Address']
+            | components['schemas']['UserAvatar']
+            | components['schemas']['Review']
+            | components['schemas']['UserProfile']
+            | components['schemas']['UserSocialLink']
+          )[];
         };
       };
     };
