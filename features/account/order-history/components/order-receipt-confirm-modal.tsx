@@ -6,7 +6,6 @@ import { DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import { Dialog } from '@radix-ui/react-dialog';
 import { forwardRef, useImperativeHandle, useState } from 'react';
-import { receiveOrder } from '../actions';
 
 export type OrderReceiptConfirmModalRef = {
   open: (email: string) => void;
@@ -14,22 +13,14 @@ export type OrderReceiptConfirmModalRef = {
 };
 
 type OrderReceiptConfirmModalProps = {
-  shipmentId: string | null;
   onConfirm: () => void;
 };
 
 export const OrderReceiptConfirmModal = forwardRef<
   OrderReceiptConfirmModalRef,
   OrderReceiptConfirmModalProps
->(({ shipmentId, onConfirm }, ref) => {
+>(({ onConfirm }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleOnClickYes = () => {
-    if (shipmentId) {
-      receiveOrder(shipmentId);
-    }
-    onConfirm();
-  };
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -67,7 +58,7 @@ export const OrderReceiptConfirmModal = forwardRef<
               className="h-[48px] w-[150px] md:h-[55px] md:w-[200px]"
               size="lg"
               variant="lg"
-              onClick={handleOnClickYes}
+              onClick={() => onConfirm()}
               type="button"
             >
               <Typography as="bold" element="p" className="text-white-base">

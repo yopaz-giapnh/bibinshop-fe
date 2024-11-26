@@ -191,48 +191,42 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="w-[450px]">
-        <div className="flex flex-col gap-5">
-          <div>
-            <div className="flex w-full justify-center">
-              <Image
-                src={product.images[0]?.url || '/placeholder-product-image.png'}
-                alt={product.attributes.name || ''}
-                width={300}
-                height={300}
-                className={'h-full rounded-[5px] object-cover'}
-                style={{
-                  height: 300,
-                  width: 300
-                }}
-              />
-            </div>
-            <div className="mt-4 flex w-full justify-between">
-              <Typography
-                as="small"
-                element="h1"
-                className="max-w-[300px] overflow-hidden whitespace-normal break-words text-text-80 md:max-w-[500px]"
-                style={{
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: 3
-                }}
-              >
-                {product.attributes.name}
-              </Typography>
-              <button className="ml-[17.5px]" onClick={onPressShare}>
-                <Share className="h-6 w-6" />
-              </button>
-            </div>
+      <DialogContent className="w-[85%] md:w-[450px]">
+        <div className="scrollbar-hide flex max-h-[calc(90vh-4rem)] flex-col gap-5 overflow-y-auto overflow-x-hidden">
+          <div className="flex w-full justify-center">
+            <Image
+              src={product.images[0]?.url || '/placeholder-product-image.png'}
+              alt={product.attributes.name || ''}
+              width={300}
+              height={300}
+              className="h-[250px] w-[250px] rounded-[5px] object-cover md:h-[300px] md:w-[300px]"
+            />
+          </div>
+          <div className="mt-4 flex w-full justify-between">
+            <Typography
+              as="small"
+              element="h1"
+              className="max-w-[300px] overflow-hidden whitespace-normal break-words text-text-80 md:max-w-[500px]"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 3
+              }}
+            >
+              {product.attributes.name}
+            </Typography>
+            <button className="ml-[17.5px]" onClick={onPressShare}>
+              <Share className="h-6 w-6" />
+            </button>
+          </div>
 
-            <div className="mt-[5px] flex w-fit items-center justify-start">
-              {product.attributes.stars != null && (
-                <Rating star={product.attributes.stars} size={16} readOnly />
-              )}
-              <Typography as="xSmall" element="p" className="text-sunburstYellow">
-                {`(${product.attributes.reviews_count})`}
-              </Typography>
-            </div>
+          <div className="mt-[5px] flex w-fit items-center justify-start">
+            {product.attributes.stars != null && (
+              <Rating star={product.attributes.stars} size={16} readOnly />
+            )}
+            <Typography as="xSmall" element="p" className="text-sunburstYellow">
+              {`(${product.attributes.reviews_count})`}
+            </Typography>
           </div>
 
           <div className="flex items-end gap-2">
@@ -350,7 +344,7 @@ function AddToCartButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button size="lg" variant="lg" className="h-[45px] w-[300px] md:w-[350px]" disabled={pending}>
+    <Button size="lg" variant="lg" className="h-[45px] w-[220px] md:w-[350px]" disabled={pending}>
       {pending ? <LoadingSpinner /> : 'カートに追加'}
     </Button>
   );

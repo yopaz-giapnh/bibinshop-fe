@@ -106,8 +106,18 @@ function reshapeReviews({
 }
 
 export async function saveReviews(
-  prevState: { success: boolean; message: string } | null,
-  reviews: { productId: string; rating: number; review?: string; reviewId?: string }[]
+  reviews: {
+    productId: string;
+    ratings: {
+      texture: number;
+      finish: number;
+      effectiveness: number;
+      longevity: number;
+      usability: number;
+    };
+    review?: string;
+    reviewId?: string;
+  }[]
 ) {
   const results = await Promise.all(
     reviews.map((review) =>
@@ -115,12 +125,24 @@ export async function saveReviews(
         ? updateReview({
             productId: review.productId,
             reviewId: review.reviewId,
-            rating: review.rating,
+            ratings: {
+              texture: review.ratings.texture,
+              finish: review.ratings.finish,
+              effectiveness: review.ratings.effectiveness,
+              longevity: review.ratings.longevity,
+              usability: review.ratings.usability
+            },
             review: review.review
           })
         : writeReview({
             productId: review.productId,
-            rating: review.rating,
+            ratings: {
+              texture: review.ratings.texture,
+              finish: review.ratings.finish,
+              effectiveness: review.ratings.effectiveness,
+              longevity: review.ratings.longevity,
+              usability: review.ratings.usability
+            },
             review: review.review
           })
     )
@@ -141,58 +163,21 @@ export async function saveReviews(
   }
 }
 
-async function writeReview({
-  productId,
-  rating,
-  review
-}: {
-  productId: string;
-  rating: number;
-  review?: string;
-}) {
-  try {
-    const { error } = await apiClient.POST('/api/v2/storefront/reviews', {
-      body: {
-        review: {
-          product_id: productId,
-          // TODO: 評価項目を修正する
-          texture_rating: rating,
-          finish_rating: rating,
-          effectiveness_rating: rating,
-          longevity_rating: rating,
-          usability_rating: rating,
-          review
-        }
-      }
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    return {
-      success: true,
-      message: 'レビューを投稿しました'
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      success: false,
-      message: 'レビューの投稿に失敗しました'
-    };
-  }
-}
-
 async function updateReview({
   productId,
   reviewId,
-  rating,
+  ratings,
   review
 }: {
   productId: string;
   reviewId: string;
-  rating: number;
+  ratings: {
+    texture: number;
+    finish: number;
+    effectiveness: number;
+    longevity: number;
+    usability: number;
+  };
   review?: string;
 }) {
   try {
@@ -200,12 +185,11 @@ async function updateReview({
       body: {
         review: {
           product_id: productId,
-          // TODO: 評価項目を修正する
-          texture_rating: rating,
-          finish_rating: rating,
-          effectiveness_rating: rating,
-          longevity_rating: rating,
-          usability_rating: rating,
+          texture_rating: ratings.texture,
+          finish_rating: ratings.finish,
+          effectiveness_rating: ratings.effectiveness,
+          longevity_rating: ratings.longevity,
+          usability_rating: ratings.usability,
           review
         }
       },
@@ -230,6 +214,54 @@ async function updateReview({
     return {
       success: false,
       message: 'レビューの更新に失敗しました'
+    };
+  }
+}
+
+async function writeReview({
+  productId,
+  ratings,
+  review
+}: {
+  productId: string;
+  ratings: {
+    texture: number;
+    finish: number;
+    effectiveness: number;
+    longevity: number;
+    usability: number;
+  };
+  review?: string;
+}) {
+  try {
+    const { error } = await apiClient.POST('/api/v2/storefront/reviews', {
+      body: {
+        review: {
+          product_id: productId,
+          texture_rating: ratings.texture,
+          finish_rating: ratings.finish,
+          effectiveness_rating: ratings.effectiveness,
+          longevity_rating: ratings.longevity,
+          usability_rating: ratings.usability,
+          review
+        }
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      success: true,
+      message: 'レビューを投稿しました'
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: 'レビューの投稿に失敗しました'
     };
   }
 }

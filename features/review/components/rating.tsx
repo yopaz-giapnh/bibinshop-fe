@@ -28,6 +28,7 @@ export default function Rating({
   const [clickValue, setClickValue] = useState(star);
   const [isHovered, setIsHovered] = useState(false);
   const arr = [1, 2, 3, 4, 5];
+  const currentValue = isHovered ? hoverValue : star;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const calcRes = (amount: number, _: React.MouseEvent<HTMLSpanElement>) => {
@@ -55,10 +56,10 @@ export default function Rating({
     }
   };
 
-  const handleOnHover = (amount: number, event: React.MouseEvent<HTMLSpanElement>) => {
+  const handleOnHover = (amount: number) => {
+    if (readOnly) return;
     setIsHovered(true);
-    const res = calcRes(amount, event);
-    setHoverValue(res);
+    setHoverValue(amount);
   };
 
   return (
@@ -83,7 +84,7 @@ export default function Rating({
               <span
                 key={`star-${num}`}
                 className="px-0.5"
-                onMouseMove={readOnly ? () => {} : (e) => handleOnHover(num, e)}
+                onMouseMove={readOnly ? () => {} : () => handleOnHover(num)}
                 onClick={readOnly ? () => {} : (e) => handleOnClick(num, e)}
               >
                 ☆
@@ -96,7 +97,7 @@ export default function Rating({
           style={{
             color: color,
             fontSize: `${size}px`,
-            width: isHovered ? `${hoverValue * 2 * 10}%` : `${clickValue * 2 * 10}%`,
+            width: `${currentValue * 2 * 10}%`,
             pointerEvents: 'none'
           }}
         >
