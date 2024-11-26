@@ -1,14 +1,10 @@
-'use client';
-
 import Shop from '@/assets/cart/shop.svg';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { ImageSchema, VariantSchema } from '@/features/product/types';
 import { findImageFromLineItem, getProductImageUrl } from '@/features/product/utils';
 import { Store } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 import { updateItemQuantity } from '../actions';
 import { LineItem, VendorTotal } from '../types';
 import { CartDeleteItemButton, MobileCartDeleteItemButton } from './cart-delete-item-button';
@@ -26,11 +22,6 @@ type Props = {
 
 export function CartItemGroupByShop({ shop }: Props) {
   const { variants, images } = shop;
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClick = () => {
-    setIsLoading(true);
-  };
 
   const handleQuantityChange = async (lineItem: LineItem, newQuantity: number) => {
     const currentQuantity = lineItem.attributes.quantity || 1;
@@ -45,25 +36,17 @@ export function CartItemGroupByShop({ shop }: Props) {
 
   return (
     <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
-      <Link href={`/vendors/${shop.id}`} onClick={handleClick}>
+      <Link href={`/vendors/${shop.id}`}>
         <div
           key={shop.id.toString()}
           className="mt-[4px] flex cursor-pointer items-center md:mt-[0px]"
         >
-          {isLoading ? (
-            <LoadingSpinner className="mr-[4px]" />
-          ) : (
-            <div className="flex items-center">
-              <Store className="mr-[4px] h-[18px] w-[18px]" />
-              <Typography
-                as="bold"
-                element="h2"
-                className="text-[14px] text-black-90 md:text-[18px]"
-              >
-                {shop.attributes.name}
-              </Typography>
-            </div>
-          )}
+          <div className="flex items-center">
+            <Store className="mr-[4px] h-[18px] w-[18px]" />
+            <Typography as="bold" element="h2" className="text-[14px] text-black-90 md:text-[18px]">
+              {shop.attributes.name}
+            </Typography>
+          </div>
         </div>
       </Link>
 
