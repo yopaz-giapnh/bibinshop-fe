@@ -106,21 +106,45 @@ function reshapeReviews({
 }
 
 export async function saveReviews(
-  reviews: { productId: string; rating: number; review?: string }[]
+  reviews: {
+    productId: string;
+    ratings: {
+      texture: number;
+      finish: number;
+      effectiveness: number;
+      longevity: number;
+      usability: number;
+    };
+    review?: string;
+    reviewId?: string;
+  }[]
 ) {
   const results = await Promise.all(
     reviews.map((review) =>
-      writeReview({
-        productId: review.productId,
-        ratings: {
-          texture: review.rating,
-          finish: review.rating,
-          effectiveness: review.rating,
-          longevity: review.rating,
-          usability: review.rating
-        },
-        review: review.review
-      })
+      review.reviewId
+        ? updateReview({
+            productId: review.productId,
+            reviewId: review.reviewId,
+            ratings: {
+              texture: review.ratings.texture,
+              finish: review.ratings.finish,
+              effectiveness: review.ratings.effectiveness,
+              longevity: review.ratings.longevity,
+              usability: review.ratings.usability
+            },
+            review: review.review
+          })
+        : writeReview({
+            productId: review.productId,
+            ratings: {
+              texture: review.ratings.texture,
+              finish: review.ratings.finish,
+              effectiveness: review.ratings.effectiveness,
+              longevity: review.ratings.longevity,
+              usability: review.ratings.usability
+            },
+            review: review.review
+          })
     )
   );
 
@@ -135,6 +159,61 @@ export async function saveReviews(
     return {
       success: false,
       message: 'レビューの投稿に失敗しました'
+    };
+  }
+}
+
+async function updateReview({
+  productId,
+  reviewId,
+  ratings,
+  review
+}: {
+  productId: string;
+  reviewId: string;
+  ratings: {
+    texture: number;
+    finish: number;
+    effectiveness: number;
+    longevity: number;
+    usability: number;
+  };
+  review?: string;
+}) {
+  try {
+    const { error } = await apiClient.PATCH(`/api/v2/storefront/reviews/{id}`, {
+      body: {
+        review: {
+          product_id: productId,
+          texture_rating: ratings.texture,
+          finish_rating: ratings.finish,
+          effectiveness_rating: ratings.effectiveness,
+          longevity_rating: ratings.longevity,
+          usability_rating: ratings.usability,
+          review
+        }
+      },
+      params: {
+        path: {
+          id: reviewId
+        }
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      success: true,
+      message: 'レビューを更新しました'
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: 'レビューの更新に失敗しました'
     };
   }
 }

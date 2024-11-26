@@ -28,6 +28,7 @@ type WriteReview = {
     usability: number;
   };
   review?: string;
+  reviewId?: string;
 };
 
 export default function WriteReviewForm({ products, reviews }: Props) {
@@ -47,22 +48,19 @@ export default function WriteReviewForm({ products, reviews }: Props) {
     }))
   );
 
-  const formAction = async (
-    prevState: null | { success: boolean; message: string },
-    formData: FormData
-  ) => {
-    const reviews = writeReviews.map((review) => {
-      const ratingValues = Object.values(review.ratings);
-      const averageRating = Math.round(
-        ratingValues.reduce((acc, curr) => acc + curr, 0) / ratingValues.length
-      );
-
-      return {
-        productId: review.productId,
-        rating: averageRating,
-        review: review.review
-      };
-    });
+  const formAction = async () => {
+    const reviews = writeReviews.map((review) => ({
+      productId: review.productId,
+      ratings: {
+        texture: review.ratings.texture,
+        finish: review.ratings.finish,
+        effectiveness: review.ratings.effectiveness,
+        longevity: review.ratings.longevity,
+        usability: review.ratings.usability
+      },
+      review: review.review,
+      reviewId: review.reviewId
+    }));
 
     return await saveReviews(reviews);
   };
