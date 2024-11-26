@@ -19,25 +19,76 @@ export function SnsUserList() {
     scalpHairConcern: ''
   });
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const loadUsers = async (isInitial: boolean = false) => {
+    if (isInitial) {
+      setLoading(true);
+    } else {
+      setLoadingMore(true);
+    }
+
+    try {
+      const fetchedUsers = (await getUsers({
+        page,
+        perPage: 10,
+        sortBy,
+        filter
+      })) as User[];
+
+      const newUsers = fetchedUsers || [];
+
+      if (isInitial) {
+        setUsers(newUsers || []);
+      } else {
+        setUsers((prev) => {
+          const existingIds = new Set(prev.map((user) => user.id));
+          const uniqueNewUsers = newUsers.filter((user) => !existingIds.has(user.id));
+          return [...prev, ...uniqueNewUsers];
+        });
+      }
+
+      // If we got less users than requested, there are no more pages
+      setHasMore((newUsers?.length || 0) === 10);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
 
   useEffect(() => {
-    setLoading(true);
-    const fetchUsers = async () => {
-      try {
-        const fetchedUsers = await getUsers({
-          page: 1,
-          perPage: 50,
-          sortBy,
-          filter
-        });
-        setUsers((fetchedUsers as User[]) || []);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
+    setPage(1);
+    loadUsers(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy, filter]);
+
+  useEffect(() => {
+    if (page > 1) {
+      loadUsers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  // Infinite scroll handler
+  useEffect(() => {
+    const handleScroll = () => {
+      if (loading || loadingMore || !hasMore) return;
+
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.documentElement.scrollHeight - 800; // Load more when 800px from bottom
+
+      if (scrollPosition > threshold) {
+        setPage((prev) => prev + 1);
       }
     };
 
-    fetchUsers().then(() => setLoading(false));
-  }, [sortBy, filter]);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading, loadingMore, hasMore]);
 
   const haveRecommendedProductsUsers = users.filter(
     (user: User) => user.recommendedProducts && user.recommendedProducts.length > 0
@@ -57,6 +108,7 @@ export function SnsUserList() {
               products={user.recommendedProducts || []}
             />
           ))}
+          {loadingMore && <LoadingSpinner size={24} className="mx-auto mt-4" />}
         </div>
       ) : (
         <SnsUserListEmptyView />
