@@ -33,9 +33,9 @@ export function Search({ isSignedIn }: Props) {
     <Command
       className={
         (isOpen
-          ? 'absolute left-0 top-0 z-50 h-screen w-screen pt-[15px] md:h-fit md:max-h-[300px] md:w-[462px] md:pt-[0px] '
+          ? `absolute left-0 top-0 z-50 h-screen w-screen pt-[15px] md:h-fit md:max-h-[300px] md:w-[462px] md:pt-[0px]`
           : `absolute ${isSignedIn ? 'top-3' : 'top-9 md:mt-[20px]'} z-50  h-[48px] w-[172px]`) +
-        ' md:left-auto md:top-3 md:flex md:w-[456px]'
+        ` md:left-auto md:top-3 md:flex md:w-[456px] ${isSignedIn ? '' : 'md:mt-[20px]'}`
       }
       value={searchValue}
     >
