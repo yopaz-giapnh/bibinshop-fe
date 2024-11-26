@@ -24,7 +24,10 @@ export const DeliveryActionButtons: React.FC<DeliveryActionButtonsProps> = ({
   groupSlugs,
   isReviewed
 }) => {
-  if (group.state === 'shipped') {
+  const isShipped = group.state === 'shipped';
+  const isReady = group.state === 'ready';
+
+  if (isShipped) {
     return (
       <>
         <Button
@@ -57,7 +60,7 @@ export const DeliveryActionButtons: React.FC<DeliveryActionButtonsProps> = ({
     );
   }
 
-  if (group.state !== 'ready') {
+  if (!isReady) {
     return <ReviewButton groupSlugs={groupSlugs} isReviewed={isReviewed} />;
   }
 
