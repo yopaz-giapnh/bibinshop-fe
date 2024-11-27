@@ -15,7 +15,7 @@ export async function UserDetail({ userDetail, searchParams }: Props) {
   const currentPage = Number(searchParams?.page) || 1;
 
   return (
-    <div className="mx-auto flex h-full w-full flex-col items-center bg-paleFrostBlue pb-[48px] pt-[73px] md:px-32 md:pt-[128px]">
+    <div className="mx-auto flex h-full w-full flex-col items-center bg-paleFrostBlue pb-[48px] pt-[73px] md:px-32 md:pt-[150px]">
       <UserDetailProfile userDetail={userDetail} />
       <UserDetailTabs tabState={tabState} currentPage={currentPage} userDetail={userDetail} />
     </div>
