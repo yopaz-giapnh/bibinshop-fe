@@ -9,6 +9,9 @@ import { VendorReviewList } from './vendor-review-list';
 
 type Props = {
   vendor: Vendor;
+  searchParams?: {
+    page?: string;
+  };
 };
 
 const useVendorReviewData = (vendor: Vendor) => {
@@ -36,8 +39,9 @@ const RatingProgressBar = ({ star, percent }: { star: number; percent: number })
   </div>
 );
 
-export function VendorReviews({ vendor }: Props) {
+export function VendorReviews({ vendor, searchParams }: Props) {
   const { avgReview, reviewsCount, reviewsCountPercents } = useVendorReviewData(vendor);
+  const currentPage = Number(searchParams?.page) || 1;
 
   return (
     <div className="flex w-full flex-col justify-between">
@@ -70,11 +74,8 @@ export function VendorReviews({ vendor }: Props) {
               </div>
             </div>
             <div className="mt-6 md:ml-14">
-              {/* <div className="absolute right-0 mr-14">
-                <SortButton />
-              </div> */}
               <Suspense fallback={<LoadingSpinner />}>
-                <VendorReviewList vendorId={vendor.id} />
+                <VendorReviewList vendorId={vendor.id} currentPage={currentPage} />
               </Suspense>
             </div>
           </div>
