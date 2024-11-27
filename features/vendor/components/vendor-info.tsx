@@ -1,86 +1,32 @@
 import { Card } from '@/components/ui/card';
-import { Typography } from '@/components/ui/typography';
 import { Vendor } from '../types';
+import { VendorInfoItem } from './vendor-info-item';
+import VendorInfoEmptyView from './vendorInfo-empty-view';
 
 type Props = {
   vendor: Vendor;
 };
 
 const VendorInfo = ({ vendor }: Props) => {
+  const infoItems = [
+    { label: 'ショップ、ブランド名', value: vendor.attributes.name },
+    { label: 'ショップ、ブランド概要', value: vendor.attributes.about_us },
+    { label: '住所', value: vendor.attributes.address },
+    { label: 'メール', value: vendor.attributes.notification_email },
+    { label: '連絡先', value: vendor.attributes.phone }
+  ];
+
+  const hasAnyValue = infoItems.some((item) => item.value);
+
+  if (!hasAnyValue) {
+    return <VendorInfoEmptyView />;
+  }
+
   return (
-    <Card className="flex w-11/12 flex-col gap-5 rounded-md bg-[#EEF8FF] p-4 md:h-[340px] md:w-[580px] md:items-center md:justify-center">
-      <div className="flex flex-col justify-center gap-1 p-0 md:w-[532px] md:items-center">
-        <div className="flex h-[21px] flex-row gap-1 p-0 md:w-[532px] md:items-center md:justify-center">
-          <Typography
-            as="bold"
-            element="p"
-            className="h-[21px] text-[14px] font-bold leading-[20px] tracking-[0.03em] text-bibinBlue-100 md:w-[532px]"
-          >
-            {vendor.attributes.name}
-          </Typography>
-        </div>
-        <Typography
-          as="bold"
-          element="p"
-          className="text-[12px] font-medium leading-[17px] tracking-[0.03em] text-stone-950/50 md:w-[532px] md:text-primary"
-        >
-          {vendor.attributes.about_us}
-        </Typography>
-      </div>
-      <div className="flex h-[43px] flex-col gap-1 p-0 md:w-[532px] md:items-center md:justify-center">
-        <div className="flex h-[21px] flex-row gap-1 p-0 md:w-[532px] md:items-center md:justify-center">
-          <Typography
-            as="bold"
-            element="p"
-            className="h-[21px] text-[14px] font-bold leading-[20px] tracking-[0.03em] text-bibinBlue-100 md:w-[532px]"
-          >
-            住所
-          </Typography>
-        </div>
-        <Typography
-          as="bold"
-          element="p"
-          className="h-[18px] text-[12px] font-medium leading-[17px] tracking-[0.03em] text-stone-950/50 md:w-[532px]  md:text-primary"
-        >
-          {vendor.attributes.address}
-        </Typography>
-      </div>
-      <div className="flex h-[43px] flex-col gap-1 p-0 md:w-[532px] md:items-center md:justify-center">
-        <div className="flex h-[21px] flex-row gap-1 p-0 md:w-[532px] md:items-center md:justify-center">
-          <Typography
-            as="bold"
-            element="p"
-            className="h-[21px] text-[14px] font-bold leading-[20px] tracking-[0.03em] text-bibinBlue-100 md:w-[532px]"
-          >
-            メール
-          </Typography>
-        </div>
-        <Typography
-          as="bold"
-          element="p"
-          className="h-[18px] text-[12px] font-medium leading-[17px] tracking-[0.03em] text-stone-950/50 md:w-[532px] md:text-primary"
-        >
-          {vendor.attributes.notification_email}
-        </Typography>
-      </div>
-      <div className="flex h-[43px] flex-col gap-1 p-0 md:w-[532px] md:items-center md:justify-center">
-        <div className="flex h-[21px] flex-row gap-1 p-0 md:w-[532px] md:items-center md:justify-center">
-          <Typography
-            as="bold"
-            element="p"
-            className="h-[21px] text-[14px] font-bold leading-[20px] tracking-[0.03em] text-bibinBlue-100 md:w-[532px]"
-          >
-            連絡先
-          </Typography>
-        </div>
-        <Typography
-          as="bold"
-          element="p"
-          className="h-[18px] text-[12px] font-medium leading-[17px] tracking-[0.03em] text-stone-950/50 md:w-[532px] md:text-primary"
-        >
-          {vendor.attributes.phone}
-        </Typography>
-      </div>
+    <Card className="flex w-11/12 flex-col gap-5 rounded-md bg-[#EEF8FF] p-4 md:w-[580px] md:items-center md:justify-center">
+      {infoItems.map((item) => (
+        <VendorInfoItem key={item.label} {...item} />
+      ))}
     </Card>
   );
 };
