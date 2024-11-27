@@ -38,7 +38,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="h-full w-full bg-white-base pb-6 md:px-16">
-      <div className="pt-[80px] md:pt-[128px]">
+      <div className="pt-[80px] md:pt-[150px]">
         <Breadcrumb menus={menus} />
         <ProductDetail product={product} />
       </div>

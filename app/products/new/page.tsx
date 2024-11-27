@@ -18,7 +18,7 @@ export default async function Page({ searchParams }: { searchParams?: { page?: s
 
   return (
     <div className="h-full w-full">
-      <div className="mx-auto flex w-full flex-col pt-[73px] md:pt-[126px]">
+      <div className="mx-auto flex w-full flex-col pt-[73px] md:pt-[150px]">
         <div className="md:hidden">
           <Menu getTaxons={getTaxons()} />
         </div>
