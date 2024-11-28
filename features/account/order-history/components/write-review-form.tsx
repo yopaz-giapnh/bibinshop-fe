@@ -71,7 +71,9 @@ export default function WriteReviewForm({ products, reviews }: Props) {
     !!writeReviews.length &&
     writeReviews.some((review) => {
       const ratingValues = Object.values(review.ratings);
-      return ratingValues.some((rating) => rating > 0);
+      const hasRating = ratingValues.some((rating) => rating > 0);
+      const hasReviewText = review.review && review.review.trim().length > 0;
+      return hasRating && hasReviewText;
     });
 
   const updateReview = (productId: string, updateData: Partial<WriteReview>): void => {
