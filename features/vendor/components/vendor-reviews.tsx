@@ -9,6 +9,9 @@ import { VendorReviewList } from './vendor-review-list';
 
 type Props = {
   vendor: Vendor;
+  searchParams?: {
+    page?: string;
+  };
 };
 
 const useVendorReviewData = (vendor: Vendor) => {
@@ -36,13 +39,15 @@ const RatingProgressBar = ({ star, percent }: { star: number; percent: number })
   </div>
 );
 
-export function VendorReviews({ vendor }: Props) {
+export function VendorReviews({ vendor, searchParams }: Props) {
   const { avgReview, reviewsCount, reviewsCountPercents } = useVendorReviewData(vendor);
+  const currentPage = Number(searchParams?.page) || 1;
 
   return (
     <div className="flex w-full flex-col justify-between">
-      <div className="sticky top-[72px] z-40 mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:bg-white-base">
-        {/* <Select>
+      {/* TODO: 並べ替え */}
+      {/* <div className="sticky top-[72px] z-40 mx-[-16px] flex justify-center bg-[#F5F6FA] p-2 md:bg-white-base">
+        <Select>
           <SelectTrigger className="mx-1 w-fit rounded-full border-2 border-bibinBlue-100 bg-white-base text-xs font-bold text-bibinBlue-100">
             並べ替え: ランキング順
           </SelectTrigger>
@@ -50,15 +55,15 @@ export function VendorReviews({ vendor }: Props) {
             <SelectItem value="1">1</SelectItem>
               <SelectItem value="2">2</SelectItem>
           </SelectContent>
-        </Select> */}
-      </div>
+        </Select>
+      </div> */}
       {reviewsCount !== 0 ? (
         <>
-          <div className="z-0 w-full md:w-[225px]">
-            {avgReview != null && <Rating star={avgReview} size={32} withLabel readOnly />}
-          </div>
           <div className="flex w-full flex-col md:flex-row">
             <div className="flex flex-col items-center md:items-start ">
+              <div className="z-0 w-full md:w-[225px]">
+                {avgReview != null && <Rating star={avgReview} size={32} withLabel readOnly />}
+              </div>
               <div className="w-full">
                 {[5, 4, 3, 2, 1].map((star, index) => (
                   <RatingProgressBar
@@ -69,12 +74,9 @@ export function VendorReviews({ vendor }: Props) {
                 ))}
               </div>
             </div>
-            <div className="mt-6 md:ml-14">
-              {/* <div className="absolute right-0 mr-14">
-                <SortButton />
-              </div> */}
+            <div className="md:ml-14">
               <Suspense fallback={<LoadingSpinner />}>
-                <VendorReviewList vendorId={vendor.id} />
+                <VendorReviewList vendorId={vendor.id} currentPage={currentPage} />
               </Suspense>
             </div>
           </div>
