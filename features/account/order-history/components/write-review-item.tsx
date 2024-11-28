@@ -95,7 +95,7 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
       </div>
       <div className="mt-[12px] border-b border-gray-200 pb-[12px]">
         <Typography as="boldSmall" element="p" className="text-[16px] text-black-90 md:text-[20px]">
-          項目評価
+          項目評価<span className="text-error">*</span>
         </Typography>
         {RATING_ITEMS.map((item) => (
           <RatingItem
@@ -112,11 +112,11 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
         element="p"
         className="mt-[12px] text-[14px] text-black-90 md:mt-[14px]"
       >
-        レビュー
+        レビュー<span className="text-error">*</span>
       </Typography>
       <Textarea
         className="mt-[8px] h-[160px] bg-gray-50"
-        placeholder="レビュー"
+        placeholder="商品の感想を入力してください"
         defaultValue={review?.attributes.review || ''}
         onChange={(event) => {
           onReviewText({
@@ -124,6 +124,7 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
             text: event.target.value
           });
         }}
+        required
       />
     </div>
   );
