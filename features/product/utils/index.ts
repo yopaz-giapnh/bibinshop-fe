@@ -95,8 +95,8 @@ export function getDisplayShippingCost({
   );
 
   const cost = shippingMethod?.calculator?.attributes.preferences?.amount;
-  if (!cost) {
-    return null;
+  if (!cost || parseInt(cost) <= 0) {
+    return '無料';
   }
 
   return parseInt(cost).toLocaleString() + '円';
