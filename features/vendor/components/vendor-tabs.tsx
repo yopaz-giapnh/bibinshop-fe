@@ -1,5 +1,6 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Link from 'next/link';
 import { Suspense } from 'react';
 import { Vendor } from '../types';
 import VendorInfo from './vendor-info';
@@ -20,6 +21,9 @@ type VendorTabsProps = {
 export default async function VendorTabs({ vendor, searchParams }: VendorTabsProps) {
   const productsCount = vendor.attributes.available_products_count || 0;
   const avgReview = vendor.attributes.stars;
+  const currentTab = Array.isArray(searchParams.tab)
+    ? searchParams.tab[0]
+    : searchParams.tab || 'products';
 
   const tabs = [
     { label: `商品(${productsCount}件)`, value: 'products' },
@@ -28,11 +32,26 @@ export default async function VendorTabs({ vendor, searchParams }: VendorTabsPro
   ];
 
   return (
-    <Tabs defaultValue={tabs[0].value} className="flex flex-col">
+    <Tabs defaultValue={currentTab} className="flex flex-col">
       <TabsList className="z-0 my-2 w-full bg-white-base">
         {tabs.map((tab) => (
-          <TabsTrigger key={tab.value} value={tab.value} className="text-[14px] md:text-[16px]">
-            {tab.label}
+          <TabsTrigger
+            key={tab.value}
+            value={tab.value}
+            className="flex text-[14px] md:text-[16px]"
+            asChild
+          >
+            <Link
+              href={{
+                query: {
+                  ...searchParams,
+                  tab: tab.value
+                }
+              }}
+              scroll={false}
+            >
+              {tab.label}
+            </Link>
           </TabsTrigger>
         ))}
       </TabsList>
@@ -42,7 +61,7 @@ export default async function VendorTabs({ vendor, searchParams }: VendorTabsPro
       </TabsContent>
       <TabsContent value="review">
         <Suspense fallback={<LoadingSpinner />}>
-          <VendorReviews vendor={vendor} />
+          <VendorReviews vendor={vendor} searchParams={searchParams} />
         </Suspense>
       </TabsContent>
       <TabsContent value="shopInfo">
