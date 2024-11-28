@@ -35,9 +35,15 @@ export function SnsUserListDetailCard({ user, products }: SnsUserListDetailCardP
       <div className="mb-4 flex items-center md:items-start">
         <Link
           href={`/user-detail/${uniqueKey}`}
-          className="relative mr-4 h-[84px] w-[88px] flex-shrink-0 rounded-full md:h-[154px] md:w-[160px]"
+          className="relative mr-4 h-[84px] w-[88px] flex-shrink-0 rounded-full border border-gray-200 md:h-[154px] md:w-[160px]"
         >
-          <Image src={avatarUrl} alt={'avatar'} className="rounded-full" fill objectFit="cover" />
+          <Image
+            src={avatarUrl}
+            alt={'avatar'}
+            className="h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]"
+            fill
+            objectFit="cover"
+          />
         </Link>
         <div className="flex flex-col justify-center md:justify-between">
           <Typography as="boldSmall" element="h2" className="pb-[4px] text-[16px] md:text-[20px]">

@@ -63,8 +63,14 @@ export default async function ProfileDetail({ isSpHomeProfile = false, searchPar
   return (
     <div className="h-full">
       <div className="flex h-[90px] pl-[16px] md:ml-[24px] md:mr-0 md:h-fit md:justify-normal md:pl-0">
-        <div className="relative h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]">
-          <Image src={avatarUrl} className="rounded-full" fill alt={'avatar'} objectFit="cover" />
+        <div className="relative h-[84px] w-[88px] rounded-full border border-gray-200 md:h-[154px] md:w-[160px]">
+          <Image
+            src={avatarUrl}
+            className="h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]"
+            fill
+            alt={'avatar'}
+            objectFit="cover"
+          />
         </div>
         <div className="ml-[16px] flex flex-col items-start justify-between">
           <div className="items-center md:flex">

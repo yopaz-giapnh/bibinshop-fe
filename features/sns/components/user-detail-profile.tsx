@@ -40,8 +40,14 @@ export default async function UserDetailProfile({ userDetail }: { userDetail: Us
   return (
     <div className="bg mt-[24px] w-full items-center justify-center md:flex">
       <div className="mb-[16px] ml-[8px] flex md:mb-0 md:ml-0">
-        <div className="relative h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]">
-          <Image src={avatarUrl} alt={nickname} className="rounded-full" fill objectFit="cover" />
+        <div className="relative h-[84px] w-[88px] rounded-full border border-gray-200  md:h-[154px] md:w-[160px]">
+          <Image
+            src={avatarUrl}
+            alt={nickname}
+            className="h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]"
+            fill
+            objectFit="cover"
+          />
         </div>
         <div className="ml-4 flex flex-col items-baseline justify-end md:hidden">
           <Typography as="boldSmall" element="h2" className="mb-[8px] mr-[16px] text-[20px]">

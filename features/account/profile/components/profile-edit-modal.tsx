@@ -518,7 +518,11 @@ function AvatarUpload({ account }: { account: User }) {
 
   return (
     <>
-      <button className="relative h-[100px] w-[100px]" onClick={handleImageClick} type="button">
+      <button
+        className="h-[100px] w-[100px] rounded-[100px] border border-gray-200"
+        onClick={handleImageClick}
+        type="button"
+      >
         <Image
           src={
             avatar
@@ -528,6 +532,7 @@ function AvatarUpload({ account }: { account: User }) {
           className="rounded-[100px]"
           fill
           alt={''}
+          objectFit="cover"
         />
       </button>
       <RoundedWhiteCamera className="absolute bottom-0 right-0" />

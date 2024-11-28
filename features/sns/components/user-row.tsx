@@ -24,7 +24,7 @@ export default function UserRow(props: Props) {
             <Image
               src={props.avatar}
               alt="avatar"
-              className="rounded-full"
+              className="h-[64px] w-[64px] rounded-full border border-gray-200"
               fill
               objectFit="cover"
             />
@@ -34,7 +34,7 @@ export default function UserRow(props: Props) {
             <Image
               src={props.avatar}
               alt="avatar"
-              className="rounded-full"
+              className="h-[64px] w-[64px] rounded-full border border-gray-200"
               fill
               objectFit="cover"
             />
