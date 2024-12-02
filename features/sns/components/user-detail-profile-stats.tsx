@@ -43,16 +43,18 @@ export const UserDetailProfileStats = ({
   const StatItem = ({
     value,
     label,
-    onClick
+    onClick,
+    isClickable = true
   }: {
     value: string;
     label: string;
     onClick?: () => void;
+    isClickable?: boolean;
   }) => (
     <div
       className="flex flex-col items-center"
-      onClick={onClick}
-      style={{ cursor: onClick ? 'pointer' : 'default' }}
+      onClick={isClickable ? onClick : undefined}
+      style={{ cursor: isClickable && onClick ? 'pointer' : 'default' }}
     >
       <Typography as="boldSmall" element="p" className="text-[16px] md:text-sm">
         {value}
@@ -97,6 +99,7 @@ export const UserDetailProfileStats = ({
             if (followersCount === 0) return;
             followersModalRef.current?.open();
           }}
+          isClickable={followersCount > 0}
         />
         <div className="h-[40px] w-[0.5px] bg-gray-400" />
         <StatItem
@@ -106,6 +109,7 @@ export const UserDetailProfileStats = ({
             if (followeesCount === 0) return;
             followeesModalRef.current?.open();
           }}
+          isClickable={followeesCount > 0}
         />
       </div>
       <div className="mx-[8px] mb-4 flex w-full max-w-screen-sm flex-wrap px-[16px] md:mx-0 md:px-0">
