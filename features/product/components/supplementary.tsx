@@ -21,17 +21,17 @@ export async function Supplementary({ product }: Props) {
             <Typography as="boldSmall" element="p" className="ml-1 text-bibinBlue-100">
               送料
             </Typography>
+            {vendor && (
+              <div className="ml-1">
+                <Typography as="xSmall" element="p" className="text-black-50">
+                  {getDisplayShippingCost({
+                    shippingMethods,
+                    vendor
+                  })}
+                </Typography>
+              </div>
+            )}
           </div>
-          {vendor && (
-            <div className="mt-1">
-              <Typography as="xSmall" element="p" className="text-black-50">
-                {getDisplayShippingCost({
-                  shippingMethods,
-                  vendor
-                })}
-              </Typography>
-            </div>
-          )}
         </div>
       </div>
 
