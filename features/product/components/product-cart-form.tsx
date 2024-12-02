@@ -81,7 +81,6 @@ export function ProductCartForm({ product, getCart }: Props) {
     if (!state) {
       return;
     }
-    //TODO: 購入制限toastを表示するロジック追加
 
     if (state.success) {
       if (isPc) {

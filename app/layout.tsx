@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    //TODO: 横のサイズが大きいコンポーネントの影響で横スクロールが発生するため、overflow-x-hiddenを一旦入れてます
+    //NOTE: 横のサイズが大きいコンポーネントの影響で横スクロールが発生するため、overflow-x-hiddenを一旦入れてます
     <html lang="ja" suppressHydrationWarning className="overflow-x-hidden">
       <head>
         <meta
