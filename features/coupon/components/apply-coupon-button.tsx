@@ -9,9 +9,10 @@ import { CouponSheet, CouponSheetRef } from './coupon-sheet';
 
 type Props = {
   getCoupons: ReturnType<typeof getCoupons>;
+  cartTotal?: string;
 };
 
-export function ApplyCouponButton({ getCoupons }: Props) {
+export function ApplyCouponButton({ getCoupons, cartTotal }: Props) {
   const couponSheetRef = useRef<CouponSheetRef>(null);
   const { activeCoupon } = useCoupon();
 
@@ -35,7 +36,7 @@ export function ApplyCouponButton({ getCoupons }: Props) {
           <ChevronRight className="hidden h-6 w-6 md:block" color="black" />
         </button>
       )}
-      <CouponSheet ref={couponSheetRef} getCoupons={getCoupons} />
+      <CouponSheet ref={couponSheetRef} getCoupons={getCoupons} cartTotal={cartTotal} />
     </>
   );
 }

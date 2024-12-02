@@ -241,7 +241,6 @@ export function AddressForm({ buttonText = '保存する', address, onSaved }: P
         <div className="w-full">
           <label key="isDefaultAddress" className="flex cursor-pointer items-center">
             <div className="flex h-[46px] w-[46px] items-center justify-center">
-              {/* TODO: チェックボックスがtrueの状態で住所一覧に新しい住所を追加(update)するAPIを叩いた場合、main addoressに設定 */}
               <Checkbox
                 id="isDefaultAddress"
                 onCheckedChange={(checked: boolean) => {

@@ -22,11 +22,11 @@ export async function Cart() {
         </div>
         <div className="flex flex-none flex-col gap-4 md:w-[424px]">
           <div className="hidden w-full md:block">
-            <ApplyCouponButton getCoupons={getCoupons()} />
+            <ApplyCouponButton getCoupons={getCoupons()} cartTotal={cart?.attributes.total} />
           </div>
           <OrderOverview cart={cart} getCoupons={getCoupons()} />
 
-          {/* TODO: 本来は、支払い方法を取得できたほうがいい？ */}
+          {/* NOTE: 本来は、支払い方法を取得できたほうがいい？ */}
           <PaymentMethod />
         </div>
       </div>

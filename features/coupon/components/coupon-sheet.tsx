@@ -40,9 +40,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
   getCoupons: ReturnType<typeof getCoupons>;
+  cartTotal?: string;
 };
 
-export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, ref) => {
+export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons, cartTotal }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCouponId, setSelectedCouponId] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<CouponSchema[]>([]);
@@ -190,7 +191,7 @@ export const CouponSheet = forwardRef<CouponSheetRef, Props>(({ getCoupons }, re
                     <div className="flex flex-col">
                       {coupons.map((coupon) => (
                         <div key={coupon.id}>
-                          <CouponSheetItem coupon={coupon} />
+                          <CouponSheetItem coupon={coupon} cartTotal={cartTotal} />
                           <div className="border-b" />
                         </div>
                       ))}

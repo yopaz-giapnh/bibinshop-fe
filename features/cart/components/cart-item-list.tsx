@@ -2,8 +2,9 @@
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
+import { useToast } from '@/components/ui/use-toast';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
-import { Check } from 'lucide-react';
+import { BadgeAlert, Check } from 'lucide-react';
 import { Cart } from '../types';
 import { CartItemGroupByShop } from './cart-item-group-by-shop';
 
@@ -13,6 +14,23 @@ type Props = {
 
 export function CartItemList({ cart }: Props) {
   const { activeCoupon, removeActiveCoupon } = useCoupon();
+  const { toast } = useToast();
+
+  const handleRemoveCoupon = async () => {
+    const { success, message } = await removeActiveCoupon();
+    if (success) {
+      toast({
+        title: message,
+        icon: <Check className="h-6 w-6" />
+      });
+    } else {
+      toast({
+        title: message,
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -37,8 +55,7 @@ export function CartItemList({ cart }: Props) {
               as="boldTitle"
               element="button"
               className="text-[14px] text-red-500"
-              // TODO: @coupon トースト表示
-              onClick={removeActiveCoupon}
+              onClick={handleRemoveCoupon}
             >
               取消し
             </Typography>

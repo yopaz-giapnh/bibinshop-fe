@@ -56,6 +56,13 @@ export default function OrderHistoryItem({
               {item.attributes.options_text}
             </Typography>
           )}
+          <Typography
+            as="boldSmall"
+            element="p"
+            className="mt-[4px] text-[14px] text-bibinBlue-100"
+          >
+            {item.attributes.display_price}
+          </Typography>
         </div>
         {!isUnpaid && !!variantId && showBuyAgain && (
           <BuyAgainModal

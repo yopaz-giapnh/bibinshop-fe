@@ -70,7 +70,7 @@ export function OrderOverview({ cart, getCoupons }: Props) {
           </Typography>
         </div>
         <div className="mt-2 flex items-center">
-          <ApplyCouponButton getCoupons={getCoupons} />
+          <ApplyCouponButton getCoupons={getCoupons} cartTotal={cart?.attributes.total} />
           <Link href="/checkout" passHref className="w-full">
             <Button size="default" variant="lg" className="ml-2 h-[45px] w-full">
               購入する

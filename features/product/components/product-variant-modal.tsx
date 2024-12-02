@@ -41,7 +41,7 @@ type Props = {
   product: Product;
 };
 
-// TODO: ProductCartFormとロジックがほとんど一緒なので、共通化してもいいかも
+// NOTE: ProductCartFormとロジックがほとんど一緒なので、共通化してもいいかも
 export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_, ref) => {
   const { isLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
