@@ -87,9 +87,9 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
             {tab.value === 'review' ? (
               <>
                 <FilteredReviews reviews={reviews.data} />
-                {reviews.meta?.total_pages && reviews.meta.total_pages > 1 && (
+                {reviews.meta?.total_pages && reviews.meta.total_pages > 1 ? (
                   <Pagination totalPages={reviews.meta.total_pages} />
-                )}
+                ) : null}
               </>
             ) : (
               <div className="mx-[8px]">
