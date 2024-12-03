@@ -14,6 +14,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { authenticateByGoogle, signUp } from '../actions';
+import { ROUTES } from '../constants';
 import { FormValues, formSchema } from '../types/email-and-password-form';
 import { EmailFormField } from './email-form-field';
 import { GoogleAuthButton } from './google-auth-button';
@@ -99,11 +100,11 @@ export default function SignupForm() {
 
           <Typography as="caption" element="p" className="text-center text-black-base">
             次に進むことで、当社の
-            <Link href={'/privacy-policy'} className="font-bold text-bibinBlue-100" passHref>
-              プライバシー
+            <Link href={ROUTES.PRIVACY_POLICY} className="font-bold text-bibinBlue-100" passHref>
+              プライバシーポリシー
             </Link>
             と
-            <Link href={'/terms-of-service'} className="font-bold text-bibinBlue-100" passHref>
+            <Link href={ROUTES.TERMS_OF_SERVICE} className="font-bold text-bibinBlue-100" passHref>
               利用規約
             </Link>
             に同意したものとみなされます。
