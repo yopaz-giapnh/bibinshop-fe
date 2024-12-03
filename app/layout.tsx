@@ -6,6 +6,7 @@ import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Noto_Sans_JP } from 'next/font/google';
 import { PropsWithChildren, Suspense } from 'react';
+import { META } from './constants';
 import { Providers } from './providers';
 
 const notoSansJP = Noto_Sans_JP({
@@ -27,10 +28,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta
-          name="google-site-verification"
-          content="AAhih1P04_sCaEMUE0Z8iVdR5s5LZgQ0PNDE6IHUx6k"
-        />
+        <meta name="google-site-verification" content={META.googleSiteVerification} />
       </head>
       <body
         className={cn(
