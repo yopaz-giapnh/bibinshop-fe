@@ -104,7 +104,7 @@ export default function SignupForm() {
               プライバシーポリシー
             </Link>
             と
-            <Link href={ROUTES.TERMS_OF_SERVICE} className="font-bold text-bibinBlue-100" passHref>
+            <Link href={ROUTES.TERMS_OF_USE} className="font-bold text-bibinBlue-100" passHref>
               利用規約
             </Link>
             に同意したものとみなされます。
