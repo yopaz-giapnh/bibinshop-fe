@@ -20,7 +20,11 @@ const components: { title: string; links: { label: string; href?: string }[] }[]
   },
   {
     title: '会社情報',
-    links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
+    links: [
+      { label: '特定商取引法に基づく表記', href: '/commercial-transactions' },
+      { label: 'リンク2' },
+      { label: 'リンク3' }
+    ]
   },
   {
     title: 'サービス',
