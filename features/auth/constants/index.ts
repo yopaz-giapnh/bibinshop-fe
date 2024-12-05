@@ -1,5 +1,4 @@
 export const ROUTES = {
-  // TODO: 一旦仮置き。必要であれば正しいものに置き換える
-  PRIVACY_POLICY: 'https://bibin.jp/privacy',
+  PRIVACY_POLICY: '/privacy-policy',
   TERMS_OF_USE: '/terms-of-use'
 };
