@@ -15,15 +15,16 @@ type VendorHeaderProps = {
 export function VendorHeader({ vendor }: VendorHeaderProps) {
   return (
     <div className="flex flex-col md:my-6">
-      <div className="relative h-[200px] w-full md:h-[300px]">
-        <Image
-          src={getVendorBannerImageUrl(vendor.vendorBannerImage)}
-          className="mb-6 object-cover"
-          fill
-          sizes="100vw"
-          priority
-          alt={vendor.attributes.name || ''}
-        />
+      <div className="relative w-full">
+        <div className="relative w-full pb-[21.9%]">
+          <Image
+            src={getVendorBannerImageUrl(vendor.vendorBannerImage)}
+            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            priority
+            alt={vendor.attributes.name || ''}
+          />
+        </div>
       </div>
       <div className="mt-2 flex w-full items-center rounded-[8px] border-2 md:mt-5 md:border-none">
         <Image
