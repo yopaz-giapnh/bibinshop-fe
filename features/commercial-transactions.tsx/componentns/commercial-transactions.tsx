@@ -5,6 +5,7 @@ import { Typography } from '@/components/ui/typography';
  * 特定商取引法に基づく表記コンポーネント
  * @returns JSX.Element
  */
+// TODO: stripeの申請のために仮の内容で特定商取引法を表記。正規の内容貰い次第更新予定。
 export function CommercialTransactions() {
   return (
     <div className="mx-auto max-w-4xl rounded-xl bg-white-base p-8">
