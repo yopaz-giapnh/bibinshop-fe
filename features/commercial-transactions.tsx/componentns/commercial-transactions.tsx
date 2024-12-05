@@ -65,7 +65,7 @@ export function CommercialTransactions() {
             <div>
               <h3 className="mb-4 font-bold">商品以外の必要料金</h3>
               <p className="leading-relaxed">
-                送料：全国一律880円（税込）
+                送料：商品ごとに設定された配送料金となります。具体的な金額は各商品ページに表示されます。
                 <br />
                 ※商品代金10,000円以上のご注文で送料無料
                 <br />
