@@ -16,7 +16,7 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
   return (
     <div className="flex flex-col md:my-6">
       <div className="relative w-full">
-        <div className="relative w-full pb-[21.9%]">
+        <div className="relative w-full pb-[21.8%]">
           <Image
             src={getVendorBannerImageUrl(vendor.vendorBannerImage)}
             className="absolute inset-0 h-full w-full object-cover"
