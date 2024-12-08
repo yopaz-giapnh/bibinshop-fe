@@ -6,9 +6,14 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { CouponSchema } from '../types';
 import { CouponCard } from './coupon-card';
 
-export const RegistrationCouponGetModal = () => {
+type Props = {
+  coupon: CouponSchema;
+};
+
+export const RegistrationCouponGetModal = ({ coupon }: Props) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
 
@@ -47,12 +52,11 @@ export const RegistrationCouponGetModal = () => {
           <div className="absolute top-[100px] flex w-full justify-center md:top-[80px]">
             <BibiSmilingFace />
           </div>
-          {/* TODO: @coupon 初回登録クーポンどうするか？ */}
           <CouponCard
-            title="[APPダウンロード]1,000円 OFF"
-            description="初回登録限定クーポン"
-            expiresAt="2024-12-31T00:00:00"
-            code="BIBINSHOP2024"
+            title={coupon.attributes.title}
+            description={coupon.attributes.description}
+            expiresAt={coupon.attributes.expires_at}
+            code={coupon.attributes.code}
           />
         </div>
         <div className="w-4/5">

@@ -21,18 +21,6 @@ export const CouponCard: React.FC<CouponCardProps> = ({ title, description, expi
           objectFit: 'cover'
         }}
       />
-      {/* TODO: @coupon BE 実装後(使用決めてから？) */}
-      {/* {showLabel && (
-        <div className="absolute left-0 top-0 bg-bibinBlue-100 px-[9px] pb-[2px]">
-          <Typography
-            as="boldSmall"
-            element="p"
-            className="mt-1 text-center text-[12px] text-white-base md:mt-2"
-          >
-            {label}
-          </Typography>
-        </div>
-      )} */}
       <div className="absolute inset-0 flex flex-col items-center justify-between p-4">
         <div className="mt-[15px] flex w-full flex-col justify-start">
           <Typography

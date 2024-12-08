@@ -2,6 +2,7 @@ import { Logo } from '@/components/icons/logo';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
+import NewRegistrationCouponBanner from '@/features/coupon/components/new-registration-coupoun-banner';
 import { getTaxons } from '@/features/taxon/actions';
 import { Heart } from 'lucide-react';
 import Image from 'next/image';
@@ -19,13 +20,7 @@ type Props = Pick<ComponentProps<typeof AccountMenu>, 'isSignedIn'> & {
 export function Header({ isSignedIn, getTaxons }: Props) {
   return (
     <div>
-      {!isSignedIn && (
-        <div className="w-full bg-bibinViolet-100">
-          <Typography as="bold" element="p" className="text-center text-[14px] text-white-base">
-            bibin Shop 新規ユーザー10%OFF クーポンゲット！
-          </Typography>
-        </div>
-      )}
+      {!isSignedIn && <NewRegistrationCouponBanner />}
       <div className="z-40 flex h-[72px] items-center justify-between border-b-[1px] bg-white-base px-[8px] py-3 md:px-[24px]">
         <div className="flex">
           <SpSideBar getTaxons={getTaxons} isSignedIn={isSignedIn} />

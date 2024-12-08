@@ -3,7 +3,7 @@
 import { apiClient } from '@/config/api-client';
 import { isNotFound } from '@/utils/api';
 import { cookies } from 'next/headers';
-import { COOKIES, TAGS } from '../constants';
+import { COOKIES, NEW_REGISTERATION_COUPON, TAGS } from '../constants';
 import { CouponSchema } from '../types';
 
 export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache } = {}) {
@@ -32,6 +32,36 @@ export async function getCoupons({ cache = 'no-store' }: { cache?: RequestCache 
   }
 }
 
+export async function getNewRegisterationCoupon({
+  cache = 'no-store'
+}: { cache?: RequestCache } = {}) {
+  try {
+    const { response, error, data } = await apiClient.GET('/api/v2/storefront/coupons', {
+      params: {},
+      fetch: (request) => {
+        return fetch(request, { next: { tags: [TAGS.coupon] }, cache });
+      }
+    });
+
+    if (isNotFound(response)) {
+      return null;
+    }
+
+    if (error) {
+      throw error;
+    }
+
+    const registerationCoupon =
+      data.data
+        ?.filter((coupon) => coupon.attributes.status === 'available')
+        .find((coupon) => coupon.attributes.code === NEW_REGISTERATION_COUPON) || null;
+
+    return registerationCoupon;
+  } catch (error) {
+    console.error('Error fetching coupons:', error);
+    return null;
+  }
+}
 type ApplyCouponResult = {
   success: boolean;
   message: string;

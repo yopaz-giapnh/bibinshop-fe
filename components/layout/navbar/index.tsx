@@ -12,8 +12,6 @@ export async function Navbar() {
       <div className="hidden md:block">
         <Menu getTaxons={getTaxons()} />
       </div>
-      {/* TODO: @coupon 獲得した人には出したくない(BE で管理してもらう？) */}
-      {/* {isSignedIn && <FirstCouponGetModal />} */}
     </div>
   );
 }
