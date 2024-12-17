@@ -67,7 +67,7 @@ export function Gallery({ images }: Props) {
               <Image
                 src={image.url}
                 alt={image.id}
-                className="h-[4vw] w-[4vw] object-cover"
+                className="aspect-square h-[4vw] w-[4vw] border border-gray-200 object-cover"
                 width={subImageSize}
                 height={subImageSize}
               />
@@ -84,7 +84,7 @@ export function Gallery({ images }: Props) {
                 alt={image.id}
                 width={mainImageSize}
                 height={mainImageSize}
-                className="md:h-[40vw] md:w-[40vw] md:rounded-[8px] md:object-cover"
+                className="aspect-square border border-gray-200 md:h-[40vw] md:w-[40vw] md:rounded-[8px] md:object-cover"
               />
             </CarouselItem>
           ))}

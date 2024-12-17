@@ -92,11 +92,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
             alt={product.attributes.name || ''}
             width={imageSize}
             height={imageSize}
-            className={'h-full rounded-[5px] object-cover'}
-            style={{
-              height: imageSize,
-              width: imageSize
-            }}
+            className="aspect-square w-full rounded-[10px] border border-gray-200 object-cover"
           />
           {!available && (
             <div className="absolute bottom-0 z-10 w-full rounded-b-[6px] bg-[#000000] opacity-60">
