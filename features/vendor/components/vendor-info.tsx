@@ -25,7 +25,9 @@ const VendorInfo = ({ vendor }: Props) => {
   return (
     <Card className="flex w-11/12 flex-col gap-5 rounded-md bg-[#EEF8FF] p-4 md:w-[580px] md:items-center md:justify-center">
       {infoItems.map((item) => (
-        <VendorInfoItem key={item.label} {...item} />
+        <div key={item.label} className="w-full">
+          <VendorInfoItem {...item} />
+        </div>
       ))}
     </Card>
   );
