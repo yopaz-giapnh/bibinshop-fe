@@ -90,18 +90,14 @@ export function SnsUserList() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loading, loadingMore, hasMore]);
 
-  const haveRecommendedProductsUsers = users.filter(
-    (user: User) => user.recommendedProducts && user.recommendedProducts.length > 0
-  );
-
   return (
     <>
       <SnsInputSortBar onSortChange={setSortBy} onFilterChange={setFilter} />
       {loading ? (
         <LoadingSpinner size={24} className="mx-auto mt-8" />
-      ) : haveRecommendedProductsUsers.length > 0 ? (
+      ) : users.length > 0 ? (
         <div className="mt-[24px] w-full space-y-4 overflow-y-auto">
-          {haveRecommendedProductsUsers.map((user: User) => (
+          {users.map((user: User) => (
             <SnsUserListDetailCard
               key={user.id}
               user={user}
