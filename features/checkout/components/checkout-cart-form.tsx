@@ -21,6 +21,7 @@ export async function CheckoutCartForm({ cart }: Props) {
                 variants: cart.variants,
                 images: cart.images
               }}
+              cart={cart}
             />
             {index !== cart.vendorTotals.length - 1 && <div className="mx-4 border-b-[1px]" />}
           </>

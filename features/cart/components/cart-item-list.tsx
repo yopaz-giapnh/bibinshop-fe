@@ -17,9 +17,9 @@ export function CartItemList({ cart }: Props) {
   const { activeCoupon, removeActiveCoupon } = useCoupon();
   const { toast } = useToast();
 
-  const sagawaShippingVendorsCount = cart.vendors.filter(
-    (vendor) => vendor.attributes.shipping_method_type === 'sagawa_system'
-  ).length;
+  const sagawaShippingVendorsCount =
+    cart?.vendors?.filter((vendor) => vendor.attributes.shipping_method_type === 'sagawa_system')
+      .length ?? 0;
 
   const handleRemoveCoupon = async () => {
     const { success, message } = await removeActiveCoupon();

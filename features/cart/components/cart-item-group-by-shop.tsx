@@ -35,7 +35,7 @@ export function CartItemGroupByShop({ shop, cart }: Props) {
     }
   };
 
-  const vendor = cart.vendors.find((vendor) => vendor.id === shop.id);
+  const vendor = cart?.vendors?.find((vendor) => vendor.id === shop.id);
   const isSagawaShipping = vendor?.attributes.shipping_method_type === 'sagawa_system';
 
   return (
