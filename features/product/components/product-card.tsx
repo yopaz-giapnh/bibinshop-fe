@@ -24,9 +24,6 @@ type Props = {
 export function ProductCard({ product, imageSize, deleteButtonAction = undefined }: Props) {
   const { toast } = useToast();
   const modalRef = useRef<ProductVariantModalRef>(null);
-  const { vendor } = product;
-
-  const isSagawaShipping = vendor?.attributes.shipping_method_type === 'sagawa_system';
 
   const defaultVariant = product.relationships.default_variant?.data;
   const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
@@ -120,14 +117,22 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
           >
             {product.attributes.name}
           </Typography>
-          {isSagawaShipping && (
-            <Typography
-              as="boldSmall"
-              element="p"
-              className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
-            >
-              送料無料対象
-            </Typography>
+          {product.vendor?.attributes.shipping_method_type === 'sagawa_system' && (
+            <div className="flex items-center rounded-full border border-yellow-500 bg-yellow-50 px-3 py-2">
+              <Image
+                src={'/bibin-official-badge.png'}
+                alt={'bibin official badge'}
+                width={16}
+                height={16}
+              />
+              <Typography
+                as="xSmall"
+                element="p"
+                className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
+              >
+                送料無料対象
+              </Typography>
+            </div>
           )}
         </div>
         <div className={'items-center gap-2 md:flex' + (!available && ' opacity-50')}>
