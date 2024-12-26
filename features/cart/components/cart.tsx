@@ -1,6 +1,7 @@
 import { getCoupons } from '@/features/coupon/actions';
 import { ApplyCouponButton } from '@/features/coupon/components/apply-coupon-button';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
+import { getVendor } from '@/features/vendor/actions';
 import { getCart } from '../actions';
 import { CartEmpty } from './cart-empty';
 import { CartItemList } from './cart-item-list';
@@ -8,6 +9,10 @@ import { OrderOverview } from './order-overview';
 
 export async function Cart() {
   const cart = await getCart();
+  const vendors = (
+    await Promise.all(cart?.vendorTotals.map((vendorTotal) => getVendor(vendorTotal.id)) || [])
+  ).filter((vendor): vendor is NonNullable<typeof vendor> => vendor !== undefined);
+
   const isCartEmpty = !cart || cart.attributes.item_count === 0;
 
   return isCartEmpty ? (
@@ -18,7 +23,7 @@ export async function Cart() {
     <div className="mt-[22px] h-full  px-[8px] md:px-20">
       <div className="gap-6 md:flex">
         <div className="flex-1">
-          <CartItemList cart={cart} />
+          <CartItemList cart={cart} vendors={vendors} />
         </div>
         <div className="flex flex-none flex-col gap-4 md:w-[424px]">
           <div className="hidden w-full md:block">

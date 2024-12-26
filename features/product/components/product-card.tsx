@@ -24,6 +24,9 @@ type Props = {
 export function ProductCard({ product, imageSize, deleteButtonAction = undefined }: Props) {
   const { toast } = useToast();
   const modalRef = useRef<ProductVariantModalRef>(null);
+  const { vendor } = product;
+
+  const isSagawaShipping = vendor?.attributes.shipping_method_type === 'sagawa_system';
 
   const defaultVariant = product.relationships.default_variant?.data;
   const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
@@ -102,20 +105,31 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
             </div>
           )}
         </div>
-        <Typography
-          as="xSmall"
-          element="p"
-          className={
-            'mt-1 overflow-hidden whitespace-normal break-words' + (!available && ' opacity-50')
-          }
-          style={{
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 1
-          }}
-        >
-          {product.attributes.name}
-        </Typography>
+        <div className="mt-2 flex items-center justify-between">
+          <Typography
+            as="xSmall"
+            element="p"
+            className={
+              'mt-1 overflow-hidden whitespace-normal break-words' + (!available && ' opacity-50')
+            }
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 1
+            }}
+          >
+            {product.attributes.name}
+          </Typography>
+          {isSagawaShipping && (
+            <Typography
+              as="boldSmall"
+              element="p"
+              className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
+            >
+              送料無料対象
+            </Typography>
+          )}
+        </div>
         <div className={'items-center gap-2 md:flex' + (!available && ' opacity-50')}>
           <Typography
             as="xSmall"

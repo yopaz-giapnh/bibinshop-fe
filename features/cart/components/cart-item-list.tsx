@@ -4,17 +4,24 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
-import { BadgeAlert, Check } from 'lucide-react';
+import { Vendor } from '@/features/vendor/types';
+import { BadgeAlert, Check, CircleAlert } from 'lucide-react';
+import Image from 'next/image';
 import { Cart } from '../types';
 import { CartItemGroupByShop } from './cart-item-group-by-shop';
 
 type Props = {
   cart: Cart;
+  vendors: Vendor[];
 };
 
-export function CartItemList({ cart }: Props) {
+export function CartItemList({ cart, vendors }: Props) {
   const { activeCoupon, removeActiveCoupon } = useCoupon();
   const { toast } = useToast();
+
+  const sagawaShippingVendorsCount = vendors.filter(
+    (vendor) => vendor.attributes.shipping_method_type === 'sagawa_system'
+  ).length;
 
   const handleRemoveCoupon = async () => {
     const { success, message } = await removeActiveCoupon();
@@ -35,7 +42,7 @@ export function CartItemList({ cart }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {activeCoupon && (
-        <div className="flex items-center justify-between rounded-[6px] border border-indigo-200 bg-indigo-100  px-[11px] py-[10px]">
+        <div className="flex items-center justify-between rounded-[6px] border border-indigo-200 bg-indigo-100 px-[11px] py-[10px]">
           <div className="flex items-center">
             <Check className="mr-2 h-8 w-8 md:h-4 md:w-4" />
             <Typography
@@ -60,6 +67,49 @@ export function CartItemList({ cart }: Props) {
               取消し
             </Typography>
           </div>
+        </div>
+      )}
+      {sagawaShippingVendorsCount === 1 && (
+        <div className="flex items-center rounded-[6px] border border-yellow-500 bg-yellow-50 px-3 py-2">
+          <CircleAlert className="mr-2 h-6 w-6 text-gray-500" />
+          <Typography as="title" element="span" className="text-[14px] text-text-80">
+            送料無料対象：
+          </Typography>
+          <div className="ml-2 flex items-center gap-1">
+            <Image
+              src={'/bibin-official-badge.png'}
+              alt={'bibin official badge'}
+              width={24}
+              height={24}
+            />
+            <Typography as="title" element="span" className="text-[14px] text-text-80">
+              バッジブランドをもう1つ追加すると
+            </Typography>
+            <Image
+              src={'/bibin-official-badge.png'}
+              alt={'bibin official badge'}
+              width={24}
+              height={24}
+            />
+            <Typography as="title" element="span" className="text-[14px] text-text-80">
+              バッジのブランドは送料無料になります
+            </Typography>
+          </div>
+        </div>
+      )}
+      {sagawaShippingVendorsCount >= 2 && (
+        <div className="flex items-center rounded-[6px] border border-yellow-500 bg-yellow-50 px-3 py-2">
+          <Typography as="title" element="span" className="text-[14px] text-text-80">
+            送料無料対象：
+          </Typography>
+          <Check className="mr-2 h-6 w-6 text-green-500" />
+          <Typography
+            as="title"
+            element="span"
+            className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-[14px] text-transparent"
+          >
+            バッジのブランド送料無料適用中！
+          </Typography>
         </div>
       )}
       <label
@@ -87,6 +137,7 @@ export function CartItemList({ cart }: Props) {
                 variants: cart.variants,
                 images: cart.images
               }}
+              vendors={vendors}
             />
           ))}
         </div>
