@@ -4,7 +4,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
 import { useCoupon } from '@/features/coupon/components/coupon-ctx';
-import { Vendor } from '@/features/vendor/types';
 import { BadgeAlert, Check, CircleAlert } from 'lucide-react';
 import Image from 'next/image';
 import { Cart } from '../types';
@@ -12,14 +11,13 @@ import { CartItemGroupByShop } from './cart-item-group-by-shop';
 
 type Props = {
   cart: Cart;
-  vendors: Vendor[];
 };
 
-export function CartItemList({ cart, vendors }: Props) {
+export function CartItemList({ cart }: Props) {
   const { activeCoupon, removeActiveCoupon } = useCoupon();
   const { toast } = useToast();
 
-  const sagawaShippingVendorsCount = vendors.filter(
+  const sagawaShippingVendorsCount = cart.vendors.filter(
     (vendor) => vendor.attributes.shipping_method_type === 'sagawa_system'
   ).length;
 
@@ -137,7 +135,7 @@ export function CartItemList({ cart, vendors }: Props) {
                 variants: cart.variants,
                 images: cart.images
               }}
-              vendors={vendors}
+              cart={cart}
             />
           ))}
         </div>

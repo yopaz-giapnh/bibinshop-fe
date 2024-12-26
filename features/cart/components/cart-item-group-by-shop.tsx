@@ -2,12 +2,11 @@ import Shop from '@/assets/cart/shop.svg';
 import { Typography } from '@/components/ui/typography';
 import { ImageSchema, VariantSchema } from '@/features/product/types';
 import { findImageFromLineItem, getProductImageUrl } from '@/features/product/utils';
-import { Vendor } from '@/features/vendor/types';
 import { Store } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { updateItemQuantity } from '../actions';
-import { LineItem, VendorTotal } from '../types';
+import { Cart, LineItem, VendorTotal } from '../types';
 import { CartDeleteItemButton, MobileCartDeleteItemButton } from './cart-delete-item-button';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
 
@@ -19,10 +18,10 @@ type Shop = VendorTotal & {
 
 type Props = {
   shop: Shop;
-  vendors: Vendor[];
+  cart: Cart;
 };
 
-export function CartItemGroupByShop({ shop, vendors }: Props) {
+export function CartItemGroupByShop({ shop, cart }: Props) {
   const { variants, images } = shop;
 
   const handleQuantityChange = async (lineItem: LineItem, newQuantity: number) => {
@@ -36,7 +35,7 @@ export function CartItemGroupByShop({ shop, vendors }: Props) {
     }
   };
 
-  const vendor = vendors.find((vendor) => vendor.id === shop.id);
+  const vendor = cart.vendors.find((vendor) => vendor.id === shop.id);
   const isSagawaShipping = vendor?.attributes.shipping_method_type === 'sagawa_system';
 
   return (

@@ -4,6 +4,7 @@ import { apiClient } from '@/config/api-client';
 import { isAddressSchema } from '@/features/address/utils';
 import { isCreditCardSchema } from '@/features/payment/utils';
 import { isImageSchema, isVariantSchema } from '@/features/product/utils';
+import { isVendorSchema } from '@/features/vendor/utils';
 import { isNotFound } from '@/utils/api';
 import { isClientError } from '@/utils/error';
 import { revalidateTag } from 'next/cache';
@@ -204,6 +205,13 @@ function reshapeCart({
   const address = included?.find(isAddressSchema);
   const variants = included?.filter(isVariantSchema) || [];
   const images = included?.filter(isImageSchema) || [];
+  const vendors = included?.filter(isVendorSchema) || [];
+
+  const reshapedVendors = vendors.map((vendor) => {
+    return {
+      ...vendor
+    };
+  });
 
   return {
     ...cart,
@@ -212,6 +220,7 @@ function reshapeCart({
     creditCard,
     address,
     variants,
-    images
+    images,
+    vendors: reshapedVendors
   };
 }

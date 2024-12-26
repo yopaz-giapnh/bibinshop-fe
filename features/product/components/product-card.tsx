@@ -24,6 +24,7 @@ type Props = {
 export function ProductCard({ product, imageSize, deleteButtonAction = undefined }: Props) {
   const { toast } = useToast();
   const modalRef = useRef<ProductVariantModalRef>(null);
+  const isSagawaShipping = product.vendor?.attributes.shipping_method_type === 'sagawa_system';
 
   const defaultVariant = product.relationships.default_variant?.data;
   const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
@@ -117,7 +118,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
           >
             {product.attributes.name}
           </Typography>
-          {product.vendor?.attributes.shipping_method_type === 'sagawa_system' && (
+          {isSagawaShipping && (
             <div className="flex items-center rounded-full border border-yellow-500 bg-yellow-50 px-3 py-2">
               <Image
                 src={'/bibin-official-badge.png'}
