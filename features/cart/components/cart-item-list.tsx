@@ -100,7 +100,12 @@ export function CartItemList({ cart }: Props) {
           <Typography as="title" element="span" className="text-[14px] text-text-80">
             送料無料対象：
           </Typography>
-          <Check className="mr-2 h-6 w-6 text-green-500" />
+          <Image
+            src={'/bibin-official-badge.png'}
+            alt={'bibin official badge'}
+            width={24}
+            height={24}
+          />
           <Typography
             as="title"
             element="span"
