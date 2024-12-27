@@ -30,9 +30,19 @@ export const reshapeProducts = ({
       optionTypes.some((ot) => ov.relationships.option_type?.data?.id === ot.id)
     );
 
+    const vendorIncluded = (productIncluded?.filter(isVendorSchema) || []).find(
+      (v) => v.id === product.relationships.vendor?.data?.id
+    );
+
     return reshapeProduct({
       product,
-      productIncluded: [...imageIncluded, ...productProperties, ...optionTypes, ...optionValues]
+      productIncluded: [
+        ...imageIncluded,
+        ...productProperties,
+        ...optionTypes,
+        ...optionValues,
+        ...(vendorIncluded ? [vendorIncluded] : [])
+      ]
     });
   });
 

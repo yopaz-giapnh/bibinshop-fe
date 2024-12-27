@@ -473,6 +473,14 @@ export interface paths {
      */
     get: operations['notifications-read'];
   };
+  '/api/v2/storefront/user_push_token': {
+    /**
+     * Update User Push Token
+     * @description Updates or creates a push token for the currently logged-in user.
+     * Requires authentication.
+     */
+    put: operations['update-user-push-token'];
+  };
   '/api/v2/storefront/products': {
     /**
      * List all Products
@@ -2374,6 +2382,8 @@ export interface components {
         unread_notifications_count?: number;
         /** @example true */
         followed_by_me?: boolean;
+        /** @example true */
+        push_notifications_enabled?: boolean;
         /** @example 5 */
         followees_count?: number;
         /** @example 10 */
@@ -2536,6 +2546,7 @@ export interface components {
         stars?: number;
         reviews_count?: number;
         available_products_count?: number;
+        shipping_method_type?: string;
       };
       relationships: {
         /** @description List of Product Properties */
@@ -2547,7 +2558,11 @@ export interface components {
         };
         /** @description banner associated with this vendor */
         banner_image?: {
-          data?: components['schemas']['Relation'][];
+          data?: components['schemas']['Relation'];
+        };
+        /** @description List of Shipping Methods associated with this vendor */
+        shipping_methods?: {
+          data?: components['schemas']['ShippingMethod'][];
         };
       };
     };
@@ -3013,7 +3028,7 @@ export interface components {
       };
       relationships: {
         product?: {
-          data?: components['schemas']['Relation'][];
+          data?: components['schemas']['Relation'];
         };
       };
     };
@@ -5182,6 +5197,65 @@ export interface operations {
     };
     responses: {
       200: components['responses']['Notification'];
+    };
+  };
+  /**
+   * Update User Push Token
+   * @description Updates or creates a push token for the currently logged-in user.
+   * Requires authentication.
+   */
+  'update-user-push-token': {
+    requestBody: {
+      content: {
+        'application/json': {
+          push_token?: {
+            /**
+             * @description The push token string.
+             * @example example_push_token_value
+             */
+            token: string;
+            /**
+             * @description Indicates if the push token is active.
+             * @example true
+             */
+            is_active?: boolean;
+          };
+        };
+      };
+    };
+    responses: {
+      /** @description Push token updated successfully. */
+      200: {
+        content: {
+          'application/json': {
+            /** @example true */
+            success?: boolean;
+            /** @example Push token updated successfully. */
+            message?: string;
+          };
+        };
+      };
+      /** @description User not logged in or token invalid. */
+      401: {
+        content: {
+          'application/json': {
+            /** @example false */
+            success?: boolean;
+            /** @example You must be logged in. */
+            message?: string;
+          };
+        };
+      };
+      /** @description Unprocessable Entity - Validation errors. */
+      422: {
+        content: {
+          'application/json': {
+            /** @example false */
+            success?: boolean;
+            errors?: string[];
+          };
+        };
+      };
     };
   };
   /**

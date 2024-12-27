@@ -11,12 +11,13 @@ type Props = {
 
 export async function ShopCard({ vendorId }: Props) {
   const vendor = await getVendor(vendorId);
+  const isSagawaShipping = vendor?.attributes.shipping_method_type === 'sagawa_system';
 
   return vendor ? (
     <div className="mt-[8px] flex w-full flex-col gap-[10px] rounded-[6px] border border-black-10 bg-white-base p-4 md:mt-0 md:w-fit">
-      <div className="inline-flex w-full items-center gap-[16px]">
+      <div className="inline-flex w-full gap-[16px]">
         <Image
-          className="h-[82px] w-[82px] object-cover"
+          className="h-[96px] w-[96px] object-cover"
           alt={vendor.attributes.name || ''}
           width={82}
           height={82}
@@ -27,6 +28,25 @@ export async function ShopCard({ vendorId }: Props) {
             <Typography as="bold" element="p" className="text-text-100">
               {vendor?.attributes.name}
             </Typography>
+            {isSagawaShipping && (
+              <div className="flex items-center">
+                <Image
+                  src={'/bibin-official-badge.png'}
+                  alt={'bibin official badge'}
+                  width={24}
+                  height={24}
+                />
+                <Typography
+                  as="boldSmall"
+                  element="p"
+                  className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
+                >
+                  送料無料対象
+                </Typography>
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
             {vendor.attributes.stars != null && (
               <Rating star={vendor.attributes.stars} size={12} readOnly />
             )}

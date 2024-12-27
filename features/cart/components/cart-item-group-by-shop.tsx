@@ -6,7 +6,7 @@ import { Store } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { updateItemQuantity } from '../actions';
-import { LineItem, VendorTotal } from '../types';
+import { Cart, LineItem, VendorTotal } from '../types';
 import { CartDeleteItemButton, MobileCartDeleteItemButton } from './cart-delete-item-button';
 import { QuantityAdjustmentButtons } from './quantity-adjustment-buttons';
 
@@ -18,9 +18,10 @@ type Shop = VendorTotal & {
 
 type Props = {
   shop: Shop;
+  cart: Cart;
 };
 
-export function CartItemGroupByShop({ shop }: Props) {
+export function CartItemGroupByShop({ shop, cart }: Props) {
   const { variants, images } = shop;
 
   const handleQuantityChange = async (lineItem: LineItem, newQuantity: number) => {
@@ -34,6 +35,9 @@ export function CartItemGroupByShop({ shop }: Props) {
     }
   };
 
+  const vendor = cart?.vendors?.find((vendor) => vendor.id === shop.id);
+  const isSagawaShipping = vendor?.attributes.shipping_method_type === 'sagawa_system';
+
   return (
     <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
       <Link href={`/vendors/${shop.id}`}>
@@ -46,6 +50,23 @@ export function CartItemGroupByShop({ shop }: Props) {
             <Typography as="bold" element="h2" className="text-[14px] text-black-90 md:text-[18px]">
               {shop.attributes.name}
             </Typography>
+            {isSagawaShipping && (
+              <div className="ml-2 flex items-center">
+                <Image
+                  src={'/bibin-official-badge.png'}
+                  alt={'bibin official badge'}
+                  width={24}
+                  height={24}
+                />
+                <Typography
+                  as="boldSmall"
+                  element="p"
+                  className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
+                >
+                  送料無料対象
+                </Typography>
+              </div>
+            )}
           </div>
         </div>
       </Link>

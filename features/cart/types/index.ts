@@ -1,7 +1,8 @@
 import { ImageSchema, VariantSchema } from '@/features/product/types';
+import { VendorBannerImage, VendorImage, VendorSchema } from '@/features/vendor/types';
 import { components } from '@/lib/api/storefront';
 
-export type CartIncludes = components['schemas']['CartIncludes'];
+export type CartIncludes = components['schemas']['CartIncludes'] | VendorImage | VendorBannerImage;
 
 export type LineItem = components['schemas']['LineItem'];
 
@@ -14,4 +15,5 @@ export type Cart = CartSchema & {
   vendorTotals: VendorTotal[];
   variants: VariantSchema[];
   images: ImageSchema[];
+  vendors: VendorSchema[];
 };
