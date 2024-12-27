@@ -119,7 +119,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
             {product.attributes.name}
           </Typography>
           {isSagawaShipping && (
-            <div className="flex items-center rounded-full border border-yellow-500 bg-yellow-50 px-3 py-2">
+            <div className="ml-1 flex shrink-0 items-center rounded-full border border-yellow-500 bg-yellow-50 px-1 py-1">
               <Image
                 src={'/bibin-official-badge.png'}
                 alt={'bibin official badge'}
@@ -129,7 +129,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
               <Typography
                 as="xSmall"
                 element="p"
-                className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
+                className="ml-1 whitespace-nowrap bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
               >
                 送料無料対象
               </Typography>
