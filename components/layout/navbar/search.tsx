@@ -69,8 +69,12 @@ export function Search({ isSignedIn }: Props) {
       </div>
       {isOpen && (
         <>
-          <div className="absolute left-0 top-8 h-[50px] w-[2px] bg-gray-200" />
-          <div className="absolute right-0 top-8 h-[50px] w-[2px] bg-gray-200" />
+          <div
+            className={`absolute left-0 top-8 h-[50px] w-[2px] bg-gray-200 transition-all duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+          />
+          <div
+            className={`absolute right-0 top-8 h-[50px] w-[2px] bg-gray-200 transition-all duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+          />
         </>
       )}
       <CommandList
