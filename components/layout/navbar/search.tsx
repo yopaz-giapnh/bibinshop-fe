@@ -67,7 +67,13 @@ export function Search({ isSignedIn }: Props) {
           }}
         />
       </div>
-      <CommandList className="mt-2 border-t-[1px]">
+      <CommandList className="mt-2 rounded-b-[4px] border-b-[2px] border-l-[2px] border-r-[2px]">
+        {isOpen && (
+          <>
+            <div className="absolute left-0 top-8 h-[50px] w-[2px] bg-gray-200" />
+            <div className="absolute right-0 top-8 h-[50px] w-[2px] bg-gray-200" />
+          </>
+        )}
         {searchValue ? (
           <SearchResuts text={searchValue} />
         ) : (
