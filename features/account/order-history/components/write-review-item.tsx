@@ -12,6 +12,9 @@ import { RATING_ITEMS } from '../constants';
 import { Ratings } from '../types';
 import RatingItem from './rating-item';
 
+const MAX_REVIEW_LENGTH = 1000;
+const MIN_REVIEW_LENGTH = 10;
+
 type ReviewParams = {
   productId: string;
   ratings?: {
@@ -44,6 +47,8 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
     usability: review?.attributes.usability_rating || 1
   });
 
+  const [reviewText, setReviewText] = useState(review?.attributes.review || '');
+
   const averageRating = useMemo(() => {
     const values = Object.values(ratings);
     const average = values.reduce((acc, curr) => acc + curr, 0) / values.length;
@@ -54,6 +59,17 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
     const newRatings = { ...ratings, [type]: value };
     setRatings(newRatings);
     onReviewRatings({ productId: product.id, ratings: newRatings });
+  };
+
+  const handleReviewTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = event.target.value;
+    if (newValue.length <= MAX_REVIEW_LENGTH) {
+      setReviewText(newValue);
+      onReviewText({
+        productId: product.id,
+        text: newValue
+      });
+    }
   };
 
   return (
@@ -107,25 +123,27 @@ export default function WriteReviewItem({ product, review, onReviewRatings, onRe
         ))}
       </div>
 
-      <Typography
-        as="small"
-        element="p"
-        className="mt-[12px] text-[14px] text-black-90 md:mt-[14px]"
-      >
-        レビュー<span className="text-error">*</span>
-      </Typography>
-      <Textarea
-        className="mt-[8px] h-[160px] bg-gray-50"
-        placeholder="商品の感想を入力してください"
-        defaultValue={review?.attributes.review || ''}
-        onChange={(event) => {
-          onReviewText({
-            productId: product.id,
-            text: event.target.value
-          });
-        }}
-        required
-      />
+      <div className="mt-[12px] flex items-center">
+        <Typography as="small" element="p" className="text-[14px] text-black-90">
+          レビュー<span className="text-error">*</span>
+        </Typography>
+        <Typography as="small" element="p" className="mt-1 text-gray-500">
+          （{MIN_REVIEW_LENGTH}文字以上{MAX_REVIEW_LENGTH}文字以内）
+        </Typography>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Textarea
+          className="mt-[8px] h-[160px] bg-gray-50"
+          placeholder="商品の感想を入力してください"
+          value={reviewText}
+          onChange={handleReviewTextChange}
+          maxLength={MAX_REVIEW_LENGTH}
+          required
+        />
+        <Typography as="small" element="p" className="text-right text-gray-500">
+          {reviewText.length}/{MAX_REVIEW_LENGTH}文字
+        </Typography>
+      </div>
     </div>
   );
 }

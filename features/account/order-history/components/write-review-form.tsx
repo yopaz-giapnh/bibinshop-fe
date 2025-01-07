@@ -13,6 +13,9 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { DEFAULT_RATINGS } from '../constants';
 import WriteReviewItem from './write-review-item';
 
+const MAX_REVIEW_LENGTH = 1000;
+const MIN_REVIEW_LENGTH = 10;
+
 type Props = {
   products: Product[];
   reviews: Review[];
@@ -72,8 +75,11 @@ export default function WriteReviewForm({ products, reviews }: Props) {
     writeReviews.some((review) => {
       const ratingValues = Object.values(review.ratings);
       const hasRating = ratingValues.some((rating) => rating > 0);
-      const hasReviewText = review.review && review.review.trim().length > 0;
-      return hasRating && hasReviewText;
+      const hasValidReviewText =
+        review.review &&
+        review.review.trim().length >= MIN_REVIEW_LENGTH &&
+        review.review.trim().length <= MAX_REVIEW_LENGTH;
+      return hasRating && hasValidReviewText;
     });
 
   const updateReview = (productId: string, updateData: Partial<WriteReview>): void => {
