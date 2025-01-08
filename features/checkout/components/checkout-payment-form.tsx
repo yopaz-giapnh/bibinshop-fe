@@ -18,7 +18,7 @@ type Props = {
 };
 
 export function CheckoutPaymentForm({ creditCards }: Props) {
-  const { activeCreditCard, setActiveCreditCard } = useCheckout();
+  const { activeCreditCard, setActiveCreditCard, setActivePaymentMethodId } = useCheckout();
   const hasCreditCard = creditCards.length > 0;
   const paymentNewCreateModalRef = useRef<PaymentNewCreateModalRef>(null);
   const defaultCreditCard = getDefaultCreditCard(creditCards);
@@ -26,6 +26,11 @@ export function CheckoutPaymentForm({ creditCards }: Props) {
   useEffect(() => {
     if (defaultCreditCard) {
       setActiveCreditCard(defaultCreditCard);
+      const defaultCreditCardPaymentMethodId =
+        defaultCreditCard.relationships.payment_method?.data?.id;
+      if (defaultCreditCardPaymentMethodId) {
+        setActivePaymentMethodId(defaultCreditCardPaymentMethodId);
+      }
     }
   }, [defaultCreditCard, setActiveCreditCard]);
 
@@ -33,11 +38,7 @@ export function CheckoutPaymentForm({ creditCards }: Props) {
     <>
       {hasCreditCard ? (
         <>
-          <PaymentList
-            activeCreditCard={activeCreditCard}
-            creditCards={creditCards}
-            onValueChange={setActiveCreditCard}
-          />
+          <PaymentList activeCreditCard={activeCreditCard} creditCards={creditCards} />
           <button
             type="button"
             className="flex w-fit items-center justify-center gap-1"

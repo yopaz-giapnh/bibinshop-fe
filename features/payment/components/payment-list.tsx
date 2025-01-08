@@ -2,6 +2,7 @@ import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
+import { useCheckout } from '@/features/checkout/components/checkout-ctx';
 import { cn } from '@/lib/utils';
 import { useRef } from 'react';
 import { CreditCard } from '../types';
@@ -11,11 +12,11 @@ import { PaymentDeleteModal, PaymentDeleteModalRef } from './payment-delete-moda
 type Props = {
   activeCreditCard?: CreditCard | null;
   creditCards: CreditCard[];
-  onValueChange: (creditCard: CreditCard) => void;
 };
 
-export function PaymentList({ activeCreditCard, creditCards, onValueChange }: Props) {
+export function PaymentList({ activeCreditCard, creditCards }: Props) {
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
+  const { setActiveCreditCard } = useCheckout();
 
   return (
     <RadioGroup
@@ -23,7 +24,7 @@ export function PaymentList({ activeCreditCard, creditCards, onValueChange }: Pr
       onValueChange={(value) => {
         const creditCard = creditCards.find((creditCard) => creditCard.id === value);
         if (creditCard) {
-          onValueChange(creditCard);
+          setActiveCreditCard(creditCard);
         }
       }}
       className="flex flex-col"

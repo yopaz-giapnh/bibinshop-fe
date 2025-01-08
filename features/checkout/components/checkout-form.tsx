@@ -3,6 +3,7 @@
 import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
 import { Cart } from '@/features/cart/types';
+import { useCheckout } from '@/features/checkout/components/checkout-ctx';
 import { getAccountCreditCards } from '@/features/payment/actions';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
 
@@ -41,11 +42,12 @@ export function CheckoutForm({ cart }: Props) {
     queryFn: getPointsRate
   });
 
-  const hasAddress = addresses.length > 0;
-  const hasCreditCard = creditCards.length > 0;
+  const { activePaymentMethodId } = useCheckout();
 
-  // payment methodが選択されていたらcanOrderがtrueになるようにする
-  const canOrder = hasAddress && hasCreditCard;
+  const hasAddress = addresses.length > 0;
+
+  const canOrder = hasAddress && !!activePaymentMethodId;
+
 
   return (
     <div className="mt-[16px] w-full md:mt-[22px] md:px-20">
