@@ -5,27 +5,46 @@ import { Typography } from '@/components/ui/typography';
 import { useCheckout } from '@/features/checkout/components/checkout-ctx';
 import { cn } from '@/lib/utils';
 import { useRef } from 'react';
-import { CreditCard } from '../types';
+import { CreditCard, PaymentMethodSchema } from '../types';
 import { getCreditCardBrandIcon } from '../utils';
 import { PaymentDeleteModal, PaymentDeleteModalRef } from './payment-delete-modal';
 
 type Props = {
-  activeCreditCard?: CreditCard | null;
   creditCards: CreditCard[];
+  paymentMethods: PaymentMethodSchema[];
 };
 
-export function PaymentList({ activeCreditCard, creditCards }: Props) {
+export function PaymentList({creditCards, paymentMethods }: Props) {
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
-  const { setActiveCreditCard, setActivePaymentMethodId } = useCheckout();
+  const { setActiveCreditCard, setActivePaymentMethodId, activePaymentMethodId, activeCreditCard } = useCheckout();
+
+  const creditCardPaymentMethodId = paymentMethods.find(
+    (method) => method.attributes.name?.toLowerCase() === 'stripe'
+  )?.id;
+  const paypayPaymentMethodId = paymentMethods.find(
+    (method) => method.attributes.name?.toLowerCase() === 'paypay'
+  )?.id;
+
+  const paypayValue = paypayPaymentMethodId ? paypayPaymentMethodId.toString() : 'paypay';
+
+  const defaultValue = activeCreditCard?.id?.toString() ?? paypayValue;
 
   return (
     <RadioGroup
-      defaultValue={activeCreditCard?.id.toString()}
+      defaultValue={defaultValue}
       onValueChange={(value) => {
-        const creditCard = creditCards.find((creditCard) => creditCard.id === value);
+        if (value === paypayValue) {
+          setActiveCreditCard(null);
+          if (paypayPaymentMethodId) {
+            setActivePaymentMethodId(paypayPaymentMethodId);
+          }
+          return;
+        }
+
+        const creditCard = creditCards.find((card) => card.id.toString() === value);
         if (creditCard) {
           setActiveCreditCard(creditCard);
-          const creditCardPaymentMethodId = creditCard.relationships.payment_method?.data?.id;
+
           if (creditCardPaymentMethodId) {
             setActivePaymentMethodId(creditCardPaymentMethodId);
           }
@@ -33,6 +52,26 @@ export function PaymentList({ activeCreditCard, creditCards }: Props) {
       }}
       className="flex flex-col"
     >
+      <label key={paypayValue} className="mb-2 flex cursor-pointer items-center">
+        <div
+          className={cn(
+            'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
+            (!activeCreditCard || activePaymentMethodId === paypayPaymentMethodId) &&
+              'border-bibinBlue-100 bg-[#F6FBFF]'
+          )}
+        >
+          <div className="flex w-full items-center gap-4">
+            <RadioGroupItem
+              value={paypayValue}
+              checked={activePaymentMethodId === paypayPaymentMethodId}
+            />
+            <Typography as="body" element="p" className="text-black-80">
+              PayPayで支払う
+            </Typography>
+          </div>
+        </div>
+      </label>
+
       {creditCards.map((creditCard) => {
         const isSelected = activeCreditCard?.id === creditCard.id;
 

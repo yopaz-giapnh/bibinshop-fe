@@ -6,7 +6,7 @@ export const CheckoutContext = React.createContext<{
   activeAddress: Address | null;
   setActiveAddress: (address: Address) => void;
   activeCreditCard: CreditCard | null;
-  setActiveCreditCard: (creditCard: CreditCard) => void;
+  setActiveCreditCard: (creditCard: CreditCard | null) => void;
   activePaymentMethodId: string | null;
   setActivePaymentMethodId: (paymentMethodId: string) => void;
 }>({

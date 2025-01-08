@@ -7,7 +7,7 @@ import {
   PaymentNewCreateModal,
   PaymentNewCreateModalRef
 } from '@/features/payment/components/payment-new-create-modal';
-import { CreditCard } from '@/features/payment/types';
+import { CreditCard, PaymentMethodSchema } from '@/features/payment/types';
 import { getDefaultCreditCard } from '@/features/payment/utils';
 import { Plus } from 'lucide-react';
 import { useEffect, useRef } from 'react';
@@ -15,10 +15,11 @@ import { useCheckout } from './checkout-ctx';
 
 type Props = {
   creditCards: CreditCard[];
+  paymentMethods: PaymentMethodSchema[];
 };
 
-export function CheckoutPaymentForm({ creditCards }: Props) {
-  const { activeCreditCard, setActiveCreditCard, setActivePaymentMethodId } = useCheckout();
+export function CheckoutPaymentForm({ creditCards, paymentMethods }: Props) {
+  const { setActiveCreditCard, setActivePaymentMethodId } = useCheckout();
   const hasCreditCard = creditCards.length > 0;
   const paymentNewCreateModalRef = useRef<PaymentNewCreateModalRef>(null);
   const defaultCreditCard = getDefaultCreditCard(creditCards);
@@ -38,7 +39,10 @@ export function CheckoutPaymentForm({ creditCards }: Props) {
     <>
       {hasCreditCard ? (
         <>
-          <PaymentList activeCreditCard={activeCreditCard} creditCards={creditCards} />
+          <PaymentList
+            creditCards={creditCards}
+            paymentMethods={paymentMethods}
+          />
           <button
             type="button"
             className="flex w-fit items-center justify-center gap-1"

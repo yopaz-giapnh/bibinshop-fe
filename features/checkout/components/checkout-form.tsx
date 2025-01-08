@@ -4,7 +4,7 @@ import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
 import { Cart } from '@/features/cart/types';
 import { useCheckout } from '@/features/checkout/components/checkout-ctx';
-import { getAccountCreditCards } from '@/features/payment/actions';
+import { getAccountCreditCards, getPaymentMethods } from '@/features/payment/actions';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
 
 import { PaymentMethod } from '@/features/payment/components/payment-method';
@@ -22,6 +22,7 @@ type Props = {
   getAccountCreditCards: ReturnType<typeof getAccountCreditCards>;
   getAvailablePoints: ReturnType<typeof getAvailablePoints>;
   getPointsRate: ReturnType<typeof getPointsRate>;
+  getPaymentMethods: ReturnType<typeof getPaymentMethods>;
 };
 
 export function CheckoutForm({
@@ -29,12 +30,14 @@ export function CheckoutForm({
   getAccountAddresses,
   getAccountCreditCards,
   getAvailablePoints,
-  getPointsRate
+  getPointsRate,
+  getPaymentMethods
 }: Props) {
   const addresses = use(getAccountAddresses);
   const creditCards = use(getAccountCreditCards);
   const availablePoints = use(getAvailablePoints);
   const pointsRate = use(getPointsRate);
+  const paymentMethods = use(getPaymentMethods);
 
   const { activePaymentMethodId } = useCheckout();
 
@@ -58,7 +61,9 @@ export function CheckoutForm({
               >
                 2. お支払い方法
               </Typography>
-              {hasAddress && <CheckoutPaymentForm creditCards={creditCards} />}
+              {hasAddress && paymentMethods && (
+                <CheckoutPaymentForm creditCards={creditCards} paymentMethods={paymentMethods} />
+              )}
             </div>
           </div>
           <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base">

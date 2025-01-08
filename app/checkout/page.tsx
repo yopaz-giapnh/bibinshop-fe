@@ -4,7 +4,7 @@ import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
 import { getCart } from '@/features/cart/actions';
 import { CheckoutForm } from '@/features/checkout/components/checkout-form';
-import { getAccountCreditCards } from '@/features/payment/actions';
+import { getAccountCreditCards, getPaymentMethods } from '@/features/payment/actions';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
 
 import { redirect } from 'next/navigation';
@@ -40,6 +40,7 @@ export default async function Page() {
               getAccountCreditCards={getAccountCreditCards()}
               getAvailablePoints={getAvailablePoints()}
               getPointsRate={getPointsRate()}
+              getPaymentMethods={getPaymentMethods()}
             />
           </Suspense>
         </div>
