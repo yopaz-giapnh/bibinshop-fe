@@ -36,10 +36,10 @@ export default async function Page() {
           <Suspense fallback={<LoadingSpinner />}>
             <CheckoutForm
               cart={cart}
-              getAccountAddresses={getAccountAddresses}
-              getAccountCreditCards={getAccountCreditCards}
-              getAvailablePoints={getAvailablePoints}
-              getPointsRate={getPointsRate}
+              getAccountAddresses={getAccountAddresses()}
+              getAccountCreditCards={getAccountCreditCards()}
+              getAvailablePoints={getAvailablePoints()}
+              getPointsRate={getPointsRate()}
             />
           </Suspense>
         </div>
