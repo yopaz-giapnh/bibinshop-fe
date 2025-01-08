@@ -7,10 +7,9 @@ import { useCheckout } from '@/features/checkout/components/checkout-ctx';
 import { getAccountCreditCards } from '@/features/payment/actions';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
 
-import { useQuery } from '@tanstack/react-query';
-
 import { PaymentMethod } from '@/features/payment/components/payment-method';
 
+import { use } from 'react';
 import { CheckoutUsePointForm } from './CheckoutUsePointForm';
 import { CheckoutAddressForm } from './checkout-address-form';
 import { CheckoutCartForm } from './checkout-cart-form';
@@ -19,35 +18,23 @@ import { OrderOverview } from './order-overview';
 
 type Props = {
   cart: Cart;
+  getAccountAddresses: typeof getAccountAddresses;
+  getAccountCreditCards: typeof getAccountCreditCards;
+  getAvailablePoints: typeof getAvailablePoints;
+  getPointsRate: typeof getPointsRate;
 };
 
 export function CheckoutForm({ cart }: Props) {
-  const { data: addresses = [] } = useQuery({
-    queryKey: ['accountAddresses'],
-    queryFn: () => getAccountAddresses()
-  });
-
-  const { data: creditCards = [] } = useQuery({
-    queryKey: ['accountCreditCards'],
-    queryFn: () => getAccountCreditCards()
-  });
-
-  const { data: availablePoints = 0 } = useQuery({
-    queryKey: ['availablePoints'],
-    queryFn: getAvailablePoints
-  });
-
-  const { data: pointsRate } = useQuery({
-    queryKey: ['pointsRate'],
-    queryFn: getPointsRate
-  });
+  const addresses = use(getAccountAddresses());
+  const creditCards = use(getAccountCreditCards());
+  const availablePoints = use(getAvailablePoints());
+  const pointsRate = use(getPointsRate());
 
   const { activePaymentMethodId } = useCheckout();
 
   const hasAddress = addresses.length > 0;
 
   const canOrder = hasAddress && !!activePaymentMethodId;
-
 
   return (
     <div className="mt-[16px] w-full md:mt-[22px] md:px-20">
