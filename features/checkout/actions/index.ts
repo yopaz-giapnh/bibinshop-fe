@@ -23,8 +23,15 @@ export async function updateCheckout(
     await updateCheckoutAddress(address);
     await advanceCheckout();
 
-    await updateCreditCardCheckoutPayment(creditCard);
-    
+    // 以下、ちゃんと判定基準分ける
+    if (paymentMethodId === '1') {
+      await updateCreditCardCheckoutPayment(creditCard);
+    } else if (paymentMethodId === '2') {
+      await updatePayPayCheckoutPayment(paymentMethodId);
+    } else {
+      throw new Error('Invalid payment method');
+    }
+
     await advanceCheckout();
   } catch (error) {
     console.error(error);
@@ -67,6 +74,22 @@ export async function updateCreditCardCheckoutPayment(creditCard: CreditCard) {
         order: {
           existing_card: creditCard.id
         }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updatePayPayCheckoutPayment(selectedPaymentMethodId: string) {
+  try {
+    await apiClient.PATCH('/api/v2/storefront/checkout', {
+      order: {
+        payments_attributes: [
+          {
+            payment_method_id: selectedPaymentMethodId
+          }
+        ]
       }
     });
   } catch (error) {

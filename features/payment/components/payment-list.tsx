@@ -14,9 +14,10 @@ type Props = {
   paymentMethods: PaymentMethodSchema[];
 };
 
-export function PaymentList({creditCards, paymentMethods }: Props) {
+export function PaymentList({ creditCards, paymentMethods }: Props) {
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
-  const { setActiveCreditCard, setActivePaymentMethodId, activePaymentMethodId, activeCreditCard } = useCheckout();
+  const { setActiveCreditCard, setActivePaymentMethodId, activePaymentMethodId, activeCreditCard } =
+    useCheckout();
 
   const creditCardPaymentMethodId = paymentMethods.find(
     (method) => method.attributes.name?.toLowerCase() === 'stripe'

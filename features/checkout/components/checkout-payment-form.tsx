@@ -39,10 +39,7 @@ export function CheckoutPaymentForm({ creditCards, paymentMethods }: Props) {
     <>
       {hasCreditCard ? (
         <>
-          <PaymentList
-            creditCards={creditCards}
-            paymentMethods={paymentMethods}
-          />
+          <PaymentList creditCards={creditCards} paymentMethods={paymentMethods} />
           <button
             type="button"
             className="flex w-fit items-center justify-center gap-1"

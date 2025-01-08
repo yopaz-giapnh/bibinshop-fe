@@ -17,11 +17,16 @@ type Props = {
 };
 
 export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
-  const { activeAddress, activeCreditCard } = useCheckout();
+  const { activeAddress, activeCreditCard, activePaymentMethodId } = useCheckout();
   const [, formAction] = useFormState(updateCheckout, null);
+
   const action =
-    activeAddress && activeCreditCard
-      ? formAction.bind(null, { address: activeAddress, creditCard: activeCreditCard })
+    activeAddress && activeCreditCard && activePaymentMethodId
+      ? formAction.bind(null, {
+          address: activeAddress,
+          creditCard: activeCreditCard,
+          paymentMethodId: activePaymentMethodId
+        })
       : undefined;
 
   return (
