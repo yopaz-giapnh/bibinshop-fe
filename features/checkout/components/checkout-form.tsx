@@ -18,17 +18,17 @@ import { OrderOverview } from './order-overview';
 
 type Props = {
   cart: Cart;
-  getAccountAddresses: typeof getAccountAddresses;
-  getAccountCreditCards: typeof getAccountCreditCards;
-  getAvailablePoints: typeof getAvailablePoints;
-  getPointsRate: typeof getPointsRate;
+  getAccountAddresses: ReturnType<typeof getAccountAddresses>;
+  getAccountCreditCards: ReturnType<typeof getAccountCreditCards>;
+  getAvailablePoints: ReturnType<typeof getAvailablePoints>;
+  getPointsRate: ReturnType<typeof getPointsRate>;
 };
 
-export function CheckoutForm({ cart }: Props) {
-  const addresses = use(getAccountAddresses());
-  const creditCards = use(getAccountCreditCards());
-  const availablePoints = use(getAvailablePoints());
-  const pointsRate = use(getPointsRate());
+export function CheckoutForm({ cart, getAccountAddresses, getAccountCreditCards, getAvailablePoints, getPointsRate }: Props) {
+  const addresses = use(getAccountAddresses);
+  const creditCards = use(getAccountCreditCards);
+  const availablePoints = use(getAvailablePoints);
+  const pointsRate = use(getPointsRate);
 
   const { activePaymentMethodId } = useCheckout();
 
