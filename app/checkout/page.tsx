@@ -1,11 +1,9 @@
 import { BackButton } from '@/components/button/back-button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import { getAccountAddresses } from '@/features/address/actions';
 import { getCart } from '@/features/cart/actions';
 import { CheckoutForm } from '@/features/checkout/components/checkout-form';
-import { getAccountCreditCards } from '@/features/payment/actions';
-import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
+
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -33,13 +31,7 @@ export default async function Page() {
             <div className="h-7 w-7" />
           </div>
           <Suspense fallback={<LoadingSpinner />}>
-            <CheckoutForm
-              cart={cart}
-              getAccountAddresses={getAccountAddresses()}
-              getAccountCreditCards={getAccountCreditCards()}
-              getAvailablePoints={getAvailablePoints()}
-              getPointsRate={getPointsRate()}
-            />
+            <CheckoutForm cart={cart} />
           </Suspense>
         </div>
       </div>
