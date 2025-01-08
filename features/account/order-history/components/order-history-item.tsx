@@ -56,6 +56,9 @@ export default function OrderHistoryItem({
               {item.attributes.options_text}
             </Typography>
           )}
+          <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
+            購入数: {item.attributes.quantity}
+          </Typography>
           <Typography
             as="boldSmall"
             element="p"
