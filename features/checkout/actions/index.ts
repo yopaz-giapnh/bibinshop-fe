@@ -11,7 +11,7 @@ import { COOKIES } from '../constants';
 
 type CheckoutPayload = {
   address: Address;
-  creditCard: CreditCard;
+  creditCard: CreditCard | null;
   paymentMethodId: string;
 };
 
@@ -23,12 +23,13 @@ export async function updateCheckout(
     await updateCheckoutAddress(address);
     await advanceCheckout();
 
-    // 以下、ちゃんと判定基準分ける
-    if (paymentMethodId === '1') {
+    // 以下マスターナンバー使わないで分岐する
+    if (paymentMethodId === '1' && creditCard) {
       await updateCreditCardCheckoutPayment(creditCard);
     } else if (paymentMethodId === '2') {
       await updatePayPayCheckoutPayment(paymentMethodId);
     } else {
+      console.error('Invalid payment method');
       throw new Error('Invalid payment method');
     }
 

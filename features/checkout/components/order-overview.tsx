@@ -21,7 +21,7 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
   const [, formAction] = useFormState(updateCheckout, null);
 
   const action =
-    activeAddress && activeCreditCard && activePaymentMethodId
+    activeAddress && activePaymentMethodId
       ? formAction.bind(null, {
           address: activeAddress,
           creditCard: activeCreditCard,
