@@ -12,17 +12,19 @@ import { COOKIES } from '../constants';
 type CheckoutPayload = {
   address: Address;
   creditCard: CreditCard;
+  paymentMethodId: string;
 };
 
 export async function updateCheckout(
   prevState: void | null,
-  { address, creditCard }: CheckoutPayload
+  { address, creditCard, paymentMethodId }: CheckoutPayload
 ) {
   try {
     await updateCheckoutAddress(address);
     await advanceCheckout();
 
-    await updateCheckoutPayment(creditCard);
+    await updateCreditCardCheckoutPayment(creditCard);
+    
     await advanceCheckout();
   } catch (error) {
     console.error(error);
@@ -58,7 +60,7 @@ export async function updateCheckoutAddress(address: Address) {
   }
 }
 
-export async function updateCheckoutPayment(creditCard: CreditCard) {
+export async function updateCreditCardCheckoutPayment(creditCard: CreditCard) {
   try {
     await apiClient.PATCH('/api/v2/storefront/checkout', {
       body: {
