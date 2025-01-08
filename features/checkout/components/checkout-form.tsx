@@ -4,9 +4,12 @@ import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
 import { Cart } from '@/features/cart/types';
 import { getAccountCreditCards } from '@/features/payment/actions';
-import { PaymentMethod } from '@/features/payment/components/payment-method';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
-import { use } from 'react';
+
+import { useQuery } from '@tanstack/react-query';
+
+import { PaymentMethod } from '@/features/payment/components/payment-method';
+
 import { CheckoutUsePointForm } from './CheckoutUsePointForm';
 import { CheckoutAddressForm } from './checkout-address-form';
 import { CheckoutCartForm } from './checkout-cart-form';
@@ -15,26 +18,33 @@ import { OrderOverview } from './order-overview';
 
 type Props = {
   cart: Cart;
-  getAccountAddresses: ReturnType<typeof getAccountAddresses>;
-  getAccountCreditCards: ReturnType<typeof getAccountCreditCards>;
-  getAvailablePoints: ReturnType<typeof getAvailablePoints>;
-  getPointsRate: ReturnType<typeof getPointsRate>;
 };
 
-export function CheckoutForm({
-  cart,
-  getAccountAddresses,
-  getAccountCreditCards,
-  getAvailablePoints,
-  getPointsRate
-}: Props) {
-  const addresses = use(getAccountAddresses);
-  const creditCards = use(getAccountCreditCards);
-  const availablePoints = use(getAvailablePoints);
-  const pointsRate = use(getPointsRate);
+export function CheckoutForm({ cart }: Props) {
+  const { data: addresses = [] } = useQuery({
+    queryKey: ['accountAddresses'],
+    queryFn: () => getAccountAddresses()
+  });
+
+  const { data: creditCards = [] } = useQuery({
+    queryKey: ['accountCreditCards'],
+    queryFn: () => getAccountCreditCards()
+  });
+
+  const { data: availablePoints = 0 } = useQuery({
+    queryKey: ['availablePoints'],
+    queryFn: getAvailablePoints
+  });
+
+  const { data: pointsRate } = useQuery({
+    queryKey: ['pointsRate'],
+    queryFn: getPointsRate
+  });
 
   const hasAddress = addresses.length > 0;
   const hasCreditCard = creditCards.length > 0;
+
+  // payment methodが選択されていたらcanOrderがtrueになるようにする
   const canOrder = hasAddress && hasCreditCard;
 
   return (
