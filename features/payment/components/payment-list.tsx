@@ -16,7 +16,7 @@ type Props = {
 
 export function PaymentList({ activeCreditCard, creditCards }: Props) {
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
-  const { setActiveCreditCard } = useCheckout();
+  const { setActiveCreditCard, setActivePaymentMethodId } = useCheckout();
 
   return (
     <RadioGroup
@@ -25,6 +25,10 @@ export function PaymentList({ activeCreditCard, creditCards }: Props) {
         const creditCard = creditCards.find((creditCard) => creditCard.id === value);
         if (creditCard) {
           setActiveCreditCard(creditCard);
+          const creditCardPaymentMethodId = creditCard.relationships.payment_method?.data?.id;
+          if (creditCardPaymentMethodId) {
+            setActivePaymentMethodId(creditCardPaymentMethodId);
+          }
         }
       }}
       className="flex flex-col"
