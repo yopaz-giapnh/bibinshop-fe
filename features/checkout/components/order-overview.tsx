@@ -13,7 +13,7 @@ import { useCheckout } from './checkout-ctx';
 type Props = {
   cart: Cart;
   canOrder: boolean;
-  pointsRate: number | undefined;
+  pointsRate: number;
 };
 
 export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
@@ -69,7 +69,7 @@ export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
         </Typography>
       </div>
 
-      {!!cart.attributes.total && !!pointsRate && (
+      {!!cart.attributes.total && (
         <div className="flex w-full items-center justify-center pt-2 md:pb-2">
           <Typography as="caption" element="p" className="text-black-90">
             獲得予定

@@ -24,7 +24,13 @@ type Props = {
   getPointsRate: ReturnType<typeof getPointsRate>;
 };
 
-export function CheckoutForm({ cart, getAccountAddresses, getAccountCreditCards, getAvailablePoints, getPointsRate }: Props) {
+export function CheckoutForm({
+  cart,
+  getAccountAddresses,
+  getAccountCreditCards,
+  getAvailablePoints,
+  getPointsRate
+}: Props) {
   const addresses = use(getAccountAddresses);
   const creditCards = use(getAccountCreditCards);
   const availablePoints = use(getAvailablePoints);
