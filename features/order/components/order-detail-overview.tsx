@@ -1,13 +1,14 @@
 'use client';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
+import { Order } from '@/features/order/types';
 import OrderDetailSection from './order-detail-section';
 
 type Props = {
-  cart: Cart;
+  item: Cart | Order;
 };
 
-export function OrderDetailOverview({ cart }: Props) {
+export function OrderDetailOverview({ item }: Props) {
   return (
     <OrderDetailSection title="注文概要">
       <div className="w-full md:w-1/2">
@@ -17,17 +18,18 @@ export function OrderDetailOverview({ cart }: Props) {
             element="p"
             className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
           >
-            {`商品金額(${cart.attributes.item_count})`}
+            {`商品金額(${item.attributes.item_count})`}
           </Typography>
           <Typography
             as="caption"
             element="p"
             className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
           >
-            {cart.attributes.display_item_total}
+            {item.attributes.display_item_total}
           </Typography>
         </div>
-        {!!cart.attributes.coupons_total && (
+
+        {!!item.attributes.coupons_total && (
           <div className="flex justify-between">
             <Typography
               as="caption"
@@ -41,11 +43,12 @@ export function OrderDetailOverview({ cart }: Props) {
               element="p"
               className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
             >
-              - {cart.attributes.display_coupons_total}
+              - {item.attributes.display_coupons_total}
             </Typography>
           </div>
         )}
-        {!!cart.attributes.points && (
+
+        {!!item.attributes.points && (
           <div className="flex justify-between">
             <Typography
               as="caption"
@@ -59,10 +62,11 @@ export function OrderDetailOverview({ cart }: Props) {
               element="p"
               className="mt-[8px] text-[14px] text-bibinBlue-100 md:mt-[16px]"
             >
-              - {cart.attributes.display_points}
+              - {item.attributes.display_points}
             </Typography>
           </div>
         )}
+
         <div className="flex justify-between">
           <Typography
             as="caption"
@@ -76,9 +80,10 @@ export function OrderDetailOverview({ cart }: Props) {
             element="p"
             className="mt-[8px] text-[14px] text-black-90 md:mt-[16px]"
           >
-            {cart.attributes.display_ship_total}
+            {item.attributes.display_ship_total}
           </Typography>
         </div>
+
         <div className="mt-[8px] border-t-[1px] md:mt-[16px]" />
         <div className="carts-center flex justify-between">
           <Typography
@@ -93,7 +98,7 @@ export function OrderDetailOverview({ cart }: Props) {
             element="p"
             className="mt-[8px] text-[20px] text-black-90 md:mt-[16px]"
           >
-            {cart.attributes.display_total}
+            {item.attributes.display_total}
           </Typography>
         </div>
       </div>

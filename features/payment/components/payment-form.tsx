@@ -105,7 +105,11 @@ function Form({ onClose }: Props) {
       }
 
       const paymentMethods = await getPaymentMethods();
-      const paymentMethodId = paymentMethods?.[0].id;
+
+      const paymentMethodId = paymentMethods?.find(
+        (paymentMethod) => paymentMethod.attributes.name?.toLowerCase() === 'stripe'
+      )?.id;
+
       if (!paymentMethodId) {
         setIsLoading(false);
         return;
