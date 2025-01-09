@@ -14,21 +14,24 @@ const notoSansJP = Noto_Sans_JP({
   variable: '--font-noto-sans-jp'
 });
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+const isStaging = apiUrl.includes('stg-api');
+
 export const metadata: Metadata = {
   title: 'bibin',
-  description: 'bibin'
+  description: 'bibin',
+  robots: isStaging ? 'all' : 'noindex'
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    //NOTE: 横のサイズが大きいコンポーネントの影響で横スクロールが発生するため、overflow-x-hiddenを一旦入れてます
     <html lang="ja" suppressHydrationWarning className="overflow-x-hidden">
       <head>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta name="robots" content="noindex" />
+        {!isStaging && <meta name="robots" content="noindex" />}
         <meta name="google-site-verification" content={META.googleSiteVerification} />
       </head>
       <body
