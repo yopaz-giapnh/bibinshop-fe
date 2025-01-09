@@ -13,11 +13,14 @@ export default async function CheckoutConfirm() {
     return redirectToTop();
   }
 
+  // 型がちょい複雑なので一旦分割して渡す。時間がなかった。本当は直したい
+  const creditCard = cart.creditCard;
+
   return (
     <div className="flex w-full flex-col items-center">
       <div className="w-full overflow-y-auto px-2 md:px-[272px]">
-        <OrderDetailOverview item={cart} />
-        {cart.creditCard && <OrderDetailPaymentMethod creditCard={cart.creditCard} />}
+        <OrderDetailOverview cart={cart} />
+        <OrderDetailPaymentMethod cart={cart} creditCard={creditCard} />
         {cart.address && <OrderDetailAddress address={cart.address} />}
         <OrderDetailInfo
           lineItems={cart.lineItems}
