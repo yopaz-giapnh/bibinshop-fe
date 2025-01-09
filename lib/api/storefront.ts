@@ -459,6 +459,66 @@ export interface paths {
      */
     get: operations['shipping-rates'];
   };
+  '/api/v2/storefront/paypay_payments': {
+    /**
+     * Create PayPay Payment
+     * @description Creates a new PayPay payment and returns the payment URL.
+     */
+    post: operations['create-paypay-payment'];
+  };
+  '/api/v2/storefront/payments/{id}/update_state': {
+    /**
+     * Update payment state
+     * @description Updates the state of a specific payment
+     */
+    put: {
+      parameters: {
+        path: {
+          /** @description Payment id */
+          id: string;
+        };
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            payment: {
+              /**
+               * @description The new state for the payment
+               * @enum {string}
+               */
+              state: 'checkout' | 'pending' | 'completed' | 'failed' | 'void' | 'invalid';
+            };
+            /** @description Optional merchant payment ID for payment provider reference */
+            merchant_payment_id?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Payment state successfully updated */
+        200: {
+          content: {
+            'application/json': {
+              success?: boolean;
+              payment?: {
+                number?: string;
+                state?: string;
+                /** Format: date-time */
+                updated_at?: string;
+              };
+            };
+          };
+        };
+        /** @description Payment not found */
+        404: {
+          content: never;
+        };
+        /** @description Invalid state or payment processing error */
+        422: {
+          content: never;
+        };
+      };
+    };
+  };
   '/api/v2/storefront/notifications': {
     /**
      * List all notifications
@@ -4948,7 +5008,7 @@ export interface operations {
                * @example 1
                */
               payment_method_id: string;
-              source_attributes: {
+              source_attributes?: {
                 gateway_payment_profile_id?: string;
                 month?: number;
                 year?: number;
@@ -5164,6 +5224,81 @@ export interface operations {
     responses: {
       200: components['responses']['Shipment'];
       404: components['responses']['NotFound'];
+    };
+  };
+  /**
+   * Create PayPay Payment
+   * @description Creates a new PayPay payment and returns the payment URL.
+   */
+  'create-paypay-payment': {
+    requestBody: {
+      content: {
+        'application/json': {
+          /**
+           * @description The order number for this payment
+           * @example R123456789
+           */
+          order_number: string;
+          /**
+           * @description Payment amount in cents/yen (optional, defaults to 1000)
+           * @example 1000
+           */
+          amount: number;
+          /**
+           * @description Flag to indicate if the request is from a mobile device
+           * @example true
+           */
+          is_mobile: boolean;
+        };
+      };
+    };
+    responses: {
+      /** @description Payment URL successfully generated */
+      200: {
+        content: {
+          'application/json': {
+            /** @example true */
+            success?: boolean;
+            /**
+             * @description The PayPay payment URL
+             * @example https://stg-www.sandbox.paypay.ne.jp/app/cashier?code=https%3A%2F%2Fqr-stg.sandbox.paypay.ne.jp%2F28180104LZ0jEKkrFlBMqROK
+             */
+            paypay_url?: string;
+            /**
+             * @description The PayPay deep link URL for mobile devices
+             * @example paypay://payment?link_key=https%3A%2F%2Fqr-stg.sandbox.paypay.ne.jp%2F28180104LZ0jEKkrFlBMqROK
+             */
+            paypay_deeplink?: string;
+            /**
+             * @description The merchant payment ID from PayPay
+             * @example 6a53c5ea-5dc9-477f-91fb-c0fa72002091
+             */
+            merchant_payment_id?: string;
+          };
+        };
+      };
+      /** @description Bad Request - Invalid parameters or PayPay API error */
+      400: {
+        content: {
+          'application/json': {
+            /** @example false */
+            success?: boolean;
+            /** @example PayPay URL not found in response. */
+            error?: string;
+          };
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          'application/json': {
+            /** @example false */
+            success?: boolean;
+            /** @example An unexpected error occurred */
+            error?: string;
+          };
+        };
+      };
     };
   };
   /**
