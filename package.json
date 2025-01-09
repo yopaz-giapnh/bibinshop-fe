@@ -13,6 +13,7 @@
     "test": "pnpm lint && pnpm prettier:check",
     "generate:type:oauth": "pnpm openapi-typescript https://stg-api.bibin.shop/api-docs/spree/oauth.yaml --output lib/api/oauth.ts",
     "generate:type:storefront": "pnpm openapi-typescript https://stg-api.bibin.shop/api-docs/spree/storefront.yaml --output lib/api/storefront.ts",
+    "generate:type:storefront:local": "pnpm openapi-typescript openapi/spree/storefront.yaml --output lib/api/storefront.ts",
     "generate:type": "rm -rf lib/api/ && pnpm generate:type:oauth && pnpm generate:type:storefront && pnpm prettier"
   },
   "dependencies": {
