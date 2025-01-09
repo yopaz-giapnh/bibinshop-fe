@@ -2,10 +2,22 @@
 
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Cart } from '@/features/cart/types';
 import { useFormStatus } from 'react-dom';
 import { completeCheckout } from '../actions';
 
-export function CheckoutConfirmForm() {
+type Props = {
+  cart: Cart;
+};
+
+export function CheckoutConfirmForm({ cart }: Props) {
+  // ここにpaymentMethodIdを取得する処理を書く
+
+  const payments = cart?.payments;
+
+  const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)?.attributes.payment_method_id;
+
+  // actionに渡す
   const action = completeCheckout;
 
   return (
