@@ -85,16 +85,20 @@ export async function updateCreditCardCheckoutPayment(creditCard: CreditCard) {
 export async function updatePayPayCheckoutPayment(selectedPaymentMethodId: string) {
   try {
     await apiClient.PATCH('/api/v2/storefront/checkout', {
-      order: {
-        payments_attributes: [
-          {
-            payment_method_id: selectedPaymentMethodId
-          }
-        ]
+      body: {
+        order: {
+          payments_attributes: [
+            {
+              payment_method_id: selectedPaymentMethodId
+            }
+          ]
+        }
       }
     });
   } catch (error) {
     console.error(error);
+
+    throw error;
   }
 }
 
