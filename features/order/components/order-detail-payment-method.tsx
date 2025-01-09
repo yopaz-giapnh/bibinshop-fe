@@ -6,14 +6,14 @@ import OrderDetailSection from './order-detail-section';
 
 type Props = {
   cart: Cart;
-  creditCard: CreditCard;
+  creditCard: CreditCard | undefined;
 };
 
 export function OrderDetailPaymentMethod({ cart, creditCard }: Props) {
   const paymentMethodName = cart.payments.find((payment) => payment.attributes.payment_method_id)
     ?.attributes.payment_method_name;
 
-  const isCreditCardUsed = paymentMethodName?.toLowerCase() === 'stripe';
+  const isCreditCardUsed = paymentMethodName?.toLowerCase() === 'stripe' && !!creditCard;
   const isPayPayUsed = paymentMethodName?.toLowerCase() === 'paypay';
 
   return (
