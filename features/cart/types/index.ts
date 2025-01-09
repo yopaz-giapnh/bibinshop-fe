@@ -1,7 +1,7 @@
+import { PaymentSchema } from '@/features/payment/types';
 import { ImageSchema, VariantSchema } from '@/features/product/types';
 import { VendorBannerImage, VendorImage, VendorSchema } from '@/features/vendor/types';
 import { components } from '@/lib/api/storefront';
-import { PaymentSchema } from './../../payment/types/index';
 
 export type CartIncludes = components['schemas']['CartIncludes'] | VendorImage | VendorBannerImage;
 
