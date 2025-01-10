@@ -5,7 +5,9 @@ import { Address } from '@/features/address/types';
 import { TAGS as CART_TAGS } from '@/features/cart/constants';
 import { CreditCard } from '@/features/payment/types';
 import { revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { COOKIES } from '../constants';
 
 type CheckoutPayload = {
   address: Address;
@@ -193,6 +195,12 @@ export async function completeCheckout(
     } else {
       throw new Error(`Unsupported payment method: ${paymentMethodId}`);
     }
+
+    cookies().set(COOKIES.checkoutCompletedOrderNumber, orderNumber, {
+      maxAge: 60 * 10 // 10 minutes
+    });
+    // 適応中のクーポンを削除
+    cookies().delete(COOKIES.activeCouponId);
   } catch (error) {
     console.error(error);
   } finally {
