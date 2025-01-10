@@ -85,7 +85,7 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
             {/* {enableCancel && <CancelOrderButton order={order} />} */}
           </div>
         </OrderDetailSection>
-        <OrderDetailOverview cart={order} />
+        <OrderDetailOverview item={order} />
         <Typography
           as="bold"
           element="p"

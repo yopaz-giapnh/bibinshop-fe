@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Cart } from '@/features/cart/types';
@@ -8,7 +10,7 @@ type Props = {
   cart: Cart;
 };
 
-export default function CheckoutConfirmForm({ cart }: Props) {
+export function CheckoutConfirmForm({ cart }: Props) {
   const payments = cart?.payments;
   const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)
     ?.attributes.payment_method_id;
@@ -17,7 +19,6 @@ export default function CheckoutConfirmForm({ cart }: Props) {
   const amount = Number(cart?.attributes.total);
 
   async function handleSubmit() {
-    'use server';
     if (!paymentMethodId || !orderNumber || !amount) {
       return;
     }

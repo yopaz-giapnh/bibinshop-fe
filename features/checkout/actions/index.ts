@@ -175,14 +175,14 @@ export async function completeCheckout(
       const { data } = response;
       if (data?.success === false) {
         // 以下本当はエラートーストを出したい
-        throw new Error("PayPay決済の処理に失敗しました");
+        throw new Error('PayPay決済の処理に失敗しました');
       }
 
       // APIからのレスポンスに `redirect_url` が含まれる
       const redirect_url = data?.paypay_url;
       if (!redirect_url) {
         // 以下本当はエラートーストを出したい
-        throw new Error("PayPay決済の処理に失敗しました");
+        throw new Error('PayPay決済の処理に失敗しました');
       }
 
       redirect(redirect_url);

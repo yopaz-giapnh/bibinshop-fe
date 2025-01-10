@@ -1,5 +1,5 @@
 import { getCart } from '@/features/cart/actions';
-import CheckoutConfirmForm from '@/features/checkout/components/checkout-confirm-form';
+import { CheckoutConfirmForm } from '@/features/checkout/components/checkout-confirm-form';
 import { OrderDetailAddress } from '@/features/order/components/order-detail-address';
 import { OrderDetailInfo } from '@/features/order/components/order-detail-info';
 import { OrderDetailOverview } from '@/features/order/components/order-detail-overview';
@@ -19,7 +19,7 @@ export default async function CheckoutConfirm() {
   return (
     <div className="flex w-full flex-col items-center">
       <div className="w-full overflow-y-auto px-2 md:px-[272px]">
-        <OrderDetailOverview cart={cart} />
+        <OrderDetailOverview item={cart} />
         <OrderDetailPaymentMethod cart={cart} creditCard={creditCard} />
         {cart.address && <OrderDetailAddress address={cart.address} />}
         <OrderDetailInfo
