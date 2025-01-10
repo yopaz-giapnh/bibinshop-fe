@@ -5,9 +5,7 @@ import { Address } from '@/features/address/types';
 import { TAGS as CART_TAGS } from '@/features/cart/constants';
 import { CreditCard } from '@/features/payment/types';
 import { revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { COOKIES } from '../constants';
 
 type CheckoutPayload = {
   address: Address;
@@ -147,29 +145,35 @@ export async function advanceCheckout() {
   }
 }
 
-export async function completeCheckout() {
+
+export async function completeCheckout(paymentMethodId: string) {
+  let response
+
   try {
-    const { data, error } = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
-
-    if (error) {
-      throw error;
+    if (paymentMethodId === '1') {
+      response = await apiClient.PATCH('/api/v2/storefront/checkout/complete')
+      const { error } = response
+      if (error) {
+        throw error
+      }
+    } else if (paymentMethodId === '2') {
+      console.log('PayPayの処理をここに書く')
+    } else {
+      throw new Error(`Unsupported payment method: ${paymentMethodId}`)
     }
 
-    const { data: cart } = data;
-    if (!cart.attributes.number) {
-      throw new Error('Order number not found');
-    }
+    if (response && response.data) {
+      const cart = response.data
+      if (!cart.attributes?.number) {
+        throw new Error('Order number not found')
+      }
 
-    cookies().set(COOKIES.checkoutCompletedOrderNumber, cart.attributes.number, {
-      maxAge: 60 * 10 // 10 minutes
-    });
-    // 適応中のクーポンを削除
-    cookies().delete(COOKIES.activeCouponId);
+    }
   } catch (error) {
-    console.error(error);
+    console.error(error)
   } finally {
-    revalidateTag(CART_TAGS.cart);
+    revalidateTag(CART_TAGS.cart)
   }
 
-  redirect('/checkout/complete');
+  redirect('/checkout/complete')
 }

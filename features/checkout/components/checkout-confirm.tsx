@@ -29,7 +29,7 @@ export default async function CheckoutConfirm() {
           images={cart.images}
         />
       </div>
-      <CheckoutConfirmForm />
+      <CheckoutConfirmForm cart={cart} />
     </div>
   );
 }

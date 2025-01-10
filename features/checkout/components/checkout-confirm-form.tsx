@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Cart } from '@/features/cart/types';
@@ -10,18 +8,18 @@ type Props = {
   cart: Cart;
 };
 
-export function CheckoutConfirmForm({ cart }: Props) {
-  // ここにpaymentMethodIdを取得する処理を書く
-
+export default function CheckoutConfirmForm({ cart }: Props) {
   const payments = cart?.payments;
+  const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)
+    ?.attributes.payment_method_id;
 
-  const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)?.attributes.payment_method_id;
-
-  // actionに渡す
-  const action = completeCheckout;
+  async function handleSubmit() {
+    'use server';
+    return completeCheckout(paymentMethodId);
+  }
 
   return (
-    <form action={action} className="w-full md:w-auto">
+    <form action={handleSubmit} className="w-full md:w-auto">
       <CheckoutButton />
     </form>
   );

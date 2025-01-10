@@ -85,7 +85,7 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
             {/* {enableCancel && <CancelOrderButton order={order} />} */}
           </div>
         </OrderDetailSection>
-        <OrderDetailOverview item={order} />
+        <OrderDetailOverview cart={order} />
         <Typography
           as="bold"
           element="p"
@@ -108,7 +108,7 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
             />
           ))}
         </div>
-        {order.creditCard && <OrderDetailPaymentMethod creditCard={order.creditCard} />}
+        <OrderDetailPaymentMethod cart={order} creditCard={order.creditCard} />
         {order.address && <OrderDetailAddress address={order.address} />}
       </div>
       <OrderReceiptConfirmModal
