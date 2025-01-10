@@ -20,15 +20,15 @@ export default async function Page({ searchParams }: Props) {
       const response = await apiClient.PUT('/api/v2/storefront/payments/{id}/update_state', {
         params: {
           path: {
-            id: paymentId,
-          },
+            id: paymentId
+          }
         },
         body: {
           payment: {
-            state: 'completed',
+            state: 'completed'
           },
-          merchant_payment_id: merchantPaymentId,
-        },
+          merchant_payment_id: merchantPaymentId
+        }
       });
       console.log('response', response);
     } catch (error) {
@@ -49,7 +49,6 @@ export default async function Page({ searchParams }: Props) {
           </Typography>
         </div>
       }
-    >
-    </Suspense>
+    ></Suspense>
   );
 }

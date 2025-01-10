@@ -16,6 +16,7 @@ type Props = {
 
 export function PaymentList({ creditCards, paymentMethods }: Props) {
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
+
   const { setActiveCreditCard, setActivePaymentMethodId, activePaymentMethodId, activeCreditCard } =
     useCheckout();
 
@@ -28,44 +29,43 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
 
   const paypayValue = paypayPaymentMethodId ? paypayPaymentMethodId.toString() : 'paypay';
 
-  const defaultValue = activeCreditCard?.id?.toString() ?? paypayValue;
+  let currentValue: string;
+  if (activePaymentMethodId === paypayPaymentMethodId) {
+    currentValue = paypayValue;
+  } else if (activeCreditCard?.id) {
+    currentValue = activeCreditCard.id.toString();
+  } else {
+    currentValue = paypayValue;
+  }
+
+  const handleChange = (value: string) => {
+    if (value === paypayValue) {
+      setActiveCreditCard(null);
+      if (paypayPaymentMethodId) {
+        setActivePaymentMethodId(paypayPaymentMethodId);
+      }
+    } else {
+      const creditCard = creditCards.find((card) => card.id.toString() === value);
+      if (creditCard) {
+        setActiveCreditCard(creditCard);
+        if (creditCardPaymentMethodId) {
+          setActivePaymentMethodId(creditCardPaymentMethodId);
+        }
+      }
+    }
+  };
 
   return (
-    <RadioGroup
-      defaultValue={defaultValue}
-      onValueChange={(value) => {
-        if (value === paypayValue) {
-          setActiveCreditCard(null);
-          if (paypayPaymentMethodId) {
-            setActivePaymentMethodId(paypayPaymentMethodId);
-          }
-          return;
-        }
-
-        const creditCard = creditCards.find((card) => card.id.toString() === value);
-        if (creditCard) {
-          setActiveCreditCard(creditCard);
-
-          if (creditCardPaymentMethodId) {
-            setActivePaymentMethodId(creditCardPaymentMethodId);
-          }
-        }
-      }}
-      className="flex flex-col"
-    >
+    <RadioGroup value={currentValue} onValueChange={handleChange} className="flex flex-col">
       <label key={paypayValue} className="mb-2 flex cursor-pointer items-center">
         <div
           className={cn(
             'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
-            (!activeCreditCard || activePaymentMethodId === paypayPaymentMethodId) &&
-              'border-bibinBlue-100 bg-[#F6FBFF]'
+            currentValue === paypayValue && 'border-bibinBlue-100 bg-[#F6FBFF]'
           )}
         >
           <div className="flex w-full items-center gap-4">
-            <RadioGroupItem
-              value={paypayValue}
-              checked={activePaymentMethodId === paypayPaymentMethodId}
-            />
+            <RadioGroupItem value={paypayValue} />
             <Typography as="body" element="p" className="text-black-80">
               PayPayで支払う
             </Typography>
@@ -74,7 +74,7 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
       </label>
 
       {creditCards.map((creditCard) => {
-        const isSelected = activeCreditCard?.id === creditCard.id;
+        const isSelected = currentValue === creditCard.id.toString();
 
         return (
           <label key={creditCard.id} className="flex cursor-pointer items-center">
@@ -85,7 +85,7 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
               )}
             >
               <div className="flex w-full items-center gap-4">
-                <RadioGroupItem value={creditCard.id.toString()} checked={isSelected} />
+                <RadioGroupItem value={creditCard.id.toString()} />
                 {getCreditCardBrandIcon(creditCard)}
                 <Typography as="body" element="p" className="text-black-80">
                   {creditCard.attributes.name}
@@ -94,6 +94,7 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
                   {'...' + creditCard.attributes.last_digits}
                 </Typography>
               </div>
+
               <ButtonWithIcon
                 buttonProps={{
                   className:
