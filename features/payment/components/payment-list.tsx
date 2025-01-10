@@ -1,4 +1,5 @@
 import Paypay from '@/assets/payment/paypay.svg';
+import Store from '@/assets/payment/store.svg';
 import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -91,6 +92,7 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
         >
           <div className="flex w-full items-center gap-4">
             <RadioGroupItem value={konbiniValue} checked={isKonbiniSelected} />
+            <Store />
             <Typography as="body" element="p" className="text-black-80">
               コンビニ決済
             </Typography>
