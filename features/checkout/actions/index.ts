@@ -156,12 +156,22 @@ export async function completeCheckout(paymentMethodId: string) {
         throw error;
       }
     } else if (paymentMethodId === '2') {
-      console.log('PayPayの処理をここに書く');
-      // POST /api/v2/storefront/paypay_payments
-      // responseにredirect_urlが入っている
-      // redirect_urlに遷移する
-      // paypayの際はここで処理が終了する
-      // return
+      console.log('PayPay決済の処理を開始します');
+      // PayPay決済用のエンドポイントを叩く: POST /api/v2/storefront/paypay_payments
+ 
+      const body = {
+        order_number: orderNumber,
+        amount: amount,
+        is_mobile: true,
+      };
+      response = await apiClient.POST('/api/v2/storefront/paypay_payments', {
+        body: body
+      });
+
+      // APIからのレスポンスに `redirect_url` が含まれる
+      // `redirect_url` に画面遷移することでPayPay側の決済画面へ移動
+      // 決済が完了したら、PayPayからコールバックが返される前提
+      // ここで処理は終了する（returnする）
     } else {
       throw new Error(`Unsupported payment method: ${paymentMethodId}`);
     }
