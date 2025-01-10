@@ -1,9 +1,44 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
-import CheckoutConfirm from '@/features/checkout/components/checkout-confirm';
+import { apiClient } from '@/config/api-client';
+import { redirect } from 'next/navigation'; // <-- important import
 import { Suspense } from 'react';
 
-export default async function Page() {
+type Props = {
+  searchParams: {
+    orderNumber?: string;
+    merchant_payment_id?: string;
+    payment_id?: string;
+  };
+};
+
+export default async function Page({ searchParams }: Props) {
+  const { merchant_payment_id: merchantPaymentId, payment_id: paymentId } = searchParams;
+
+  if (paymentId) {
+    const response = await apiClient.PUT('/api/v2/storefront/payments/{id}/update_state', {
+      params: {
+        path: {
+          id: paymentId
+        }
+      },
+      body: {
+        payment: {
+          state: 'completed'
+        },
+        merchant_payment_id: merchantPaymentId
+      }
+    });
+
+    if (response.response.status === 200) {
+      // Use redirect from `next/navigation` (no second argument allowed)
+      redirect('/checkout/complete');
+    } else {
+      // showErrorToast('決済に失敗しました');
+      redirect('/cart');
+    }
+  }
+
   return (
     <Suspense
       fallback={
@@ -14,8 +49,6 @@ export default async function Page() {
           </Typography>
         </div>
       }
-    >
-      <CheckoutConfirm />
-    </Suspense>
+    ></Suspense>
   );
 }

@@ -196,7 +196,7 @@ export async function completeCheckout(payload: CompleteCheckoutPayload) {
 
       const payPayUrl = data?.paypay_url;
       if (!payPayUrl) {
-        throw new Error('PayPay決済の処理に失敗しました');
+        throw new Error('PayPay urlが取得できませんでした');
       }
 
       // リダイレクト前にカートの再検証やクッキーの設定
