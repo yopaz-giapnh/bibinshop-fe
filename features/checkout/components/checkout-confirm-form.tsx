@@ -14,15 +14,21 @@ export function CheckoutConfirmForm({ cart }: Props) {
   const payments = cart?.payments;
   const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)
     ?.attributes.payment_method_id;
-
   const orderNumber = cart?.attributes.number;
   const amount = Number(cart?.attributes.total);
 
   async function handleSubmit() {
     if (!paymentMethodId || !orderNumber || !amount) {
+      console.error('決済に必要な情報が不足しています');
       return;
     }
-    return completeCheckout(paymentMethodId, orderNumber, amount);
+
+    const payload = { paymentMethodId, orderNumber, amount };
+
+    const result = await completeCheckout(payload);
+    if (!result.success) {
+      alert('決済に失敗しました');
+    }
   }
 
   return (
