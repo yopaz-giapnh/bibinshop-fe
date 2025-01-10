@@ -14,7 +14,7 @@ export default function CheckoutConfirmForm({ cart }: Props) {
     ?.attributes.payment_method_id;
 
   const orderNumber = cart?.attributes.number;
-  const amount = cart?.attributes.total;
+  const amount = Number(cart?.attributes.total);
 
   async function handleSubmit() {
     'use server';

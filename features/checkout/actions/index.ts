@@ -148,7 +148,7 @@ export async function advanceCheckout() {
 export async function completeCheckout(
   paymentMethodId: number,
   orderNumber: string,
-  amount: string
+  amount: number
 ) {
   let response;
 
