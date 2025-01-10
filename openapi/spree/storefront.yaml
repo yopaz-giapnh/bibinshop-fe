@@ -1955,6 +1955,22 @@ paths:
                       updated_at:
                         type: string
                         format: date-time
+                      order:
+                        type: object
+                        properties:
+                          number:
+                            type: string
+                          state:
+                            type: string
+                          total:
+                            type: number
+                            format: float
+                          updated_at:
+                            type: string
+                            format: date-time
+                required:
+                  - success
+                  - payment
         '404':
           description: Payment not found
         '422':

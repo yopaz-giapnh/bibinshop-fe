@@ -498,12 +498,20 @@ export interface paths {
         200: {
           content: {
             'application/json': {
-              success?: boolean;
-              payment?: {
+              success: boolean;
+              payment: {
                 number?: string;
                 state?: string;
                 /** Format: date-time */
                 updated_at?: string;
+                order?: {
+                  number?: string;
+                  state?: string;
+                  /** Format: float */
+                  total?: number;
+                  /** Format: date-time */
+                  updated_at?: string;
+                };
               };
             };
           };
