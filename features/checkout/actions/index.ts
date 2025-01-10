@@ -145,24 +145,28 @@ export async function advanceCheckout() {
   }
 }
 
-export async function completeCheckout(paymentMethodId: string) {
+export async function completeCheckout(
+  paymentMethodId: number,
+  orderNumber: string,
+  amount: string
+) {
   let response;
 
   try {
-    if (paymentMethodId === '1') {
+    if (paymentMethodId === 1) {
       response = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
       const { error } = response;
       if (error) {
         throw error;
       }
-    } else if (paymentMethodId === '2') {
+    } else if (paymentMethodId === 2) {
       console.log('PayPay決済の処理を開始します');
       // PayPay決済用のエンドポイントを叩く: POST /api/v2/storefront/paypay_payments
- 
+
       const body = {
         order_number: orderNumber,
         amount: amount,
-        is_mobile: true,
+        is_mobile: false
       };
       response = await apiClient.POST('/api/v2/storefront/paypay_payments', {
         body: body
@@ -174,13 +178,6 @@ export async function completeCheckout(paymentMethodId: string) {
       // ここで処理は終了する（returnする）
     } else {
       throw new Error(`Unsupported payment method: ${paymentMethodId}`);
-    }
-
-    if (response && response.data) {
-      const cart = response.data;
-      if (!cart.attributes?.number) {
-        throw new Error('Order number not found');
-      }
     }
   } catch (error) {
     console.error(error);

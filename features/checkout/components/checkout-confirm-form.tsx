@@ -13,9 +13,15 @@ export default function CheckoutConfirmForm({ cart }: Props) {
   const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)
     ?.attributes.payment_method_id;
 
+  const orderNumber = cart?.attributes.number;
+  const amount = cart?.attributes.total;
+
   async function handleSubmit() {
     'use server';
-    return completeCheckout(paymentMethodId);
+    if (!paymentMethodId || !orderNumber || !amount) {
+      return;
+    }
+    return completeCheckout(paymentMethodId, orderNumber, amount);
   }
 
   return (
