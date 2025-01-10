@@ -1,7 +1,7 @@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { apiClient } from '@/config/api-client';
-import { redirect } from 'next/navigation'; // <-- important import
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 type Props = {
@@ -16,26 +16,26 @@ export default async function Page({ searchParams }: Props) {
   const { merchant_payment_id: merchantPaymentId, payment_id: paymentId } = searchParams;
 
   if (paymentId) {
-    const response = await apiClient.PUT('/api/v2/storefront/payments/{id}/update_state', {
-      params: {
-        path: {
-          id: paymentId
-        }
-      },
-      body: {
-        payment: {
-          state: 'completed'
+    try {
+      const response = await apiClient.PUT('/api/v2/storefront/payments/{id}/update_state', {
+        params: {
+          path: {
+            id: paymentId,
+          },
         },
-        merchant_payment_id: merchantPaymentId
-      }
-    });
-
-    if (response.response.status === 200) {
-      // Use redirect from `next/navigation` (no second argument allowed)
+        body: {
+          payment: {
+            state: 'completed',
+          },
+          merchant_payment_id: merchantPaymentId,
+        },
+      });
+      console.log('response', response);
+    } catch (error) {
+      console.error('Error while updating payment state:', error);
+      return null;
+    } finally {
       redirect('/checkout/complete');
-    } else {
-      // showErrorToast('決済に失敗しました');
-      redirect('/cart');
     }
   }
 
@@ -49,6 +49,7 @@ export default async function Page({ searchParams }: Props) {
           </Typography>
         </div>
       }
-    ></Suspense>
+    >
+    </Suspense>
   );
 }
