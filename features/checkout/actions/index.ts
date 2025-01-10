@@ -145,35 +145,38 @@ export async function advanceCheckout() {
   }
 }
 
-
 export async function completeCheckout(paymentMethodId: string) {
-  let response
+  let response;
 
   try {
     if (paymentMethodId === '1') {
-      response = await apiClient.PATCH('/api/v2/storefront/checkout/complete')
-      const { error } = response
+      response = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
+      const { error } = response;
       if (error) {
-        throw error
+        throw error;
       }
     } else if (paymentMethodId === '2') {
-      console.log('PayPayの処理をここに書く')
+      console.log('PayPayの処理をここに書く');
+      // POST /api/v2/storefront/paypay_payments
+      // responseにredirect_urlが入っている
+      // redirect_urlに遷移する
+      // paypayの際はここで処理が終了する
+      // return
     } else {
-      throw new Error(`Unsupported payment method: ${paymentMethodId}`)
+      throw new Error(`Unsupported payment method: ${paymentMethodId}`);
     }
 
     if (response && response.data) {
-      const cart = response.data
+      const cart = response.data;
       if (!cart.attributes?.number) {
-        throw new Error('Order number not found')
+        throw new Error('Order number not found');
       }
-
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
   } finally {
-    revalidateTag(CART_TAGS.cart)
+    revalidateTag(CART_TAGS.cart);
   }
 
-  redirect('/checkout/complete')
+  redirect('/checkout/complete');
 }
