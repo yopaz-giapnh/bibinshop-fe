@@ -147,65 +147,79 @@ export async function advanceCheckout() {
   }
 }
 
-export async function completeCheckout(
-  paymentMethodId: number,
-  orderNumber: string,
-  amount: number
-) {
-  let response;
+type CompleteCheckoutPayload = {
+  paymentMethodId: number;
+  orderNumber: string;
+  amount: number;
+};
+
+export async function completeCheckout(payload: CompleteCheckoutPayload) {
+  const { paymentMethodId, orderNumber, amount } = payload;
 
   try {
     if (paymentMethodId === 1) {
-      response = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
-      const { error } = response;
-      if (error) {
-        throw error;
+      // クレジットカードなどの場合の例
+      const response = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
+      if (response.error) {
+        throw response.error;
       }
-    } else if (paymentMethodId === 2) {
-      console.log('PayPay決済の処理を開始します');
-      // PayPay決済用のエンドポイントを叩く: POST /api/v2/storefront/paypay_payments
 
+      // カートを再取得させたいなど、Tagを使っている場合は revalidate
+      revalidateTag(CART_TAGS.cart);
+
+      return {
+        success: true,
+        paypayUrl: null // PayPayURLは不要なので null
+      };
+    } else if (paymentMethodId === 2) {
+      // PayPayの場合
+      console.log('PayPay決済の処理を開始します');
+
+      // PayPay決済用のエンドポイントを叩く
       const body = {
         order_number: orderNumber,
         amount: amount,
         is_mobile: false
       };
-      response = await apiClient.POST('/api/v2/storefront/paypay_payments', {
-        body: body
+      const response = await apiClient.POST('/api/v2/storefront/paypay_payments', {
+        body
       });
 
       const { data } = response;
       if (data?.success === false) {
-        // 以下本当はエラートーストを出したい
         throw new Error('PayPay決済の処理に失敗しました');
       }
 
-      // APIからのレスポンスに `redirect_url` が含まれる
-      const redirect_url = data?.paypay_url;
-      if (!redirect_url) {
-        // 以下本当はエラートーストを出したい
+      const redirectUrl = data?.paypay_url;
+      if (!redirectUrl) {
         throw new Error('PayPay決済の処理に失敗しました');
       }
 
-      redirect(redirect_url);
+      console.log('PayPay redirect_url:', redirectUrl);
 
-      // `redirect_url` に画面遷移することでPayPay側の決済画面へ移動
-      // 決済が完了したら、PayPayからコールバックが返される前提
-      // ここで処理は終了する（returnする）
+      // ↓ サーバーアクション内では redirect() せず、URLを返す
+      revalidateTag(CART_TAGS.cart);
+
+      cookies().set(COOKIES.checkoutCompletedOrderNumber, orderNumber, {
+        maxAge: 60 * 10 // 10 minutes
+      });
+      // 適応中のクーポンを削除
+      cookies().delete(COOKIES.activeCouponId);
+
+      return {
+        success: true,
+        paypayUrl: redirectUrl
+      };
     } else {
+      // 未対応の支払い方法の場合
       throw new Error(`Unsupported payment method: ${paymentMethodId}`);
     }
-
-    cookies().set(COOKIES.checkoutCompletedOrderNumber, orderNumber, {
-      maxAge: 60 * 10 // 10 minutes
-    });
-    // 適応中のクーポンを削除
-    cookies().delete(COOKIES.activeCouponId);
   } catch (error) {
     console.error(error);
-  } finally {
-    revalidateTag(CART_TAGS.cart);
+    return {
+      success: false,
+      error: String(error),
+      paypayUrl: null
+    };
   }
-
-  redirect('/checkout/complete');
 }
