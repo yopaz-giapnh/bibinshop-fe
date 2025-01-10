@@ -174,6 +174,7 @@ export async function getOrder(order_number: string) {
   const images = included?.filter(isImageSchema) || [];
   const products = included?.filter(isProductSchema) || [];
   const cancellationRequests = included?.filter(isCancellationReuqestSchema) || [];
+  const payments = included?.filter(isPaymentSchema) || [];
 
   return {
     ...order,
@@ -185,7 +186,8 @@ export async function getOrder(order_number: string) {
     variants,
     images,
     products,
-    cancellationRequests
+    cancellationRequests,
+    payments
   };
 }
 

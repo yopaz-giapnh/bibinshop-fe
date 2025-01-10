@@ -2,15 +2,16 @@ import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
 import { CreditCard } from '@/features/payment/types';
 import { getCreditCardBrandIcon } from '@/features/payment/utils';
+import { Order } from '../types';
 import OrderDetailSection from './order-detail-section';
 
 type Props = {
-  cart: Cart;
+  item: Cart | Order;
   creditCard: CreditCard | undefined;
 };
 
-export function OrderDetailPaymentMethod({ cart, creditCard }: Props) {
-  const paymentMethodName = cart.payments.find((payment) => payment.attributes.payment_method_id)
+export function OrderDetailPaymentMethod({ item, creditCard }: Props) {
+  const paymentMethodName = item.payments?.find((payment) => payment.attributes.payment_method_id)
     ?.attributes.payment_method_name;
 
   const isCreditCardUsed = paymentMethodName?.toLowerCase() === 'stripe' && !!creditCard;
