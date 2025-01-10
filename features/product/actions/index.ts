@@ -115,6 +115,37 @@ export async function getProductsOnTaxons(taxonIds: string[], page?: string, sor
   };
 }
 
+export async function getRecommendedProducts(page?: string) {
+  const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
+    params: {
+      query: {
+        'filter[recommended]': true,
+        page: Number(page || 1),
+        include:
+          'images,vendor,product_properties,default_variant,option_types,option_types.option_values',
+        'filter[in_stock]': true
+      }
+    },
+    fetch: (request) => {
+      return fetch(request, { next: { tags: [TAGS.products] }, cache: 'no-store' });
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data: products, included: productIncluded, meta } = data;
+
+  return {
+    data: reshapeProducts({
+      products,
+      productIncluded
+    }),
+    meta
+  };
+}
+
 export async function getTaxonId(title: string) {
   const taxons = await getRootTaxons(['name']);
 

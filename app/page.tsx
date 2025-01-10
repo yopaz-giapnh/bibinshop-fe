@@ -47,6 +47,12 @@ export default async function Page() {
           <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">
             <Suspense fallback={<LoadingSpinner />}>
               <ProductOverviewByTaxon
+                title="おすすめ商品"
+                seeMoreUrl="/products/recommended?page=1"
+              />
+            </Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <ProductOverviewByTaxon
                 title="ベストセラー"
                 seeMoreUrl="/products/bestseller?page=1"
               />
