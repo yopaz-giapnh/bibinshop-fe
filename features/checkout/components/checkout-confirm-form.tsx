@@ -3,6 +3,8 @@
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Cart } from '@/features/cart/types';
+import { useStripe } from '@stripe/react-stripe-js';
+import { useRouter } from 'next/navigation';
 import { useFormStatus } from 'react-dom';
 import { completeCheckout } from '../actions';
 
@@ -11,6 +13,9 @@ type Props = {
 };
 
 export function CheckoutConfirmForm({ cart }: Props) {
+  const router = useRouter();
+  const stripe = useStripe();
+
   const payments = cart?.payments;
   const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)
     ?.attributes.payment_method_id;

@@ -28,6 +28,13 @@ export async function updateCheckout(
       await updateCreditCardCheckoutPayment(creditCard);
     } else if (paymentMethodId === '2') {
       await updatePayPayCheckoutPayment(paymentMethodId);
+    } else if (paymentMethodId === '3') {
+      // TODO: すでにnameとemailがあるので、それを使う
+      await updateKonbiniCheckoutPayment({
+        paymentMethodId,
+        name: '山田 太郎',
+        email: 'customer@example.com'
+      });
     } else {
       console.error('Invalid payment method');
       throw new Error('Invalid payment method');
@@ -90,6 +97,38 @@ export async function updatePayPayCheckoutPayment(selectedPaymentMethodId: strin
           payments_attributes: [
             {
               payment_method_id: selectedPaymentMethodId
+            }
+          ]
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+
+    throw error;
+  }
+}
+
+export async function updateKonbiniCheckoutPayment({
+  paymentMethodId,
+  name,
+  email
+}: {
+  paymentMethodId: string;
+  name: string;
+  email: string;
+}) {
+  try {
+    await apiClient.PATCH('/api/v2/storefront/checkout', {
+      body: {
+        order: {
+          payments_attributes: [
+            {
+              payment_method_id: paymentMethodId,
+              source_attributes: {
+                name,
+                email
+              }
             }
           ]
         }
@@ -234,4 +273,25 @@ export async function completeCheckout(payload: CompleteCheckoutPayload) {
 
   // ここに到達するのは型的に想定しておきたいだけなので、念のため返却
   return { success: true };
+}
+
+export async function completeKonbiniCheckout() {
+  try {
+    const response = await apiClient.PATCH('/api/v2/storefront/checkout/complete', {
+      params: {
+        query: {
+          include: 'payments'
+        }
+      }
+    });
+    const { data, error } = response;
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 }

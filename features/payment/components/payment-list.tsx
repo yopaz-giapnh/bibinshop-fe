@@ -26,8 +26,14 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
   const paypayPaymentMethodId = paymentMethods.find(
     (method) => method.attributes.name?.toLowerCase() === 'paypay'
   )?.id;
+  const konbiniPaymentMethodId = paymentMethods.find(
+    (method) => method.attributes.name?.toLowerCase() === 'コンビニ決済'
+  )?.id;
 
   const paypayValue = paypayPaymentMethodId ? paypayPaymentMethodId.toString() : 'paypay';
+  const konbiniValue = konbiniPaymentMethodId ? konbiniPaymentMethodId.toString() : 'コンビニ決済';
+  const isKonbiniSelected =
+    activeCreditCard == null && activePaymentMethodId === konbiniPaymentMethodId;
 
   let currentValue: string;
   if (activePaymentMethodId === paypayPaymentMethodId) {
@@ -68,6 +74,23 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
             <RadioGroupItem value={paypayValue} />
             <Typography as="body" element="p" className="text-black-80">
               PayPayで支払う
+            </Typography>
+          </div>
+        </div>
+      </label>
+
+      {/* TODO: コンビニ決済のデザインに合わせる */}
+      <label key={konbiniValue} className="mb-2 flex cursor-pointer items-center">
+        <div
+          className={cn(
+            'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
+            isKonbiniSelected && 'border-bibinBlue-100'
+          )}
+        >
+          <div className="flex w-full items-center gap-4">
+            <RadioGroupItem value={konbiniValue} checked={isKonbiniSelected} />
+            <Typography as="body" element="p" className="text-black-80">
+              コンビニ決済
             </Typography>
           </div>
         </div>
