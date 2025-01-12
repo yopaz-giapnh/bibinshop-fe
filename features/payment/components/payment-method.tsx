@@ -30,7 +30,6 @@ export function PaymentMethod() {
         <PayPay />
         <FamilyMart />
         <Lawson />
-
       </div>
     </div>
   );

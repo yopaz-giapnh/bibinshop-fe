@@ -36,7 +36,7 @@ import { BadgeAlert, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createPayment, getPaymentMethods } from '../actions';
-import { cardOptions, stripePromise } from '../constants';
+import { availablePaymentMethodName, cardOptions, stripePromise } from '../constants';
 import { FormValues, formSchema } from '../types';
 
 type Props = {
@@ -107,7 +107,8 @@ function Form({ onClose }: Props) {
       const paymentMethods = await getPaymentMethods();
 
       const paymentMethodId = paymentMethods?.find(
-        (paymentMethod) => paymentMethod.attributes.name?.toLowerCase() === 'stripe'
+        (paymentMethod) =>
+          paymentMethod.attributes.name?.toLowerCase() === availablePaymentMethodName.stripe
       )?.id;
 
       if (!paymentMethodId) {
