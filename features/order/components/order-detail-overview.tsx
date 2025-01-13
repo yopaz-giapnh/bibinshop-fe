@@ -1,10 +1,11 @@
 'use client';
 import { Typography } from '@/components/ui/typography';
-import { CartSchema } from '@/features/cart/types';
+import { Cart } from '@/features/cart/types';
+import { Order } from '@/features/order/types';
 import OrderDetailSection from './order-detail-section';
 
 type Props = {
-  item: CartSchema;
+  item: Cart | Order;
 };
 
 export function OrderDetailOverview({ item }: Props) {
@@ -27,6 +28,7 @@ export function OrderDetailOverview({ item }: Props) {
             {item.attributes.display_item_total}
           </Typography>
         </div>
+
         {!!item.attributes.coupons_total && (
           <div className="flex justify-between">
             <Typography
@@ -45,6 +47,7 @@ export function OrderDetailOverview({ item }: Props) {
             </Typography>
           </div>
         )}
+
         {!!item.attributes.points && (
           <div className="flex justify-between">
             <Typography
@@ -63,6 +66,7 @@ export function OrderDetailOverview({ item }: Props) {
             </Typography>
           </div>
         )}
+
         <div className="flex justify-between">
           <Typography
             as="caption"
@@ -79,8 +83,9 @@ export function OrderDetailOverview({ item }: Props) {
             {item.attributes.display_ship_total}
           </Typography>
         </div>
+
         <div className="mt-[8px] border-t-[1px] md:mt-[16px]" />
-        <div className="flex items-center justify-between">
+        <div className="carts-center flex justify-between">
           <Typography
             as="caption"
             element="p"

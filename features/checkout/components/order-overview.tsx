@@ -12,16 +12,20 @@ import { useCheckout } from './checkout-ctx';
 
 type Props = {
   cart: Cart;
-  canOrder: boolean;
   pointsRate: number;
 };
 
-export function OrderOverview({ cart, canOrder, pointsRate }: Props) {
-  const { activeAddress, activeCreditCard } = useCheckout();
+export function OrderOverview({ cart, pointsRate }: Props) {
+  const { canOrder } = useCheckout();
+  const { activeAddress, activePaymentMethod } = useCheckout();
   const [, formAction] = useFormState(updateCheckout, null);
+
   const action =
-    activeAddress && activeCreditCard
-      ? formAction.bind(null, { address: activeAddress, creditCard: activeCreditCard })
+    activeAddress && activePaymentMethod
+      ? formAction.bind(null, {
+          address: activeAddress,
+          paymentMethod: activePaymentMethod
+        })
       : undefined;
 
   return (

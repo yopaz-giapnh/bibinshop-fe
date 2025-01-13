@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Typography } from '@/components/ui/typography';
 import { ResetCouponClient } from '@/features/coupon/components/reset-coupon-client';
 import { OrderDetail } from '@/features/order/components/order-detail';
 import { redirectToTop } from '@/utils/navigation';
@@ -8,6 +7,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { COOKIES } from '../constants';
+import { CheckoutOrderMessage } from './checkout-order-message';
 
 export default async function CheckoutComplete() {
   const orderNumber = cookies().get(COOKIES.checkoutCompletedOrderNumber)?.value;
@@ -19,20 +19,9 @@ export default async function CheckoutComplete() {
     <div className="h-full w-full bg-paleFrostBlue">
       <div className="mx-auto flex w-full flex-col items-center px-2 md:px-[272px] md:pt-[24px] ">
         <ResetCouponClient />
-        <Typography
-          as="boldTitle"
-          element="h2"
-          className="mt-[16px] text-[16px] text-text-100 md:mt-0 md:text-[24px]"
-        >
-          ご購入ありがとうございました
-        </Typography>
-        <Typography
-          as="caption"
-          element="p"
-          className="pb-[16px] pt-[16px] text-text-80 md:pb-[24px]"
-        >
-          ご注文を承りました。
-        </Typography>
+        <Suspense fallback={<LoadingSpinner />}>
+          <CheckoutOrderMessage orderNumber={orderNumber} />
+        </Suspense>
         <Suspense fallback={<LoadingSpinner />}>
           <OrderDetail orderNumber={orderNumber} />
           <Link href="/" passHref>

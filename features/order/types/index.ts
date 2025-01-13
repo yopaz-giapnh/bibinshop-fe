@@ -1,6 +1,11 @@
 import { Address } from '@/features/address/types';
 import { CartSchema, LineItem } from '@/features/cart/types';
-import { CreditCard, ShippmentSchema } from '@/features/payment/types';
+import {
+  CreditCard,
+  KonbiniSchema,
+  PaymentSchema,
+  ShippmentSchema
+} from '@/features/payment/types';
 import {
   CancellationRequestSchema,
   ImageSchema,
@@ -19,4 +24,6 @@ export type Order = CartSchema & {
   images: ImageSchema[];
   products: ProductSchema[];
   cancellationRequests: CancellationRequestSchema[];
+  payments?: PaymentSchema[];
+  konbini?: KonbiniSchema;
 };

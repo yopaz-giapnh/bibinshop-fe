@@ -11,6 +11,7 @@ import {
   OrderTrackerModal,
   OrderTrackerModalRef
 } from '@/features/account/order-history/components/order-tracker-modal';
+import { isKonbiniPaymentMethod } from '@/features/payment/utils';
 import {
   TryReviewWriteModal,
   TryReviewWriteModalRef
@@ -18,9 +19,12 @@ import {
 import { Review } from '@/features/review/types';
 import { cn } from '@/lib/utils';
 import { formatDateString } from '@/utils/date';
+import { format } from 'date-fns';
+import { ja } from 'date-fns/locale';
 import { useEffect, useRef, useState } from 'react';
 import { sortLineItemsByShipment } from '../utils';
 import { OrderDetailAddress } from './order-detail-address';
+import { OrderDetailKonbiniInfo } from './order-detail-konbini-info';
 import { OrderDetailOverview } from './order-detail-overview';
 import { OrderDetailPaymentMethod } from './order-detail-payment-method';
 import OrderDetailSection from './order-detail-section';
@@ -45,6 +49,12 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
   const [selectedShipmentId, setSelectedShipmentId] = useState<string | null>(null);
+  const paymentMethodName =
+    order?.payments?.[order.payments.length - 1]?.attributes.payment_method_name;
+  const isKonbiniUsed = isKonbiniPaymentMethod(paymentMethodName);
+  const konbini = order?.konbini;
+
+  console.log(konbini);
 
   useEffect(() => {
     fetchOrderData(orderNumber).then((order) => {
@@ -85,6 +95,28 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
             {/* {enableCancel && <CancelOrderButton order={order} />} */}
           </div>
         </OrderDetailSection>
+        {isKonbiniUsed && !!konbini && (
+          <div className="mt-4">
+            <OrderDetailKonbiniInfo
+              displayTotal={`¥${order.attributes.display_total}`}
+              paymentDueDate={
+                konbini.attributes.expires_at
+                  ? format(new Date(konbini.attributes.expires_at), 'yyyy年M月d日 a h:mm', {
+                      locale: ja
+                    })
+                  : ''
+              }
+              familymartPaymentCode={`${konbini.attributes.familymart_payment_code}`}
+              familymartConfirmationNumber={`${konbini.attributes.familymart_confirmation_number}`}
+              lawsonPaymentCode={`${konbini.attributes.lawson_payment_code}`}
+              lawsonConfirmationNumber={`${konbini.attributes.lawson_confirmation_number}`}
+              ministopPaymentCode={`${konbini.attributes.ministop_payment_code}`}
+              ministopConfirmationNumber={`${konbini.attributes.ministop_confirmation_number}`}
+              seicomartPaymentCode={`${konbini.attributes.seicomart_payment_code}`}
+              seicomartConfirmationNumber={`${konbini.attributes.seicomart_confirmation_number}`}
+            />
+          </div>
+        )}
         <OrderDetailOverview item={order} />
         <Typography
           as="bold"
@@ -108,7 +140,7 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
             />
           ))}
         </div>
-        {order.creditCard && <OrderDetailPaymentMethod creditCard={order.creditCard} />}
+        <OrderDetailPaymentMethod item={order} creditCard={order.creditCard} />
         {order.address && <OrderDetailAddress address={order.address} />}
       </div>
       <OrderReceiptConfirmModal

@@ -3,9 +3,10 @@
 import { Typography } from '@/components/ui/typography';
 import { getAccountAddresses } from '@/features/address/actions';
 import { Cart } from '@/features/cart/types';
-import { getAccountCreditCards } from '@/features/payment/actions';
+import { getAccountCreditCards, getPaymentMethods } from '@/features/payment/actions';
 import { PaymentMethod } from '@/features/payment/components/payment-method';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
+
 import { use } from 'react';
 import { CheckoutUsePointForm } from './CheckoutUsePointForm';
 import { CheckoutAddressForm } from './checkout-address-form';
@@ -19,6 +20,7 @@ type Props = {
   getAccountCreditCards: ReturnType<typeof getAccountCreditCards>;
   getAvailablePoints: ReturnType<typeof getAvailablePoints>;
   getPointsRate: ReturnType<typeof getPointsRate>;
+  getPaymentMethods: ReturnType<typeof getPaymentMethods>;
 };
 
 export function CheckoutForm({
@@ -26,16 +28,16 @@ export function CheckoutForm({
   getAccountAddresses,
   getAccountCreditCards,
   getAvailablePoints,
-  getPointsRate
+  getPointsRate,
+  getPaymentMethods
 }: Props) {
   const addresses = use(getAccountAddresses);
   const creditCards = use(getAccountCreditCards);
   const availablePoints = use(getAvailablePoints);
   const pointsRate = use(getPointsRate);
+  const paymentMethods = use(getPaymentMethods) || [];
 
   const hasAddress = addresses.length > 0;
-  const hasCreditCard = creditCards.length > 0;
-  const canOrder = hasAddress && hasCreditCard;
 
   return (
     <div className="mt-[16px] w-full md:mt-[22px] md:px-20">
@@ -53,7 +55,9 @@ export function CheckoutForm({
               >
                 2. お支払い方法
               </Typography>
-              {hasAddress && <CheckoutPaymentForm creditCards={creditCards} />}
+              {hasAddress && (
+                <CheckoutPaymentForm creditCards={creditCards} paymentMethods={paymentMethods} />
+              )}
             </div>
           </div>
           <div className="mt-2 flex flex-col gap-4 rounded-[6px] bg-white-base">
@@ -88,7 +92,7 @@ export function CheckoutForm({
             <Typography as="title" element="p" className="text-[16px] text-text-100 md:text-[24px]">
               注文概要
             </Typography>
-            <OrderOverview cart={cart} canOrder={canOrder} pointsRate={pointsRate} />
+            <OrderOverview cart={cart} pointsRate={pointsRate} />
           </div>
           <div className="hidden md:flex">
             <PaymentMethod />

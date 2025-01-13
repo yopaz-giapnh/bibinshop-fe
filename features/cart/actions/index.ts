@@ -2,7 +2,7 @@
 
 import { apiClient } from '@/config/api-client';
 import { isAddressSchema } from '@/features/address/utils';
-import { isCreditCardSchema } from '@/features/payment/utils';
+import { isCreditCardSchema, isPaymentSchema } from '@/features/payment/utils';
 import { isImageSchema, isVariantSchema } from '@/features/product/utils';
 import { isVendorSchema } from '@/features/vendor/utils';
 import { isNotFound } from '@/utils/api';
@@ -206,6 +206,7 @@ function reshapeCart({
   const variants = included?.filter(isVariantSchema) || [];
   const images = included?.filter(isImageSchema) || [];
   const vendors = included?.filter(isVendorSchema) || [];
+  const payments = included?.filter(isPaymentSchema) || [];
 
   const reshapedVendors = vendors.map((vendor) => {
     return {
@@ -221,6 +222,7 @@ function reshapeCart({
     address,
     variants,
     images,
-    vendors: reshapedVendors
+    vendors: reshapedVendors,
+    payments
   };
 }

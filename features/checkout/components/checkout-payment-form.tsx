@@ -7,36 +7,56 @@ import {
   PaymentNewCreateModal,
   PaymentNewCreateModalRef
 } from '@/features/payment/components/payment-new-create-modal';
-import { CreditCard } from '@/features/payment/types';
-import { getDefaultCreditCard } from '@/features/payment/utils';
+import { availablePaymentMethod } from '@/features/payment/constants';
+import { CreditCard, PaymentMethodSchema } from '@/features/payment/types';
+import {
+  getDefaultCreditCard,
+  isKonbiniPaymentMethod,
+  isPayPayPaymentMethod
+} from '@/features/payment/utils';
 import { Plus } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useCheckout } from './checkout-ctx';
 
 type Props = {
   creditCards: CreditCard[];
+  paymentMethods: PaymentMethodSchema[];
 };
 
-export function CheckoutPaymentForm({ creditCards }: Props) {
-  const { activeCreditCard, setActiveCreditCard } = useCheckout();
+export function CheckoutPaymentForm({ creditCards, paymentMethods }: Props) {
+  const { setActivePaymentMethod, activePaymentMethod } = useCheckout();
   const hasCreditCard = creditCards.length > 0;
   const paymentNewCreateModalRef = useRef<PaymentNewCreateModalRef>(null);
   const defaultCreditCard = getDefaultCreditCard(creditCards);
+  const payPayPaymentMethod = paymentMethods.find((paymentMethod) =>
+    isPayPayPaymentMethod(paymentMethod.attributes.name)
+  );
+  const konbiniPaymentMethod = paymentMethods.find((paymentMethod) =>
+    isKonbiniPaymentMethod(paymentMethod.attributes.name)
+  );
 
   useEffect(() => {
     if (defaultCreditCard) {
-      setActiveCreditCard(defaultCreditCard);
+      const defaultCreditCardPaymentMethodId =
+        defaultCreditCard.relationships.payment_method?.data?.id;
+      setActivePaymentMethod({
+        id: `${defaultCreditCardPaymentMethodId}`,
+        type: availablePaymentMethod.creditCard,
+        creditCard: defaultCreditCard
+      });
     }
-  }, [defaultCreditCard, setActiveCreditCard]);
+  }, [defaultCreditCard]);
 
   return (
     <>
       {hasCreditCard ? (
         <>
           <PaymentList
-            activeCreditCard={activeCreditCard}
+            activePaymentMethod={activePaymentMethod}
             creditCards={creditCards}
-            onValueChange={setActiveCreditCard}
+            onValueChange={setActivePaymentMethod}
+            payPayPaymentMethod={payPayPaymentMethod}
+            konbiniPaymentMethod={konbiniPaymentMethod}
           />
           <button
             type="button"

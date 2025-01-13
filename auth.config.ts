@@ -19,7 +19,6 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      console.log('nextUrl', nextUrl);
       return isLoggedIn;
     },
     async redirect({ baseUrl }) {
