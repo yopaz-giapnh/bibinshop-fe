@@ -22,6 +22,8 @@ export type PaymentSchema = components['schemas']['Payment'];
 
 export type PaymentMethodSchema = components['schemas']['PaymentMethod'];
 
+export type KonbiniSchema = components['schemas']['StripeKonbini'];
+
 export type BasePaymentMethod = {
   id: string;
   type: AvailablePaymentMethodType;

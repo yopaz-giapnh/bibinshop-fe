@@ -4,7 +4,7 @@ import { apiClient } from '@/config/api-client';
 import { isAddressSchema, isShippmentSchema } from '@/features/address/utils';
 import { CartIncludes, CartSchema } from '@/features/cart/types';
 import { isLineItemIncludes } from '@/features/cart/utils';
-import { isCreditCardSchema, isPaymentSchema } from '@/features/payment/utils';
+import { isCreditCardSchema, isKonbiniSchema, isPaymentSchema } from '@/features/payment/utils';
 import {
   isCancellationReuqestSchema,
   isImageSchema,
@@ -175,6 +175,7 @@ export async function getOrder(order_number: string) {
   const products = included?.filter(isProductSchema) || [];
   const cancellationRequests = included?.filter(isCancellationReuqestSchema) || [];
   const payments = included?.filter(isPaymentSchema) || [];
+  const konbini = included?.find(isKonbiniSchema);
 
   return {
     ...order,
@@ -187,7 +188,8 @@ export async function getOrder(order_number: string) {
     images,
     products,
     cancellationRequests,
-    payments
+    payments,
+    konbini
   };
 }
 

@@ -34,7 +34,8 @@ export async function updateCheckout(
       await updatePayPayCheckoutPayment(paymentMethod.id);
     } else if (isKonbiniPaymentMethod(paymentMethod.type)) {
       await updateKonbiniCheckoutPayment({
-        paymentMethodId: paymentMethod.id
+        paymentMethodId: paymentMethod.id,
+        name: `${address.attributes.firstname} ${address.attributes.lastname}`
       });
     }
     await advanceCheckout();
@@ -107,23 +108,31 @@ export async function updatePayPayCheckoutPayment(selectedPaymentMethodId: strin
 }
 
 export async function updateKonbiniCheckoutPayment({
-  paymentMethodId
+  paymentMethodId,
+  name
 }: {
   paymentMethodId: string;
+  name: string;
 }) {
   try {
-    await apiClient.PATCH('/api/v2/storefront/checkout', {
+    const { error } = await apiClient.PATCH('/api/v2/storefront/checkout', {
       body: {
         order: {
           payments_attributes: [
             {
               payment_method_id: paymentMethodId,
-              source_attributes: {}
+              source_attributes: {
+                name
+              }
             }
           ]
         }
       }
     });
+
+    if (error) {
+      throw error;
+    }
   } catch (error) {
     console.error(error);
 
@@ -176,7 +185,7 @@ export async function advanceCheckout() {
   }
 }
 
-export async function completeCreditCardCheckout() {
+export async function completeCheckout() {
   try {
     const { data, error } = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
 
@@ -260,26 +269,5 @@ export async function completePayPayCheckout() {
   // 成功時のみリダイレクト
   if (redirectUrl) {
     redirect(redirectUrl);
-  }
-}
-
-export async function completeKonbiniCheckout() {
-  try {
-    const response = await apiClient.PATCH('/api/v2/storefront/checkout/complete', {
-      params: {
-        query: {
-          include: 'payments'
-        }
-      }
-    });
-    const { data, error } = response;
-
-    if (error) {
-      throw error;
-    }
-
-    return data;
-  } catch (error) {
-    console.error(error);
   }
 }

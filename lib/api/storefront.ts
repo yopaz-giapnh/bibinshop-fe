@@ -1367,7 +1367,8 @@ export interface components {
       | components['schemas']['Product']
       | components['schemas']['Address']
       | components['schemas']['Image']
-      | components['schemas']['OrderCancelRequest'];
+      | components['schemas']['OrderCancelRequest']
+      | components['schemas']['StripeKonbini'];
     /**
      * CMS Page
      * @description The CMS Page model contains page data for Standard pages, Feature Pages and Homepages.
@@ -1900,6 +1901,30 @@ export interface components {
         source?: {
           data?: components['schemas']['Relation'];
         };
+        payment_method?: {
+          data?: components['schemas']['Relation'];
+        };
+      };
+    };
+    StripeKonbini: {
+      id: string;
+      /** @default payment */
+      type: string;
+      attributes: {
+        name?: string | null;
+        email?: string | null;
+        voucher_url?: string | null;
+        expires_at?: components['schemas']['Timestamp'];
+        familymart_confirmation_number?: string | null;
+        familymart_payment_code?: string | null;
+        lawson_confirmation_number?: string | null;
+        lawson_payment_code?: string | null;
+        ministop_confirmation_number?: string | null;
+        ministop_payment_code?: string | null;
+        seicomart_confirmation_number?: string | null;
+        seicomart_payment_code?: string | null;
+      };
+      relationships: {
         payment_method?: {
           data?: components['schemas']['Relation'];
         };

@@ -12,6 +12,7 @@ import {
   AvailablePaymentMethod,
   CreditCard,
   CreditCardPaymentMethod,
+  KonbiniSchema,
   PaymentSchema,
   ShippmentSchema
 } from '../types';
@@ -43,6 +44,12 @@ export function isCreditCardSchema(includedObject: unknown): includedObject is C
 
 export function isPaymentSchema(includedObject: unknown): includedObject is PaymentSchema {
   return hasProperty(includedObject, 'type') && includedObject.type === 'payment';
+}
+
+export function isKonbiniSchema(includedObject: unknown): includedObject is KonbiniSchema {
+  return (
+    hasProperty(includedObject, 'type') && includedObject.type === availablePaymentMethod.konbini
+  );
 }
 
 export function isShippmentSchema(includedObject: unknown): includedObject is ShippmentSchema {

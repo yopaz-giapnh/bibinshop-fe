@@ -94,7 +94,8 @@ const config = {
         error: '#FD5454',
         sunburstYellow: '#FCBE2D',
         powderBlue: '#EEF8FF',
-        charcoalGray: '#6E6E73'
+        charcoalGray: '#6E6E73',
+        cardPale: '#F6F6FF'
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -119,7 +120,8 @@ const config = {
         sans: ['var(--font-noto-sans-jp)', ...fontFamily.sans]
       },
       boxShadow: {
-        base: '0px 4px 10px 0px rgba(0, 0, 0, 0.03)'
+        base: '0px 4px 10px 0px rgba(0, 0, 0, 0.03)',
+        cardBase: '0px 4px 10px rgba(0, 0, 0, 0.03)'
       },
       height: {
         'screen-calc': 'calc(100vh - 100px)',

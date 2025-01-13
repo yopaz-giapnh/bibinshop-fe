@@ -4,46 +4,24 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Cart } from '@/features/cart/types';
 import { stripePromise } from '@/features/payment/constants';
-import {
-  isCreditCardPaymentMethod,
-  isKonbiniPaymentMethod,
-  isPayPayPaymentMethod
-} from '@/features/payment/utils';
-import { Elements, useStripe } from '@stripe/react-stripe-js';
-import { useRouter } from 'next/navigation';
+import { isPayPayPaymentMethod } from '@/features/payment/utils';
+import { Elements } from '@stripe/react-stripe-js';
 import { useFormStatus } from 'react-dom';
-import {
-  completeCreditCardCheckout,
-  completeKonbiniCheckout,
-  completePayPayCheckout
-} from '../actions';
+import { completeCheckout, completePayPayCheckout } from '../actions';
 
 type Props = {
   cart: Cart;
 };
 
 function Form({ cart }: Props) {
-  const router = useRouter();
-  const stripe = useStripe();
-
   const paymentMethodName =
     cart.payments?.[cart.payments.length - 1]?.attributes.payment_method_name;
-  const isCreditCardUsed = isCreditCardPaymentMethod(paymentMethodName);
   const isPayPayUsed = isPayPayPaymentMethod(paymentMethodName);
-  const isKonibiUsed = isKonbiniPaymentMethod(paymentMethodName);
 
-  const onSubmit = async () => {
-    if (isCreditCardUsed) {
-      await completeCreditCardCheckout();
-    } else if (isPayPayUsed) {
-      await completePayPayCheckout();
-    } else if (isKonibiUsed) {
-      await completeKonbiniCheckout();
-    }
-  };
+  const action = isPayPayUsed ? completePayPayCheckout : completeCheckout;
 
   return (
-    <form action={onSubmit} className="w-full md:w-auto">
+    <form action={action} className="w-full md:w-auto">
       <CheckoutButton />
     </form>
   );
