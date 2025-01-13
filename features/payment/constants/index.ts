@@ -26,8 +26,12 @@ export const cardOptions: StripeCardElementOptions = {
 
 export const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-export const availablePaymentMethodName = {
-  stripe: 'stripe',
+// BEの支払い方法(payment_method)のnameとvalueを一致させる必要がある。
+export const availablePaymentMethod = {
+  creditCard: 'stripe',
   paypay: 'paypay',
-  stripeKonbini: 'stripe_konbini'
+  konbini: 'stripe_konbini'
 } as const;
+
+export type AvailablePaymentMethodType =
+  (typeof availablePaymentMethod)[keyof typeof availablePaymentMethod];

@@ -3,41 +3,47 @@
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Cart } from '@/features/cart/types';
-import { useStripe } from '@stripe/react-stripe-js';
+import { stripePromise } from '@/features/payment/constants';
+import {
+  isCreditCardPaymentMethod,
+  isKonbiniPaymentMethod,
+  isPayPayPaymentMethod
+} from '@/features/payment/utils';
+import { Elements, useStripe } from '@stripe/react-stripe-js';
 import { useRouter } from 'next/navigation';
 import { useFormStatus } from 'react-dom';
-import { completeCheckout } from '../actions';
+import {
+  completeCreditCardCheckout,
+  completeKonbiniCheckout,
+  completePayPayCheckout
+} from '../actions';
 
 type Props = {
   cart: Cart;
 };
 
-export function CheckoutConfirmForm({ cart }: Props) {
+function Form({ cart }: Props) {
   const router = useRouter();
   const stripe = useStripe();
 
-  const payments = cart?.payments;
-  const paymentMethodId = payments?.find((payment) => payment.attributes.payment_method_id)
-    ?.attributes.payment_method_id;
-  const orderNumber = cart?.attributes.number;
-  const amount = Number(cart?.attributes.total);
+  const paymentMethodName =
+    cart.payments?.[cart.payments.length - 1]?.attributes.payment_method_name;
+  const isCreditCardUsed = isCreditCardPaymentMethod(paymentMethodName);
+  const isPayPayUsed = isPayPayPaymentMethod(paymentMethodName);
+  const isKonibiUsed = isKonbiniPaymentMethod(paymentMethodName);
 
-  async function handleSubmit() {
-    if (!paymentMethodId || !orderNumber || !amount) {
-      console.error('決済に必要な情報が不足しています');
-      return;
+  const onSubmit = async () => {
+    if (isCreditCardUsed) {
+      await completeCreditCardCheckout();
+    } else if (isPayPayUsed) {
+      await completePayPayCheckout();
+    } else if (isKonibiUsed) {
+      await completeKonbiniCheckout();
     }
-
-    const payload = { paymentMethodId, orderNumber, amount };
-
-    const result = await completeCheckout(payload);
-    if (!result.success) {
-      alert('決済に失敗しました');
-    }
-  }
+  };
 
   return (
-    <form action={handleSubmit} className="w-full md:w-auto">
+    <form action={onSubmit} className="w-full md:w-auto">
       <CheckoutButton />
     </form>
   );
@@ -52,5 +58,13 @@ function CheckoutButton() {
         {pending ? <LoadingSpinner /> : '注文する'}
       </Button>
     </div>
+  );
+}
+
+export function CheckoutConfirmForm({ cart }: Props) {
+  return (
+    <Elements stripe={stripePromise}>
+      <Form cart={cart} />
+    </Elements>
   );
 }

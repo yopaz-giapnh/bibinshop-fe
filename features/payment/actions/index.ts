@@ -92,3 +92,29 @@ export async function createPayment({
     console.error(error);
   }
 }
+
+export async function updatePayPayPaymentState({
+  paymentId,
+  merchantPaymentId
+}: {
+  paymentId: string;
+  merchantPaymentId: string;
+}) {
+  const { error } = await apiClient.PUT('/api/v2/storefront/payments/{id}/update_state', {
+    params: {
+      path: { id: paymentId }
+    },
+    body: {
+      payment: {
+        state: 'completed'
+      },
+      merchant_payment_id: merchantPaymentId
+    }
+  });
+
+  if (error) {
+    return false;
+  }
+
+  return true;
+}

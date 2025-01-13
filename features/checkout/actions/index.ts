@@ -2,8 +2,14 @@
 
 import { apiClient } from '@/config/api-client';
 import { Address } from '@/features/address/types';
+import { getCart } from '@/features/cart/actions';
 import { TAGS as CART_TAGS } from '@/features/cart/constants';
-import { CreditCard } from '@/features/payment/types';
+import { AvailablePaymentMethod, CreditCard } from '@/features/payment/types';
+import {
+  isCreditCardPaymentMethodType,
+  isKonbiniPaymentMethod,
+  isPayPayPaymentMethod
+} from '@/features/payment/utils';
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -11,35 +17,26 @@ import { COOKIES } from '../constants';
 
 type CheckoutPayload = {
   address: Address;
-  creditCard: CreditCard | null;
-  paymentMethodId: string;
+  paymentMethod: AvailablePaymentMethod;
 };
 
 export async function updateCheckout(
   prevState: void | null,
-  { address, creditCard, paymentMethodId }: CheckoutPayload
+  { address, paymentMethod }: CheckoutPayload
 ) {
   try {
     await updateCheckoutAddress(address);
     await advanceCheckout();
 
-    // 以下マスターナンバー使わないで分岐する
-    if (paymentMethodId === '1' && creditCard) {
-      await updateCreditCardCheckoutPayment(creditCard);
-    } else if (paymentMethodId === '2') {
-      await updatePayPayCheckoutPayment(paymentMethodId);
-    } else if (paymentMethodId === '3') {
-      // TODO: すでにnameとemailがあるので、それを使う
+    if (isCreditCardPaymentMethodType(paymentMethod)) {
+      await updateCreditCardCheckoutPayment(paymentMethod.creditCard);
+    } else if (isPayPayPaymentMethod(paymentMethod.type)) {
+      await updatePayPayCheckoutPayment(paymentMethod.id);
+    } else if (isKonbiniPaymentMethod(paymentMethod.type)) {
       await updateKonbiniCheckoutPayment({
-        paymentMethodId,
-        name: '山田 太郎',
-        email: 'customer@example.com'
+        paymentMethodId: paymentMethod.id
       });
-    } else {
-      console.error('Invalid payment method');
-      throw new Error('Invalid payment method');
     }
-
     await advanceCheckout();
   } catch (error) {
     console.error(error);
@@ -110,13 +107,9 @@ export async function updatePayPayCheckoutPayment(selectedPaymentMethodId: strin
 }
 
 export async function updateKonbiniCheckoutPayment({
-  paymentMethodId,
-  name,
-  email
+  paymentMethodId
 }: {
   paymentMethodId: string;
-  name: string;
-  email: string;
 }) {
   try {
     await apiClient.PATCH('/api/v2/storefront/checkout', {
@@ -125,10 +118,7 @@ export async function updateKonbiniCheckoutPayment({
           payments_attributes: [
             {
               payment_method_id: paymentMethodId,
-              source_attributes: {
-                name,
-                email
-              }
+              source_attributes: {}
             }
           ]
         }
@@ -186,93 +176,91 @@ export async function advanceCheckout() {
   }
 }
 
-type CompleteCheckoutPayload = {
-  paymentMethodId: number;
-  orderNumber: string;
-  amount: number;
-};
+export async function completeCreditCardCheckout() {
+  try {
+    const { data, error } = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
 
-/**
- * 最終的な決済処理を行い、成功時はリダイレクト先（または外部決済画面）へ飛ばす。
- * 失敗時はエラーを返却し、リダイレクトしない。
- */
-export async function completeCheckout(payload: CompleteCheckoutPayload) {
-  const { paymentMethodId, orderNumber, amount } = payload;
+    if (error) {
+      throw error;
+    }
 
-  let success = false;
-  let errorMessage: string | null = null;
+    const { data: cart } = data;
+    if (!cart.attributes.number) {
+      throw new Error('Order number not found');
+    }
+
+    cookies().set(COOKIES.checkoutCompletedOrderNumber, cart.attributes.number, {
+      maxAge: 60 * 10 // 10 minutes
+    });
+    // 適応中のクーポンを削除
+    cookies().delete(COOKIES.activeCouponId);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    revalidateTag(CART_TAGS.cart);
+  }
+
+  redirect('/checkout/complete');
+}
+
+export async function completePayPayCheckout() {
   let redirectUrl: string | null = null;
 
   try {
-    if (paymentMethodId === 1) {
-      // --- クレジットカード処理 ---
-      const response = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
-      if (response.error) {
-        throw new Error('クレジットカード決済の処理に失敗しました');
-      }
+    const cart = await getCart();
 
-      // カートの最新化
-      revalidateTag(CART_TAGS.cart);
+    const orderNumber = cart?.attributes.number;
+    const amount = Number(cart?.attributes.total);
 
-      // リダイレクト先: チェックアウト完了画面
-      redirectUrl = '/checkout/complete';
-      success = true;
-    } else if (paymentMethodId === 2) {
-      // --- PayPay 処理 ---
-      console.log('PayPay決済の処理を開始します');
-
-      const body = {
-        order_number: orderNumber,
-        amount,
-        is_mobile: false
-      };
-      const response = await apiClient.POST('/api/v2/storefront/paypay_payments', { body });
-      const { data } = response;
-
-      if (!data?.success) {
-        throw new Error('PayPay決済の処理に失敗しました');
-      }
-
-      const payPayUrl = data?.paypay_url;
-      if (!payPayUrl) {
-        throw new Error('PayPay urlが取得できませんでした');
-      }
-
-      // リダイレクト前にカートの再検証やクッキーの設定
-      revalidateTag(CART_TAGS.cart);
-      cookies().set(COOKIES.checkoutCompletedOrderNumber, orderNumber, {
-        maxAge: 60 * 10 // 10分
-      });
-      cookies().delete(COOKIES.activeCouponId);
-
-      // リダイレクト先: PayPay 決済ページ
-      redirectUrl = payPayUrl;
-      success = true;
-    } else {
-      // --- 未対応の支払い方法 ---
-      throw new Error(`Unsupported payment method: ${paymentMethodId}`);
+    if (!orderNumber || amount <= 0) {
+      throw new Error('決済に必要な情報が不足しています');
     }
+
+    const body = {
+      order_number: orderNumber,
+      amount,
+      is_mobile: false
+    };
+
+    const paymentResponse = await apiClient.POST('/api/v2/storefront/paypay_payments', {
+      body
+    });
+    const { data } = paymentResponse;
+
+    if (!data?.success) {
+      throw new Error('PayPay決済の処理に失敗しました');
+    }
+
+    const payPayUrl = data?.paypay_url;
+    if (!payPayUrl) {
+      throw new Error('PayPay urlが取得できませんでした');
+    }
+
+    const completeResponse = await apiClient.PATCH('/api/v2/storefront/checkout/complete');
+
+    if (completeResponse.error) {
+      throw new Error('PayPay決済の処理に失敗しました');
+    }
+
+    // リダイレクト前にカートの再検証やクッキーの設定
+    revalidateTag(CART_TAGS.cart);
+    cookies().set(COOKIES.checkoutCompletedOrderNumber, orderNumber, {
+      maxAge: 60 * 10 // 10分
+    });
+    cookies().delete(COOKIES.activeCouponId);
+
+    // リダイレクト先: PayPay 決済ページ
+    redirectUrl = payPayUrl;
   } catch (error) {
     console.error(error);
-    errorMessage = String(error);
-  }
-
-  // エラーが起きて成功しなかった場合はリダイレクトせずエラー情報を返す
-  if (!success) {
-    return {
-      success: false,
-      error: errorMessage,
-      paypayUrl: null
-    };
+  } finally {
+    revalidateTag(CART_TAGS.cart);
   }
 
   // 成功時のみリダイレクト
   if (redirectUrl) {
     redirect(redirectUrl);
   }
-
-  // ここに到達するのは型的に想定しておきたいだけなので、念のため返却
-  return { success: true };
 }
 
 export async function completeKonbiniCheckout() {

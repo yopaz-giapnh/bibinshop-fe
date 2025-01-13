@@ -4,76 +4,82 @@ import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
-import { useCheckout } from '@/features/checkout/components/checkout-ctx';
 import { cn } from '@/lib/utils';
 import { useRef } from 'react';
-import { CreditCard, PaymentMethodSchema } from '../types';
-import { getCreditCardBrandIcon } from '../utils';
+import { availablePaymentMethod } from '../constants';
+import { AvailablePaymentMethod, CreditCard, PaymentMethodSchema } from '../types';
+import {
+  getCreditCardBrandIcon,
+  isCreditCardPaymentMethodType,
+  isKonbiniPaymentMethod,
+  isPayPayPaymentMethod
+} from '../utils';
 import { PaymentDeleteModal, PaymentDeleteModalRef } from './payment-delete-modal';
 
 type Props = {
+  activePaymentMethod: AvailablePaymentMethod | null;
   creditCards: CreditCard[];
-  paymentMethods: PaymentMethodSchema[];
+  onValueChange: (paymentMethod: AvailablePaymentMethod) => void;
+  payPayPaymentMethod: PaymentMethodSchema | undefined;
+  konbiniPaymentMethod: PaymentMethodSchema | undefined;
 };
 
-export function PaymentList({ creditCards, paymentMethods }: Props) {
+export function PaymentList({
+  activePaymentMethod,
+  creditCards,
+  onValueChange,
+  payPayPaymentMethod,
+  konbiniPaymentMethod
+}: Props) {
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
 
-  const { setActiveCreditCard, setActivePaymentMethodId, activePaymentMethodId, activeCreditCard } =
-    useCheckout();
+  function handleValueChange(value: string) {
+    const creditCard = creditCards.find((creditCard) => creditCard.id === value);
+    if (creditCard) {
+      const id = `${creditCard.relationships.payment_method?.data?.id}`;
+      onValueChange({
+        id,
+        type: availablePaymentMethod.creditCard,
+        creditCard
+      });
 
-  const creditCardPaymentMethodId = paymentMethods.find(
-    (method) => method.attributes.name?.toLowerCase() === 'stripe'
-  )?.id;
-  const paypayPaymentMethodId = paymentMethods.find(
-    (method) => method.attributes.name?.toLowerCase() === 'paypay'
-  )?.id;
-  const konbiniPaymentMethodId = paymentMethods.find(
-    (method) => method.attributes.name?.toLowerCase() === 'コンビニ決済'
-  )?.id;
+      return;
+    }
 
-  const paypayValue = paypayPaymentMethodId ? paypayPaymentMethodId.toString() : 'paypay';
-  const konbiniValue = konbiniPaymentMethodId ? konbiniPaymentMethodId.toString() : 'コンビニ決済';
-  const isKonbiniSelected =
-    activeCreditCard == null && activePaymentMethodId === konbiniPaymentMethodId;
+    const isPayPay = isPayPayPaymentMethod(value);
+    if (isPayPay && payPayPaymentMethod) {
+      onValueChange({
+        id: payPayPaymentMethod.id,
+        type: availablePaymentMethod.paypay
+      });
+      return;
+    }
 
-  let currentValue: string;
-  if (activePaymentMethodId === paypayPaymentMethodId) {
-    currentValue = paypayValue;
-  } else if (activeCreditCard?.id) {
-    currentValue = activeCreditCard.id.toString();
-  } else {
-    currentValue = paypayValue;
+    const isKonbini = isKonbiniPaymentMethod(value);
+    if (isKonbini && konbiniPaymentMethod) {
+      onValueChange({
+        id: konbiniPaymentMethod.id,
+        type: availablePaymentMethod.konbini
+      });
+      return;
+    }
   }
 
-  const handleChange = (value: string) => {
-    if (value === paypayValue) {
-      setActiveCreditCard(null);
-      if (paypayPaymentMethodId) {
-        setActivePaymentMethodId(paypayPaymentMethodId);
-      }
-    } else {
-      const creditCard = creditCards.find((card) => card.id.toString() === value);
-      if (creditCard) {
-        setActiveCreditCard(creditCard);
-        if (creditCardPaymentMethodId) {
-          setActivePaymentMethodId(creditCardPaymentMethodId);
-        }
-      }
-    }
-  };
-
   return (
-    <RadioGroup value={currentValue} onValueChange={handleChange} className="flex flex-col">
-      <label key={paypayValue} className="mb-2 flex cursor-pointer items-center">
+    <RadioGroup
+      defaultValue={activePaymentMethod?.id}
+      onValueChange={handleValueChange}
+      className="flex flex-col"
+    >
+      <label key={availablePaymentMethod.paypay} className="mb-2 flex cursor-pointer items-center">
         <div
           className={cn(
             'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
-            currentValue === paypayValue && 'border-bibinBlue-100 bg-[#F6FBFF]'
+            isPayPayPaymentMethod(activePaymentMethod?.type) && 'border-bibinBlue-100 bg-[#F6FBFF]'
           )}
         >
           <div className="flex w-full items-center gap-4">
-            <RadioGroupItem value={paypayValue} />
+            <RadioGroupItem value={availablePaymentMethod.paypay} />
             <Paypay />
             <Typography as="body" element="p" className="text-black-80">
               PayPay
@@ -82,16 +88,15 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
         </div>
       </label>
 
-      {/* TODO: コンビニ決済のデザインに合わせる */}
-      <label key={konbiniValue} className="mb-2 flex cursor-pointer items-center">
+      <label key={availablePaymentMethod.konbini} className="mb-2 flex cursor-pointer items-center">
         <div
           className={cn(
             'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
-            isKonbiniSelected && 'border-bibinBlue-100'
+            isKonbiniPaymentMethod(activePaymentMethod?.type) && 'border-bibinBlue-100 bg-[#F6FBFF]'
           )}
         >
           <div className="flex w-full items-center gap-4">
-            <RadioGroupItem value={konbiniValue} checked={isKonbiniSelected} />
+            <RadioGroupItem value={availablePaymentMethod.konbini} />
             <Store />
             <Typography as="body" element="p" className="text-black-80">
               コンビニ決済
@@ -101,7 +106,9 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
       </label>
 
       {creditCards.map((creditCard) => {
-        const isSelected = currentValue === creditCard.id.toString();
+        const isSelected =
+          isCreditCardPaymentMethodType(activePaymentMethod) &&
+          activePaymentMethod.creditCard.id === creditCard.id;
 
         return (
           <label key={creditCard.id} className="flex cursor-pointer items-center">
@@ -112,7 +119,7 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
               )}
             >
               <div className="flex w-full items-center gap-4">
-                <RadioGroupItem value={creditCard.id.toString()} />
+                <RadioGroupItem value={creditCard.id.toString()} checked={isSelected} />
                 {getCreditCardBrandIcon(creditCard)}
                 <Typography as="body" element="p" className="text-black-80">
                   {creditCard.attributes.name}
@@ -121,7 +128,6 @@ export function PaymentList({ creditCards, paymentMethods }: Props) {
                   {'...' + creditCard.attributes.last_digits}
                 </Typography>
               </div>
-
               <ButtonWithIcon
                 buttonProps={{
                   className:

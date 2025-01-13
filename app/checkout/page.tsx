@@ -6,7 +6,6 @@ import { getCart } from '@/features/cart/actions';
 import { CheckoutForm } from '@/features/checkout/components/checkout-form';
 import { getAccountCreditCards, getPaymentMethods } from '@/features/payment/actions';
 import { getAvailablePoints, getPointsRate } from '@/features/point-balance/actions';
-
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
