@@ -35,7 +35,7 @@ export async function updateCheckout(
     } else if (isKonbiniPaymentMethod(paymentMethod.type)) {
       await updateKonbiniCheckoutPayment({
         paymentMethodId: paymentMethod.id,
-        name: `${address.attributes.firstname} ${address.attributes.lastname}`
+        name: `${address.attributes.lastname} ${address.attributes.firstname}`
       });
     }
     await advanceCheckout();
