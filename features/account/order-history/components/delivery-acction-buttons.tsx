@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { ShippmentSchema } from '@/features/payment/types';
+import { KonbiniInfoButton } from './konbini-info-button';
 import { ReviewButton } from './review-button';
 
 type DeliveryActionButtonsProps = {
+  orderNumber: string;
   group: { state: string };
   shipment: ShippmentSchema | undefined;
   shipmentTrackerNumber: string;
@@ -12,9 +14,11 @@ type DeliveryActionButtonsProps = {
   handleShowShippingInfo: (trackingNumber: string) => void;
   groupSlugs: string[];
   isReviewed: boolean;
+  isKonbiniInfo: boolean;
 };
 
 export const DeliveryActionButtons: React.FC<DeliveryActionButtonsProps> = ({
+  orderNumber,
   group,
   shipment,
   shipmentTrackerNumber,
@@ -22,7 +26,8 @@ export const DeliveryActionButtons: React.FC<DeliveryActionButtonsProps> = ({
   orderReceiptConfirmModalRef,
   handleShowShippingInfo,
   groupSlugs,
-  isReviewed
+  isReviewed,
+  isKonbiniInfo
 }) => {
   const isShipped = group.state === 'shipped';
   const isReady = group.state === 'ready';
@@ -58,6 +63,10 @@ export const DeliveryActionButtons: React.FC<DeliveryActionButtonsProps> = ({
         <ReviewButton groupSlugs={groupSlugs} isReviewed={isReviewed} />
       </>
     );
+  }
+
+  if (isKonbiniInfo) {
+    return <KonbiniInfoButton orderNumber={orderNumber} />;
   }
 
   if (!isReady) {

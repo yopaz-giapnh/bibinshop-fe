@@ -57,6 +57,7 @@ export default function OrderHistoryList({ order, reviews }: OrderHistoryListPro
                 orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
                 handleShowShippingInfo={handleShowShippingInfo}
                 reviews={reviews}
+                showKonbiniMessage
               />
             ))}
           </div>

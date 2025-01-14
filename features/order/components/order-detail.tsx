@@ -53,8 +53,7 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
     order?.payments?.[order.payments.length - 1]?.attributes.payment_method_name;
   const isKonbiniUsed = isKonbiniPaymentMethod(paymentMethodName);
   const konbini = order?.konbini;
-
-  console.log(konbini);
+  const isPaid = order?.attributes.payment_state === 'paid';
 
   useEffect(() => {
     fetchOrderData(orderNumber).then((order) => {
@@ -95,7 +94,7 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
             {/* {enableCancel && <CancelOrderButton order={order} />} */}
           </div>
         </OrderDetailSection>
-        {isKonbiniUsed && !!konbini && (
+        {isKonbiniUsed && !!konbini && !isPaid && (
           <div className="mt-4">
             <OrderDetailKonbiniInfo
               displayTotal={`¥${order.attributes.display_total}`}

@@ -3,6 +3,9 @@ import { Order } from '@/features/order/types';
 import { extractSlugs, getShipmentStateTitle, getTabValue } from '@/features/order/utils';
 import { findImageFromLineItem } from '@/features/product/utils';
 import { Review } from '@/features/review/types';
+import { format } from 'date-fns';
+import { ja } from 'date-fns/locale';
+import { ClockIcon } from 'lucide-react';
 import React from 'react';
 import { SortedLineItemGroup } from '../constants';
 import { DeliveryActionButtons } from './delivery-acction-buttons';
@@ -17,6 +20,7 @@ type OrderHistoryListItemProps = {
   orderReceiptConfirmModalRef: React.RefObject<{ open: (id: string) => void }>;
   handleShowShippingInfo: (trackingNumber: string) => void;
   reviews?: Review[];
+  showKonbiniMessage?: boolean;
 };
 
 const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
@@ -27,7 +31,8 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
   setSelectedShipmentId,
   orderReceiptConfirmModalRef,
   handleShowShippingInfo,
-  reviews
+  reviews,
+  showKonbiniMessage
 }) => {
   const shipment = order.shipments[index];
   const shipmentTrackerNumber = shipment?.attributes.number ?? '';
@@ -39,16 +44,38 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
     )
   );
 
+  const konbini = order.konbini;
+  const konbiniExpiresAt = konbini?.attributes.expires_at
+    ? format(new Date(konbini?.attributes.expires_at), 'yyyy年M月d日 a h:mm', {
+        locale: ja
+      })
+    : '';
+  const isPaid = order.attributes.payment_state === 'paid';
+  const isDisplayKonbiniMessage = !!order.konbini && !isPaid && !!showKonbiniMessage;
+
   return (
     <div className="flex flex-col">
       <div className="relative flex w-full justify-between">
-        <Typography as="boldSmall" element="p" className="mt-[16px] text-[20px]">
-          {getTabValue(group.state)}
-        </Typography>
+        {isDisplayKonbiniMessage ? (
+          <div className="mt-[16px] flex flex-row items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center">
+              <ClockIcon className="text-bibinViolet-100" />
+            </div>
+            <Typography as="boldSmall" element="p" className="text-[20px] text-bibinViolet-100">
+              {konbiniExpiresAt}{' '}
+              <span className="text-black-80">以内にコンビニでお支払いください</span>
+            </Typography>
+          </div>
+        ) : (
+          <Typography as="boldSmall" element="p" className="mt-[16px] text-[20px]">
+            {getTabValue(group.state)}
+          </Typography>
+        )}
 
         {/* Desktop Action Buttons */}
         <div className="absolute right-0 top-[16px] hidden md:block">
           <DeliveryActionButtons
+            orderNumber={`${order.attributes.number}`}
             group={group}
             shipment={shipment}
             shipmentTrackerNumber={shipmentTrackerNumber}
@@ -57,6 +84,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
             handleShowShippingInfo={handleShowShippingInfo}
             groupSlugs={groupSlugs}
             isReviewed={isReviewed}
+            isKonbiniInfo={isDisplayKonbiniMessage}
           />
         </div>
       </div>
@@ -86,6 +114,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
       {/* Mobile Action Buttons */}
       <div className="md:hidden">
         <DeliveryActionButtons
+          orderNumber={`${order.attributes.number}`}
           group={group}
           shipment={shipment}
           shipmentTrackerNumber={shipmentTrackerNumber}
@@ -94,6 +123,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
           handleShowShippingInfo={handleShowShippingInfo}
           groupSlugs={groupSlugs}
           isReviewed={isReviewed}
+          isKonbiniInfo={isDisplayKonbiniMessage}
         />
       </div>
 

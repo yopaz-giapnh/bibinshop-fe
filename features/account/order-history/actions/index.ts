@@ -4,6 +4,7 @@ import { apiClient } from '@/config/api-client';
 import { isAddressSchema, isShippmentSchema } from '@/features/address/utils';
 import { CartIncludes, CartSchema } from '@/features/cart/types';
 import { isLineItemIncludes } from '@/features/cart/utils';
+import { Order } from '@/features/order/types';
 import { isCreditCardSchema, isKonbiniSchema, isPaymentSchema } from '@/features/payment/utils';
 import {
   isCancellationReuqestSchema,
@@ -70,7 +71,13 @@ export async function getAccountOrders({
 }
 
 // TODO: リファクタリングする
-function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: CartIncludes[] }) {
+function reshapeOrders({
+  orders,
+  included
+}: {
+  orders: CartSchema[];
+  included?: CartIncludes[];
+}): Order[] {
   const allLineItems = included?.filter(isLineItemIncludes) || [];
   const allVendors = included?.filter(isVendorSchema) || [];
   const allAddresses = included?.filter(isAddressSchema) || [];
@@ -81,6 +88,7 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
   const allImages = included?.filter(isImageSchema) || [];
   const allProducts = included?.filter(isProductSchema) || [];
   const allCancellationRequests = included?.filter(isCancellationReuqestSchema) || [];
+  const allKonbinis = included?.filter(isKonbiniSchema) || [];
 
   return orders.map((order) => {
     const lineItems = allLineItems.filter((item) =>
@@ -122,6 +130,12 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
         .includes(cancellationRequest.id)
     );
 
+    const konbini = allKonbinis.find(
+      (k) =>
+        k.relationships.payment_method?.data?.id.toString() ===
+        payment?.attributes.payment_method_id?.toString()
+    );
+
     return {
       ...order,
       lineItems,
@@ -132,7 +146,8 @@ function reshapeOrders({ orders, included }: { orders: CartSchema[]; included?: 
       variants,
       images,
       products,
-      cancellationRequests
+      cancellationRequests,
+      konbini
     };
   });
 }
