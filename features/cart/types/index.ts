@@ -11,6 +11,8 @@ export type VendorTotal = components['schemas']['VendorTotal'];
 
 export type CartSchema = components['schemas']['Cart'];
 
+export type CreditCardSchema = components['schemas']['CreditCard'];
+
 export type Cart = CartSchema & {
   lineItems: LineItem[];
   vendorTotals: VendorTotal[];
@@ -18,4 +20,5 @@ export type Cart = CartSchema & {
   images: ImageSchema[];
   vendors: VendorSchema[];
   payments: PaymentSchema[];
+  creditCard?: CreditCardSchema;
 };

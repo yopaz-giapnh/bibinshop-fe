@@ -139,7 +139,7 @@ export function OrderDetail({ className, orderNumber, reviews }: Props) {
             />
           ))}
         </div>
-        <OrderDetailPaymentMethod item={order} creditCard={order.creditCard} />
+        <OrderDetailPaymentMethod item={order} />
         {order.address && <OrderDetailAddress address={order.address} />}
       </div>
       <OrderReceiptConfirmModal
