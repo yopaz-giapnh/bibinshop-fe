@@ -4,21 +4,19 @@ import MiniStop from '@/assets/payment/mini-stop.svg';
 import Paypay from '@/assets/payment/paypay.svg';
 import SeikoMart from '@/assets/payment/seiko-mart.svg';
 import Store from '@/assets/payment/store.svg';
-import Trash from '@/assets/trash-blue.svg';
-import { ButtonWithIcon } from '@/components/button/button-with-icon';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Typography } from '@/components/ui/typography';
-import { cn } from '@/lib/utils';
+
+import { RadioGroup } from '@/components/ui/radio-group';
+import { PaymentCreditCardOption } from '@/features/payment/components/payment-credit-card-ption';
+import { PaymentDeleteModalRef } from '@/features/payment/components/payment-delete-modal';
+import { PaymentMethodOption } from '@/features/payment/components/payment-method-option';
 import { useRef } from 'react';
 import { availablePaymentMethod } from '../constants';
 import { AvailablePaymentMethod, CreditCard, PaymentMethodSchema } from '../types';
 import {
-  getCreditCardBrandIcon,
   isCreditCardPaymentMethodType,
   isKonbiniPaymentMethod,
   isPayPayPaymentMethod
 } from '../utils';
-import { PaymentDeleteModal, PaymentDeleteModalRef } from './payment-delete-modal';
 
 type Props = {
   activePaymentMethod: AvailablePaymentMethod | null;
@@ -38,12 +36,10 @@ export function PaymentList({
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
 
   function handleValueChange(value: string) {
-    const creditCard = creditCards.find((creditCard) => creditCard.id === value);
+    const creditCard = creditCards.find((c) => c.id === value);
     if (creditCard) {
       const id = creditCard.relationships.payment_method?.data?.id;
-      if (!id) {
-        return;
-      }
+      if (!id) return;
       onValueChange({
         id,
         type: availablePaymentMethod.creditCard,
@@ -52,8 +48,7 @@ export function PaymentList({
       return;
     }
 
-    const isPayPay = isPayPayPaymentMethod(value);
-    if (isPayPay && payPayPaymentMethod) {
+    if (isPayPayPaymentMethod(value) && payPayPaymentMethod) {
       onValueChange({
         id: payPayPaymentMethod.id,
         type: availablePaymentMethod.paypay
@@ -61,13 +56,11 @@ export function PaymentList({
       return;
     }
 
-    const isKonbini = isKonbiniPaymentMethod(value);
-    if (isKonbini && konbiniPaymentMethod) {
+    if (isKonbiniPaymentMethod(value) && konbiniPaymentMethod) {
       onValueChange({
         id: konbiniPaymentMethod.id,
         type: availablePaymentMethod.konbini
       });
-      return;
     }
   }
 
@@ -77,43 +70,27 @@ export function PaymentList({
       onValueChange={handleValueChange}
       className="flex flex-col gap-4"
     >
-      <label key={availablePaymentMethod.paypay} className="cursor-pointer">
-        <div
-          className={cn(
-            'flex w-[458px] items-center gap-4 rounded-[6px] border border-solid border-black-10 p-4',
-            isPayPayPaymentMethod(activePaymentMethod?.type) && 'border-bibinBlue-100 bg-[#F6FBFF]'
-          )}
-        >
-          <RadioGroupItem value={availablePaymentMethod.paypay} />
-          <Paypay />
-          <Typography as="body" element="p" className="text-black-80">
-            PayPay
-          </Typography>
-        </div>
-      </label>
+      <PaymentMethodOption
+        labelKey={availablePaymentMethod.paypay}
+        icon={<Paypay />}
+        title="PayPay"
+        isChecked={isPayPayPaymentMethod(activePaymentMethod?.type)}
+      />
 
-      <label key={availablePaymentMethod.konbini} className="cursor-pointer">
-        <div
-          className={cn(
-            'flex w-[458px] items-center gap-4 rounded-[6px] border border-solid border-black-10 p-4',
-            isKonbiniPaymentMethod(activePaymentMethod?.type) && 'border-bibinBlue-100 bg-[#F6FBFF]'
-          )}
-        >
-          <RadioGroupItem value={availablePaymentMethod.konbini} />
-          <Store />
-          <div className="flex flex-col gap-2">
-            <Typography as="body" element="p" className="text-black-80">
-              コンビニ決済
-            </Typography>
-            <div className="flex items-center gap-2">
-              <FamilyMart />
-              <Lawson />
-              <MiniStop />
-              <SeikoMart />
-            </div>
-          </div>
-        </div>
-      </label>
+      <PaymentMethodOption
+        labelKey={availablePaymentMethod.konbini}
+        icon={<Store />}
+        title="コンビニ決済"
+        isChecked={isKonbiniPaymentMethod(activePaymentMethod?.type)}
+        konbiniLogos={
+          <>
+            <FamilyMart />
+            <Lawson />
+            <MiniStop />
+            <SeikoMart />
+          </>
+        }
+      />
 
       {creditCards.map((creditCard) => {
         const isSelected =
@@ -121,38 +98,12 @@ export function PaymentList({
           activePaymentMethod.creditCard.id === creditCard.id;
 
         return (
-          <label key={creditCard.id} className="cursor-pointer">
-            <div
-              className={cn(
-                'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
-                isSelected && 'border-bibinBlue-100 bg-[#F6FBFF]'
-              )}
-            >
-              <div className="flex w-full items-center gap-4">
-                <RadioGroupItem value={creditCard.id.toString()} checked={isSelected} />
-                {getCreditCardBrandIcon(creditCard)}
-                <Typography as="body" element="p" className="text-black-80">
-                  {creditCard.attributes.name}
-                </Typography>
-                <Typography as="body" element="p" className="text-black-80">
-                  {'...' + creditCard.attributes.last_digits}
-                </Typography>
-              </div>
-              <ButtonWithIcon
-                buttonProps={{
-                  className:
-                    'w-[93px] h-10 flex justify-center mt-2 px-2 py-4 border border-bibinBlue-100 rounded-[100px]',
-                  onClick: () => {
-                    paymentDeleteModalRef.current?.open();
-                  }
-                }}
-                icon={<Trash />}
-                text="削除"
-                textProps={{ className: 'text-bibinBlue-100' }}
-              />
-            </div>
-            <PaymentDeleteModal ref={paymentDeleteModalRef} creditCard={creditCard} />
-          </label>
+          <PaymentCreditCardOption
+            key={creditCard.id}
+            creditCard={creditCard}
+            isSelected={isSelected}
+            paymentDeleteModalRef={paymentDeleteModalRef}
+          />
         );
       })}
     </RadioGroup>
