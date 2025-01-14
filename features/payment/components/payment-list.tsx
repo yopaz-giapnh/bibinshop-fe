@@ -40,7 +40,10 @@ export function PaymentList({
   function handleValueChange(value: string) {
     const creditCard = creditCards.find((creditCard) => creditCard.id === value);
     if (creditCard) {
-      const id = `${creditCard.relationships.payment_method?.data?.id}`;
+      const id = creditCard.relationships.payment_method?.data?.id;
+      if (!id) {
+        return;
+      }
       onValueChange({
         id,
         type: availablePaymentMethod.creditCard,
