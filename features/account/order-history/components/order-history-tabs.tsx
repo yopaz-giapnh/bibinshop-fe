@@ -2,6 +2,7 @@ import { BackButton } from '@/components/button/back-button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Typography } from '@/components/ui/typography';
+import { Order } from '@/features/order/types';
 import { getMyReviews } from '@/features/review/actions';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -25,22 +26,18 @@ const tabs = [
  * @returns JSX.Element
  */
 export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
-  const shipmentState = tabState === 'all' ? undefined : tabState;
-  const orders = await getAccountOrders({ page: currentPage, shipment_state: shipmentState });
+  const allOrders = await getAccountOrders({ page: currentPage });
+  const filteredOrders = filterOrdersByTabState(allOrders.data, tabState);
   const reviews = await getMyReviews({
     query: {
-      'filter[product_ids]': orders.data
+      'filter[product_ids]': filteredOrders
         .flatMap((order) => order.lineItems.map((item) => item.relationships.variant?.data?.id))
         .join(',')
     }
   });
 
-  const getOrderCount = async (state: string) => {
-    const stateOrders = await getAccountOrders({
-      page: 1,
-      shipment_state: state === 'all' ? undefined : state
-    });
-    return stateOrders.meta.total_count ?? 0;
+  const getOrderCount = (state: string) => {
+    return filterOrdersByTabState(allOrders.data, state).length;
   };
 
   return (
@@ -61,7 +58,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
           {tabs.map((tab, index) => (
             <Link
               key={tab.value}
-              href={`?state=${tab.value}&page=1`}
+              href={`?state=${tab.value}`}
               passHref
               className="flex w-[90px] items-center md:w-full"
             >
@@ -92,9 +89,9 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
             <Suspense fallback={<LoadingSpinner />}>
               <OrderHistoryTabContent
                 orders={{
-                  data: orders.data,
+                  data: filteredOrders,
                   meta: {
-                    total_pages: orders.meta.total_pages ?? 1
+                    total_pages: allOrders.meta.total_pages ?? 1
                   }
                 }}
                 status={tabState}
@@ -107,4 +104,23 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
       </Tabs>
     </>
   );
+}
+
+function filterOrdersByTabState(orders: Order[], tabState: string) {
+  if (tabState === 'all') return orders;
+
+  return orders.filter((order) => {
+    const shipmentStates = order.shipments.map((shipment) => shipment.attributes.state);
+
+    switch (tabState) {
+      case 'delivered':
+        return shipmentStates.includes('delivered');
+      case 'shipped':
+        return shipmentStates.includes('shipped') && !shipmentStates.includes('delivered');
+      case 'ready':
+        return shipmentStates.every((state) => state === 'ready' || state === 'pending');
+      default:
+        return false;
+    }
+  });
 }
