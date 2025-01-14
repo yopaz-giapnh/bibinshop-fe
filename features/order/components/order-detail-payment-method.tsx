@@ -2,7 +2,6 @@ import Paypay from '@/assets/payment/paypay.svg';
 import Konbini from '@/assets/payment/store.svg';
 import { Typography } from '@/components/ui/typography';
 import { Cart } from '@/features/cart/types';
-import { CreditCard } from '@/features/payment/types';
 import {
   getCreditCardBrandIcon,
   isCreditCardPaymentMethod,
@@ -14,10 +13,10 @@ import OrderDetailSection from './order-detail-section';
 
 type Props = {
   item: Cart | Order;
-  creditCard: CreditCard | undefined;
 };
 
-export function OrderDetailPaymentMethod({ item, creditCard }: Props) {
+export function OrderDetailPaymentMethod({ item }: Props) {
+  const creditCard = item.creditCard;
   const paymentMethodName =
     item.payments?.[item.payments.length - 1]?.attributes.payment_method_name;
   const isCreditCardUsed = creditCard && isCreditCardPaymentMethod(paymentMethodName);

@@ -17,7 +17,7 @@ export default async function CheckoutConfirm() {
     <div className="flex w-full flex-col items-center">
       <div className="w-full overflow-y-auto px-2 md:px-[272px]">
         <OrderDetailOverview item={cart} />
-        <OrderDetailPaymentMethod item={cart} creditCard={cart.creditCard} />
+        <OrderDetailPaymentMethod item={cart} />
         {cart.address && <OrderDetailAddress address={cart.address} />}
         <OrderDetailInfo
           lineItems={cart.lineItems}
