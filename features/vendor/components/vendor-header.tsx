@@ -29,10 +29,10 @@ export function VendorHeader({ vendor }: VendorHeaderProps) {
       <div className="mt-2 flex w-full items-center rounded-[8px] border-2 md:mt-5 md:border-none">
         <Image
           src={vendor.vendorImage?.url || '/placeholder-product-image.png'}
-          width={40}
-          height={40}
+          width={82}
+          height={82}
           alt={vendor.attributes.name || ''}
-          className="m-4 md:my-0 md:ml-0 md:mr-4 md:h-[82px] md:w-[82px]"
+          className="m-4 aspect-square w-[40px] object-cover object-center md:my-0 md:ml-0 md:mr-4 md:w-[82px]"
         />
         <div className="my-4">
           <Typography as="title" element="h1" className="text-[14px] text-black-90 md:text-[24px]">
