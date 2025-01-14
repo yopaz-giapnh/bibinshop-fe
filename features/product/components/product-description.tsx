@@ -34,6 +34,8 @@ export function ProductDescription({ product }: Props) {
       {Object.entries(PRODUCT_PROPERTY_MAP).map(([key, value]) => {
         const property = product.productProperties.find((pp) => pp.attributes.name === key);
         if (!property) return null;
+        // TODO: 本来はBEで管理するようにしたい
+        if (property.attributes.value === 'Placeholder') return null;
         return (
           <div key={key} className="flex">
             <Typography as="body" element="h2" className="text-black-base">

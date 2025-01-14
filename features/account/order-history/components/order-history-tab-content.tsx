@@ -23,7 +23,7 @@ export async function OrderHistoryTabContent({ status, orders, reviews }: OrderH
 
   return (
     <div>
-      <div className="overflow-y-auto overflow-x-hidden md:h-screen-calc">
+      <div>
         {isEmpty ? (
           <OrderHistoryEmptyView status={status} />
         ) : (

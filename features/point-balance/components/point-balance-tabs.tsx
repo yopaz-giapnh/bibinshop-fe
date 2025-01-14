@@ -1,8 +1,19 @@
+'use client';
+
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/ui/pagination';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { getPointAquisitionHistory, getPointUsageHistory } from '../actions';
+import { AggregatedPointAcquisition, MergedHistoryItem } from '../types';
 import { aggregatePointAcquisitionByDate, mergePointHistory } from '../util';
 import PointExpirationEmptyView from './point-expiration-empty-view';
 import PointExpirationItem from './point-expiration-item';
@@ -14,6 +25,8 @@ type Props = {
   tabState: string;
 };
 
+const ITEMS_PER_PAGE = 10;
+
 const tabs = [
   {
     label: 'ポイント履歴',
@@ -22,16 +35,82 @@ const tabs = [
   { label: '有効期限', value: 'expiration' }
 ] as const;
 
-export async function PointBalanceTabs({ tabState }: Props) {
-  const pointAquisitonHistory = await getPointAquisitionHistory();
-  const pointUsageHistory = await getPointUsageHistory();
-  const mergeHistoryData = mergePointHistory(pointAquisitonHistory, pointUsageHistory);
-  // HACK: サンプルデータ
-  // const mergeHistoryData = sampleMergedHistory;
-  const aggregatePointAcquisitionByDateData =
-    aggregatePointAcquisitionByDate(pointAquisitonHistory);
-  // HACK: サンプルデータ
-  // aggregatedResult;
+export function PointBalanceTabs({ tabState, currentPage }: Props) {
+  const [page, setPage] = useState(currentPage || 1);
+  const [mergeHistoryData, setMergeHistoryData] = useState<MergedHistoryItem[]>([]);
+  const [aggregatePointAcquisitionByDateData, setAggregatePointAcquisitionByDateData] = useState<
+    AggregatedPointAcquisition[]
+  >([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const pointAquisitonHistory = await getPointAquisitionHistory();
+      const pointUsageHistory = await getPointUsageHistory();
+      const mergedData = mergePointHistory(pointAquisitonHistory, pointUsageHistory);
+      const aggregatedData = aggregatePointAcquisitionByDate(pointAquisitonHistory);
+
+      setMergeHistoryData(mergedData);
+      setAggregatePointAcquisitionByDateData(aggregatedData);
+    };
+
+    fetchData();
+  }, []);
+
+  // ページネーション用のデータスライス処理
+  const startIndex = (page - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedHistoryData = mergeHistoryData.slice(startIndex, endIndex);
+  const paginatedExpirationData = aggregatePointAcquisitionByDateData.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const renderPagination = (totalItems: number) => {
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    if (totalPages <= 1) return null;
+
+    return (
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (page > 1) handlePageChange(page - 1);
+              }}
+              disable={page === 1}
+            />
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+            <PaginationItem key={pageNum}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(pageNum);
+                }}
+                isActive={page === pageNum}
+              >
+                {pageNum}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (page < totalPages) handlePageChange(page + 1);
+              }}
+              disable={page === totalPages}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    );
+  };
 
   return (
     <Tabs
@@ -64,20 +143,25 @@ export async function PointBalanceTabs({ tabState }: Props) {
                 {mergeHistoryData.length === 0 ? (
                   <PointHistoryEmptyView />
                 ) : (
-                  <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
-                    {mergeHistoryData.map((item, index) => (
-                      <PointHistoryItem
-                        key={index}
-                        date={item.date}
-                        time={item.time}
-                        reason={item.reason}
-                        expiresAt={item.expiresAt}
-                        amount={item.amount}
-                        orderId={item.orderId}
-                        isLastItem={index === mergeHistoryData.length - 1}
-                      />
-                    ))}
-                  </div>
+                  <>
+                    <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
+                      {paginatedHistoryData.map((item, index) => (
+                        <PointHistoryItem
+                          key={index}
+                          date={item.date}
+                          time={item.time}
+                          reason={item.reason}
+                          expiresAt={item.expiresAt}
+                          amount={item.amount}
+                          orderId={item.orderId}
+                          isLastItem={index === paginatedHistoryData.length - 1}
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-4 flex justify-center">
+                      {renderPagination(mergeHistoryData.length)}
+                    </div>
+                  </>
                 )}
               </div>
             ) : (
@@ -85,16 +169,21 @@ export async function PointBalanceTabs({ tabState }: Props) {
                 {aggregatePointAcquisitionByDateData.length === 0 ? (
                   <PointExpirationEmptyView />
                 ) : (
-                  <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
-                    {aggregatePointAcquisitionByDateData.map((item, index) => (
-                      <PointExpirationItem
-                        key={index}
-                        date={item.date}
-                        points={item.totalAmount}
-                        isLastItem={index === aggregatePointAcquisitionByDateData.length - 1}
-                      />
-                    ))}
-                  </div>
+                  <>
+                    <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
+                      {paginatedExpirationData.map((item, index) => (
+                        <PointExpirationItem
+                          key={index}
+                          date={item.date}
+                          points={item.totalAmount}
+                          isLastItem={index === paginatedExpirationData.length - 1}
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-4 flex justify-center">
+                      {renderPagination(aggregatePointAcquisitionByDateData.length)}
+                    </div>
+                  </>
                 )}
               </div>
             )}
