@@ -7,9 +7,13 @@ import Store from '@/assets/payment/store.svg';
 
 import { RadioGroup } from '@/components/ui/radio-group';
 import { PaymentCreditCardOption } from '@/features/payment/components/payment-credit-card-ption';
-import { PaymentDeleteModalRef } from '@/features/payment/components/payment-delete-modal';
+import {
+  PaymentDeleteModal,
+  PaymentDeleteModalRef
+} from '@/features/payment/components/payment-delete-modal';
 import { PaymentMethodOption } from '@/features/payment/components/payment-method-option';
 import { useRef } from 'react';
+
 import { availablePaymentMethod } from '../constants';
 import { AvailablePaymentMethod, CreditCard, PaymentMethodSchema } from '../types';
 import {
@@ -36,6 +40,7 @@ export function PaymentList({
   const paymentDeleteModalRef = useRef<PaymentDeleteModalRef>(null);
 
   function handleValueChange(value: string) {
+    // クレジットカードかどうかを判定
     const creditCard = creditCards.find((c) => c.id === value);
     if (creditCard) {
       const id = creditCard.relationships.payment_method?.data?.id;
@@ -48,6 +53,7 @@ export function PaymentList({
       return;
     }
 
+    // PayPayの場合
     if (isPayPayPaymentMethod(value) && payPayPaymentMethod) {
       onValueChange({
         id: payPayPaymentMethod.id,
@@ -56,6 +62,7 @@ export function PaymentList({
       return;
     }
 
+    // コンビニの場合
     if (isKonbiniPaymentMethod(value) && konbiniPaymentMethod) {
       onValueChange({
         id: konbiniPaymentMethod.id,
@@ -70,6 +77,7 @@ export function PaymentList({
       onValueChange={handleValueChange}
       className="flex flex-col gap-4"
     >
+      {/* PayPay決済 */}
       <PaymentMethodOption
         labelKey={availablePaymentMethod.paypay}
         icon={<Paypay />}
@@ -77,6 +85,7 @@ export function PaymentList({
         isChecked={isPayPayPaymentMethod(activePaymentMethod?.type)}
       />
 
+      {/* コンビニ決済 */}
       <PaymentMethodOption
         labelKey={availablePaymentMethod.konbini}
         icon={<Store />}
@@ -92,6 +101,7 @@ export function PaymentList({
         }
       />
 
+      {/* クレジットカード一覧 */}
       {creditCards.map((creditCard) => {
         const isSelected =
           isCreditCardPaymentMethodType(activePaymentMethod) &&
@@ -106,6 +116,13 @@ export function PaymentList({
           />
         );
       })}
+
+      {isCreditCardPaymentMethodType(activePaymentMethod) && (
+        <PaymentDeleteModal
+          ref={paymentDeleteModalRef}
+          creditCard={activePaymentMethod.creditCard}
+        />
+      )}
     </RadioGroup>
   );
 }

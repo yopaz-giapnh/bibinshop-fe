@@ -3,24 +3,22 @@ import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 type PaymentMethodOptionProps = {
-  /** RadioGroupItem に指定する value */
-  labelKey: string;
-  /** メインアイコン (PayPay / Store 等) */
-  icon: React.ReactNode;
-  /** ラジオボタンが選択されているか */
-  isChecked: boolean;
-  /** 表示名 ('PayPay' / 'コンビニ決済' 等) */
-  title: string;
-  /** コンビニ用の追加ロゴ群（任意） */
+  labelKey: string; // RadioGroupItem の value として使う文字列
+  icon: React.ReactNode; // PayPay, Storeなどのアイコン
+  title: string; // 表示ラベル
+  isChecked: boolean; // ラジオボタンが選択状態かどうか
+  // コンビニ用に複数のロゴを追加表示する場合のみ渡す
   konbiniLogos?: React.ReactNode;
 };
 
-/** PayPay や コンビニの決済オプション用コンポーネント */
+/**
+ * PayPay or コンビニ の表示
+ */
 export function PaymentMethodOption({
   labelKey,
   icon,
-  isChecked,
   title,
+  isChecked,
   konbiniLogos
 }: PaymentMethodOptionProps) {
   return (

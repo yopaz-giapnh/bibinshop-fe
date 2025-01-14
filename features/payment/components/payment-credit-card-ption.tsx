@@ -2,12 +2,16 @@ import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
 import { RadioGroupItem } from '@/components/ui/radio-group';
 import { Typography } from '@/components/ui/typography';
-import { PaymentDeleteModalRef } from '@/features/payment/components/payment-delete-modal';
 import { cn } from '@/lib/utils';
 import { useCallback } from 'react';
+
+import { PaymentDeleteModalRef } from '@/features/payment/components/payment-delete-modal';
 import { CreditCard } from '../types';
 import { getCreditCardBrandIcon } from '../utils';
 
+/**
+ * クレジットカード1枚分の表示
+ */
 type PaymentCreditCardOptionProps = {
   creditCard: CreditCard;
   isSelected: boolean;
@@ -32,7 +36,11 @@ export function PaymentCreditCardOption({
         )}
       >
         <div className="flex w-full items-center gap-4">
-          <RadioGroupItem value={creditCard.id} checked={isSelected} id={creditCard.id} />
+          <RadioGroupItem
+            value={creditCard.id.toString()}
+            checked={isSelected}
+            id={creditCard.id}
+          />
           {getCreditCardBrandIcon(creditCard)}
           <Typography as="body" element="p" className="text-black-80">
             {creditCard.attributes.name}
