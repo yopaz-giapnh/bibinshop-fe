@@ -1,4 +1,8 @@
+import FamilyMart from '@/assets/payment/family-mart.svg';
+import Lawson from '@/assets/payment/lawson.svg';
+import MiniStop from '@/assets/payment/mini-stop.svg';
 import Paypay from '@/assets/payment/paypay.svg';
+import SeikoMart from '@/assets/payment/seiko-mart.svg';
 import Store from '@/assets/payment/store.svg';
 import Trash from '@/assets/trash-blue.svg';
 import { ButtonWithIcon } from '@/components/button/button-with-icon';
@@ -42,7 +46,6 @@ export function PaymentList({
         type: availablePaymentMethod.creditCard,
         creditCard
       });
-
       return;
     }
 
@@ -69,38 +72,42 @@ export function PaymentList({
     <RadioGroup
       defaultValue={activePaymentMethod?.id}
       onValueChange={handleValueChange}
-      className="flex flex-col"
+      className="flex flex-col gap-4"
     >
-      <label key={availablePaymentMethod.paypay} className="mb-2 flex cursor-pointer items-center">
+      <label key={availablePaymentMethod.paypay} className="cursor-pointer">
         <div
           className={cn(
-            'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
+            'flex w-[458px] items-center gap-4 rounded-[6px] border border-solid border-black-10 p-4',
             isPayPayPaymentMethod(activePaymentMethod?.type) && 'border-bibinBlue-100 bg-[#F6FBFF]'
           )}
         >
-          <div className="flex w-full items-center gap-4">
-            <RadioGroupItem value={availablePaymentMethod.paypay} />
-            <Paypay />
-            <Typography as="body" element="p" className="text-black-80">
-              PayPay
-            </Typography>
-          </div>
+          <RadioGroupItem value={availablePaymentMethod.paypay} />
+          <Paypay />
+          <Typography as="body" element="p" className="text-black-80">
+            PayPay
+          </Typography>
         </div>
       </label>
 
-      <label key={availablePaymentMethod.konbini} className="mb-2 flex cursor-pointer items-center">
+      <label key={availablePaymentMethod.konbini} className="cursor-pointer">
         <div
           className={cn(
-            'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
+            'flex w-[458px] items-center gap-4 rounded-[6px] border border-solid border-black-10 p-4',
             isKonbiniPaymentMethod(activePaymentMethod?.type) && 'border-bibinBlue-100 bg-[#F6FBFF]'
           )}
         >
-          <div className="flex w-full items-center gap-4">
-            <RadioGroupItem value={availablePaymentMethod.konbini} />
-            <Store />
+          <RadioGroupItem value={availablePaymentMethod.konbini} />
+          <Store />
+          <div className="flex flex-col gap-2">
             <Typography as="body" element="p" className="text-black-80">
               コンビニ決済
             </Typography>
+            <div className="flex items-center gap-2">
+              <FamilyMart />
+              <Lawson />
+              <MiniStop />
+              <SeikoMart />
+            </div>
           </div>
         </div>
       </label>
@@ -111,7 +118,7 @@ export function PaymentList({
           activePaymentMethod.creditCard.id === creditCard.id;
 
         return (
-          <label key={creditCard.id} className="flex cursor-pointer items-center">
+          <label key={creditCard.id} className="cursor-pointer">
             <div
               className={cn(
                 'flex w-[458px] flex-col justify-between rounded-[6px] border border-solid border-black-10 p-4 md:flex-row md:items-center',
