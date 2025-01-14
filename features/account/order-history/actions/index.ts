@@ -49,8 +49,7 @@ export async function getAccountOrders({
       query: {
         include: includes,
         'filter[shipment_state]': shipment_state,
-        page,
-        per_page: 10
+        page
       }
     },
     fetch: (request) => {

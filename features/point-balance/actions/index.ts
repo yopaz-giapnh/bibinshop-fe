@@ -26,11 +26,10 @@ export async function getPointAquisitionHistory(params?: { page?: number; perPag
 }
 
 export async function getAvailablePoints() {
-  // TODO: FEで計算するのではなく、APIで取得したい
   const { response, error, data } = await apiClient.GET('/api/v2/storefront/account/points', {
     query: {
       page: 1,
-      per_page: 100
+      per_page: 1
     },
     fetch: (request) => {
       return fetch(request, { cache: 'no-cache' });
@@ -50,12 +49,13 @@ export async function getAvailablePoints() {
     return 0;
   }
 
-  const totalPoints = data.data.reduce((sum, point) => {
-    const pointDiff = (point.attributes.amount || 0) - (point.attributes.used_amount || 0);
-    return sum + pointDiff;
-  }, 0);
-
-  return totalPoints;
+  // 型ガードを使用してデータの形式を確認
+  const firstItem = data.data[0];
+  if ('attributes' in firstItem && 'available' in firstItem.attributes) {
+    return firstItem.attributes.available || 0;
+  } else {
+    return 0;
+  }
 }
 
 export async function getPointUsageHistory(params?: { page?: number; perPage?: number }) {
