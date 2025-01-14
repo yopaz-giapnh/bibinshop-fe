@@ -7,7 +7,9 @@ import FamilyMart from '@/assets/payment/family-mart.svg';
 import Jcb from '@/assets/payment/jcb.svg';
 import Lawson from '@/assets/payment/lawson.svg';
 import MasterCard from '@/assets/payment/master-card.svg';
+import MiniStop from '@/assets/payment/mini-stop.svg';
 import PayPay from '@/assets/payment/paypay.svg';
+import SeikoMart from '@/assets/payment/seiko-mart.svg';
 import Visa from '@/assets/payment/visa.svg';
 import { Typography } from '@/components/ui/typography';
 
@@ -30,6 +32,8 @@ export function PaymentMethod() {
         <PayPay />
         <FamilyMart />
         <Lawson />
+        <SeikoMart />
+        <MiniStop />
       </div>
     </div>
   );
