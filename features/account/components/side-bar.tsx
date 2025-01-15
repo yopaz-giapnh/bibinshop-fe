@@ -124,22 +124,24 @@ export default function AccountSideBar() {
     const isActive = pathname === href;
 
     return (
-      <Link href={href} passHref>
-        <button
-          type="button"
-          className={clsx(
-            'mt-[16px] flex w-full items-center rounded-[6px] bg-white-base p-[24px] md:w-[275px]',
-            isActive
-              ? 'border-[2px] border-bibinBlue-100 bg-bibinBlue-10'
-              : 'border-[1px] border-gray-300'
-          )}
-        >
-          {icon}
-          <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
-            {label}
-          </Typography>
-        </button>
-      </Link>
+      <div className="mt-[16px]">
+        <Link href={href} passHref className="block w-full md:w-fit">
+          <button
+            type="button"
+            className={clsx(
+              'flex w-full items-center rounded-[6px] bg-white-base p-[24px] md:w-[275px]',
+              isActive
+                ? 'border-[2px] border-bibinBlue-100 bg-bibinBlue-10'
+                : 'border-[1px] border-gray-300'
+            )}
+          >
+            {icon}
+            <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
+              {label}
+            </Typography>
+          </button>
+        </Link>
+      </div>
     );
   };
 

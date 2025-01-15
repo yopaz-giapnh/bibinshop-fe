@@ -62,13 +62,15 @@ export default async function MessageSeeMoreModal({ message }: Props) {
             passHref
             className="flex items-center rounded-[6px] border-[1px] p-[16px]"
           >
-            <Image
-              alt=""
-              src={vendorImageUrl}
-              width={40}
-              height={40}
-              className="relative rounded-[4px]"
-            />
+            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-[4px] border border-gray-200">
+              <Image
+                alt=""
+                src={vendorImageUrl}
+                width={40}
+                height={40}
+                className="relative h-full w-full rounded-[4px] object-cover"
+              />
+            </div>
             <Typography
               as="boldSmall"
               element="p"
