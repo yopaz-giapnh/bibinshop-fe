@@ -154,7 +154,7 @@ function Form({ onClose }: Props) {
   return (
     <FormComponent {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="mx-auto w-full space-y-6">
-        <div className="mt-4 grid grid-cols-5 gap-x-4 gap-y-6">
+        <div className="mt-4 flex flex-wrap gap-4">
           <Visa />
           <MasterCard />
           <Jcb />
