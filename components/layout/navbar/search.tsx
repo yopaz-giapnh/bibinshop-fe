@@ -67,7 +67,19 @@ export function Search({ isSignedIn }: Props) {
           }}
         />
       </div>
-      <CommandList className="mt-2 border-t-[1px]">
+      {isOpen && (
+        <>
+          <div
+            className={`absolute left-0 top-8 h-[50px] w-[2px] bg-gray-200 transition-all duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+          />
+          <div
+            className={`absolute right-0 top-8 h-[50px] w-[2px] bg-gray-200 transition-all duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+          />
+        </>
+      )}
+      <CommandList
+        className={`mt-2 rounded-b-[4px] border-b-[2px] border-l-[2px] border-r-[2px] transition-all duration-500 ${isOpen ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'}`}
+      >
         {searchValue ? (
           <SearchResuts text={searchValue} />
         ) : (
