@@ -1,5 +1,4 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Typography } from '@/components/ui/typography';
 import { getMyReviews } from '@/features/review/actions';
@@ -7,6 +6,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { getAccountOrders } from '../actions';
 import { OrderHistoryTabContent } from './order-history-tab-content';
+import { OrderHistoryTabContentSkeleton } from './skeletons/order-history-tab-content-skeleton';
 
 type Props = {
   currentPage: number;
@@ -89,7 +89,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
         </TabsList>
         {tabs.map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<OrderHistoryTabContentSkeleton />}>
               <OrderHistoryTabContent
                 orders={{
                   data: orders.data,

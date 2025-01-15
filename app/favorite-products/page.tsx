@@ -1,7 +1,7 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { FavoriteProducts } from '@/features/favorite-products/components/favorite-products';
+import { FavoriteProductsSkeleton } from '@/features/favorite-products/components/skeletons/favorite-products-skeleton';
 import { Suspense } from 'react';
 
 export default async function Page({ searchParams }: { searchParams?: { page?: string } }) {
@@ -18,7 +18,7 @@ export default async function Page({ searchParams }: { searchParams?: { page?: s
         </Typography>
         <div className="h-7 w-7" />
       </div>
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<FavoriteProductsSkeleton />}>
         <FavoriteProducts searchParams={searchParams} />
       </Suspense>
     </div>

@@ -76,6 +76,7 @@ export function VendorReviews({ vendor, searchParams }: Props) {
             </div>
             <div className="md:ml-14">
               <Suspense fallback={<LoadingSpinner />}>
+                {/* TODO: スケルトンビュー */}
                 <VendorReviewList vendorId={vendor.id} currentPage={currentPage} />
               </Suspense>
             </div>

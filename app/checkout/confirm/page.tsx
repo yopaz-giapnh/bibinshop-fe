@@ -1,7 +1,7 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import CheckoutConfirm from '@/features/checkout/components/checkout-confirm';
+import { CheckoutConfirmSkeleton } from '@/features/checkout/components/skeletons/checkout-confirm-skeleton';
 import { Suspense } from 'react';
 
 export default async function Page() {
@@ -21,7 +21,7 @@ export default async function Page() {
               </Typography>
               <div className="h-7 w-7" />
             </div>
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<CheckoutConfirmSkeleton />}>
               <CheckoutConfirm />
             </Suspense>
           </div>

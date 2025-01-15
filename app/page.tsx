@@ -1,11 +1,12 @@
 import { Menu } from '@/components/layout/navbar/menu';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { CarouselSkeleton, TaxonListSkeleton } from '@/components/skeletons';
 import { Typography } from '@/components/ui/typography';
 import * as session from '@/features/auth/utils/session';
 import { getBanners } from '@/features/banner/actions';
 import { CarouselBanner } from '@/features/banner/components/carousel-banner';
 import { StickyBanner } from '@/features/banner/components/sticky-banner';
 import { ProductOverviewByTaxon } from '@/features/product/components/product-overview-by-taxon';
+import { ProductSkeleton } from '@/features/product/components/skeletons/product-skeleton';
 import { getTaxons } from '@/features/taxon/actions';
 import { TaxonList } from '@/features/taxon/components/taxon-list';
 import Image from 'next/image';
@@ -21,10 +22,10 @@ export default async function Page() {
         <div className="md:hidden">
           <Menu getTaxons={getTaxons()} />
         </div>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={<CarouselSkeleton />}>
           <CarouselBanner getBanners={getBanners()} />
         </Suspense>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={<TaxonListSkeleton />}>
           <TaxonList />
         </Suspense>
         <Link href={'/sns'} passHref className="mt-[24px]">
@@ -45,19 +46,19 @@ export default async function Page() {
         </Link>
         <div className="flex w-full flex-col">
           <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<ProductSkeleton />}>
               <ProductOverviewByTaxon
                 title="おすすめ商品"
                 seeMoreUrl="/products/recommended?page=1"
               />
             </Suspense>
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<ProductSkeleton />}>
               <ProductOverviewByTaxon
                 title="ベストセラー"
                 seeMoreUrl="/products/bestseller?page=1"
               />
             </Suspense>
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<ProductSkeleton />}>
               <ProductOverviewByTaxon title="新着" seeMoreUrl="/products/new?page=1" />
             </Suspense>
           </div>
@@ -65,8 +66,8 @@ export default async function Page() {
             <Typography as="bold" element="h2" className="text-bibinBlue-100">
               \ 売れてる商品 /
             </Typography>
-            <div className="mt-1 ">
-              <Suspense fallback={<LoadingSpinner />}>
+            <div className="mt-1">
+              <Suspense fallback={<ProductSkeleton />}>
                 <ProductOverviewByTaxon title="ランキング" seeMoreUrl="/products/ranking?page=1" />
               </Suspense>
             </div>

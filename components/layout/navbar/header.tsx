@@ -53,6 +53,7 @@ export function Header({ isSignedIn, getTaxons }: Props) {
               お気に入り
             </Typography>
           </Link>
+          {/* TODO: スケルトンビュー */}
           <Suspense fallback={<LoadingSpinner />}>
             <CartMenu />
           </Suspense>

@@ -19,10 +19,9 @@ export default async function WriteReview({ slugs }: Props) {
   });
 
   return (
-    <>
-      <Suspense fallback={<LoadingSpinner />}>
-        <WriteReviewForm products={products.data} reviews={reviews.data} />
-      </Suspense>
-    </>
+    // TODO: スケルトンビュー
+    <Suspense fallback={<LoadingSpinner />}>
+      <WriteReviewForm products={products.data} reviews={reviews.data} />
+    </Suspense>
   );
 }

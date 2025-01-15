@@ -1,9 +1,9 @@
 'use client';
 
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getUsers } from '@/features/users/actions';
 import { User } from '@/features/users/types';
 import { useEffect, useState } from 'react';
+import { SnsListSkeleton } from './skeletons/sns-list-skeleton';
 import { SnsInputSortBar } from './sns-input-sort-bar';
 import { SnsUserListDetailCard } from './sns-user-list-detail-card';
 import SnsUserListEmptyView from './sns-user-list-empty-view';
@@ -94,7 +94,7 @@ export function SnsUserList() {
     <>
       <SnsInputSortBar onSortChange={setSortBy} onFilterChange={setFilter} />
       {loading ? (
-        <LoadingSpinner size={24} className="mx-auto mt-8" />
+        <SnsListSkeleton />
       ) : users.length > 0 ? (
         <div className="mt-[24px] w-full space-y-4 overflow-y-auto">
           {users.map((user: User) => (
@@ -104,7 +104,7 @@ export function SnsUserList() {
               products={user.recommendedProducts || []}
             />
           ))}
-          {loadingMore && <LoadingSpinner size={24} className="mx-auto mt-4" />}
+          {loadingMore && <SnsListSkeleton />}
         </div>
       ) : (
         <SnsUserListEmptyView />

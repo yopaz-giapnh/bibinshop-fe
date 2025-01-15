@@ -34,8 +34,8 @@ export default function MessageListItem({ message }: Props) {
             width={40}
             height={40}
             className={cn(
-              'relative object-cover',
-              isReviewComment ? 'h-[40px] w-[40px] rounded-full' : 'rounded-[4px]'
+              'relative h-full w-full object-cover',
+              isReviewComment ? 'rounded-full' : 'rounded-[4px]'
             )}
           />
         </div>
@@ -66,7 +66,7 @@ export default function MessageListItem({ message }: Props) {
             {message.attributes.content}
           </Typography>
         </div>
-        <div className="hidden md:block">
+        <div className="md:hidden">
           <MessageSeeMoreModal message={message} />
         </div>
       </div>

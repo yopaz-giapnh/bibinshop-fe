@@ -24,6 +24,7 @@ export default async function NotFound() {
         </Link>
       </div>
       <div className="ml-2 mr-2 flex md:ml-6 md:mr-6">
+        {/* TODO: スケルトンビュー */}
         <Suspense fallback={<LoadingSpinner />}>
           <ProductOverviewByTaxon title="新着" seeMoreUrl="/products/new?page=1" />
         </Suspense>

@@ -1,4 +1,6 @@
 import { OrderHistoryTabs } from '@/features/account/order-history/components/order-history-tabs';
+import { OrderHistorySkeleton } from '@/features/account/order-history/components/skeletons/order-history-skeleton';
+import { Suspense } from 'react';
 
 /**
  * 注文履歴ホーム画面
@@ -16,7 +18,9 @@ export default function Page({
 
   return (
     <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[14px] md:p-[24px]">
-      <OrderHistoryTabs currentPage={currentPage} tabState={tabState} />
+      <Suspense fallback={<OrderHistorySkeleton />}>
+        <OrderHistoryTabs currentPage={currentPage} tabState={tabState} />
+      </Suspense>
     </div>
   );
 }

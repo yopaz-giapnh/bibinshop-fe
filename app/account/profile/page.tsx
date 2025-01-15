@@ -1,7 +1,7 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import ProfileDetail from '@/features/account/profile/components/profile-detail';
+import { ProfileDetailSkeleton } from '@/features/account/profile/components/skeletons/profile-detail-skeleton';
 import { Suspense } from 'react';
 
 /**
@@ -25,7 +25,7 @@ export default function Page({
         </Typography>
         <div className="h-7 w-7" />
       </div>
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<ProfileDetailSkeleton />}>
         <ProfileDetail searchParams={searchParams} />
       </Suspense>
     </div>
