@@ -1,8 +1,8 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import PaymentCreate from '@/features/account/payment/components/payment-create';
 import PaymentList from '@/features/account/payment/components/payment-list';
+import { PaymentSkeleton } from '@/features/account/payment/components/skeletons/payment-skeleton';
 import { Suspense } from 'react';
 
 /**
@@ -24,7 +24,7 @@ export default async function Page() {
         <div className="h-7 w-7" />
       </div>
       <PaymentCreate />
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<PaymentSkeleton />}>
         <PaymentList />
       </Suspense>
     </div>

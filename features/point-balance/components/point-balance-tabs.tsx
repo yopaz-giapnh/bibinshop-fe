@@ -58,6 +58,7 @@ export async function PointBalanceTabs({ tabState }: Props) {
       <div className="relative top-[-2px] border-[1px]" />
       {tabs.map((tab) => (
         <TabsContent key={tab.value} value={tab.value} className="w-full">
+          {/* TODO: スケルトンビュー */}
           <Suspense fallback={<LoadingSpinner />}>
             {tab.value === 'point-history' ? (
               <div>

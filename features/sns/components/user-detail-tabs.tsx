@@ -83,6 +83,7 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
       <div className="relative top-[-2px] border-[1px]" />
       {tabs.map((tab) => (
         <TabsContent key={tab.value} value={tab.value} className="w-full">
+          {/* TODO: スケルトンビュー */}
           <Suspense fallback={<LoadingSpinner />}>
             {tab.value === 'review' ? (
               <>

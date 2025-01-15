@@ -1,7 +1,7 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import MessageList from '@/features/account/message/components/message-list';
+import { MessageListSkeleton } from '@/features/account/message/components/skeletons/message-list-skeleton';
 import { Suspense } from 'react';
 
 /**
@@ -30,7 +30,7 @@ export default function Page({
         </Typography>
         <div className="h-7 w-7" />
       </div>
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<MessageListSkeleton />}>
         <MessageList currentPage={currentPage} />
       </Suspense>
     </div>

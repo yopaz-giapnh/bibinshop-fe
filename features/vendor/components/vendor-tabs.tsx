@@ -61,6 +61,7 @@ export default async function VendorTabs({ vendor, searchParams }: VendorTabsPro
       </TabsContent>
       <TabsContent value="review">
         <Suspense fallback={<LoadingSpinner />}>
+          {/* TODO: スケルトンビュー */}
           <VendorReviews vendor={vendor} searchParams={searchParams} />
         </Suspense>
       </TabsContent>

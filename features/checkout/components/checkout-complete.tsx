@@ -19,6 +19,7 @@ export default async function CheckoutComplete() {
     <div className="h-full w-full bg-paleFrostBlue">
       <div className="mx-auto flex w-full flex-col items-center px-2 md:px-[272px] md:pt-[24px] ">
         <ResetCouponClient />
+        {/* TODO: スケルトンビュー */}
         <Suspense fallback={<LoadingSpinner />}>
           <CheckoutOrderMessage orderNumber={orderNumber} />
         </Suspense>

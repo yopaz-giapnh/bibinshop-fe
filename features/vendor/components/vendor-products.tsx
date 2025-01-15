@@ -42,6 +42,7 @@ export async function VendorProducts({ vendorId, searchParams }: Props) {
             <SortButton />
           </div> */}
           <Suspense fallback={<LoadingSpinner />}>
+            {/* TODO: スケルトンビュー */}
             <ProductsList vendorId={vendorId} searchParams={searchParams} />
           </Suspense>
         </div>

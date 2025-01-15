@@ -19,6 +19,7 @@ type Props = {
 };
 
 export async function ProductDetail({ product }: Props) {
+  // TODO: スケルトンビュー
   return (
     <div className="flex flex-col pt-[22px] md:pt-0">
       <div className="md:flex">

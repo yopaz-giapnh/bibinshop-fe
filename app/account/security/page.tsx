@@ -1,8 +1,8 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
 import SecurityDetail from '@/features/account/security/components/security-detail';
+import { SecurityDetailSkeleton } from '@/features/account/security/components/skeletons/security-detail-skeleton';
 import { Suspense } from 'react';
 
 /**
@@ -23,7 +23,7 @@ export default async function Page() {
         </Typography>
         <div className="h-7 w-7" />
       </div>
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<SecurityDetailSkeleton />}>
         <SecurityDetail getAccount={getAccount()} />
       </Suspense>
     </div>

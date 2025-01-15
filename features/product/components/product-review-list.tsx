@@ -19,6 +19,7 @@ export async function ProductReviewList({ productId }: Props) {
 
   return (
     <>
+      {/* TODO: スケルトンビュー */}
       <Suspense fallback={<Loading />}>
         <ReviewListWithAvator reviews={displayedReviews} />
         {reviewsCount >= 3 && (

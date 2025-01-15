@@ -23,6 +23,7 @@ export default async function Page({ searchParams }: { searchParams?: { page?: s
           <Menu getTaxons={getTaxons()} />
         </div>
         <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">
+          {/* TODO: スケルトンビュー */}
           <Suspense fallback={<LoadingSpinner />}>
             <ProductOverview
               title={'ランキング'}

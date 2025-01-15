@@ -252,6 +252,7 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef, Pr
               <div className="mt-4 w-full">
                 {comments.length === 0 && isLoading ? (
                   <div className="flex justify-center py-4">
+                    {/* TODO: スケルトンビュー */}
                     <LoadingSpinner />
                   </div>
                 ) : (
