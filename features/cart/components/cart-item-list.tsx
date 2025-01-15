@@ -68,51 +68,59 @@ export function CartItemList({ cart }: Props) {
         </div>
       )}
       {sagawaShippingVendorsCount === 1 && (
-        <div className="flex items-center rounded-[6px] border border-yellow-500 bg-yellow-50 px-3 py-2">
-          <CircleAlert className="mr-2 h-6 w-6 text-gray-500" />
-          <Typography as="title" element="span" className="text-[14px] text-text-80">
-            送料無料対象：
-          </Typography>
-          <div className="ml-2 flex items-center gap-1">
-            <Image
-              src={'/bibin-official-badge.png'}
-              alt={'bibin official badge'}
-              width={24}
-              height={24}
-            />
+        <div className="items-center rounded-[6px] border border-yellow-500 bg-yellow-50 px-3 py-2 md:flex">
+          <div className="flex items-center">
+            <CircleAlert className="mr-2 h-6 w-6 text-gray-500" />
             <Typography as="title" element="span" className="text-[14px] text-text-80">
-              バッジブランドをもう1つ追加すると
+              送料無料対象：
             </Typography>
-            <Image
-              src={'/bibin-official-badge.png'}
-              alt={'bibin official badge'}
-              width={24}
-              height={24}
-            />
-            <Typography as="title" element="span" className="text-[14px] text-text-80">
-              バッジのブランドは送料無料になります
-            </Typography>
+          </div>
+          <div className="items-center gap-1 md:ml-2 md:flex">
+            <div className="mt-1 flex items-center md:mt-0">
+              <Image
+                src={'/bibin-official-badge.png'}
+                alt={'bibin official badge'}
+                width={24}
+                height={24}
+              />
+              <Typography as="title" element="span" className="ml-1 text-[14px] text-text-80">
+                バッジブランドをもう1つ追加すると
+              </Typography>
+            </div>
+            <div className="mt-1 flex items-center md:mt-0">
+              <Image
+                src={'/bibin-official-badge.png'}
+                alt={'bibin official badge'}
+                width={24}
+                height={24}
+              />
+              <Typography as="title" element="span" className="ml-1 text-[14px] text-text-80">
+                バッジのブランドは送料無料になります
+              </Typography>
+            </div>
           </div>
         </div>
       )}
       {sagawaShippingVendorsCount >= 2 && (
-        <div className="flex items-center rounded-[6px] border border-yellow-500 bg-yellow-50 px-3 py-2">
+        <div className="items-center rounded-[6px] border border-yellow-500 bg-yellow-50 px-3 py-2 md:flex">
           <Typography as="title" element="span" className="text-[14px] text-text-80">
             送料無料対象：
           </Typography>
-          <Image
-            src={'/bibin-official-badge.png'}
-            alt={'bibin official badge'}
-            width={24}
-            height={24}
-          />
-          <Typography
-            as="title"
-            element="span"
-            className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-[14px] text-transparent"
-          >
-            バッジのブランド送料無料適用中！
-          </Typography>
+          <div className="flex items-center">
+            <Image
+              src={'/bibin-official-badge.png'}
+              alt={'bibin official badge'}
+              width={24}
+              height={24}
+            />
+            <Typography
+              as="title"
+              element="span"
+              className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-[14px] text-transparent"
+            >
+              バッジのブランド送料無料適用中！
+            </Typography>
+          </div>
         </div>
       )}
       <label

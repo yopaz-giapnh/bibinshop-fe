@@ -6,22 +6,36 @@ type ItemProps = {
   title: string;
   price: string;
   optionsText?: string;
+  quantity?: number;
 };
 
 /**
  * 注文内容カードコンポーネント
  * @returns JSX.Element
  */
-export default function OrderDetailListItem({ imageSrc, title, price, optionsText }: ItemProps) {
+export default function OrderDetailListItem({
+  imageSrc,
+  title,
+  price,
+  optionsText,
+  quantity
+}: ItemProps) {
   return (
     <div className="mt-[16px] flex items-center">
       <div className="relative h-[100px] w-[100px]">
         <Image src={imageSrc} fill alt={''} />
       </div>
-      <div className="ml-[16px]">
-        <Typography as="boldSmall" element="p" className="text-[14px] text-black-90">
-          {title}
-        </Typography>
+      <div className="ml-[16px] flex-1">
+        <div className="flex items-start justify-between">
+          <Typography as="boldSmall" element="p" className="text-[14px] text-black-90">
+            {title}
+          </Typography>
+          {quantity && (
+            <Typography as="boldSmall" element="p" className="ml-2 text-[14px] text-black-70">
+              ×{quantity}
+            </Typography>
+          )}
+        </div>
         {!!optionsText && (
           <Typography as="small" element="p" className="mt-[4px] text-[12px] text-black-70">
             {optionsText}

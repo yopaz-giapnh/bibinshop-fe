@@ -48,6 +48,7 @@ export function OrderDetailInfo({ lineItems, vendorTotals, variants, images }: P
                   title={lineItem.attributes.name ?? ''}
                   price={lineItem.attributes.display_price ?? ''}
                   optionsText={variant?.attributes.options_text}
+                  quantity={lineItem.attributes.quantity}
                 />
               );
             })}

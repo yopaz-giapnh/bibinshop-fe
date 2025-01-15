@@ -17,18 +17,29 @@ type Props = {
 export default function MessageListItem({ message }: Props) {
   const messageImageUrl = getMessageImageUrl(message);
   const date = formatDateString(message.attributes.created_at, 'yyyy年MM月dd日');
+  const isReviewComment = message.attributes.title.includes('レビューにコメント');
 
   return (
     <div className="flex flex-col items-center justify-center md:items-stretch">
-      <div className="flex w-full items-center justify-between">
-        <Image
-          alt=""
-          src={messageImageUrl}
-          width={40}
-          height={40}
-          className="relative rounded-[4px]"
-        />
-        <div className="mx-[12px] w-full">
+      <div className="flex w-full items-center">
+        <div
+          className={cn(
+            'flex h-[40px] w-[40px] flex-shrink-0 items-center justify-center border border-gray-200',
+            isReviewComment ? 'rounded-full' : 'rounded-[4px]'
+          )}
+        >
+          <Image
+            alt=""
+            src={messageImageUrl}
+            width={40}
+            height={40}
+            className={cn(
+              'relative object-cover',
+              isReviewComment ? 'h-[40px] w-[40px] rounded-full' : 'rounded-[4px]'
+            )}
+          />
+        </div>
+        <div className="mx-[12px]">
           <div className="flex items-center">
             <Typography as="boldSmall" element="p" className="text-[14px] text-black-90">
               {message.attributes.title}
@@ -59,7 +70,7 @@ export default function MessageListItem({ message }: Props) {
           <MessageSeeMoreModal message={message} />
         </div>
       </div>
-      <div className="pt-[12px] md:hidden">
+      <div className="ml-auto hidden md:block">
         <MessageSeeMoreModal message={message} />
       </div>
     </div>

@@ -20,7 +20,7 @@ type Props = {
 
 export async function ProductDetail({ product }: Props) {
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col pt-[22px] md:pt-0">
       <div className="md:flex">
         <div className="flex flex-col gap-3 md:gap-6">
           <div className="flex items-center gap-2 px-[8px] md:hidden">

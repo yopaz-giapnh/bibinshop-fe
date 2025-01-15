@@ -50,9 +50,9 @@ export async function Supplementary({ product }: Props) {
         {isSagawaShipping && (
           <div className="mt-2">
             <Typography as="boldSmall" element="p" className="text-gray-500">
-              送料無料対象:
+              送料無料対象：
             </Typography>
-            <div className="mt-1 flex items-center">
+            <div className="mt-1 flex items-start">
               <Image
                 src={'/bibin-official-badge.png'}
                 alt={'bibin official badge'}
@@ -60,17 +60,7 @@ export async function Supplementary({ product }: Props) {
                 height={24}
               />
               <Typography as="boldSmall" element="p" className="text-black-200 ml-1">
-                バッジブランドをもう一つ追加すると
-              </Typography>
-              <Image
-                src={'/bibin-official-badge.png'}
-                alt={'bibin official badge'}
-                width={24}
-                height={24}
-                className="ml-1"
-              />
-              <Typography as="boldSmall" element="p" className="text-black-200 ml-1">
-                バッジのブランドは送料無料になります
+                バッジブランドをもう１つ追加すると、バッジのブランドは送料無料になります
               </Typography>
             </div>
           </div>

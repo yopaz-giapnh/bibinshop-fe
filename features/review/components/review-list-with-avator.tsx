@@ -68,7 +68,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
                   alt={review.user?.attributes.nickname ?? '匿名'}
                   width={40}
                   height={40}
-                  className="rounded-full object-cover"
+                  className="h-[40px] w-[40px] rounded-full object-cover"
                 />
               </Link>
               <div className="ml-3 md:ml-6">

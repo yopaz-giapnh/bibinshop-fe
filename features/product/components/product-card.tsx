@@ -119,7 +119,7 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
             {product.attributes.name}
           </Typography>
           {isSagawaShipping && (
-            <div className="ml-1 flex shrink-0 items-center rounded-full border border-yellow-500 bg-yellow-50 px-1 py-1">
+            <div className="ml-1 hidden shrink-0 items-center rounded-full border border-yellow-500 bg-yellow-50 px-1 py-1 md:flex">
               <Image
                 src={'/bibin-official-badge.png'}
                 alt={'bibin official badge'}
@@ -137,13 +137,33 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
           )}
         </div>
         <div className={'items-center gap-2 md:flex' + (!available && ' opacity-50')}>
-          <Typography
-            as="xSmall"
-            element="p"
-            className={`md:hidden ${!available ? 'text-red-500' : 'text-black-70'}`}
-          >
-            {!available ? '完売' : `${product.attributes.total_on_hand} 個販売`}
-          </Typography>
+          <div className="mt-[4px] flex items-center justify-between md:mt-0">
+            <Typography
+              as="xSmall"
+              element="p"
+              className={`md:hidden ${!available ? 'text-red-500' : 'text-black-70'}`}
+            >
+              {!available ? '完売' : `${product.attributes.total_on_hand} 個販売`}
+            </Typography>
+
+            {isSagawaShipping && (
+              <div className="ml-1 flex shrink-0 items-center rounded-full border border-yellow-500 bg-yellow-50 p-[2px] md:hidden">
+                <Image
+                  src={'/bibin-official-badge.png'}
+                  alt={'bibin official badge'}
+                  width={12}
+                  height={12}
+                />
+                <Typography
+                  as="xSmall"
+                  element="p"
+                  className="ml-1 whitespace-nowrap bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-[10px] text-transparent"
+                >
+                  送料無料対象
+                </Typography>
+              </div>
+            )}
+          </div>
 
           <div className="mt-[4px] flex w-full items-end justify-between">
             <div className="flex items-end">
