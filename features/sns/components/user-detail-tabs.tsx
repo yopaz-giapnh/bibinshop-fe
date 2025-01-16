@@ -1,4 +1,3 @@
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Pagination from '@/features/pagination/components/pagination';
 import { getPurchasedProducts, getTaxonId } from '@/features/product/actions';
@@ -11,6 +10,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { FilteredReviews } from './filterd-reviews';
 import ProfileProductEmptyView from './profile-product-empty-view';
+import { UserDetailReviewsSkeleton } from './skeletons/user-detail-reviews-skeleton';
 
 type Props = {
   currentPage: number;
@@ -83,8 +83,7 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
       <div className="relative top-[-2px] border-[1px]" />
       {tabs.map((tab) => (
         <TabsContent key={tab.value} value={tab.value} className="w-full">
-          {/* TODO: スケルトンビュー */}
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense fallback={<UserDetailReviewsSkeleton />}>
             {tab.value === 'review' ? (
               <>
                 <FilteredReviews reviews={reviews.data} />

@@ -1,7 +1,7 @@
 import { Menu } from '@/components/layout/navbar/menu';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getProductsOnTaxons, getTaxonId } from '@/features/product/actions';
 import { ProductOverview } from '@/features/product/components/product-overview';
+import { ProductSkeleton } from '@/features/product/components/skeletons/product-skeleton';
 import { getTaxons } from '@/features/taxon/actions';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -23,8 +23,7 @@ export default async function Page({ searchParams }: { searchParams?: { page?: s
           <Menu getTaxons={getTaxons()} />
         </div>
         <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">
-          {/* TODO: スケルトンビュー */}
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense fallback={<ProductSkeleton />}>
             <ProductOverview
               title={'ベストセラー'}
               products={products.data}

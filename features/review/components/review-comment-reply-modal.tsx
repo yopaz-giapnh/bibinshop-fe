@@ -1,7 +1,6 @@
 'use client';
 
 import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
@@ -16,6 +15,7 @@ import { FeedbackButton } from './feedback-button';
 import Rating from './rating';
 import { ReviewCommentForm } from './review-comment-form';
 import { ReviewCommentListItem } from './review-comment-list-item';
+import { ReviewCommentListSkeleton } from './skeletons/review-comment-list-item-skeleton';
 
 export type ReviewCommentReplyModalRef = {
   review?: Review;
@@ -252,8 +252,7 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef, Pr
               <div className="mt-4 w-full">
                 {comments.length === 0 && isLoading ? (
                   <div className="flex justify-center py-4">
-                    {/* TODO: スケルトンビュー */}
-                    <LoadingSpinner />
+                    <ReviewCommentListSkeleton />
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -268,7 +267,7 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef, Pr
                     ))}
                     {isLoading && (
                       <div className="flex justify-center py-4">
-                        <LoadingSpinner />
+                        <ReviewCommentListSkeleton />
                       </div>
                     )}
                     <div ref={observerTarget} className="h-4" />

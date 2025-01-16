@@ -1,5 +1,5 @@
 import { Logo } from '@/components/icons/logo';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { CartMenuSkeleton } from '@/components/layout/navbar/skeletons/cart-menu-skeleton';
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
 import NewRegistrationCouponBanner from '@/features/coupon/components/new-registration-coupoun-banner';
@@ -53,8 +53,7 @@ export function Header({ isSignedIn, getTaxons }: Props) {
               お気に入り
             </Typography>
           </Link>
-          {/* TODO: スケルトンビュー */}
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense fallback={<CartMenuSkeleton />}>
             <CartMenu />
           </Suspense>
         </div>

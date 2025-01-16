@@ -1,7 +1,5 @@
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
 import Rating from '@/features/review/components/rating';
-import { Suspense } from 'react';
 import { Vendor } from '../types';
 import { calculateReviewsCountPercent } from '../utils';
 import VendorReviewEmptyView from './vendor-review-empty-view';
@@ -75,10 +73,7 @@ export function VendorReviews({ vendor, searchParams }: Props) {
               </div>
             </div>
             <div className="md:ml-14">
-              <Suspense fallback={<LoadingSpinner />}>
-                {/* TODO: スケルトンビュー */}
-                <VendorReviewList vendorId={vendor.id} currentPage={currentPage} />
-              </Suspense>
+              <VendorReviewList vendorId={vendor.id} currentPage={currentPage} />
             </div>
           </div>
         </>
