@@ -1,5 +1,4 @@
 import { BackButton } from '@/components/button/back-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
 import Rating from '@/features/review/components/rating';
@@ -12,6 +11,10 @@ import { ProductDescription } from './product-description';
 import { ProductReviewList } from './product-review-list';
 import { RecommendProduct } from './recommend-product';
 import { ShopCard } from './shop-card';
+import { ProductReviewListSkeleton } from './skeletons/product-review-list-skeleton';
+import { RecommendProductSkeleton } from './skeletons/recommend-product-skeleton';
+import { ShopCardSkeleton } from './skeletons/shop-card-skeleton';
+import { SupplementarySkeleton } from './skeletons/supplementary-skeleton';
 import { Supplementary } from './supplementary';
 
 type Props = {
@@ -19,7 +22,6 @@ type Props = {
 };
 
 export async function ProductDetail({ product }: Props) {
-  // TODO: スケルトンビュー
   return (
     <div className="flex flex-col pt-[22px] md:pt-0">
       <div className="md:flex">
@@ -34,10 +36,10 @@ export async function ProductDetail({ product }: Props) {
           <Gallery images={product.images} />
           <div className="px-4 md:hidden">
             <ProductCartForm product={product} getCart={getCart()} />
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<ShopCardSkeleton />}>
               {product.vendor && <ShopCard vendorId={product.vendor.id} />}
             </Suspense>
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<SupplementarySkeleton />}>
               <div className="mt-2">
                 <Supplementary product={product} />
               </div>
@@ -65,7 +67,7 @@ export async function ProductDetail({ product }: Props) {
             </div>
           </div>
 
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense fallback={<ProductReviewListSkeleton />}>
             <ProductReviewList productId={product.id} />
           </Suspense>
 
@@ -77,10 +79,10 @@ export async function ProductDetail({ product }: Props) {
             <ProductCartForm product={product} getCart={getCart()} />
           </div>
           <div className="hidden md:block">
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<ShopCardSkeleton />}>
               {product.vendor && <ShopCard vendorId={product.vendor.id} />}
             </Suspense>
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<SupplementarySkeleton />}>
               <div className="mt-5">
                 <Supplementary product={product} />
               </div>
@@ -92,7 +94,7 @@ export async function ProductDetail({ product }: Props) {
         <Typography as="title" element="h1" className="text-black-90">
           おすすめ商品
         </Typography>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={<RecommendProductSkeleton />}>
           <RecommendProduct />
         </Suspense>
       </div>
