@@ -24,8 +24,8 @@ export const PointBalanceSkeleton = () => (
 
     {/* ポイント表示 */}
     <div className="flex w-full flex-col items-center justify-center bg-indigo-400 py-8 md:rounded-[4px]">
-      <Skeleton className="h-14 w-40 bg-gray-200" />
-      <Skeleton className="mt-2 h-5 w-20 bg-gray-200" />
+      <Skeleton className="h-14 w-40 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+      <Skeleton className="mt-2 h-5 w-20 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
     </div>
 
     {/* タブ */}

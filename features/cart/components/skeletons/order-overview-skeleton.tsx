@@ -4,36 +4,36 @@ export const OrderOverviewSkeleton = () => (
   <div className="bg-white rounded-md p-4 shadow-sm">
     {/* タイトル */}
     <div className="mb-4">
-      <Skeleton className="h-5 w-20 bg-gray-200" />
+      <Skeleton className="h-5 w-20 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
     </div>
 
     {/* 商品金額 */}
     <div className="mb-2 flex items-center justify-between">
       <div className="flex items-center gap-1">
-        <Skeleton className="h-4 w-16 bg-gray-200" />
-        <Skeleton className="h-4 w-6 bg-gray-200" />
+        <Skeleton className="h-4 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+        <Skeleton className="h-4 w-6 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       </div>
       <div className="flex items-center gap-1">
-        <Skeleton className="h-4 w-16 bg-gray-200" />
-        <Skeleton className="h-4 w-4 bg-gray-200" />
+        <Skeleton className="h-4 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+        <Skeleton className="h-4 w-4 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       </div>
     </div>
 
     {/* 送料 */}
     <div className="mb-2 flex items-center justify-between">
-      <Skeleton className="h-4 w-8 bg-gray-200" />
+      <Skeleton className="h-4 w-8 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       <div className="flex items-center gap-1">
-        <Skeleton className="h-4 w-16 bg-gray-200" />
-        <Skeleton className="h-4 w-4 bg-gray-200" />
+        <Skeleton className="h-4 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+        <Skeleton className="h-4 w-4 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       </div>
     </div>
 
     {/* クーポン割引 */}
     <div className="mb-4 flex items-center justify-between">
-      <Skeleton className="h-4 w-20 bg-gray-200" />
+      <Skeleton className="h-4 w-20 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       <div className="flex items-center gap-1">
-        <Skeleton className="h-4 w-16 bg-gray-200" />
-        <Skeleton className="h-4 w-4 bg-gray-200" />
+        <Skeleton className="h-4 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+        <Skeleton className="h-4 w-4 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       </div>
     </div>
 
@@ -41,8 +41,8 @@ export const OrderOverviewSkeleton = () => (
     <div className="flex items-center justify-between border-t border-gray-200 pt-4">
       <Skeleton className="h-5 w-8 bg-gray-200" />
       <div className="flex items-center gap-1">
-        <Skeleton className="h-5 w-20 bg-gray-200" />
-        <Skeleton className="h-5 w-4 bg-gray-200" />
+        <Skeleton className="h-5 w-20 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+        <Skeleton className="h-5 w-4 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       </div>
     </div>
 

@@ -16,7 +16,7 @@ export const OrderOverviewSkeleton = () => (
           <span className="text-[14px] text-gray-700">(2)</span>
         </div>
         <div className="flex items-center gap-1">
-          <Skeleton className="h-4 w-16 bg-gray-200" />
+          <Skeleton className="h-4 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
           <span className="text-[14px]">円</span>
         </div>
       </div>
@@ -25,7 +25,7 @@ export const OrderOverviewSkeleton = () => (
       <div className="mb-4 flex items-center justify-between">
         <span className="text-[14px] text-gray-700">小計</span>
         <div className="flex items-center gap-1">
-          <Skeleton className="h-4 w-16 bg-gray-200" />
+          <Skeleton className="h-4 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
           <span className="text-[14px]">円</span>
         </div>
       </div>
@@ -33,7 +33,7 @@ export const OrderOverviewSkeleton = () => (
       {/* 獲得予定ポイント */}
       <div className="flex items-center justify-center gap-1 text-[14px] text-gray-500">
         <span>獲得予定</span>
-        <Skeleton className="h-4 w-16 bg-gray-200" />
+        <Skeleton className="h-4 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
         <span>ポイント</span>
         <div className="h-4 w-4 rounded-full bg-gray-200" />
       </div>

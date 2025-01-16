@@ -8,12 +8,14 @@ export const ProductsListSkeleton = () => {
         {[...Array(8)].map((_, i) => (
           <div key={i} className="flex flex-col gap-2">
             {/* 商品画像 */}
-            <Skeleton className="aspect-square w-full rounded-lg" />
+            <Skeleton className="aspect-square w-full animate-[pulse_1s_ease-in-out_infinite] rounded-lg bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
 
             {/* 商品情報 */}
             <div className="space-y-2">
-              <Skeleton className="h-4 w-full" /> {/* 商品名 */}
-              <Skeleton className="h-4 w-2/3" /> {/* 価格 */}
+              {/* 商品名 */}
+              <Skeleton className="h-4 w-full animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+              {/* 価格 */}
+              <Skeleton className="h-4 w-2/3 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
             </div>
           </div>
         ))}
@@ -22,7 +24,10 @@ export const ProductsListSkeleton = () => {
       {/* ページネーション */}
       <div className="mt-4 flex justify-center gap-2">
         {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="h-8 w-8 rounded-full" />
+          <Skeleton
+            key={i}
+            className="h-8 w-8 animate-[pulse_1s_ease-in-out_infinite] rounded-full bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200"
+          />
         ))}
       </div>
     </div>

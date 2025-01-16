@@ -9,16 +9,16 @@ export const VendorReviewsSkeleton = () => (
         {/* 平均評価 */}
         <div className="z-0 w-full md:w-[225px]">
           <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-36" />
-            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-8 w-36 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+            <Skeleton className="h-5 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
           </div>
         </div>
         {/* 評価分布 */}
         <div className="w-full">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="mt-2 flex w-full items-center">
-              <Skeleton className="mr-2 h-2 w-2/3 md:w-[100px]" />
-              <Skeleton className="h-6 w-28" />
+              <Skeleton className="mr-2 h-2 w-2/3 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 md:w-[100px]" />
+              <Skeleton className="h-6 w-28 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
             </div>
           ))}
         </div>
