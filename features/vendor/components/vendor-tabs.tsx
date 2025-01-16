@@ -1,8 +1,8 @@
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { Vendor } from '../types';
+import { VendorReviewsSkeleton } from './skeletons/vendor-reviews-skeleton';
 import VendorInfo from './vendor-info';
 import { VendorProducts } from './vendor-products';
 import { VendorReviews } from './vendor-reviews';
@@ -60,8 +60,7 @@ export default async function VendorTabs({ vendor, searchParams }: VendorTabsPro
         <VendorProducts vendorId={vendor.id} searchParams={searchParams} />
       </TabsContent>
       <TabsContent value="review">
-        <Suspense fallback={<LoadingSpinner />}>
-          {/* TODO: スケルトンビュー */}
+        <Suspense fallback={<VendorReviewsSkeleton />}>
           <VendorReviews vendor={vendor} searchParams={searchParams} />
         </Suspense>
       </TabsContent>

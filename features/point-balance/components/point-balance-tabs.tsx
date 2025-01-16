@@ -1,7 +1,5 @@
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
-import { Suspense } from 'react';
 import { getPointAquisitionHistory, getPointUsageHistory } from '../actions';
 import { aggregatePointAcquisitionByDate, mergePointHistory } from '../util';
 import PointExpirationEmptyView from './point-expiration-empty-view';
@@ -58,48 +56,45 @@ export async function PointBalanceTabs({ tabState }: Props) {
       <div className="relative top-[-2px] border-[1px]" />
       {tabs.map((tab) => (
         <TabsContent key={tab.value} value={tab.value} className="w-full">
-          {/* TODO: スケルトンビュー */}
-          <Suspense fallback={<LoadingSpinner />}>
-            {tab.value === 'point-history' ? (
-              <div>
-                {mergeHistoryData.length === 0 ? (
-                  <PointHistoryEmptyView />
-                ) : (
-                  <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
-                    {mergeHistoryData.map((item, index) => (
-                      <PointHistoryItem
-                        key={index}
-                        date={item.date}
-                        time={item.time}
-                        reason={item.reason}
-                        expiresAt={item.expiresAt}
-                        amount={item.amount}
-                        orderId={item.orderId}
-                        isLastItem={index === mergeHistoryData.length - 1}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                {aggregatePointAcquisitionByDateData.length === 0 ? (
-                  <PointExpirationEmptyView />
-                ) : (
-                  <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
-                    {aggregatePointAcquisitionByDateData.map((item, index) => (
-                      <PointExpirationItem
-                        key={index}
-                        date={item.date}
-                        points={item.totalAmount}
-                        isLastItem={index === aggregatePointAcquisitionByDateData.length - 1}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </Suspense>
+          {tab.value === 'point-history' ? (
+            <div>
+              {mergeHistoryData.length === 0 ? (
+                <PointHistoryEmptyView />
+              ) : (
+                <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
+                  {mergeHistoryData.map((item, index) => (
+                    <PointHistoryItem
+                      key={index}
+                      date={item.date}
+                      time={item.time}
+                      reason={item.reason}
+                      expiresAt={item.expiresAt}
+                      amount={item.amount}
+                      orderId={item.orderId}
+                      isLastItem={index === mergeHistoryData.length - 1}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              {aggregatePointAcquisitionByDateData.length === 0 ? (
+                <PointExpirationEmptyView />
+              ) : (
+                <div className="m-[16px] rounded-md bg-white-base px-[16px] shadow-sm md:px-[24px]">
+                  {aggregatePointAcquisitionByDateData.map((item, index) => (
+                    <PointExpirationItem
+                      key={index}
+                      date={item.date}
+                      points={item.totalAmount}
+                      isLastItem={index === aggregatePointAcquisitionByDateData.length - 1}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </TabsContent>
       ))}
     </Tabs>

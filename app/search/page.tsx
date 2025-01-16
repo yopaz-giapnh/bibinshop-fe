@@ -1,10 +1,11 @@
 import { SortButton } from '@/components/button/sort-button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { FiltersDisplay } from '@/components/ui/mobile/filters-display';
 import { PriceSlider } from '@/components/ui/priceSlider';
 import { getProducts } from '@/features/product/actions';
 import EmptyView from '@/features/product/components/empty-view';
 import { ProductOverview } from '@/features/product/components/product-overview';
+import { FilterFormSkeleton } from '@/features/product/components/skeletons/filter-form-skeleton';
+import { ProductsListSkeleton } from '@/features/product/components/skeletons/products-list-skeleton';
 import { getTaxons } from '@/features/taxon/actions';
 import { FilterForm } from '@/features/vendor/components/filterForm';
 import { Suspense } from 'react';
@@ -14,13 +15,12 @@ type Props = {
 };
 
 export default async function Page({ searchParams }: Props) {
-  // TODO: スケルトンビュー
   return (
     <div className="mb-6 mt-2 h-full w-full bg-white-base md:px-16">
       <div className="pt-[64px] md:pt-[170px]">
         <div className="flex flex-col md:flex-row">
           <div className="flex flex-row gap-6 bg-[#F5F6FA] md:flex-col md:bg-inherit">
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<FilterFormSkeleton />}>
               <FilterForm getTaxons={getTaxons()} />
             </Suspense>
             <PriceSlider />
@@ -29,7 +29,7 @@ export default async function Page({ searchParams }: Props) {
             </div>
           </div>
           <div className="relative mx-1 mt-2 flex-1 md:ml-14 md:mt-6">
-            <Suspense fallback={<LoadingSpinner />}>
+            <Suspense fallback={<ProductsListSkeleton />}>
               <ProductOverviewWithPagination searchParams={searchParams} />
             </Suspense>
           </div>

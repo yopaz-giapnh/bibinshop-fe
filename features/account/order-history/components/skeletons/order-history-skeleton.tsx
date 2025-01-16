@@ -28,7 +28,7 @@ export const OrderHistorySkeleton = () => (
             <span className="text-[14px] font-medium text-gray-700 md:text-[18px]">
               {tab.label}
             </span>
-            <Skeleton className="mt-1 h-8 w-16 bg-gray-200" />
+            <Skeleton className="mt-1 h-8 w-16 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
           </div>
           {index !== tabs.length - 1 && <div className="h-[60px] w-[1px] bg-gray-300" />}
         </div>

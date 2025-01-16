@@ -13,9 +13,9 @@ export const CartSkeleton = () => (
             <div className="flex items-center gap-2">
               <div className="h-5 w-5 rounded-full bg-gray-200" />
               <div className="flex items-center gap-2">
-                <Skeleton className="h-4 w-32 bg-gray-200" />
+                <Skeleton className="h-4 w-32 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
                 <div className="h-5 w-5 rounded-full bg-gray-200" />
-                <Skeleton className="h-4 w-48 bg-gray-200" />
+                <Skeleton className="h-4 w-48 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
               </div>
             </div>
           </div>
@@ -23,8 +23,8 @@ export const CartSkeleton = () => (
           {/* すべての商品 */}
           <div className="mb-4">
             <div className="flex items-center gap-2">
-              <Skeleton className="h-5 w-24 bg-gray-200" />
-              <Skeleton className="h-5 w-6 bg-gray-200" />
+              <Skeleton className="h-5 w-24 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+              <Skeleton className="h-5 w-6 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
             </div>
           </div>
 
@@ -38,7 +38,7 @@ export const CartSkeleton = () => (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="h-5 w-5 rounded-full bg-gray-200" />
-                    <Skeleton className="h-4 w-24 bg-gray-200" />
+                    <Skeleton className="h-4 w-24 animate-[pulse_1s_ease-in-out_infinite] bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
                   </div>
                   <div className="h-5 w-5 rounded-full bg-gray-200" />
                 </div>

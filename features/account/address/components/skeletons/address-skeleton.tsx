@@ -16,7 +16,7 @@ export const AddressSkeleton = () => (
 
     {/* 住所追加ボタン */}
     <div className="flex justify-center">
-      <Skeleton className="h-[50px] w-[200px] rounded-full bg-gray-200" />
+      <Skeleton className="h-[50px] w-[200px] animate-[pulse_1s_ease-in-out_infinite] rounded-full bg-gray-200 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
     </div>
 
     {/* 住所カードリスト */}

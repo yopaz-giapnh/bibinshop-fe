@@ -1,7 +1,7 @@
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getReviews } from '@/features/review/actions';
 import { AllReviewListModalWithButton } from '@/features/review/components/all-review-list-modal-with-button';
 import { ReviewListWithAvator } from '@/features/review/components/review-list-with-avator';
+import { ReviewListWithAvatorSkeleton } from '@/features/review/components/skeletons/review-list-with-avator-skeleton';
 import { Suspense } from 'react';
 
 type Props = {
@@ -18,22 +18,11 @@ export async function ProductReviewList({ productId }: Props) {
   const reviewsCount = meta?.total_count ?? 0;
 
   return (
-    <>
-      {/* TODO: スケルトンビュー */}
-      <Suspense fallback={<Loading />}>
-        <ReviewListWithAvator reviews={displayedReviews} />
-        {reviewsCount >= 3 && (
-          <AllReviewListModalWithButton reviews={reviews} reviewsCount={reviewsCount} />
-        )}
-      </Suspense>
-    </>
-  );
-}
-
-function Loading() {
-  return (
-    <div className="flex justify-center py-4">
-      <LoadingSpinner />
-    </div>
+    <Suspense fallback={<ReviewListWithAvatorSkeleton />}>
+      <ReviewListWithAvator reviews={displayedReviews} />
+      {reviewsCount >= 3 && (
+        <AllReviewListModalWithButton reviews={reviews} reviewsCount={reviewsCount} />
+      )}
+    </Suspense>
   );
 }

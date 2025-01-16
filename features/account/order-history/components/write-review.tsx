@@ -1,7 +1,7 @@
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getProducts } from '@/features/product/actions';
 import { getMyReviews } from '@/features/review/actions';
 import { Suspense } from 'react';
+import { WriteReviewFormSkeleton } from './skeletons/write-review-form-skeleton';
 import WriteReviewForm from './write-review-form';
 
 type Props = {
@@ -19,8 +19,7 @@ export default async function WriteReview({ slugs }: Props) {
   });
 
   return (
-    // TODO: スケルトンビュー
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<WriteReviewFormSkeleton />}>
       <WriteReviewForm products={products.data} reviews={reviews.data} />
     </Suspense>
   );
