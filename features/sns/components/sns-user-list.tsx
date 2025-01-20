@@ -2,7 +2,8 @@
 
 import { getUsers } from '@/features/users/actions';
 import { User } from '@/features/users/types';
-import { useEffect, useState } from 'react';
+import { debounce } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SnsListSkeleton } from './skeletons/sns-list-skeleton';
 import { SnsInputSortBar } from './sns-input-sort-bar';
 import { SnsUserListDetailCard } from './sns-user-list-detail-card';
@@ -23,72 +24,78 @@ export function SnsUserList() {
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const loadUsers = async (isInitial: boolean = false) => {
-    if (isInitial) {
-      setLoading(true);
-    } else {
-      setLoadingMore(true);
-    }
-
-    try {
-      const fetchedUsers = (await getUsers({
-        page,
-        perPage: 10,
-        sortBy,
-        filter
-      })) as User[];
-
-      const newUsers = fetchedUsers || [];
-
+  const loadUsers = useCallback(
+    async (isInitial: boolean = false) => {
       if (isInitial) {
-        setUsers(newUsers || []);
+        setLoading(true);
       } else {
-        setUsers((prev) => {
-          const existingIds = new Set(prev.map((user) => user.id));
-          const uniqueNewUsers = newUsers.filter((user) => !existingIds.has(user.id));
-          return [...prev, ...uniqueNewUsers];
-        });
+        setLoadingMore(true);
       }
 
-      // If we got less users than requested, there are no more pages
-      setHasMore((newUsers?.length || 0) === 10);
-    } catch (error) {
-      console.error('Failed to fetch users:', error);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  };
+      try {
+        const fetchedUsers = (await getUsers({
+          page,
+          perPage: 20,
+          sortBy,
+          filter
+        })) as User[];
+
+        const newUsers = fetchedUsers || [];
+
+        if (isInitial) {
+          setUsers(newUsers || []);
+        } else {
+          setUsers((prev) => {
+            const existingIds = new Set(prev.map((user) => user.id));
+            const uniqueNewUsers = newUsers.filter((user) => !existingIds.has(user.id));
+            return [...prev, ...uniqueNewUsers];
+          });
+        }
+
+        setHasMore((newUsers?.length || 0) === 20);
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [page, sortBy, filter]
+  );
 
   useEffect(() => {
     setPage(1);
     loadUsers(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy, filter]);
+  }, [sortBy, filter, loadUsers]);
 
   useEffect(() => {
     if (page > 1) {
       loadUsers();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, loadUsers]);
 
-  // Infinite scroll handler
+  const debouncedHandleScroll = useMemo(
+    () =>
+      debounce(() => {
+        if (loading || loadingMore || !hasMore) return;
+
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const threshold = document.documentElement.scrollHeight - 800;
+
+        if (scrollPosition > threshold) {
+          setPage((prev) => prev + 1);
+        }
+      }, 150),
+    [loading, loadingMore, hasMore]
+  );
+
   useEffect(() => {
-    const handleScroll = () => {
-      if (loading || loadingMore || !hasMore) return;
-
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const threshold = document.documentElement.scrollHeight - 800; // Load more when 800px from bottom
-
-      if (scrollPosition > threshold) {
-        setPage((prev) => prev + 1);
-      }
+    window.addEventListener('scroll', debouncedHandleScroll);
+    return () => {
+      debouncedHandleScroll.cancel();
+      window.removeEventListener('scroll', debouncedHandleScroll);
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, loadingMore, hasMore]);
+  }, [debouncedHandleScroll]);
 
   return (
     <>
