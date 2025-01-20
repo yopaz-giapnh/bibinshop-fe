@@ -274,11 +274,13 @@ export function ProductCard({
                 {`(${product.attributes.reviews_count})`}
               </Typography>
             </div>
-            <button
+            <motion.button
               onClick={addToCart}
               type="button"
               disabled={!available || isLoadingCart}
               className="flex items-center justify-center"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.2 }}
             >
               {isLoadingCart ? (
                 <div className="flex h-6 w-[36px] items-center justify-center rounded-full border-[1px]">
@@ -287,7 +289,7 @@ export function ProductCard({
               ) : (
                 <Cart />
               )}
-            </button>
+            </motion.button>
           </div>
         </Link>
       </motion.div>
