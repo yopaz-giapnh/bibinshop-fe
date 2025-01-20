@@ -5,6 +5,7 @@ import { Typography } from '@/components/ui/typography';
 import { logout } from '@/features/auth/actions';
 import { useIsPc } from '@/hooks/use-is-pc';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import {
   Bell,
   CircleDollarSign,
@@ -126,7 +127,9 @@ export default function AccountSideBar() {
     return (
       <div className="mt-[16px]">
         <Link href={href} passHref className="block w-full md:w-fit">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
             type="button"
             className={clsx(
               'flex w-full items-center rounded-[6px] bg-white-base p-[24px] md:w-[275px]',
@@ -135,11 +138,15 @@ export default function AccountSideBar() {
                 : 'border-[1px] border-gray-300'
             )}
           >
-            {icon}
-            <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
-              {label}
-            </Typography>
-          </button>
+            <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
+              {icon}
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
+              <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
+                {label}
+              </Typography>
+            </motion.div>
+          </motion.button>
         </Link>
       </div>
     );
@@ -149,13 +156,20 @@ export default function AccountSideBar() {
     return (
       <div className="flex w-full flex-col items-center justify-center">
         <Link href={href} passHref>
-          <button type="button" className="rounded-full bg-bibinBlue-100 p-[24px]">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.2 }}
+            type="button"
+            className="rounded-full bg-bibinBlue-100 p-[24px]"
+          >
             {icon}
-          </button>
+          </motion.button>
         </Link>
-        <Typography as="bold" element="p" className="pt-[8px] text-[16px] text-black-90">
-          {label}
-        </Typography>
+        <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
+          <Typography as="bold" element="p" className="pt-[8px] text-[16px] text-black-90">
+            {label}
+          </Typography>
+        </motion.div>
       </div>
     );
   };
@@ -191,7 +205,9 @@ function LogoutButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
       className={clsx(
         'mt-[16px] flex w-full items-center rounded-[6px] border-[1px] border-gray-300 bg-white-base p-[24px] md:w-[275px]'
       )}
@@ -200,12 +216,16 @@ function LogoutButton() {
         <LoadingSpinner />
       ) : (
         <>
-          <LogOut className="h-6 w-6" color="black" />
-          <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
-            サインアウト
-          </Typography>
+          <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
+            <LogOut className="h-6 w-6" color="black" />
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
+            <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
+              サインアウト
+            </Typography>
+          </motion.div>
         </>
       )}
-    </button>
+    </motion.button>
   );
 }
