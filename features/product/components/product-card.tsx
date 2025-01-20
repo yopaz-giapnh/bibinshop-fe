@@ -282,13 +282,33 @@ export function ProductCard({
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.2 }}
             >
-              {isLoadingCart ? (
-                <div className="flex h-6 w-[36px] items-center justify-center rounded-full border-[1px]">
-                  <LoadingSpinner size={10} />
-                </div>
-              ) : (
-                <Cart />
-              )}
+              <motion.div
+                animate={
+                  isLoadingCart
+                    ? {
+                        scale: [1, 0.9, 1],
+                        rotate: [0, 360]
+                      }
+                    : {
+                        scale: 1,
+                        rotate: 0
+                      }
+                }
+                transition={
+                  isLoadingCart
+                    ? {
+                        duration: 1,
+                        ease: 'linear',
+                        repeat: Infinity
+                      }
+                    : {
+                        duration: 0.3,
+                        ease: 'easeOut'
+                      }
+                }
+              >
+                <Cart className={isLoadingCart ? 'text-bibinBlue-100' : ''} />
+              </motion.div>
             </motion.button>
           </div>
         </Link>
