@@ -21,6 +21,7 @@ import {
 import { useAuth } from '@/hooks/use-auth';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
+import { motion } from 'framer-motion';
 import { BadgeAlert, Check, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense, useEffect, useRef, useState } from 'react';
@@ -295,11 +296,23 @@ export function ProductCartForm({ product, getCart }: Props) {
                 <LoadingSpinner size={18} />
               </div>
             ) : (
-              <Heart
-                className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
-                color={isFavorite ? 'red' : 'black'}
-                fill={isFavorite ? 'red' : 'white'}
-              />
+              <motion.div
+                whileTap={{ scale: 0.8 }}
+                animate={{
+                  scale: isFavorite ? [1, 1.2, 1] : 1,
+                  rotate: isFavorite ? [0, 15, -15, 0] : 0
+                }}
+                transition={{
+                  duration: 0.4,
+                  ease: 'easeInOut'
+                }}
+              >
+                <Heart
+                  className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
+                  color={isFavorite ? 'red' : 'black'}
+                  fill={isFavorite ? 'red' : 'white'}
+                />
+              </motion.div>
             )}
           </button>
         </div>
@@ -319,11 +332,23 @@ export function ProductCartForm({ product, getCart }: Props) {
               <LoadingSpinner size={14} />
             </div>
           ) : (
-            <Heart
-              className="h-10 w-10 rounded-full border-[1px] p-2"
-              color={isFavorite ? 'red' : 'black'}
-              fill={isFavorite ? 'red' : 'white'}
-            />
+            <motion.div
+              whileTap={{ scale: 0.8 }}
+              animate={{
+                scale: isFavorite ? [1, 1.2, 1] : 1,
+                rotate: isFavorite ? [0, 15, -15, 0] : 0
+              }}
+              transition={{
+                duration: 0.4,
+                ease: 'easeInOut'
+              }}
+            >
+              <Heart
+                className="h-10 w-10 rounded-full border-[1px] p-2"
+                color={isFavorite ? 'red' : 'black'}
+                fill={isFavorite ? 'red' : 'white'}
+              />
+            </motion.div>
           )}
         </button>
         <Link href="/cart" className="ml-2">
