@@ -304,9 +304,10 @@ export function ProductCartForm({ product, getCart }: Props) {
               <motion.div
                 whileTap={{ scale: 0.8 }}
                 animate={{
-                  scale: isFavorite ? [1, 1.2, 1] : 1,
-                  rotate: isFavorite ? [0, 15, -15, 0] : 0
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 15, -15, 0]
                 }}
+                key={isFavorite ? 'favorite' : 'unfavorite'}
                 transition={{
                   duration: 0.4,
                   ease: 'easeInOut'
@@ -345,9 +346,10 @@ export function ProductCartForm({ product, getCart }: Props) {
             <motion.div
               whileTap={{ scale: 0.8 }}
               animate={{
-                scale: isFavorite ? [1, 1.2, 1] : 1,
-                rotate: isFavorite ? [0, 15, -15, 0] : 0
+                scale: [1, 1.2, 1],
+                rotate: [0, 15, -15, 0]
               }}
+              key={isFavorite ? 'favorite' : 'unfavorite'}
               transition={{
                 duration: 0.4,
                 ease: 'easeInOut'
