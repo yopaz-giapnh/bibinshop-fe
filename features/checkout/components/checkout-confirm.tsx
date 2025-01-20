@@ -4,6 +4,7 @@ import { OrderDetailInfo } from '@/features/order/components/order-detail-info';
 import { OrderDetailOverview } from '@/features/order/components/order-detail-overview';
 import { OrderDetailPaymentMethod } from '@/features/order/components/order-detail-payment-method';
 import { redirectToTop } from '@/utils/navigation';
+import { AnimatedCheckoutContainer } from './animated-checkout-container';
 import { CheckoutConfirmForm } from './checkout-confirm-form';
 
 export default async function CheckoutConfirm() {
@@ -14,19 +15,23 @@ export default async function CheckoutConfirm() {
   }
 
   return (
-    <div className="flex w-full flex-col items-center">
-      <div className="w-full overflow-y-auto px-2 md:px-[272px]">
-        <OrderDetailOverview item={cart} />
-        <OrderDetailPaymentMethod item={cart} />
-        {cart.address && <OrderDetailAddress address={cart.address} />}
-        <OrderDetailInfo
-          lineItems={cart.lineItems}
-          vendorTotals={cart.vendorTotals}
-          variants={cart.variants}
-          images={cart.images}
-        />
+    <AnimatedCheckoutContainer>
+      <div className="flex w-full flex-1 flex-col">
+        <div className="flex-1 overflow-y-auto px-2 md:px-[272px]">
+          <OrderDetailOverview item={cart} />
+          <OrderDetailPaymentMethod item={cart} />
+          {cart.address && <OrderDetailAddress address={cart.address} />}
+          <OrderDetailInfo
+            lineItems={cart.lineItems}
+            vendorTotals={cart.vendorTotals}
+            variants={cart.variants}
+            images={cart.images}
+          />
+        </div>
+        <div className="mt-4">
+          <CheckoutConfirmForm cart={cart} />
+        </div>
       </div>
-      <CheckoutConfirmForm cart={cart} />
-    </div>
+    </AnimatedCheckoutContainer>
   );
 }
