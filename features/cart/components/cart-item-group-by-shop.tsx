@@ -40,36 +40,31 @@ export function CartItemGroupByShop({ shop, cart }: Props) {
 
   return (
     <div className="flex flex-col gap-4 rounded-[6px] bg-white-base p-4">
-      <Link href={`/vendors/${shop.id}`}>
-        <div
-          key={shop.id.toString()}
-          className="mt-[4px] flex cursor-pointer items-center md:mt-[0px]"
-        >
-          <div className="flex items-center">
-            <Store className="mr-[4px] h-[18px] w-[18px]" />
-            <Typography as="bold" element="h2" className="text-[14px] text-black-90 md:text-[18px]">
-              {shop.attributes.name}
+      <div className="mt-[4px] flex items-center md:mt-[0px]">
+        <Link href={`/vendors/${shop.id}`} className="flex items-center">
+          <Store className="mr-[4px] h-[18px] w-[18px]" />
+          <Typography as="bold" element="h2" className="text-[14px] text-black-90 md:text-[18px]">
+            {shop.attributes.name}
+          </Typography>
+        </Link>
+        {isSagawaShipping && (
+          <div className="ml-2 flex items-center">
+            <Image
+              src={'/bibin-official-badge.png'}
+              alt={'bibin official badge'}
+              width={24}
+              height={24}
+            />
+            <Typography
+              as="boldSmall"
+              element="p"
+              className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
+            >
+              送料無料対象
             </Typography>
-            {isSagawaShipping && (
-              <div className="ml-2 flex items-center">
-                <Image
-                  src={'/bibin-official-badge.png'}
-                  alt={'bibin official badge'}
-                  width={24}
-                  height={24}
-                />
-                <Typography
-                  as="boldSmall"
-                  element="p"
-                  className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
-                >
-                  送料無料対象
-                </Typography>
-              </div>
-            )}
           </div>
-        </div>
-      </Link>
+        )}
+      </div>
 
       {shop.lineItems.map((lineItem) => {
         const key = `${shop.id}-${lineItem.id}`;
