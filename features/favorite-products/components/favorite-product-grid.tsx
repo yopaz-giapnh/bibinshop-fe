@@ -18,6 +18,7 @@ export function FavoriteProductGrid({ products }: { products: Product[] }) {
       columns={4}
       products={products.filter((product) => product.id !== deletingProduct?.id)}
       deleteButtonAction={deleteButtonAction}
+      isFavoriteList={true}
     />
   );
 }

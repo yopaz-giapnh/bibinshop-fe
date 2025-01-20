@@ -290,7 +290,12 @@ export function ProductCartForm({ product, getCart }: Props) {
           <form className="hidden md:block" action={action}>
             <AddToCartButton />
           </form>
-          <button className="ml-2" onClick={onPressFavorite}>
+          <motion.button
+            className="ml-2"
+            onClick={onPressFavorite}
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.2 }}
+          >
             {isFavoriteLoading ? (
               <div className="hidden h-12 w-12 items-center justify-center rounded-full border-[1px] md:flex">
                 <LoadingSpinner size={18} />
@@ -314,7 +319,7 @@ export function ProductCartForm({ product, getCart }: Props) {
                 />
               </motion.div>
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -326,7 +331,12 @@ export function ProductCartForm({ product, getCart }: Props) {
         <form action={action} className="w-full">
           <AddToCartButton />
         </form>
-        <button className="ml-2" onClick={onPressFavorite}>
+        <motion.button
+          className="ml-2"
+          onClick={onPressFavorite}
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.2 }}
+        >
           {isFavoriteLoading ? (
             <div className="flex h-10 w-10 items-center justify-center rounded-full border-[1px]">
               <LoadingSpinner size={14} />
@@ -350,7 +360,7 @@ export function ProductCartForm({ product, getCart }: Props) {
               />
             </motion.div>
           )}
-        </button>
+        </motion.button>
         <Link href="/cart" className="ml-2">
           <ShoppingCart className="h-8 w-8" />
         </Link>

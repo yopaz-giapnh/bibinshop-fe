@@ -8,7 +8,7 @@ import { addItem } from '@/features/cart/actions';
 import Rating from '@/features/review/components/rating';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { motion } from 'framer-motion';
-import { BadgeAlert, Check, X } from 'lucide-react';
+import { BadgeAlert, Check, Heart, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
@@ -20,9 +20,15 @@ type Props = {
   product: Product;
   imageSize: number;
   deleteButtonAction?: (product: Product) => Promise<void>;
+  isFavoriteList?: boolean;
 };
 
-export function ProductCard({ product, imageSize, deleteButtonAction = undefined }: Props) {
+export function ProductCard({
+  product,
+  imageSize,
+  deleteButtonAction = undefined,
+  isFavoriteList = false
+}: Props) {
   const { toast } = useToast();
   const modalRef = useRef<ProductVariantModalRef>(null);
   const isSagawaShipping = product.vendor?.attributes.shipping_method_type === 'sagawa_system';
@@ -75,25 +81,48 @@ export function ProductCard({ product, imageSize, deleteButtonAction = undefined
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
         whileHover={{ scale: 1.02 }}
+        layout
       >
         <Link className="flex flex-col" href={`/products/${product.attributes.slug}`} passHref>
           <div className="relative">
             {deleteButtonAction && (
-              <button
-                className="bg-white absolute right-2 top-2 z-10 rounded-full text-gray-100 shadow-xl"
+              <motion.button
+                className={`absolute right-2 top-2 z-10 rounded-full text-gray-100 shadow-xl ${
+                  !isFavoriteList ? 'bg-white' : 'bg-red-500'
+                }`}
                 onClick={handleDelete}
                 disabled={isDeleting}
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
               >
                 {isDeleting ? (
-                  <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full shadow-xl md:h-[56px] md:w-[56px]">
+                  <div className="bg-white flex h-[32px] w-[32px] items-center justify-center rounded-full shadow-xl md:h-[56px] md:w-[56px]">
                     <LoadingSpinner size={24} />
                   </div>
+                ) : isFavoriteList ? (
+                  <motion.div
+                    whileTap={{ scale: 0.8 }}
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 15, -15, 0]
+                    }}
+                    transition={{
+                      duration: 0.4,
+                      ease: 'easeInOut'
+                    }}
+                  >
+                    <Heart
+                      className="text-red h-[32px] w-[32px] rounded-full p-2 shadow-xl md:h-[56px] md:w-[56px]"
+                      fill="red"
+                    />
+                  </motion.div>
                 ) : (
                   <X className="h-[32px] w-[32px] rounded-full shadow-xl md:h-[56px] md:w-[56px]" />
                 )}
-              </button>
+              </motion.button>
             )}
             <Image
               src={product.images[0]?.url || '/placeholder-product-image.png'}
