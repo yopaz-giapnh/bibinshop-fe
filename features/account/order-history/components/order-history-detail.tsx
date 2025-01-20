@@ -4,6 +4,7 @@ import { BackButton } from '@/components/button/back-button';
 import { Order } from '@/features/order/types';
 import { Review } from '@/features/review/types';
 import { OrderDetail } from '../../../order/components/order-detail';
+import { AnimatedOrderHistoryContainer } from './animated-order-history-container';
 
 type Props = {
   order: Order;
@@ -12,7 +13,7 @@ type Props = {
 
 export default function OrderHistoryDetail({ order, reviews }: Props) {
   return (
-    <>
+    <AnimatedOrderHistoryContainer>
       <div className="mb-[16px] flex w-full items-center justify-between md:mb-[24px] md:justify-center">
         <BackButton />
         <Typography
@@ -31,6 +32,6 @@ export default function OrderHistoryDetail({ order, reviews }: Props) {
           reviews={reviews}
         />
       )}
-    </>
+    </AnimatedOrderHistoryContainer>
   );
 }
