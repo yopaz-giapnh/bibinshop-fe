@@ -73,6 +73,7 @@ export function QuantityAdjustmentButtons({
     <div className="flex items-center gap-[9px]">
       <motion.button
         whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1 }}
         className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
         type="button"
         onClick={handleDecrease}
@@ -98,6 +99,7 @@ export function QuantityAdjustmentButtons({
       </div>
       <motion.button
         whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1 }}
         className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
         type="button"
         onClick={handleIncrease}
