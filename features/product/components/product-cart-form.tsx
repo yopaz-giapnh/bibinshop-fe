@@ -21,6 +21,7 @@ import {
 import { useAuth } from '@/hooks/use-auth';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
+import { motion } from 'framer-motion';
 import { BadgeAlert, Check, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense, useEffect, useRef, useState } from 'react';
@@ -128,25 +129,31 @@ export function ProductCartForm({ product, getCart }: Props) {
 
     if (!selectedVariant) return;
 
-    setIsFavoriteLoading(true);
+    setIsFavorite(!isFavorite);
 
-    // SC側のrevalidateをまたずに、お気に入りは、楽観的更新を行う
-    if (isFavorite) {
-      setIsFavorite(false);
-      await removeFromFavorite(selectedVariant.id);
+    try {
+      if (isFavorite) {
+        toast({
+          title: 'お気に入りから削除しました',
+          icon: <Check className="h-6 w-6" />
+        });
+        await removeFromFavorite(selectedVariant.id);
+      } else {
+        toast({
+          title: 'お気に入りに追加しました',
+          icon: <Check className="h-6 w-6" />
+        });
+        await addToFavorite(selectedVariant.id);
+      }
+    } catch (error) {
+      // エラー時は状態を元に戻す
+      setIsFavorite(isFavorite);
       toast({
-        title: 'お気に入りから削除しました',
-        icon: <Check className="h-6 w-6" />
-      });
-    } else {
-      setIsFavorite(true);
-      await addToFavorite(selectedVariant.id);
-      toast({
-        title: 'お気に入りに追加しました',
-        icon: <Check className="h-6 w-6" />
+        title: 'エラーが発生しました',
+        className: 'bg-error',
+        icon: <BadgeAlert className="h-6 w-6" />
       });
     }
-    setIsFavoriteLoading(false);
   };
 
   const handleOptionClick = (clickedOptionId: string) => {
@@ -283,19 +290,37 @@ export function ProductCartForm({ product, getCart }: Props) {
           <form className="hidden md:block" action={action}>
             <AddToCartButton />
           </form>
-          <button className="ml-2" onClick={onPressFavorite}>
+          <motion.button
+            className="ml-2"
+            onClick={onPressFavorite}
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.2 }}
+          >
             {isFavoriteLoading ? (
               <div className="hidden h-12 w-12 items-center justify-center rounded-full border-[1px] md:flex">
                 <LoadingSpinner size={18} />
               </div>
             ) : (
-              <Heart
-                className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
-                color={isFavorite ? 'red' : 'black'}
-                fill={isFavorite ? 'red' : 'white'}
-              />
+              <motion.div
+                whileTap={{ scale: 0.8 }}
+                animate={{
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 15, -15, 0]
+                }}
+                key={isFavorite ? 'favorite' : 'unfavorite'}
+                transition={{
+                  duration: 0.4,
+                  ease: 'easeInOut'
+                }}
+              >
+                <Heart
+                  className="hidden h-12 w-12 rounded-full border-[1px] p-2 md:flex"
+                  color={isFavorite ? 'red' : 'black'}
+                  fill={isFavorite ? 'red' : 'white'}
+                />
+              </motion.div>
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -307,19 +332,37 @@ export function ProductCartForm({ product, getCart }: Props) {
         <form action={action} className="w-full">
           <AddToCartButton />
         </form>
-        <button className="ml-2" onClick={onPressFavorite}>
+        <motion.button
+          className="ml-2"
+          onClick={onPressFavorite}
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.2 }}
+        >
           {isFavoriteLoading ? (
             <div className="flex h-10 w-10 items-center justify-center rounded-full border-[1px]">
               <LoadingSpinner size={14} />
             </div>
           ) : (
-            <Heart
-              className="h-10 w-10 rounded-full border-[1px] p-2"
-              color={isFavorite ? 'red' : 'black'}
-              fill={isFavorite ? 'red' : 'white'}
-            />
+            <motion.div
+              whileTap={{ scale: 0.8 }}
+              animate={{
+                scale: [1, 1.2, 1],
+                rotate: [0, 15, -15, 0]
+              }}
+              key={isFavorite ? 'favorite' : 'unfavorite'}
+              transition={{
+                duration: 0.4,
+                ease: 'easeInOut'
+              }}
+            >
+              <Heart
+                className="h-10 w-10 rounded-full border-[1px] p-2"
+                color={isFavorite ? 'red' : 'black'}
+                fill={isFavorite ? 'red' : 'white'}
+              />
+            </motion.div>
           )}
-        </button>
+        </motion.button>
         <Link href="/cart" className="ml-2">
           <ShoppingCart className="h-8 w-8" />
         </Link>

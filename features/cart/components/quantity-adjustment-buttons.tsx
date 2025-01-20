@@ -1,8 +1,8 @@
 'use client';
 
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Typography } from '@/components/ui/typography';
 import { useToast } from '@/components/ui/use-toast';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
 
@@ -20,6 +20,7 @@ export function QuantityAdjustmentButtons({
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(initialQuantity);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isIncreasing, setIsIncreasing] = useState(false);
   const maxQuantity = 23;
   const minQuantity = 1;
   const isAtMinimum = quantity <= minQuantity;
@@ -41,6 +42,7 @@ export function QuantityAdjustmentButtons({
       });
       return;
     }
+    setIsIncreasing(true);
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
     setIsUpdating(true);
@@ -55,6 +57,7 @@ export function QuantityAdjustmentButtons({
   const handleDecrease = async () => {
     if (isUpdating || isAtMinimum) return;
 
+    setIsIncreasing(false);
     const newQuantity = quantity - 1;
     setQuantity(newQuantity);
     setIsUpdating(true);
@@ -68,7 +71,9 @@ export function QuantityAdjustmentButtons({
 
   return (
     <div className="flex items-center gap-[9px]">
-      <button
+      <motion.button
+        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1 }}
         className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
         type="button"
         onClick={handleDecrease}
@@ -76,17 +81,25 @@ export function QuantityAdjustmentButtons({
         style={{ opacity: isAtMinimum || isUpdating ? 0.5 : 1 }}
       >
         <Minus className="h-5 w-5 text-black-30" />
-      </button>
-      <div className="flex w-[30px] items-center justify-center">
-        {isUpdating ? (
-          <LoadingSpinner size={16} />
-        ) : (
-          <Typography as="boldSmall" element="p" className="text-black-100 text-center">
-            {quantity}
-          </Typography>
-        )}
+      </motion.button>
+      <div className="flex w-[30px] items-center justify-center overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={quantity}
+            initial={{ y: isIncreasing ? -20 : 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: isIncreasing ? 20 : -20, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Typography as="boldSmall" element="p" className="text-black-100 text-center">
+              {quantity}
+            </Typography>
+          </motion.div>
+        </AnimatePresence>
       </div>
-      <button
+      <motion.button
+        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1 }}
         className="flex h-8 w-8 items-center justify-center rounded-[16px] bg-powderBlue"
         type="button"
         onClick={handleIncrease}
@@ -101,7 +114,7 @@ export function QuantityAdjustmentButtons({
         }}
       >
         <Plus className="h-5 w-5 text-black-80" />
-      </button>
+      </motion.button>
     </div>
   );
 }

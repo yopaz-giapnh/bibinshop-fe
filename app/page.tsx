@@ -28,21 +28,27 @@ export default async function Page() {
         <Suspense fallback={<TaxonListSkeleton />}>
           <TaxonList />
         </Suspense>
-        <Link href={'/sns'} passHref className="mt-[24px]">
-          <Image
-            src={'/sns-banner-pc.png'}
-            alt={'sms banner'}
-            width={1060}
-            height={130}
-            className="hidden md:block"
-          />
-          <Image
-            src={'/sns-banner-sp.png'}
-            alt={'sms banner'}
-            width={344}
-            height={130}
-            className="md:hidden"
-          />
+        <Link href={'/sns'} passHref className="mt-[24px] block">
+          <div className="relative overflow-hidden">
+            <Image
+              src={'/sns-banner-pc.png'}
+              alt={'sms banner'}
+              width={1060}
+              height={130}
+              className="hidden transform transition-transform duration-1000 animate-in fade-in hover:scale-105 md:block"
+              loading="eager"
+              priority
+            />
+            <Image
+              src={'/sns-banner-sp.png'}
+              alt={'sms banner'}
+              width={344}
+              height={130}
+              className="block transform transition-transform duration-1000 animate-in fade-in hover:scale-105 md:hidden"
+              loading="eager"
+              priority
+            />
+          </div>
         </Link>
         <div className="flex w-full flex-col">
           <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">

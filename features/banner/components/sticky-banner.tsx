@@ -12,6 +12,7 @@ import {
   SkinConcern,
   SkinType
 } from '@/features/sns/utils';
+import { AnimatePresence, motion } from 'framer-motion';
 import { BadgeAlert, Check } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -107,32 +108,40 @@ export function StickyBanner({ isSignedIn }: Props) {
 
   return (
     <>
-      {open && (
-        <div className="fixed bottom-0 left-0 right-0 flex justify-center sm:justify-end">
-          <button
-            className="h-10 w-10"
-            style={{ position: 'absolute', top: 0, right: 0 }}
-            onClick={() => setOpen(false)}
-          />
-          <button
-            onClick={() => {
-              if (!isSignedIn) {
-                router.replace('/login');
-                return;
-              }
-              setOpenProfileFormModal(true);
-            }}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed bottom-0 left-0 right-0 flex justify-center sm:justify-end"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
           >
-            <Image
-              src={'/sticky_banner.png'}
-              alt={'sticky banner'}
-              width={344}
-              height={130}
-              style={{ width: '100%', height: 'auto' }}
+            <button
+              className="h-10 w-10"
+              style={{ position: 'absolute', top: 0, right: 0 }}
+              onClick={() => setOpen(false)}
             />
-          </button>
-        </div>
-      )}
+            <button
+              onClick={() => {
+                if (!isSignedIn) {
+                  router.replace('/login');
+                  return;
+                }
+                setOpenProfileFormModal(true);
+              }}
+            >
+              <Image
+                src={'/sticky_banner.png'}
+                alt={'sticky banner'}
+                width={344}
+                height={130}
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <ProfileFormModal
         isOpen={openProfileFormModal}
         setIsOpen={setOpenProfileFormModal}

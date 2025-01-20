@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { getProduct } from '@/features/product/actions';
+import { AnimatedProductContainer } from '@/features/product/components/animated-product-container';
 import { ProductDetail } from '@/features/product/components/product-detail';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -37,11 +38,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
   ];
 
   return (
-    <div className="h-full w-full bg-white-base pb-6 md:px-16">
-      <div className="pt-[80px] md:pt-[150px]">
-        <Breadcrumb menus={menus} />
-        <ProductDetail product={product} />
+    <AnimatedProductContainer>
+      <div className="h-full w-full bg-white-base pb-6 md:px-16">
+        <div className="pt-[80px] md:pt-[150px]">
+          <Breadcrumb menus={menus} />
+          <ProductDetail product={product} />
+        </div>
       </div>
-    </div>
+    </AnimatedProductContainer>
   );
 }

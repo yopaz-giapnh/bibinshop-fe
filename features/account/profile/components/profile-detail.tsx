@@ -5,6 +5,7 @@ import { UserDetailTabs } from '@/features/sns/components/user-detail-tabs';
 import { getConcernTags } from '@/features/sns/utils';
 import Image from 'next/image';
 import { getAccount } from '../actions';
+import { AnimatedProfileContainer } from './animated-profile-container';
 import ProfileEditModal from './profile-edit-modal';
 
 type Props = {
@@ -61,69 +62,71 @@ export default async function ProfileDetail({ isSpHomeProfile = false, searchPar
   });
 
   return (
-    <div className="h-full">
-      <div className="flex h-[90px] pl-[16px] md:ml-[24px] md:mr-0 md:h-fit md:justify-normal md:pl-0">
-        <div className="relative h-[84px] w-[88px] rounded-full border border-gray-200 md:h-[154px] md:w-[160px]">
-          <Image
-            src={avatarUrl}
-            className="h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]"
-            fill
-            alt={'avatar'}
-            objectFit="cover"
-          />
-        </div>
-        <div className="ml-[16px] flex flex-col items-start justify-between">
-          <div className="items-center md:flex">
-            <Typography
-              as="bold"
-              element="p"
-              className="max-w-[110px] overflow-hidden whitespace-normal break-words pb-[8px] text-[20px] text-black-90 md:max-w-full md:pb-0 md:pr-[16px]"
-              style={{
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 1,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
-              {nickname}
-            </Typography>
-            <ProfileEditModal
-              account={account}
-              skinTags={skinTags}
-              hairTags={hairTags}
-              concerns={concerns || undefined}
+    <AnimatedProfileContainer>
+      <div className="h-full">
+        <div className="flex h-[90px] pl-[16px] md:ml-[24px] md:mr-0 md:h-fit md:justify-normal md:pl-0">
+          <div className="relative h-[84px] w-[88px] rounded-full border border-gray-200 md:h-[154px] md:w-[160px]">
+            <Image
+              src={avatarUrl}
+              className="h-[84px] w-[88px] rounded-full md:h-[154px] md:w-[160px]"
+              fill
+              alt={'avatar'}
+              objectFit="cover"
             />
           </div>
-          <div className="mt-[8px] hidden md:block">
-            <UserDetailProfileStats
-              reviewsCount={reviewsCount}
-              followersCount={followersCount}
-              receivedFeedbackReviewsCount={receivedFeedbackReviewsCount}
-              followeesCount={followeesCount}
-              uniqueKey={userUniqueKey}
-              tags={allTags}
-              socialLinks={socialLinks}
-            />
+          <div className="ml-[16px] flex flex-col items-start justify-between">
+            <div className="items-center md:flex">
+              <Typography
+                as="bold"
+                element="p"
+                className="max-w-[110px] overflow-hidden whitespace-normal break-words pb-[8px] text-[20px] text-black-90 md:max-w-full md:pb-0 md:pr-[16px]"
+                style={{
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 1,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {nickname}
+              </Typography>
+              <ProfileEditModal
+                account={account}
+                skinTags={skinTags}
+                hairTags={hairTags}
+                concerns={concerns || undefined}
+              />
+            </div>
+            <div className="mt-[8px] hidden md:block">
+              <UserDetailProfileStats
+                reviewsCount={reviewsCount}
+                followersCount={followersCount}
+                receivedFeedbackReviewsCount={receivedFeedbackReviewsCount}
+                followeesCount={followeesCount}
+                uniqueKey={userUniqueKey}
+                tags={allTags}
+                socialLinks={socialLinks}
+              />
+            </div>
           </div>
         </div>
+        {!isSpHomeProfile && (
+          <>
+            <div className="mt-[16px] flex flex-col items-center md:hidden">
+              <UserDetailProfileStats
+                reviewsCount={reviewsCount}
+                followersCount={followersCount}
+                followeesCount={followeesCount}
+                receivedFeedbackReviewsCount={receivedFeedbackReviewsCount}
+                uniqueKey={userUniqueKey}
+                tags={allTags}
+                socialLinks={socialLinks}
+              />
+            </div>
+            <UserDetailTabs tabState={tabState} currentPage={currentPage} userDetail={account} />
+          </>
+        )}
       </div>
-      {!isSpHomeProfile && (
-        <>
-          <div className="mt-[16px] flex flex-col items-center md:hidden">
-            <UserDetailProfileStats
-              reviewsCount={reviewsCount}
-              followersCount={followersCount}
-              followeesCount={followeesCount}
-              receivedFeedbackReviewsCount={receivedFeedbackReviewsCount}
-              uniqueKey={userUniqueKey}
-              tags={allTags}
-              socialLinks={socialLinks}
-            />
-          </div>
-          <UserDetailTabs tabState={tabState} currentPage={currentPage} userDetail={account} />
-        </>
-      )}
-    </div>
+    </AnimatedProfileContainer>
   );
 }

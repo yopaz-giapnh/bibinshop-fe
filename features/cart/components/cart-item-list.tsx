@@ -125,7 +125,7 @@ export function CartItemList({ cart }: Props) {
       )}
       <label
         key="all"
-        className="flex cursor-pointer items-center rounded-[6px] bg-white-base px-[11px] py-[10px] shadow-base"
+        className="flex items-center rounded-[6px] bg-white-base px-[11px] py-[10px] shadow-base"
       >
         <Typography
           as="boldTitle"

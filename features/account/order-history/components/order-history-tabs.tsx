@@ -5,6 +5,7 @@ import { getMyReviews } from '@/features/review/actions';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getAccountOrders } from '../actions';
+import { AnimatedOrderHistoryContainer } from './animated-order-history-container';
 import { OrderHistoryTabContent } from './order-history-tab-content';
 import { OrderHistoryTabContentSkeleton } from './skeletons/order-history-tab-content-skeleton';
 
@@ -44,7 +45,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
   };
 
   return (
-    <>
+    <AnimatedOrderHistoryContainer>
       <div className="mb-[24px] flex w-full items-center justify-between md:justify-center">
         <BackButton />
         <Typography
@@ -105,6 +106,6 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
           </TabsContent>
         ))}
       </Tabs>
-    </>
+    </AnimatedOrderHistoryContainer>
   );
 }

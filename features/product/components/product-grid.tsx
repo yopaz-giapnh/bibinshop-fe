@@ -2,6 +2,7 @@
 
 import { useIsPc } from '@/hooks/use-is-pc';
 import { useWindowSize } from '@/hooks/use-window-size';
+import { AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { ComponentProps, ReactNode, useCallback } from 'react';
 import { Product } from '../types';
@@ -10,9 +11,15 @@ import { ProductCard } from './product-card';
 type Props = {
   columns: 4 | 5;
   deleteButtonAction?: (product: Product) => Promise<void>;
+  isFavoriteList?: boolean;
 } & { products: ComponentProps<typeof ProductCard>['product'][] };
 
-export function ProductGrid({ columns, products, deleteButtonAction = undefined }: Props) {
+export function ProductGrid({
+  columns,
+  products,
+  deleteButtonAction = undefined,
+  isFavoriteList = false
+}: Props) {
   const router = useRouter();
   const { width } = useWindowSize();
   const imageSize = width / columns;
@@ -28,16 +35,17 @@ export function ProductGrid({ columns, products, deleteButtonAction = undefined 
 
   return (
     <Wrapper columns={columns}>
-      {products.map((product) => {
-        return (
+      <AnimatePresence mode="popLayout">
+        {products.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
             imageSize={isPc ? imageSize : spImageSize}
             deleteButtonAction={deleteButtonAction ? deletAction : undefined}
+            isFavoriteList={isFavoriteList}
           />
-        );
-      })}
+        ))}
+      </AnimatePresence>
     </Wrapper>
   );
 }
