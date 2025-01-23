@@ -35,7 +35,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
   showKonbiniMessage
 }) => {
   const shipment = order.shipments[index];
-  const shipmentTrackerNumber = shipment?.attributes.number ?? '';
+  const shipmentTrackerNumber = shipment?.attributes.tracking ?? '';
   const groupSlugs = extractSlugs([group]).filter((slug): slug is string => slug !== undefined);
 
   const isReviewed = group.items.some((item) =>
