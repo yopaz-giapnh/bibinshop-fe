@@ -6,3 +6,4 @@ export const ROUTES = {
 export const MOBILE_SCHEME = 'exp+bibin-shop-native://';
 
 export const REDIRECT_TO_SIGNUP_PATH = 'signup';
+export const REDIRECT_TO_PASSWORD_RESET_PATH = 'mobile/password/change';
