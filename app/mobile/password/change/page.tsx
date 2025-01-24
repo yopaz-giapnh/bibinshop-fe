@@ -14,7 +14,7 @@ export default function Page() {
       return;
     }
 
-    window.location.href = `${MOBILE_SCHEME}${REDIRECT_TO_PASSWORD_RESET_PATH}?reset_password_token=${resetPasswordToken}`;
+    window.location.href = `${MOBILE_SCHEME}${REDIRECT_TO_PASSWORD_RESET_PATH}?resetPasswordToken=${resetPasswordToken}`;
     router.replace('/');
   }, [resetPasswordToken, router]);
 
