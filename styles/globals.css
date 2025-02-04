@@ -88,3 +88,110 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* リッチテキストコンテンツのスタイル */
+.rich-text-content {
+  /* デフォルトのテキストスタイル */
+  font-family: inherit;
+  line-height: 1.6;
+  color: inherit;
+}
+
+/* 見出し */
+.rich-text-content h1 {
+  font-size: 2em !important;
+  font-weight: bold !important;
+  margin: 0.67em 0 !important;
+}
+
+.rich-text-content h2 {
+  font-size: 1.5em !important;
+  font-weight: bold !important;
+  margin: 0.83em 0 !important;
+}
+
+.rich-text-content h3 {
+  font-size: 1.17em !important;
+  font-weight: bold !important;
+  margin: 1em 0 !important;
+}
+
+/* 段落 */
+.rich-text-content p {
+  margin: 1em 0 !important;
+  font-size: 1em !important;
+}
+
+/* リスト */
+.rich-text-content ul,
+.rich-text-content ol {
+  padding-left: 2em !important;
+  margin: 1em 0 !important;
+}
+
+.rich-text-content li {
+  margin: 0.5em 0 !important;
+}
+
+/* インライン要素 */
+.rich-text-content strong,
+.rich-text-content b {
+  font-weight: bold !important;
+}
+
+.rich-text-content em,
+.rich-text-content i {
+  font-style: italic !important;
+}
+
+/* リンク */
+.rich-text-content a {
+  color: #0066cc !important;
+  text-decoration: underline !important;
+}
+
+.rich-text-content a:hover {
+  text-decoration: none !important;
+}
+
+/* 引用 */
+.rich-text-content blockquote {
+  margin: 1em 0 !important;
+  padding: 0.5em 1em !important;
+  border-left: 4px solid #ccc !important;
+  background-color: #f9f9f9 !important;
+}
+
+/* コード */
+.rich-text-content pre,
+.rich-text-content code {
+  font-family: monospace !important;
+  background-color: #f5f5f5 !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 3px !important;
+}
+
+/* 画像 */
+.rich-text-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 1em 0 !important;
+}
+
+/* テーブル */
+.rich-text-content table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 1em 0 !important;
+}
+
+.rich-text-content th,
+.rich-text-content td {
+  border: 1px solid #ddd !important;
+  padding: 8px !important;
+  text-align: left !important;
+}
+
+.rich-text-content th {
+  background-color: #f5f5f5 !important;
+}

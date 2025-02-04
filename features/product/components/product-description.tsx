@@ -51,7 +51,7 @@ export function ProductDescription({ product }: Props) {
         <div className="mt-2">
           <div
             ref={descriptionRef}
-            className={`overflow-hidden transition-all duration-300 ${
+            className={`rich-text-content overflow-hidden transition-all duration-300 ${
               isExpanded ? 'max-h-full' : 'max-h-[4.5em]'
             }`}
             dangerouslySetInnerHTML={{ __html: product.attributes.description }}
