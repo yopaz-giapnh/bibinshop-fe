@@ -8,15 +8,30 @@ import { useState } from 'react';
 const components: { title: string; links: { label: string; href?: string }[] }[] = [
   {
     title: 'bibinについて',
-    links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
+    links: [
+      // TODO: リンク先を変更する
+      { label: 'リンク1', href: '/' },
+      { label: 'リンク2' },
+      { label: 'リンク3' }
+    ]
   },
   {
     title: 'カスタマサービス',
-    links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
+    links: [
+      // TODO: リンク先を変更する
+      { label: 'リンク1', href: '/' },
+      { label: 'リンク2' },
+      { label: 'リンク3' }
+    ]
   },
   {
     title: 'ヘルプ',
-    links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
+    links: [
+      // TODO: リンク先を変更する
+      { label: 'リンク1', href: '/' },
+      { label: 'リンク2' },
+      { label: 'リンク3' }
+    ]
   },
   {
     title: '会社情報',
@@ -28,7 +43,12 @@ const components: { title: string; links: { label: string; href?: string }[] }[]
   },
   {
     title: 'サービス',
-    links: [{ label: 'リンク1', href: '/about' }, { label: 'リンク2' }, { label: 'リンク3' }]
+    links: [
+      // TODO: リンク先を変更する
+      { label: 'リンク1', href: '/' },
+      { label: 'リンク2' },
+      { label: 'リンク3' }
+    ]
   }
 ];
 
