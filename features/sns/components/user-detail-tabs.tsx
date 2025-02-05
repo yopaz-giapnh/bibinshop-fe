@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Pagination from '@/features/pagination/components/pagination';
 import { getPurchasedProducts, getTaxonId } from '@/features/product/actions';
-import { ProductOverviewServer } from '@/features/product/components/product-overview-server';
+import { ProductOverview } from '@/features/product/components/product-overview';
 import { getReviews } from '@/features/review/actions';
 import { User } from '@/features/users/types';
 import { BriefcaseBusiness, MessageSquareHeart } from 'lucide-react';
@@ -96,7 +96,7 @@ export async function UserDetailTabs({ currentPage, tabState, userDetail }: Prop
                 {purchasedProducts.data.length === 0 ? (
                   <ProfileProductEmptyView />
                 ) : (
-                  <ProductOverviewServer
+                  <ProductOverview
                     products={purchasedProducts.data}
                     columns={4}
                     totalPages={purchasedProducts.meta.total_pages}

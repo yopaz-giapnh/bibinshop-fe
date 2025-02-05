@@ -1,5 +1,5 @@
 import { getProductsOnTaxons, getRecommendedProducts, getTaxonId } from '../actions';
-import { ProductOverviewServer } from './product-overview-server';
+import { ProductOverview } from './product-overview';
 
 type Props = {
   title: string;
@@ -27,7 +27,7 @@ export async function ProductOverviewByTaxon({ title, seeMoreUrl }: Props) {
   }
 
   return (
-    <ProductOverviewServer
+    <ProductOverview
       title={title}
       products={products.data}
       columns={5}
