@@ -83,36 +83,57 @@ export async function getProduct(product_slug: string) {
   });
 }
 
-export async function getProductsOnTaxons(taxonIds: string[], page?: string, sort_by?: string) {
-  const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
-    params: {
-      query: {
-        'filter[taxons]': taxonIds.join(','),
-        page: Number(page || 1),
-        include:
-          'images,vendor,product_properties,default_variant,option_types,option_types.option_values',
-        'filter[in_stock]': true,
-        ...(sort_by && { sort_by })
+export async function getProductsOnTaxons(
+  taxonIds: string[],
+  page?: string,
+  sort_by?: string,
+  fetchOptions?: RequestInit
+) {
+  try {
+    const { data, error } = await apiClient.GET('/api/v2/storefront/products', {
+      params: {
+        query: {
+          'filter[taxons]': taxonIds.join(','),
+          page: Number(page || 1),
+          include:
+            'images,vendor,product_properties,default_variant,option_types,option_types.option_values',
+          'filter[in_stock]': true,
+          ...(sort_by && { sort_by })
+        }
+      },
+      fetch: (request) => {
+        return fetch(request, {
+          ...fetchOptions,
+          next: {
+            tags: [TAGS.products],
+            revalidate: 60,
+            ...fetchOptions?.next
+          }
+        });
       }
-    },
-    fetch: (request) => {
-      return fetch(request, { next: { tags: [TAGS.products] }, cache: 'no-store' });
+    });
+
+    if (error) {
+      console.error('API Error:', error);
+      return { data: [], meta: { total_pages: 1 } };
     }
-  });
 
-  if (error) {
-    throw error;
+    if (!data || !data.data) {
+      console.error('Invalid API response:', data);
+      return { data: [], meta: { total_pages: 1 } };
+    }
+
+    return {
+      data: reshapeProducts({
+        products: data.data,
+        productIncluded: data.included || []
+      }),
+      meta: data.meta || { total_pages: 1 }
+    };
+  } catch (error) {
+    console.error('Error in getProductsOnTaxons:', error);
+    return { data: [], meta: { total_pages: 1 } };
   }
-
-  const { data: products, included: productIncluded, meta } = data;
-
-  return {
-    data: reshapeProducts({
-      products,
-      productIncluded
-    }),
-    meta
-  };
 }
 
 export async function getRecommendedProducts(page?: string) {
