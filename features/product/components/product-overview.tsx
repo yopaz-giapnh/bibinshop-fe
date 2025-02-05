@@ -1,7 +1,8 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
-import * as session from '@/features/auth/utils/session';
 import Pagination from '@/features/pagination/components/pagination';
 import Link from 'next/link';
 import { ComponentProps } from 'react';
@@ -14,11 +15,17 @@ type Props = {
   products: Product[];
   seeMoreUrl?: string;
   totalPages?: number;
+  isSignedIn: boolean;
 } & Pick<ComponentProps<typeof ProductGrid>, 'columns'>;
 
-export async function ProductOverview({ title, seeMoreUrl, products, columns, totalPages }: Props) {
-  const isSignedIn = await session.isSignedIn();
-
+export function ProductOverview({
+  title,
+  seeMoreUrl,
+  products,
+  columns,
+  totalPages,
+  isSignedIn
+}: Props) {
   return (
     <div className="z-0 flex flex-col items-center gap-4">
       {title && (
