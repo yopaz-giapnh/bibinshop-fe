@@ -3,7 +3,7 @@ import { FiltersDisplay } from '@/components/ui/mobile/filters-display';
 import { PriceSlider } from '@/components/ui/priceSlider';
 import { getProducts } from '@/features/product/actions';
 import EmptyView from '@/features/product/components/empty-view';
-import { ProductOverview } from '@/features/product/components/product-overview';
+import { ProductOverviewServer } from '@/features/product/components/product-overview-server';
 import { FilterFormSkeleton } from '@/features/product/components/skeletons/filter-form-skeleton';
 import { ProductsListSkeleton } from '@/features/product/components/skeletons/products-list-skeleton';
 import { getTaxons } from '@/features/taxon/actions';
@@ -66,7 +66,7 @@ async function ProductOverviewWithPagination({ searchParams }: Props) {
       <FiltersDisplay taxons={taxons} prices={prices} getTaxons={getTaxons()} />
       {products.data.length ? (
         <div className="mt-6">
-          <ProductOverview products={products.data} columns={4} totalPages={totalPages} />
+          <ProductOverviewServer products={products.data} columns={4} totalPages={totalPages} />
         </div>
       ) : (
         <div className="mt-6 flex h-full w-full items-center justify-center">
