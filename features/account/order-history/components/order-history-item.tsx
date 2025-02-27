@@ -1,8 +1,10 @@
 import { Typography } from '@/components/ui/typography';
 import { LineItem } from '@/features/cart/types';
 import { ImageSchema } from '@/features/product/types';
+import { Review } from '@/features/review/types';
 import Image from 'next/image';
 import BuyAgainModal from './buy-again-modal';
+import { ProductReviewButton } from './product-review-button';
 
 type OrderHistoryItemProps = {
   item: LineItem;
@@ -10,6 +12,8 @@ type OrderHistoryItemProps = {
   status?: string;
   showBuyAgain?: boolean;
   showPrice?: boolean;
+  reviews?: Review[];
+  showReviewButton?: boolean;
 };
 
 /**
@@ -20,11 +24,17 @@ export default function OrderHistoryItem({
   item,
   image,
   status,
-  showBuyAgain = true
+  showBuyAgain = true,
+  reviews,
+  showReviewButton = false
 }: OrderHistoryItemProps) {
   const isUnpaid = status === '発送予定';
   const variantId = item.relationships.variant?.data?.id;
   const imageUrl = image?.attributes.styles?.[image?.attributes.styles?.length - 1].url;
+
+  const isReviewed = reviews?.some(
+    (review) => review.relationships.product?.data?.id === item.relationships.variant?.data?.id
+  );
 
   return (
     <div className="flex py-[16px]">
@@ -67,13 +77,22 @@ export default function OrderHistoryItem({
             {item.attributes.display_price}
           </Typography>
         </div>
-        {!isUnpaid && !!variantId && showBuyAgain && (
-          <BuyAgainModal
-            variantIds={[variantId]}
-            buttonStyle="md:w-[105px] md:h-[30px] w-[80px] h-[25px]"
-            buttonTextStyle="text-[12px] text-white-base"
-          />
-        )}
+        <div className="flex flex-wrap gap-2">
+          {showReviewButton && item.attributes.slug && (
+            <ProductReviewButton
+              slug={item.attributes.slug}
+              isReviewed={!!isReviewed}
+              className="h-[25px] md:h-[30px]"
+            />
+          )}
+          {!isUnpaid && !!variantId && showBuyAgain && (
+            <BuyAgainModal
+              variantIds={[variantId]}
+              buttonStyle="md:w-[105px] md:h-[30px] w-[80px] h-[25px]"
+              buttonTextStyle="text-[12px] text-white-base"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
