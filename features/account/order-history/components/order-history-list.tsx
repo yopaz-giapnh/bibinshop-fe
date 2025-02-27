@@ -19,9 +19,14 @@ import { OrderTrackerModal, OrderTrackerModalRef } from './order-tracker-modal';
 type OrderHistoryListProps = {
   order: Order;
   reviews: Review[];
+  showProductReviewButtons?: boolean;
 };
 
-export default function OrderHistoryList({ order, reviews }: OrderHistoryListProps) {
+export default function OrderHistoryList({
+  order,
+  reviews,
+  showProductReviewButtons = true
+}: OrderHistoryListProps) {
   const orderReceiptConfirmModalRef = useRef<OrderReceiptConfirmModalRef>(null);
   const tryReviewWriteModalRef = useRef<TryReviewWriteModalRef>(null);
   const orderTrackerModalRef = useRef<OrderTrackerModalRef>(null);
@@ -58,6 +63,7 @@ export default function OrderHistoryList({ order, reviews }: OrderHistoryListPro
                 handleShowShippingInfo={handleShowShippingInfo}
                 reviews={reviews}
                 showKonbiniMessage
+                showProductReviewButtons={showProductReviewButtons}
               />
             ))}
           </div>

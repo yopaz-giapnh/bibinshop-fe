@@ -21,6 +21,7 @@ type OrderHistoryListItemProps = {
   handleShowShippingInfo: (trackingNumber: string) => void;
   reviews?: Review[];
   showKonbiniMessage?: boolean;
+  showProductReviewButtons?: boolean;
 };
 
 const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
@@ -32,7 +33,8 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
   orderReceiptConfirmModalRef,
   handleShowShippingInfo,
   reviews,
-  showKonbiniMessage
+  showKonbiniMessage,
+  showProductReviewButtons = false
 }) => {
   const shipment = order.shipments[index];
   const shipmentTrackerNumber = shipment?.attributes.tracking ?? '';
@@ -52,6 +54,9 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
     : '';
   const isPaid = order.attributes.payment_state === 'paid';
   const isDisplayKonbiniMessage = !!order.konbini && !isPaid && !!showKonbiniMessage;
+
+  // 配送済みまたは配送完了の場合のみレビューボタンを表示
+  const canShowReviewButton = group.state === 'shipped' || group.state === 'delivered';
 
   return (
     <div className="flex flex-col">
@@ -105,6 +110,8 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
                 image={image}
                 status={getShipmentStateTitle(order) ?? undefined}
                 showPrice={false}
+                reviews={reviews}
+                showReviewButton={showProductReviewButtons && canShowReviewButton}
               />
             </div>
           </div>

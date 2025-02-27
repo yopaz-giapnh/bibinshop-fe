@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { ShippmentSchema } from '@/features/payment/types';
 import { KonbiniInfoButton } from './konbini-info-button';
-import { ReviewButton } from './review-button';
 
 type DeliveryActionButtonsProps = {
   orderNumber: string;
@@ -25,12 +24,9 @@ export const DeliveryActionButtons: React.FC<DeliveryActionButtonsProps> = ({
   setSelectedShipmentId,
   orderReceiptConfirmModalRef,
   handleShowShippingInfo,
-  groupSlugs,
-  isReviewed,
   isKonbiniInfo
 }) => {
   const isShipped = group.state === 'shipped';
-  const isReady = group.state === 'ready';
 
   if (isShipped) {
     return (
@@ -60,17 +56,12 @@ export const DeliveryActionButtons: React.FC<DeliveryActionButtonsProps> = ({
             配送情報
           </Typography>
         </button>
-        <ReviewButton groupSlugs={groupSlugs} isReviewed={isReviewed} />
       </>
     );
   }
 
   if (isKonbiniInfo) {
     return <KonbiniInfoButton orderNumber={orderNumber} />;
-  }
-
-  if (!isReady) {
-    return <ReviewButton groupSlugs={groupSlugs} isReviewed={isReviewed} />;
   }
 
   return null;
