@@ -23,10 +23,11 @@ export function PrivacyPolicy() {
         <section>
           <div className="mb-12">
             <p className="text-base leading-relaxed">
-              株式会社bibinが運営するＥＣサイト（以下「当社サイト」といいます。）では、以下
-              のとおり、業務上取り扱う個人情報の保護について本プライバシーポリシー（以下「本ポ
-              リシー」といいます。）を定め、個人情報に関する法規制、及び本ポリシーを遵守いたし
-              ます。
+              株式会社bibin（東京都港区赤坂3－21－15東都赤坂ビル２A、代表取締役仲大輔、以下
+              「当社」といいます。）が運営するＥＣサイト（以下「当社サイト」といいます。）では、
+              以下 のとおり、業務上取り扱う個人情報の保護について本プライバシーポリシー（以下
+              「本ポリシー」といいます。）を定め、個人情報に関する法規制、及び本ポリシーを遵守
+              いたします。
             </p>
           </div>
 
@@ -85,7 +86,15 @@ export function PrivacyPolicy() {
                 </li>
                 <li className="flex gap-4">
                   <span>②</span>
-                  <span>通話やメール等の方法により、株式会社bibinが会員から聴取する方法</span>
+                  <span>通話やメール等の方法により、当社が会員から聴取する方法</span>
+                </li>
+                <li className="flex gap-4">
+                  <span>③</span>
+                  <span>会員から直接又は書面等の媒体を通じて提供いただく方法</span>
+                </li>
+                <li className="flex gap-4">
+                  <span>④</span>
+                  <span>上記の他、会員の同意を得た第三者から提供を受ける方法等、適法な方法</span>
                 </li>
               </ol>
             </div>
@@ -104,7 +113,9 @@ export function PrivacyPolicy() {
                 </li>
                 <li className="flex gap-4">
                   <span>②</span>
-                  <span>会員から問い合わせがあった際の対応のため</span>
+                  <span>
+                    当社サイトで提供するサービスに関して会員に連絡するため又は会員から問い合わせがあった際の対応のため
+                  </span>
                 </li>
                 <li className="flex gap-4">
                   <span>③</span>
@@ -114,15 +125,41 @@ export function PrivacyPolicy() {
                 </li>
                 <li className="flex gap-4">
                   <span>④</span>
+                  <span>
+                    利用規約及び出品者規約記載の禁止事項等に関する調査及びそれに基づく措置のため
+                  </span>
+                </li>
+                <li className="flex gap-4">
+                  <span>⑤</span>
+                  <span>当社サービスの利用状況の確認及びサービス改善のため</span>
+                </li>
+                <li className="flex gap-4">
+                  <span>⑥</span>
+                  <span>当社サービスの案内のため</span>
+                </li>
+                <li className="flex gap-4">
+                  <span>⑦</span>
+                  <span>
+                    当社サービスに対するアンケートの実施及び当社サービスに関するプレゼントの発送のため
+                  </span>
+                </li>
+                <li className="flex gap-4">
+                  <span>⑧</span>
                   <span>その他、上記利用目的に付随する目的のため</span>
                 </li>
               </ol>
+              <p className="mt-4 text-base leading-relaxed">
+                なお、当社では、当社サービスの利便性向上を目的として、個人情報を、個人を特定できない形による集計・統計データを作成するために利用することがあります。
+              </p>
             </div>
 
             <div>
               <h3 className="mb-4 text-base font-bold">4．個人情報の第三者提供</h3>
               <p className="mb-4 text-base leading-relaxed">
-                次に掲げる場合を除き、お客様の個人情報を第三者に提供することはございません。
+                （1）次に掲げる場合を除き、お客様の個人情報を第三者に提供することはございません。
+                ただし、お客様が出品者に対し個人情報を送信された場合、当該出品者に個人情報が
+                提供されることになります。その際には、出品者が自ら定める個人情報保護管理規定
+                に従い個人情報を管理することになります。
               </p>
               <ol className="list-none space-y-2 pl-0">
                 <li className="flex gap-4">
@@ -156,19 +193,65 @@ export function PrivacyPolicy() {
                   </span>
                 </li>
               </ol>
+              <p className="mb-4 mt-4 text-base leading-relaxed">
+                （2）前項の提供先には、お客様のお住まいの国又は地域以外の国又は地域にある委託先⑤
+                などの第三者を含みます。提供先の事業者の所在国又は地域は以下のとおりです。
+              </p>
+              <p className="mb-4 text-base font-bold leading-relaxed">大韓民国</p>
+              <p className="mb-2 text-base leading-relaxed">・大韓民国の個人情報保護制度</p>
+              <p className="mb-4 text-base leading-relaxed">
+                個人情報保護委員会が提供する情報を以下のリンクからご確認ください。
+              </p>
+              <p className="mb-4 text-base leading-relaxed">
+                <a
+                  href="https://www.ppc.go.jp/enforcement/infoprovision/laws/offshore_report_korea/"
+                  className="text-blue-600 hover:text-blue-800"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  外国制度（大韓民国） ｜個人情報保護委員会
+                </a>
+              </p>
+              <p className="mb-2 text-base leading-relaxed">・第三者が講ずる個人情報保護措置</p>
+              <p className="mb-4 text-base leading-relaxed">
+                提供先は、概ね個人データの取扱いについて我が国の個人情報取扱事業者に求めら
+                れる措置と同水準の措置を講じております。
+              </p>
             </div>
 
             <div>
               <h3 className="mb-4 text-base font-bold">5．個人情報の開示・訂正・利用停止等</h3>
               <p className="text-base leading-relaxed">
-                会員から個人情報について開示、訂正、利用停止等の申し出があった場合には、下記
-                問合わせ窓口に申し出ることができます。申し出に対しては、会員本人であることを
-                確認させていただいたうえで、合理的な期間内に対応いたします。
+                会員から個人情報について開示、訂正、利用停止等の申し出があった場合には、下記問合
+                わせ窓口に申し出ることができます。申し出に対しては、会員本人であることを確認させていただいたうえで、当社所定の手続きに従い、合理的な期間内に対応いたします。なお、
+                個人情報の開示につきましては、手数料としてご請求１件につき1,000円（消費税別）を
+                お支払いいただきます。
               </p>
             </div>
 
             <div>
-              <h3 className="mb-4 text-base font-bold">6．個人情報に関する問い合わせ窓口</h3>
+              <h3 className="mb-4 text-base font-bold">6．安全管理措置</h3>
+              <p className="text-base leading-relaxed">
+                当社は、個人データ（当社が取得し、または取得しようとしている個人情報であって、当
+                社が個人データとして取り扱うことを予定しているものを含みます。以下本条において同
+                じとします。）への不正アクセスまたは個人データの漏えい、滅失または毀損の防止その
+                他の個人データの安全管理のために、技術的および組織的に厳重なセキュリティ対策を講
+                じます。当社は個人データの保護を継続的・向上的に行なっていくため、当社が定めた社
+                内規程等を法令および社会規範の変化にあわせて見直し、改善をしていきます。また、個
+                人データは、利用目的の達成に必要な期間保持します。
+              </p>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-base font-bold">7．プライバシーポリシーの改定</h3>
+              <p className="text-base leading-relaxed">
+                本ポリシーは改定されることがあります。改定については本ウェブサイト上に掲載又は登
+                録のメールアドレスに通知いたします。
+              </p>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-base font-bold">8. 個人情報に関する問い合わせ窓口</h3>
               <p className="mb-6 text-base leading-relaxed">
                 個人情報に関する問い合わせ窓口は下記のとおりとします。
               </p>
@@ -182,7 +265,9 @@ export function PrivacyPolicy() {
                   させていただきます。
                 </p>
               </div>
-              <div className="text-right text-base">以上</div>
+              <div className="text-right text-base">
+                <p>2025年2月26日 制定</p>
+              </div>
             </div>
           </div>
         </section>
