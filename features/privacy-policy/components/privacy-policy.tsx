@@ -258,7 +258,7 @@ export function PrivacyPolicy() {
               <div className="mb-6 text-center text-base">記</div>
               <div className="mb-8 space-y-2 text-base">
                 <p className="mb-4">株式会社bibin</p>
-                <p className="mb-6">mail：info@bibinews.jp</p>
+                <p className="mb-6">mail：bibinshop@bibinews.jp </p>
                 <p>※お問い合わせは24時間受け付けております。</p>
                 <p className="whitespace-pre-wrap">
                   ※土・日曜日、祝日、その他運営事務局休業日の場合は、翌営業日以降の対応と
