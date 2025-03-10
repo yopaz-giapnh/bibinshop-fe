@@ -607,7 +607,7 @@ export async function TermsOfUse() {
 
             <div className="mt-8 text-left">
               <p className="mt-8">株式会社bibin</p>
-              <p className="mt-8">2025年月日 制定</p>
+              <p className="mt-8">2025年2月26日 制定</p>
             </div>
           </div>
         </section>
