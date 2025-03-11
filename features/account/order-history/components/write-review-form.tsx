@@ -6,12 +6,13 @@ import { toast } from '@/components/ui/use-toast';
 import { Product } from '@/features/product/types';
 import { saveReviews } from '@/features/review/actions';
 import { Review } from '@/features/review/types';
-import { BadgeAlert, Check } from 'lucide-react';
+import { BadgeAlert } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { DEFAULT_RATINGS } from '../constants';
 import WriteReviewItem from './write-review-item';
+import CompleteReviewModal from './complete-review-modal';
 
 const MAX_REVIEW_LENGTH = 1000;
 const MIN_REVIEW_LENGTH = 10;
@@ -19,6 +20,7 @@ const MIN_REVIEW_LENGTH = 10;
 type Props = {
   products: Product[];
   reviews: Review[];
+  reviewPoint: number;
 };
 
 type WriteReview = {
@@ -34,8 +36,10 @@ type WriteReview = {
   reviewId?: string;
 };
 
-export default function WriteReviewForm({ products, reviews }: Props) {
+export default function WriteReviewForm({ products, reviews, reviewPoint }: Props) {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [writeReviews, setWriteReviews] = useState<WriteReview[]>(
     reviews.map((review) => ({
       productId: review.product?.id || review.relationships.product?.data?.id || '',
@@ -107,17 +111,18 @@ export default function WriteReviewForm({ products, reviews }: Props) {
     });
   };
 
+  const handleButtonClick = () => {
+    setIsModalOpen(false);
+    router.push('/account/order-history');
+  };
+
   useEffect(() => {
     if (!state) {
       return;
     }
 
     if (state.success) {
-      toast({
-        title: state.message,
-        icon: <Check className="h-6 w-6" />
-      });
-      router.push('/account/profile');
+      setIsModalOpen(true);
     } else {
       toast({
         title: state.message,
@@ -128,28 +133,36 @@ export default function WriteReviewForm({ products, reviews }: Props) {
   }, [router, state]);
 
   return (
-    <form className="w-full" action={action}>
-      <div className="flex w-full flex-col items-center">
-        <div className="w-full">
-          {products.map((product) => (
-            <WriteReviewItem
-              key={product.id}
-              product={product}
-              review={reviews.find(
-                (review) => review.relationships.product?.data?.id === product.id
-              )}
-              onReviewRatings={({ productId, ratings }) => {
-                updateReview(productId, { ratings });
-              }}
-              onReviewText={({ productId, text }) => {
-                updateReview(productId, { review: text });
-              }}
-            />
-          ))}
+    <div className="w-full">
+      <form className="w-full" action={action}>
+        <div className="flex w-full flex-col items-center">
+          <div className="w-full">
+            {products.map((product) => (
+              <WriteReviewItem
+                key={product.id}
+                product={product}
+                review={reviews.find(
+                  (review) => review.relationships.product?.data?.id === product.id
+                )}
+                onReviewRatings={({ productId, ratings }) => {
+                  updateReview(productId, { ratings });
+                }}
+                onReviewText={({ productId, text }) => {
+                  updateReview(productId, { review: text });
+                }}
+              />
+            ))}
+          </div>
+          <SubmitButton disabled={!isValid} />
         </div>
-        <SubmitButton disabled={!isValid} />
-      </div>
-    </form>
+      </form>
+
+      <CompleteReviewModal
+        open={isModalOpen}
+        title={`${reviewPoint}ポイント`}
+        onClick={handleButtonClick}
+      />
+    </div>
   );
 }
 

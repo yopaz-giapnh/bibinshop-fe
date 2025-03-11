@@ -8,6 +8,7 @@ import { getAccountOrders } from '../actions';
 import { AnimatedOrderHistoryContainer } from './animated-order-history-container';
 import { OrderHistoryTabContent } from './order-history-tab-content';
 import { OrderHistoryTabContentSkeleton } from './skeletons/order-history-tab-content-skeleton';
+import { HistoryTabBanner } from '@/features/account/order-history/components/history-tab-banner';
 
 type Props = {
   currentPage: number;
@@ -58,7 +59,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
         <div className="h-7 w-7" />
       </div>
       <Tabs defaultValue={tabState} className="z-0 w-full items-center justify-center">
-        <TabsList className="flex h-fit w-full overflow-hidden border-[1px] bg-white-base">
+        <TabsList className="mb-[24px] flex h-fit w-full overflow-hidden border-[1px] bg-white-base">
           {tabs.map((tab, index) => (
             <Link
               key={tab.value}
@@ -88,6 +89,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
             </Link>
           ))}
         </TabsList>
+        <HistoryTabBanner title="レビューして" content="ポイントを獲得" />
         {tabs.map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
             <Suspense fallback={<OrderHistoryTabContentSkeleton />}>

@@ -1,6 +1,7 @@
 import { Typography } from '@/components/ui/typography';
-import { FilePen } from 'lucide-react';
 import Link from 'next/link';
+import * as React from 'react';
+import { PencilSquareIcon } from '@heroicons/react/24/solid';
 
 type ProductReviewButtonProps = {
   slug: string;
@@ -17,10 +18,10 @@ export const ProductReviewButton: React.FC<ProductReviewButtonProps> = ({
     <Link href={`/account/orders/write-review?slug=${slug}`} passHref className={className}>
       <button
         type="button"
-        className="flex items-center justify-center rounded-[100px] border-[1px] border-bibinBlue-100 px-2 py-[8px]"
+        className="flex items-center justify-center rounded-[100px] border-[1px] bg-gradation px-2 py-[8px]"
       >
-        <FilePen className="h-[14px] w-[14px]" color="#51B7FF" />
-        <Typography as="bold" element="p" className="ml-[4px] text-[12px] text-bibinBlue-100">
+        <PencilSquareIcon className="h-[16px] w-[16px] text-white-base" />
+        <Typography as="bold" element="p" className="ml-[4px] text-[12px] text-white-base">
           {!isReviewed ? 'レビューを書く' : 'レビューを編集する'}
         </Typography>
       </button>

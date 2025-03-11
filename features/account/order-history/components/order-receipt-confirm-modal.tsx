@@ -2,7 +2,12 @@
 
 import BibiVacantFace from '@/assets/bibincban/vacant-face.svg';
 import { Button } from '@/components/ui/button';
-import { DialogContent, DialogDescription } from '@/components/ui/dialog';
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import { Dialog } from '@radix-ui/react-dialog';
 import { forwardRef, useImperativeHandle, useState } from 'react';
@@ -35,9 +40,11 @@ export const OrderReceiptConfirmModal = forwardRef<
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogDescription>
         <DialogContent className="flex w-11/12 flex-col items-center justify-center md:w-[540px]">
-          <Typography as="bold" element="p" className="text-[20px] text-black-90">
-            商品を受け取りましたか？
-          </Typography>
+          <DialogHeader>
+            <DialogTitle className="text-[20px] font-bold text-black-90">
+              商品を受け取りましたか？
+            </DialogTitle>
+          </DialogHeader>
           <Typography as="caption" element="p" className="pb-[24px] text-[14px] text-black-90">
             商品が到着した注文のみ受取確認をしてください。
           </Typography>

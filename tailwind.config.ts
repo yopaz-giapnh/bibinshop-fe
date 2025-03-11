@@ -21,7 +21,8 @@ const config = {
     },
     extend: {
       backgroundImage: {
-        gradation: 'linear-gradient(74deg, #51B7FF 15.54%, #5CE686 84.04%)'
+        gradation: 'linear-gradient(74deg, #51B7FF 15.54%, #5CE686 84.04%)',
+        blueGradient: 'linear-gradient(to right, #74C6FF, #51B7FF)'
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -56,6 +57,9 @@ const config = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
+        },
+        bibinYellow: {
+          100: '#FFF731'
         },
         bibinBlue: {
           10: '#F6FBFF',
