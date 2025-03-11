@@ -221,20 +221,6 @@ export interface paths {
      */
     get: operations['review-points'];
   };
-  '/api/v2/storefront/account/campaign_winners': {
-    /**
-     * Retrieve Campaign Winners
-     * @description Returns the current user's campaign_winners.
-     */
-    get: operations['campaign-winner-list'];
-  };
-  '/api/v2/storefront/account/referral_urls': {
-    /**
-     * Create a Referral Url
-     * @description Create the current user's referral url.
-     */
-    post: operations['create-referral-url'];
-  };
   '/api/v2/storefront/account_confirmations': {
     /**
      * Send Account Confirmation Instructions
@@ -521,14 +507,12 @@ export interface paths {
             'application/json': {
               success: boolean;
               payment: {
-                /** @description Unique payment number */
-                payment_number?: string;
+                number?: string;
                 state?: string;
                 /** Format: date-time */
                 updated_at?: string;
                 order?: {
-                  /** @description Unique order number */
-                  order_number?: string;
+                  number?: string;
                   state?: string;
                   /** Format: float */
                   total?: number;
@@ -536,7 +520,6 @@ export interface paths {
                   updated_at?: string;
                 };
               };
-              error?: string | null;
             };
           };
         };
@@ -547,135 +530,6 @@ export interface paths {
         /** @description Invalid state or payment processing error */
         422: {
           content: never;
-        };
-      };
-    };
-  };
-  '/api/v2/storefront/payments/{id}': {
-    /**
-     * Show a specific payment (JSON:API format)
-     * @description Returns information about a specific payment in JSON:API format.   If `include=order` is passed, the `order` relationship will be included in the `included` array.
-     */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Comma-separated list of related resources to include (e.g. `order`) */
-          include?: string;
-        };
-        path: {
-          /** @description Payment ID */
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Returns the payment details */
-        200: {
-          content: {
-            'application/json': {
-              data: {
-                /**
-                 * @description Payment ID
-                 * @example 350
-                 */
-                id?: string;
-                /**
-                 * @description Resource type (will be "payment")
-                 * @example payment
-                 */
-                type?: string;
-                attributes?: {
-                  /** @example 4642.0 */
-                  amount?: string;
-                  /** @example null */
-                  response_code?: string | null;
-                  /** @example PAR6X5OW */
-                  number?: string;
-                  /** @example null */
-                  cvv_response_code?: string | null;
-                  /** @example null */
-                  cvv_response_message?: string | null;
-                  /** @example 1 */
-                  payment_method_id?: number;
-                  /** @example Stripe */
-                  payment_method_name?: string;
-                  /** @example invalid */
-                  state?: string;
-                  /**
-                   * @description Additional metadata
-                   * @example {}
-                   */
-                  public_metadata?: Record<string, never>;
-                  /**
-                   * Format: date-time
-                   * @example 2025-01-21T20:23:19.494+09:00
-                   */
-                  created_at?: string;
-                  /**
-                   * Format: date-time
-                   * @example 2025-01-21T20:23:25.238+09:00
-                   */
-                  updated_at?: string;
-                };
-                relationships?: {
-                  /** @description Relationship to the order associated with this payment */
-                  order?: {
-                    data?: {
-                      /** @example 163 */
-                      id?: string;
-                      /** @example order */
-                      type?: string;
-                    };
-                  };
-                  /** @description Payment source (e.g., credit card) */
-                  source?: {
-                    data?: {
-                      /** @example 60 */
-                      id?: string;
-                      /** @example credit_card */
-                      type?: string;
-                    };
-                  };
-                  /** @description The payment method used (e.g., Stripe, PayPal, etc.) */
-                  payment_method?: {
-                    data?: {
-                      /** @example 1 */
-                      id?: string;
-                      /** @example payment_method */
-                      type?: string;
-                    };
-                  };
-                };
-              };
-              /** @description Included resources (e.g., order) if requested via `include=...` */
-              included?: {
-                /** @example 163 */
-                id?: string;
-                /** @example order */
-                type?: string;
-                attributes?: {
-                  /** @example R123456789 */
-                  number?: string;
-                  /** @example complete */
-                  state?: string;
-                  /** @example 4642.0 */
-                  total?: string;
-                  /** Format: date-time */
-                  created_at?: string;
-                  /** Format: date-time */
-                  updated_at?: string;
-                };
-              }[];
-            };
-          };
-        };
-        /** @description Payment not found */
-        404: {
-          content: {
-            'application/json': {
-              /** @example Payment not found */
-              error?: string;
-            };
-          };
         };
       };
     };
@@ -1107,7 +961,44 @@ export interface paths {
      * List Users
      * @description Returns a list of users with optional filtering and sorting.
      */
-    get: operations['get-users'];
+    get: {
+      parameters: {
+        query?: {
+          include?: components['parameters']['UserIncludeParam'];
+          /** @description Filter users by skin type */
+          'filter[skin_type]'?: string;
+          /** @description Filter users by personal colors */
+          'filter[personal_color]'?: string;
+          /** @description Filter users by skin concerns */
+          'filter[skin_concern]'?: string;
+          /** @description Filter users by scalp and hair concerns */
+          'filter[scalp_hair_concern]'?: string;
+          /** @description Filter users by scalp and hair concerns */
+          'filter[without_self]'?: boolean;
+          /** @description Sort users by followers count */
+          sort_by?: 'followers_asc' | 'followers_desc';
+          page?: components['parameters']['PageParam'];
+          per_page?: components['parameters']['PerPageParam'];
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        200: {
+          content: {
+            'application/vnd.api+json': {
+              data?: components['schemas']['PublicUser'][];
+              meta?: components['schemas']['ListMeta'];
+              links?: components['schemas']['ListLinks'];
+              included?: (
+                | components['schemas']['UserSocialLink']
+                | components['schemas']['UserAvatar']
+              )[];
+            };
+          };
+        };
+        403: components['responses']['Forbidden'];
+      };
+    };
   };
   '/api/v2/storefront/users/{unique_key}/followers': {
     /**
@@ -1203,27 +1094,6 @@ export interface paths {
      * @description Returns a list of top 6 popular searches in the last 2 hours period. The list is sorted by the number of searches in descending order. This list updates at every even hour.
      */
     get: operations['popular-searches'];
-  };
-  '/api/v2/storefront/campaigns': {
-    /**
-     * Retrieve Campaigns
-     * @description Returns campaigns.
-     */
-    get: operations['campaign-list'];
-  };
-  '/api/v2/storefront/campaigns/{id}': {
-    /**
-     * Retrieve Campaign
-     * @description Returns campaign.
-     */
-    get: operations['campaign'];
-  };
-  '/api/v2/storefront/campaigns/{id}/entry': {
-    /**
-     * Entry Campaign
-     * @description Entry campaign.
-     */
-    post: operations['campaign-entry'];
   };
 }
 
@@ -1488,12 +1358,6 @@ export interface components {
           data?: components['schemas']['Relation'][];
         };
         cancellation_requests?: {
-          data?: components['schemas']['Relation'][];
-        };
-        vendor_totals?: {
-          data?: components['schemas']['Relation'][];
-        };
-        coupons?: {
           data?: components['schemas']['Relation'][];
         };
       };
@@ -2096,6 +1960,8 @@ export interface components {
       /** @default product */
       type: string;
       attributes: {
+        /** @example Example product */
+        name?: string;
         /** @example Example description */
         description?: string | null;
         /** @example 2012-10-17T03:43:57Z */
@@ -2603,8 +2469,7 @@ export interface components {
         /**
          * @description The public metadata for this User
          * @example {
-         *   "user_segment": "supplier",
-         *   "referral_code": "referral_code"
+         *   "user_segment": "supplier"
          * }
          */
         public_metadata?: Record<string, never>;
@@ -2629,8 +2494,6 @@ export interface components {
         received_feedback_reviews_count?: number;
         /** @example 1234567890 */
         unique_key?: string;
-        multiplier?: number;
-        referral_url?: string | null;
       };
       relationships: {
         /** @description Default billing address associated with this Account */
@@ -2964,13 +2827,6 @@ export interface components {
       | components['schemas']['User']
       | components['schemas']['Review']
       | components['schemas']['UserAvatar'];
-    /** CampaignWinner Includes */
-    CampaignWinnereIncludes:
-      | components['schemas']['User']
-      | components['schemas']['Campaign']
-      | components['schemas']['CampaignPrize'];
-    /** CampaignWinner Includes */
-    CampaignIncludes: components['schemas']['CampaignPrize'];
     ReviewPayload: {
       product_id: string;
       /** @description 使用感（テクスチャー、塗り心地）の評価 */
@@ -3342,73 +3198,6 @@ export interface components {
          * @example 2020-02-16T07:14:54.617Z
          */
         created_at: string;
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    CampaignWinner: {
-      id: string;
-      /** @enum {string} */
-      type: 'campaign_winner';
-      attributes: {
-        /** @enum {string} */
-        winning_type: 'instant' | 'lottery';
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    UserReferralUrl: {
-      id: string;
-      /** @enum {string} */
-      type: 'user_referral_url';
-      attributes: {
-        url: string;
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    Campaign: {
-      id: string;
-      /** @enum {string} */
-      type: 'campaign';
-      attributes: {
-        title?: string;
-        description?: string;
-        terms_and_conditions?: string;
-        /** Format: date-time */
-        start_at?: string;
-        /** Format: date-time */
-        end_at?: string;
-        instant_win_count?: number;
-        total_winner_count?: number;
-        total_views?: number;
-        banner_image_url?: string;
-        image_url?: string;
-        is_entered?: boolean;
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    CampaignPrize: {
-      id: string;
-      /** @enum {string} */
-      type: 'campaign_prize';
-      attributes: {
-        name?: string;
-        description?: string;
-        image_url?: string;
       };
       relationships: {
         order?: {
@@ -3861,53 +3650,6 @@ export interface components {
         };
       };
     };
-    /** @description 200 Success - Returns an array of `campaign winner` objects. */
-    CampaignWinnerList: {
-      content: {
-        'application/vnd.api+json': {
-          data: components['schemas']['CampaignWinner'][];
-          included?: components['schemas']['CampaignWinnereIncludes'][];
-          meta: components['schemas']['ListMeta'];
-          links: components['schemas']['ListLinks'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns the `campaign winner` object. */
-    CampaignWinner: {
-      content: {
-        'application/vnd.api+json': {
-          data?: components['schemas']['CampaignWinner'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns the `user referral url` object. */
-    UserReferralUrl: {
-      content: {
-        'application/vnd.api+json': {
-          data?: components['schemas']['UserReferralUrl'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns an array of `campaign` objects. */
-    CampaignList: {
-      content: {
-        'application/vnd.api+json': {
-          data: components['schemas']['Campaign'][];
-          included?: components['schemas']['CampaignIncludes'][];
-          meta: components['schemas']['ListMeta'];
-          links: components['schemas']['ListLinks'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns the `campaign` object. */
-    Campaign: {
-      content: {
-        'application/vnd.api+json': {
-          data?: components['schemas']['Campaign'];
-          included?: components['schemas']['CampaignIncludes'][];
-        };
-      };
-    };
   };
   parameters: {
     /**
@@ -4130,10 +3872,6 @@ export interface components {
     ReviewIncludeParam?: string;
     /** @example user,review */
     ReviewCommentIncludeParam?: string;
-    /** @example user,campaign */
-    CampaignWinnerIncludeParam?: string;
-    /** @example campaign_prizes */
-    CampaignIncludeParam?: string;
     /**
      * @description Specify the fields you would like returned in the response body. [More information](https://jsonapi.org/format/#fetching-sparse-fieldsets).
      * @example rating,review
@@ -4205,8 +3943,7 @@ export interface operations {
             /**
              * @description The public metadata for this User
              * @example {
-             *   "user_segment": "supplier",
-             *   "referral_code": "referral_code"
+             *   "user_segment": "supplier"
              * }
              */
             public_metadata?: Record<string, never>;
@@ -4823,31 +4560,6 @@ export interface operations {
     };
   };
   /**
-   * Retrieve Campaign Winners
-   * @description Returns the current user's campaign_winners.
-   */
-  'campaign-winner-list': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignWinnerIncludeParam'];
-      };
-    };
-    responses: {
-      200: components['responses']['CampaignWinnerList'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
-   * Create a Referral Url
-   * @description Create the current user's referral url.
-   */
-  'create-referral-url': {
-    responses: {
-      200: components['responses']['UserReferralUrl'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
    * Send Account Confirmation Instructions
    * @description Sends confirmation instructions to the given email address.
    */
@@ -4897,8 +4609,6 @@ export interface operations {
           user?: {
             /** @example john@snow.org */
             email?: string;
-            /** @example true */
-            mobile?: boolean;
           };
         };
       };
@@ -6525,48 +6235,6 @@ export interface operations {
     };
   };
   /**
-   * List Users
-   * @description Returns a list of users with optional filtering and sorting.
-   */
-  'get-users': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['UserIncludeParam'];
-        /** @description Filter users by skin type */
-        'filter[skin_type]'?: string;
-        /** @description Filter users by personal colors */
-        'filter[personal_color]'?: string;
-        /** @description Filter users by skin concerns */
-        'filter[skin_concern]'?: string;
-        /** @description Filter users by scalp and hair concerns */
-        'filter[scalp_hair_concern]'?: string;
-        /** @description Filter users by scalp and hair concerns */
-        'filter[without_self]'?: boolean;
-        /** @description Sort users by followers count */
-        sort_by?: 'followers_asc' | 'followers_desc';
-        page?: components['parameters']['PageParam'];
-        per_page?: components['parameters']['PerPageParam'];
-      };
-    };
-    responses: {
-      /** @description Successful response */
-      200: {
-        content: {
-          'application/vnd.api+json': {
-            data?: components['schemas']['PublicUser'][];
-            meta?: components['schemas']['ListMeta'];
-            links?: components['schemas']['ListLinks'];
-            included?: (
-              | components['schemas']['UserSocialLink']
-              | components['schemas']['UserAvatar']
-            )[];
-          };
-        };
-      };
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
    * List Followers
    * @description Returns a list of users that are following the specified user.
    */
@@ -6771,59 +6439,6 @@ export interface operations {
           'application/vnd.api+json': components['schemas']['PopularSearch'][];
         };
       };
-    };
-  };
-  /**
-   * Retrieve Campaigns
-   * @description Returns campaigns.
-   */
-  'campaign-list': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignIncludeParam'];
-        page?: components['parameters']['PageParam'];
-        per_page?: components['parameters']['PerPageParam'];
-      };
-    };
-    responses: {
-      200: components['responses']['CampaignList'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
-   * Retrieve Campaign
-   * @description Returns campaign.
-   */
-  campaign: {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignIncludeParam'];
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      200: components['responses']['Campaign'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
-   * Entry Campaign
-   * @description Entry campaign.
-   */
-  'campaign-entry': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignIncludeParam'];
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      200: components['responses']['Campaign'];
-      403: components['responses']['Forbidden'];
     };
   };
 }
