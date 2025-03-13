@@ -40,20 +40,26 @@ export default function WriteReviewForm({ products, reviews, reviewPoint }: Prop
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [writeReviews, setWriteReviews] = useState<WriteReview[]>(
-    reviews.map((review) => ({
-      productId: review.product?.id || review.relationships.product?.data?.id || '',
-      ratings: {
-        texture: review.attributes.texture_rating || 1,
-        finish: review.attributes.finish_rating || 1,
-        effectiveness: review.attributes.effectiveness_rating || 1,
-        longevity: review.attributes.longevity_rating || 1,
-        usability: review.attributes.usability_rating || 1
-      },
-      review: review.attributes.review || '',
-      reviewId: review.id
-    }))
-  );
+  const [writeReviews, setWriteReviews] = useState<WriteReview[]>([]);
+
+  useEffect(() => {
+    if (reviews.length > 0) {
+      setWriteReviews(
+        reviews.map((review) => ({
+          productId: review.product?.id || review.relationships.product?.data?.id || '',
+          ratings: {
+            texture: review.attributes.texture_rating || 1,
+            finish: review.attributes.finish_rating || 1,
+            effectiveness: review.attributes.effectiveness_rating || 1,
+            longevity: review.attributes.longevity_rating || 1,
+            usability: review.attributes.usability_rating || 1
+          },
+          review: review.attributes.review || '',
+          reviewId: review?.id
+        }))
+      );
+    }
+  }, [reviews]);
 
   const formAction = async () => {
     const reviews = writeReviews.map((review) => ({
@@ -131,6 +137,10 @@ export default function WriteReviewForm({ products, reviews, reviewPoint }: Prop
       });
     }
   }, [router, state]);
+
+  if (!products.length || !reviews.length || !reviewPoint) {
+    return null;
+  }
 
   return (
     <div className="w-full">

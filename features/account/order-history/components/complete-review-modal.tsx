@@ -26,7 +26,7 @@ export default function CompleteReviewModal({ open, title, onClick }: Props) {
     <Dialog open={open}>
       <DialogDescription>
         <DialogContent
-          className="flex w-[540px] flex-col items-center justify-center gap-1 pb-[24px]"
+          className="flex w-[540px] flex-col items-center justify-center gap-1 px-1 pb-[24px]"
           hideCloseButton
         >
           <DialogHeader>

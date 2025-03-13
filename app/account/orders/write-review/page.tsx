@@ -29,6 +29,10 @@ export default function Page({ searchParams }: { searchParams?: { slug?: string[
     fetchReviewPoint();
   }, []);
 
+  if (!reviewPoint) {
+    return null;
+  }
+
   return (
     <AnimatedWriteReviewContainer>
       <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">
