@@ -56,6 +56,10 @@ export default async function Page({
     </div>
   );
 
+  if (!reviewPoint) {
+    return null;
+  }
+
   return (
     <AnimatedWriteReviewContainer>
       <div className="mx-auto flex w-full flex-col items-center bg-paleFrostBlue p-[16px] md:p-[24px]">

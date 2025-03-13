@@ -72,7 +72,7 @@ export default function CompleteReviewModal({ open, title, onClick }: Props) {
           <Button
             size="lg"
             variant="lg"
-            type="submit"
+            type="button"
             className="mt-[24px] w-full md:w-3/4"
             onClick={onClick}
           >
