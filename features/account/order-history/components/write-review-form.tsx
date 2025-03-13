@@ -39,7 +39,6 @@ type WriteReview = {
 export default function WriteReviewForm({ products, reviews, reviewPoint }: Props) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [writeReviews, setWriteReviews] = useState<WriteReview[]>(
     reviews.map((review) => ({
       productId: review.product?.id || review.relationships.product?.data?.id || '',

@@ -1,33 +1,60 @@
-'use client';
-
 import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
 import { AnimatedWriteReviewContainer } from '@/features/account/order-history/components/animated-write-review-container';
 import WriteReview from '@/features/account/order-history/components/write-review';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { HistoryTabBanner } from '@/features/account/order-history/components/history-tab-banner';
 import { getReviewPoint } from '@/features/point-balance/actions';
-import { useIsPc } from '@/hooks/use-is-pc';
+import PcSpComponent from '@/components/ui/pc-sp-component';
 
 /**
  * ユーザープロフィールレビューを書く画面ホーム
  * @returns JSX.Element
  */
-export default function Page({ searchParams }: { searchParams?: { slug?: string[] | string } }) {
-  const [reviewPoint, setReviewPoint] = useState(0);
+export default async function Page({
+  searchParams
+}: {
+  searchParams?: { slug?: string[] | string };
+}) {
+  const reviewPoint = await getReviewPoint();
   const slugs = Array.isArray(searchParams?.slug)
     ? searchParams?.slug
     : [searchParams?.slug || ''].filter(Boolean);
-  const isPc = useIsPc();
 
-  useEffect(() => {
-    const fetchReviewPoint = async () => {
-      const point = await getReviewPoint();
-      setReviewPoint(point);
-    };
-    fetchReviewPoint();
-  }, []);
+  const desktopTitleContent =
+    'ご購入いただいた商品の使用感や感想をぜひお聞かせください！あなたのレビューが、ほかのお客様の参考になります。';
+
+  const mobileTitleContent = (
+    <div className="flex flex-col items-center">
+      <Typography as="caption" element="p" className="text-[14px] text-black-90">
+        ご購入いただいた商品の使用感や感想をぜひお聞か
+      </Typography>
+      <Typography as="caption" element="p" className="text-[14px] text-black-90">
+        せください！あなたのレビューが、ほかのお客様の
+      </Typography>
+      <Typography as="caption" element="p" className="text-[14px] text-black-90">
+        参考になります。
+      </Typography>
+    </div>
+  );
+
+  const desktopPointNoti = (
+    <Typography as="subCaption" element="p" className="text-black-90">
+      レビューの内容が不適切な場合は、運営の方で確認出来次第アカウント停止などの措置を取る場合がございます。
+    </Typography>
+  );
+
+  const mobilePointNoti = (
+    <div className="flex flex-col items-center">
+      <Typography as="caption" element="p" className="text-[12px] text-black-90">
+        レビューの内容が不適切な場合は、運営の方で確認出来
+      </Typography>
+      <Typography as="caption" element="p" className="text-[12px] text-black-90">
+        次第アカウント停止などの措置を取る場合がございます。
+      </Typography>
+    </div>
+  );
 
   return (
     <AnimatedWriteReviewContainer>
@@ -44,21 +71,7 @@ export default function Page({ searchParams }: { searchParams?: { slug?: string[
           <div className="h-7 w-7" />
         </div>
         <Typography as="caption" element="div" className="mb-[24px] text-black-90">
-          {isPc ? (
-            'ご購入いただいた商品の使用感や感想をぜひお聞かせください！あなたのレビューが、ほかのお客様の参考になります。'
-          ) : (
-            <div className="flex flex-col items-center">
-              <Typography as="caption" element="p" className="text-[14px] text-black-90">
-                ご購入いただいた商品の使用感や感想をぜひお聞か
-              </Typography>
-              <Typography as="caption" element="p" className="text-[14px] text-black-90">
-                せください！あなたのレビューが、ほかのお客様の
-              </Typography>
-              <Typography as="caption" element="p" className="text-[14px] text-black-90">
-                参考になります。
-              </Typography>
-            </div>
-          )}
+          <PcSpComponent desktop={desktopTitleContent} mobile={mobileTitleContent} />
         </Typography>
         <HistoryTabBanner
           title="獲得予定："
@@ -67,20 +80,7 @@ export default function Page({ searchParams }: { searchParams?: { slug?: string[
         />
         <div className="flex flex-row items-center gap-1">
           <ExclamationCircleIcon className="h-5 w-5 text-black-base" />
-          {isPc ? (
-            <Typography as="subCaption" element="p" className="text-black-90">
-              レビューの内容が不適切な場合は、運営の方で確認出来次第アカウント停止などの措置を取る場合がございます。
-            </Typography>
-          ) : (
-            <div className="flex flex-col items-center">
-              <Typography as="caption" element="p" className="text-[12px] text-black-90">
-                レビューの内容が不適切な場合は、運営の方で確認出来
-              </Typography>
-              <Typography as="caption" element="p" className="text-[12px] text-black-90">
-                次第アカウント停止などの措置を取る場合がございます。
-              </Typography>
-            </div>
-          )}
+          <PcSpComponent desktop={desktopPointNoti} mobile={mobilePointNoti} />
         </div>
         <Suspense>
           <WriteReview slugs={slugs} reviewPoint={reviewPoint} />
