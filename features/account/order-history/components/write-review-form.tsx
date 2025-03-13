@@ -131,10 +131,6 @@ export default function WriteReviewForm({ products, reviews, reviewPoint }: Prop
     }
   }, [router, state]);
 
-  if (!products.length || !reviews.length || !reviewPoint) {
-    return null;
-  }
-
   return (
     <div className="w-full">
       <form className="w-full" action={action}>

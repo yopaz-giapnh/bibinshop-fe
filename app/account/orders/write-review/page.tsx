@@ -1,12 +1,12 @@
 import { BackButton } from '@/components/button/back-button';
 import { Typography } from '@/components/ui/typography';
+import PcSpComponent from '@/components/ui/pc-sp-component';
 import { AnimatedWriteReviewContainer } from '@/features/account/order-history/components/animated-write-review-container';
 import WriteReview from '@/features/account/order-history/components/write-review';
 import { Suspense } from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { HistoryTabBanner } from '@/features/account/order-history/components/history-tab-banner';
 import { getReviewPoint } from '@/features/point-balance/actions';
-import PcSpComponent from '@/components/ui/pc-sp-component';
 
 /**
  * ユーザープロフィールレビューを書く画面ホーム
@@ -55,10 +55,6 @@ export default async function Page({
       </Typography>
     </div>
   );
-
-  if (!reviewPoint) {
-    return null;
-  }
 
   return (
     <AnimatedWriteReviewContainer>

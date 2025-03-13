@@ -34,30 +34,14 @@ type Props = {
  */
 export default function WriteReviewItem({ product, review, onReviewRatings, onReviewText }: Props) {
   const [ratings, setRatings] = useState<Ratings>({
-    texture: 1,
-    finish: 1,
-    effectiveness: 1,
-    longevity: 1,
-    usability: 1
+    texture: review?.attributes.texture_rating || 1,
+    finish: review?.attributes.finish_rating || 1,
+    effectiveness: review?.attributes.effectiveness_rating || 1,
+    longevity: review?.attributes.longevity_rating || 1,
+    usability: review?.attributes.usability_rating || 1
   });
 
-  const [reviewText, setReviewText] = useState('');
-
-  useEffect(() => {
-    if (review?.attributes.review) {
-      setReviewText(review.attributes.review);
-    }
-
-    if (review) {
-      setRatings({
-        texture: review.attributes.texture_rating || 1,
-        finish: review.attributes.finish_rating || 1,
-        effectiveness: review.attributes.effectiveness_rating || 1,
-        longevity: review.attributes.longevity_rating || 1,
-        usability: review.attributes.usability_rating || 1
-      });
-    }
-  }, [review]);
+  const [reviewText, setReviewText] = useState(review?.attributes.review || '');
 
   const averageRating = useMemo(() => {
     const values = Object.values(ratings);
