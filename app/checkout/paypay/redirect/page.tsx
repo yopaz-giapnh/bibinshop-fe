@@ -33,7 +33,7 @@ export default function Page({ searchParams }: Props) {
     };
 
     updateState();
-  }, [merchantPaymentId, paymentId]);
+  }, [merchantPaymentId, paymentId, router]);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-4">

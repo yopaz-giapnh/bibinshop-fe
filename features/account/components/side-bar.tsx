@@ -23,6 +23,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
+import OrderHistoryTooltip from '@/features/account/order-history/components/order-history-tooltip';
 
 interface SideNavButtonProps {
   href: string;
@@ -142,9 +143,13 @@ export default function AccountSideBar() {
               {icon}
             </motion.div>
             <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
-              <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
-                {label}
-              </Typography>
+              {label === '注文履歴' ? (
+                <OrderHistoryTooltip isPc={true} />
+              ) : (
+                <Typography as="bold" element="p" className="ml-[16px] text-[16px] text-black-90">
+                  {label}
+                </Typography>
+              )}
             </motion.div>
           </motion.button>
         </Link>
@@ -154,7 +159,7 @@ export default function AccountSideBar() {
 
   const SideNavTopButton = ({ href, icon, label }: SideNavButtonProps) => {
     return (
-      <div className="flex w-full flex-col items-center justify-center">
+      <div className="mb-10 flex w-full flex-col items-center justify-center">
         <Link href={href} passHref>
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -166,9 +171,13 @@ export default function AccountSideBar() {
           </motion.button>
         </Link>
         <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
-          <Typography as="bold" element="p" className="pt-[8px] text-[16px] text-black-90">
-            {label}
-          </Typography>
+          {label === '注文履歴' ? (
+            <OrderHistoryTooltip isPc={false} />
+          ) : (
+            <Typography as="bold" element="p" className="pt-[8px] text-[16px] text-black-90">
+              {label}
+            </Typography>
+          )}
         </motion.div>
       </div>
     );

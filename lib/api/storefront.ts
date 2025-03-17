@@ -214,6 +214,13 @@ export interface paths {
      */
     get: operations['points-rate'];
   };
+  '/api/v2/storefront/account/review_point': {
+    /**
+     * Retrieve Review Points
+     * @description Returns the current user's review points.
+     */
+    get: operations['review-points'];
+  };
   '/api/v2/storefront/account_confirmations': {
     /**
      * Send Account Confirmation Instructions
@@ -3625,6 +3632,15 @@ export interface components {
         };
       };
     };
+    /** @description 200 Success - Returns the `review_point` object. */
+    ReviewPoint: {
+      content: {
+        'application/vnd.api+json': {
+          /** @example 30 */
+          review_point: number;
+        };
+      };
+    };
     /** @description 200 Success - Returns the `coupon` object. */
     AddCouponResponse: {
       content: {
@@ -4530,6 +4546,16 @@ export interface operations {
   'points-rate': {
     responses: {
       200: components['responses']['PointsRate'];
+      403: components['responses']['Forbidden'];
+    };
+  };
+  /**
+   * Retrieve Review Points
+   * @description Returns the current user's review points.
+   */
+  'review-points': {
+    responses: {
+      200: components['responses']['ReviewPoint'];
       403: components['responses']['Forbidden'];
     };
   };

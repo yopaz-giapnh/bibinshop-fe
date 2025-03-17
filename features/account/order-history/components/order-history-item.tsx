@@ -88,7 +88,7 @@ export default function OrderHistoryItem({
           {!isUnpaid && !!variantId && showBuyAgain && (
             <BuyAgainModal
               variantIds={[variantId]}
-              buttonStyle="md:w-[105px] md:h-[30px] w-[80px] h-[25px]"
+              buttonStyle="md:w-[105px] md:h-[30px] w-[80px] h-[25px] py-[18px]"
               buttonTextStyle="text-[12px] text-white-base"
             />
           )}

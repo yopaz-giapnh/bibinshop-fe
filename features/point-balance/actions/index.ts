@@ -125,3 +125,13 @@ export async function getPointsRate() {
   }
   return data.earn_rate || 0;
 }
+
+export async function getReviewPoint() {
+  const { data, error } = await apiClient.GET(`/api/v2/storefront/account/review_point`, {
+    params: {}
+  });
+  if (error) {
+    return 0;
+  }
+  return data.review_point || 0;
+}
