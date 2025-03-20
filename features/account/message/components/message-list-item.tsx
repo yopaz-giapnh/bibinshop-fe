@@ -24,7 +24,7 @@ export default function MessageListItem({ message }: Props) {
       <div className="flex w-full items-center">
         <div
           className={cn(
-            'flex h-[40px] w-[40px] flex-shrink-0 items-center justify-center border border-gray-200',
+            'flex h-[40px] w-[40px] flex-shrink-0 items-center justify-center border border-gray-200 bg-paleFrostBlue',
             isReviewComment ? 'rounded-full' : 'rounded-[4px]'
           )}
         >
@@ -34,7 +34,7 @@ export default function MessageListItem({ message }: Props) {
             width={40}
             height={40}
             className={cn(
-              'relative h-full w-full object-cover',
+              'relative object-cover',
               isReviewComment ? 'rounded-full' : 'rounded-[4px]'
             )}
           />
