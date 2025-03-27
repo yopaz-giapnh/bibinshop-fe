@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { Message } from '../types';
 import { getMessageImageUrl } from '../utils';
 import MessageSeeMoreModal from './message-see-more-modal';
+import { getVendor } from '@/features/vendor/actions';
+import { getVendorImageUrl } from '@/features/vendor/utils';
 
 type Props = {
   message: Message;
@@ -14,10 +16,13 @@ type Props = {
  * メッセージ一覧のリストアイテムコンポーネント
  * @returns JSX.Element
  */
-export default function MessageListItem({ message }: Props) {
+export default async function MessageListItem({ message }: Props) {
   const messageImageUrl = getMessageImageUrl(message);
   const date = formatDateString(message.attributes.created_at, 'yyyy年MM月dd日');
   const isReviewComment = message.attributes.title.includes('レビューにコメント');
+  const vendorId = message.attributes.notificationable?.vendor_id;
+  const vendor = vendorId ? await getVendor(vendorId) : undefined;
+  const vendorImageUrl = getVendorImageUrl(vendor?.vendorImage);
 
   return (
     <div className="flex flex-col items-center justify-center md:items-stretch">
@@ -67,11 +72,21 @@ export default function MessageListItem({ message }: Props) {
           </Typography>
         </div>
         <div className="md:hidden">
-          <MessageSeeMoreModal message={message} />
+          <MessageSeeMoreModal
+            message={message}
+            vendor={vendor}
+            vendorImageUrl={vendorImageUrl}
+            date={date}
+          />
         </div>
       </div>
       <div className="ml-auto hidden md:block">
-        <MessageSeeMoreModal message={message} />
+        <MessageSeeMoreModal
+          message={message}
+          vendor={vendor}
+          vendorImageUrl={vendorImageUrl}
+          date={date}
+        />
       </div>
     </div>
   );
