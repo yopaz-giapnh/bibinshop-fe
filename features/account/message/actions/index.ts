@@ -5,6 +5,7 @@ import { isVendorImageSchema, isVendorSchema } from '@/features/vendor/utils';
 import { revalidateTag } from 'next/cache';
 import { TAGS } from '../constants';
 import { MessageIncludes, MessageSchema } from '../types';
+import { isClientError } from '@/utils/error';
 
 export async function getAccountMessages({ page }: { page?: number } = {}) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/notifications', {
@@ -30,30 +31,37 @@ export async function getAccountMessages({ page }: { page?: number } = {}) {
   };
 }
 
-export async function getAccountMessageDetail({ id }: { id: string }) {
-  const { data, error } = await apiClient.GET(`/api/v2/storefront/notifications/{id}`, {
-    params: {
-      query: {},
-      path: { id }
+export async function getAccountMessageDetail(
+  prevState: { success: boolean; message: string } | null,
+  id: string
+) {
+  try {
+    const { error } = await apiClient.GET(`/api/v2/storefront/notifications/{id}`, {
+      params: {
+        query: {},
+        path: { id }
+      }
+    });
+
+    if (error) {
+      throw error;
     }
-  });
 
-  if (error) {
-    throw error;
+    // NOTE: 既読処理があるので、revalidateする
+    revalidateTag(TAGS.messages);
+
+    return {
+      success: true,
+      message: 'メッセージを既読にしました'
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: isClientError(error) ? error.error : 'エラーが発生しました'
+    };
   }
-
-  // NOTE: 既読処理があるので、revalidateする
-  revalidateTag(TAGS.messages);
-
-  const { data: message, included } = data;
-  const vendor = included?.find(isVendorSchema);
-  const vendorImage = included?.find(isVendorImageSchema);
-
-  return {
-    ...message,
-    vendor,
-    vendorImage
-  };
 }
 
 function reshapeMessages({
