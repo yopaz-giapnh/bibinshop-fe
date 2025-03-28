@@ -1,6 +1,11 @@
 import BibismilingFace from '@/assets/bibincban/smiling-face.svg';
 import { Button } from '@/components/ui/button';
-import { DialogContent, DialogDescription } from '@/components/ui/dialog';
+import {
+  DialogDescription,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import { Dialog } from '@radix-ui/react-dialog';
 
@@ -19,9 +24,13 @@ export default function CompleteModal({ open, setOpen, title, onClick }: Props) 
           className="flex w-[440px] flex-col items-center justify-center pb-[24px]"
           hideCloseButton
         >
-          <Typography as="bold" element="p" className="mb-[24px] text-[20px] text-black-90">
-            {title}
-          </Typography>
+          <DialogHeader>
+            <DialogTitle>
+              <Typography as="bold" element="p" className="mb-[24px] text-[20px] text-black-90">
+                {title}
+              </Typography>
+            </DialogTitle>
+          </DialogHeader>
           <BibismilingFace />
           <Button
             size="lg"
