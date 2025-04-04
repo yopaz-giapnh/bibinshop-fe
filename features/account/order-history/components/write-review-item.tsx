@@ -34,11 +34,11 @@ type Props = {
  */
 export default function WriteReviewItem({ product, review, onReviewRatings, onReviewText }: Props) {
   const [ratings, setRatings] = useState<Ratings>({
-    texture: review?.attributes.texture_rating || 1,
-    finish: review?.attributes.finish_rating || 1,
     effectiveness: review?.attributes.effectiveness_rating || 1,
-    longevity: review?.attributes.longevity_rating || 1,
-    usability: review?.attributes.usability_rating || 1
+    satisfaction: review?.attributes.satisfaction_rating || 1,
+    repurchase: review?.attributes.repurchase_rating || 1,
+    finish: review?.attributes.finish_rating || 1,
+    skin_type: review?.attributes.skin_type_rating || 1
   });
 
   const [reviewText, setReviewText] = useState(review?.attributes.review || '');

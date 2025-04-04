@@ -26,11 +26,11 @@ type Props = {
 type WriteReview = {
   productId: string;
   ratings: {
-    texture: number;
-    finish: number;
     effectiveness: number;
-    longevity: number;
-    usability: number;
+    satisfaction: number;
+    repurchase: number;
+    finish: number;
+    skin_type: number;
   };
   review?: string;
   reviewId?: string;
@@ -43,11 +43,11 @@ export default function WriteReviewForm({ products, reviews, reviewPoint }: Prop
     reviews.map((review) => ({
       productId: review.product?.id || review.relationships.product?.data?.id || '',
       ratings: {
-        texture: review.attributes.texture_rating || 1,
-        finish: review.attributes.finish_rating || 1,
         effectiveness: review.attributes.effectiveness_rating || 1,
-        longevity: review.attributes.longevity_rating || 1,
-        usability: review.attributes.usability_rating || 1
+        satisfaction: review.attributes.satisfaction_rating || 1,
+        repurchase: review.attributes.repurchase_rating || 1,
+        finish: review.attributes.finish_rating || 1,
+        skin_type: review.attributes.skin_type_rating || 1
       },
       review: review.attributes.review || '',
       reviewId: review.id
@@ -58,11 +58,11 @@ export default function WriteReviewForm({ products, reviews, reviewPoint }: Prop
     const reviews = writeReviews.map((review) => ({
       productId: review.productId,
       ratings: {
-        texture: review.ratings.texture,
-        finish: review.ratings.finish,
         effectiveness: review.ratings.effectiveness,
-        longevity: review.ratings.longevity,
-        usability: review.ratings.usability
+        satisfaction: review.ratings.satisfaction,
+        repurchase: review.ratings.repurchase,
+        finish: review.ratings.finish,
+        skin_type: review.ratings.skin_type
       },
       review: review.review,
       reviewId: review.reviewId

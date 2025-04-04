@@ -109,11 +109,11 @@ export async function saveReviews(
   reviews: {
     productId: string;
     ratings: {
-      texture: number;
-      finish: number;
       effectiveness: number;
-      longevity: number;
-      usability: number;
+      satisfaction: number;
+      repurchase: number;
+      finish: number;
+      skin_type: number;
     };
     review?: string;
     reviewId?: string;
@@ -126,22 +126,22 @@ export async function saveReviews(
             productId: review.productId,
             reviewId: review.reviewId,
             ratings: {
-              texture: review.ratings.texture,
-              finish: review.ratings.finish,
               effectiveness: review.ratings.effectiveness,
-              longevity: review.ratings.longevity,
-              usability: review.ratings.usability
+              satisfaction: review.ratings.satisfaction,
+              repurchase: review.ratings.repurchase,
+              finish: review.ratings.finish,
+              skin_type: review.ratings.skin_type
             },
             review: review.review
           })
         : writeReview({
             productId: review.productId,
             ratings: {
-              texture: review.ratings.texture,
-              finish: review.ratings.finish,
               effectiveness: review.ratings.effectiveness,
-              longevity: review.ratings.longevity,
-              usability: review.ratings.usability
+              satisfaction: review.ratings.satisfaction,
+              repurchase: review.ratings.repurchase,
+              finish: review.ratings.finish,
+              skin_type: review.ratings.skin_type
             },
             review: review.review
           })
@@ -172,11 +172,11 @@ async function updateReview({
   productId: string;
   reviewId: string;
   ratings: {
-    texture: number;
-    finish: number;
     effectiveness: number;
-    longevity: number;
-    usability: number;
+    satisfaction: number;
+    repurchase: number;
+    finish: number;
+    skin_type: number;
   };
   review?: string;
 }) {
@@ -185,11 +185,11 @@ async function updateReview({
       body: {
         review: {
           product_id: productId,
-          texture_rating: ratings.texture,
-          finish_rating: ratings.finish,
           effectiveness_rating: ratings.effectiveness,
-          longevity_rating: ratings.longevity,
-          usability_rating: ratings.usability,
+          satisfaction_rating: ratings.satisfaction,
+          repurchase_rating: ratings.repurchase,
+          finish_rating: ratings.finish,
+          skin_type_rating: ratings.skin_type,
           review
         }
       },
@@ -225,11 +225,11 @@ async function writeReview({
 }: {
   productId: string;
   ratings: {
-    texture: number;
-    finish: number;
     effectiveness: number;
-    longevity: number;
-    usability: number;
+    satisfaction: number;
+    repurchase: number;
+    finish: number;
+    skin_type: number;
   };
   review?: string;
 }) {
@@ -238,11 +238,11 @@ async function writeReview({
       body: {
         review: {
           product_id: productId,
-          texture_rating: ratings.texture,
-          finish_rating: ratings.finish,
           effectiveness_rating: ratings.effectiveness,
-          longevity_rating: ratings.longevity,
-          usability_rating: ratings.usability,
+          satisfaction_rating: ratings.satisfaction,
+          repurchase_rating: ratings.repurchase,
+          finish_rating: ratings.finish,
+          skin_type_rating: ratings.skin_type,
           review
         }
       }

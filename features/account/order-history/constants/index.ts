@@ -6,27 +6,27 @@ export const TAGS = {
 };
 
 export const RATING_ITEMS: RatingItem[] = [
-  { key: 'texture', label: 'ツヤ' },
-  { key: 'finish', label: '発色' },
-  { key: 'effectiveness', label: 'ラメ' },
-  { key: 'longevity', label: 'マット' },
-  { key: 'usability', label: '使い心地' }
+  { key: 'effectiveness', label: '効果実感' },
+  { key: 'satisfaction', label: '商品の満足度' },
+  { key: 'repurchase', label: 'リピート購入意欲' },
+  { key: 'finish', label: '仕上がり' },
+  { key: 'skin_type', label: '自分の肌質に合っているか' }
 ];
 
 export const RATING_FIELDS = {
-  texture: 'texture',
-  finish: 'finish',
   effectiveness: 'effectiveness',
-  longevity: 'longevity',
-  usability: 'usability'
+  satisfaction: 'satisfaction',
+  repurchase: 'repurchase',
+  finish: 'finish',
+  skin_type: 'skin_type'
 } as const;
 
 export const DEFAULT_RATINGS: Ratings = {
-  texture: 1,
-  finish: 1,
   effectiveness: 1,
-  longevity: 1,
-  usability: 1
+  satisfaction: 1,
+  repurchase: 1,
+  finish: 1,
+  skin_type: 1
 };
 
 export type SortedLineItemGroup = {
