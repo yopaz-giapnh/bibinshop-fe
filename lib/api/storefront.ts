@@ -2721,16 +2721,16 @@ export interface components {
         created_at?: components['schemas']['Timestamp'];
         /** @example 1 */
         feedback_id?: string | null;
-        /** @description 使用感（テクスチャー、塗り心地）の評価 */
-        texture_rating?: number;
-        /** @description 仕上がり（見た目、フィット感）の評価 */
-        finish_rating?: number;
-        /** @description 効果実感（期待した効果が得られたか）の評価 */
+        /** @description 効果実感（期待した効果が得られたか） */
         effectiveness_rating?: number;
-        /** @description 持続性（効果や仕上がりの持続時間）の評価 */
-        longevity_rating?: number;
-        /** @description 使いやすさ（容器の使い勝手、操作性）の評価 */
-        usability_rating?: number;
+        /** @description 商品の満足度 */
+        satisfaction_rating?: number;
+        /** @description リピート購入意欲（再購入したいか） */
+        repurchase_rating?: number;
+        /** @description 仕上がり（見た目・フィット感） */
+        finish_rating?: number;
+        /** @description 自分の肌質に合っているか */
+        skin_type_rating?: number;
       };
       relationships: {
         user?: {
@@ -2829,16 +2829,16 @@ export interface components {
       | components['schemas']['UserAvatar'];
     ReviewPayload: {
       product_id: string;
-      /** @description 使用感（テクスチャー、塗り心地）の評価 */
-      texture_rating: number;
-      /** @description 仕上がり（見た目、フィット感）の評価 */
-      finish_rating: number;
-      /** @description 効果実感（期待した効果が得られたか）の評価 */
+      /** @description 効果実感（期待した効果が得られたか） */
       effectiveness_rating: number;
-      /** @description 持続性（効果や仕上がりの持続時間）の評価 */
-      longevity_rating: number;
-      /** @description 使いやすさ（容器の使い勝手、操作性）の評価 */
-      usability_rating: number;
+      /** @description 商品の満足度 */
+      satisfaction_rating: number;
+      /** @description リピート購入意欲（再購入したいか） */
+      repurchase_rating: number;
+      /** @description 仕上がり（見た目・フィット感） */
+      finish_rating: number;
+      /** @description 自分の肌質に合っているか */
+      skin_type_rating: number;
       review?: string;
     };
     /** Review Includes */

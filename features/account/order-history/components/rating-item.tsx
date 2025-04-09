@@ -10,7 +10,7 @@ type RatingItemProps = {
 export default function RatingItem({ label, value, onChange }: RatingItemProps) {
   return (
     <div className="flex items-center">
-      <Typography as="boldSmall" element="p" className="w-[100px]">
+      <Typography as="boldSmall" element="p" className="w-[180px]">
         {label}
       </Typography>
       <Rating star={value} size={24} onClick={onChange} />

@@ -1,9 +1,9 @@
 export type Ratings = {
-  texture: number;
-  finish: number;
   effectiveness: number;
-  longevity: number;
-  usability: number;
+  satisfaction: number;
+  repurchase: number;
+  finish: number;
+  skin_type: number;
 };
 
 export type RatingItem = {
