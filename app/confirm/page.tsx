@@ -25,8 +25,13 @@ export default function Page({
 
     const confirm = async () => {
       if (isString(confirmationToken)) {
-        await authenticateFromToken(confirmationToken);
-        router.replace('/?registration=complete');
+        try {
+          await authenticateFromToken(confirmationToken);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          router.replace('/?registration=failed');
+        }
       }
     };
     confirm();
