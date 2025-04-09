@@ -182,12 +182,17 @@ export async function resendEmail(prevState: State, { email }: { email: string }
 
 export async function authenticateFromToken(confirmationToken: string) {
   try {
-    await signIn('confirmation', { confirmationToken });
+    await signIn('confirmation', { confirmationToken, redirect: false });
   } catch (error) {
     console.error(error);
     if (isRedirectError(error)) {
       throw error;
     }
+
+    return {
+      success: false,
+      message: 'ログインに失敗しました'
+    };
   }
 }
 
