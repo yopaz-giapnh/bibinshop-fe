@@ -2,6 +2,7 @@ import { FacebookLogo } from '@/components/icons/facebook-logo';
 import { InstagramLogo } from '@/components/icons/instagram-logo';
 import { Logo } from '@/components/icons/logo';
 import { XLogo } from '@/components/icons/x-logo';
+import { TikTokLogo } from '@/components/icons/tiktok-logo';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
 
@@ -18,22 +19,25 @@ export function Copyright() {
         <FacebookLogo id={id} />
       </Link>
       {/* TODO: Xアカウント共有されたら修正 */}
-      <Link
-        href="https://www.instagram.com/bibinews_/"
-        target="_blank"
-        rel="noopener noreferrer"
-        passHref
-      >
+      <Link href="https://x.com/bibinews_media" target="_blank" rel="noopener noreferrer" passHref>
         <XLogo id={id} />
       </Link>
       {/* Instagramアカウント */}
       <Link
-        href="https://www.instagram.com/bibinews_/"
+        href="https://www.instagram.com/bibinews_beauty/"
         target="_blank"
         rel="noopener noreferrer"
         passHref
       >
         <InstagramLogo id={id} />
+      </Link>
+      <Link
+        href="https://www.tiktok.com/@bibinews__?is_from_webapp=1&sender_device=pc"
+        target="_blank"
+        rel="noopener noreferrer"
+        passHref
+      >
+        <TikTokLogo id={id} />
       </Link>
     </>
   );

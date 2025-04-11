@@ -7,47 +7,21 @@ import { useState } from 'react';
 
 const components: { title: string; links: { label: string; href?: string }[] }[] = [
   {
-    title: 'bibinについて',
+    title: '会社情報',
     links: [
-      // TODO: リンク先を変更する
-      { label: 'リンク1', href: '/' },
-      { label: 'リンク2' },
-      { label: 'リンク3' }
+      { label: '会社概要（会社HP）', href: 'https://bibin.jp/' },
+      { label: '韓国総合情報サイト「bibinews」', href: 'https://bibinews.jp/' },
+      { label: 'お問い合わせ・取材の依頼', href: 'https://bibin.jp/contact' }
     ]
   },
   {
     title: 'カスタマサービス',
     links: [
-      // TODO: リンク先を変更する
-      { label: 'リンク1', href: '/' },
-      { label: 'リンク2' },
-      { label: 'リンク3' }
-    ]
-  },
-  {
-    title: 'ヘルプ',
-    links: [
-      // TODO: リンク先を変更する
-      { label: 'リンク1', href: '/' },
-      { label: 'リンク2' },
-      { label: 'リンク3' }
-    ]
-  },
-  {
-    title: '会社情報',
-    links: [
+      { label: 'FAQ', href: 'https://www.notion.so/V2-QA-17ee1d9eac628007b356e4d52a654ae8' },
+      { label: 'shopへのお問い合わせ', href: 'https://forms.gle/te2rmGm1iYRALgun9' },
       { label: '利用規約', href: '/terms-of-use' },
       { label: 'プライバシーポリシー', href: '/privacy-policy' },
       { label: '特定商取引法に基づく表記', href: '/commercial-transactions' }
-    ]
-  },
-  {
-    title: 'サービス',
-    links: [
-      // TODO: リンク先を変更する
-      { label: 'リンク1', href: '/' },
-      { label: 'リンク2' },
-      { label: 'リンク3' }
     ]
   }
 ];
@@ -63,7 +37,7 @@ export function Links() {
   };
 
   return (
-    <div className="md:flex md:justify-between">
+    <div className="md:flex md:justify-end md:gap-5">
       {components.map((component) => (
         <div key={component.title} className="mb-4 flex flex-col md:mb-0">
           <button
