@@ -73,7 +73,7 @@ export function OrderOverview({ cart, pointsRate }: Props) {
         </Typography>
       </div>
 
-      {!!cart.attributes.total && (
+      {!!cart.attributes.total && !!pointsRate && (
         <div className="flex w-full items-center justify-center pt-2 md:pb-2">
           <Typography as="caption" element="p" className="text-black-90">
             獲得予定
