@@ -11,29 +11,33 @@ import {
 } from '@/features/review/components/review-comment-reply-modal';
 import { Review } from '@/features/review/types';
 import { useReviewFeedback } from '@/features/review/utils';
-import {
-  NewRegistrationMediationModal,
-  NewRegistrationMediationModalRef
-} from '@/features/sns/components/new-registration-mediation-modal';
+// import {
+//   NewRegistrationMediationModal,
+//   NewRegistrationMediationModalRef
+// } from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type ReviewProps = {
   review: Review;
 };
 
 export function ProfileReviewItem({ review: initialReview }: ReviewProps) {
+  const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
+  // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
+  // const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const { handleFeedbackToggle } = useReviewFeedback();
   const [review, setReview] = useState(initialReview);
 
   const handleReplyClick = (review: Review) => {
     if (!isLoggedIn) {
-      newRegistrationMediationModalRef.current?.open();
+      // newRegistrationMediationModalRef.current?.open();
+      router.push('/signup');
       return;
     }
     reviewCommentReplyModalRef.current?.open(review);
@@ -41,7 +45,8 @@ export function ProfileReviewItem({ review: initialReview }: ReviewProps) {
 
   const handleFeedbackClick = () => {
     if (!isLoggedIn) {
-      newRegistrationMediationModalRef.current?.open();
+      // newRegistrationMediationModalRef.current?.open();
+      router.push('/signup');
       return;
     }
     handleFeedbackToggle(review, (updatedReview) => {
@@ -106,7 +111,7 @@ export function ProfileReviewItem({ review: initialReview }: ReviewProps) {
           setReview(updatedReview);
         }}
       />
-      <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
+      {/*<NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />*/}
     </div>
   );
 }

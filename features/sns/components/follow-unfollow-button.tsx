@@ -11,12 +11,12 @@ import {
 import { useAuth } from '@/hooks/use-auth';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useRouter } from 'next/navigation';
-import { startTransition, useCallback, useRef, useState } from 'react';
+import { startTransition, useCallback, useState } from 'react';
 import { follow, unfollow } from '../actions';
-import {
-  NewRegistrationMediationModal,
-  NewRegistrationMediationModalRef
-} from './new-registration-mediation-modal';
+// import {
+//   NewRegistrationMediationModal,
+//   NewRegistrationMediationModalRef
+// } from './new-registration-mediation-modal';
 
 type Props = {
   username: string;
@@ -28,7 +28,8 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
   const [following, setFollowing] = useState(isFollowing);
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
+  // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
+  // const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
 
   const refreshUserDetails = useCallback(() => {
     startTransition(() => {
@@ -38,7 +39,8 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
 
   const handleFollow = async () => {
     if (!isLoggedIn) {
-      newRegistrationMediationModalRef.current?.open();
+      // newRegistrationMediationModalRef.current?.open();
+      router.push('/signup');
       return;
     }
 
@@ -57,7 +59,7 @@ export default function FollowUnfollowButton({ username, unique_key, isFollowing
         <Button className="ml-auto" onClick={handleFollow}>
           フォローする
         </Button>
-        <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
+        {/*<NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />*/}
       </>
     );
   }

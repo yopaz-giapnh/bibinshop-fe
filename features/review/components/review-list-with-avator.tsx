@@ -3,13 +3,14 @@
 import { Typography } from '@/components/ui/typography';
 import { formatDateString } from '@/utils/date';
 
-import {
-  NewRegistrationMediationModal,
-  NewRegistrationMediationModalRef
-} from '@/features/sns/components/new-registration-mediation-modal';
+// import {
+//   NewRegistrationMediationModal,
+//   NewRegistrationMediationModalRef
+// } from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Review } from '../types';
 import { useReviewFeedback } from '../utils';
@@ -23,15 +24,18 @@ type Props = {
 };
 
 export function ReviewListWithAvator({ reviews }: Props) {
+  const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
+  // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
+  // const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const reviewCommentReplyModalRef = useRef<ReviewCommentReplyModalRef>(null);
   const { handleFeedbackToggle } = useReviewFeedback();
   const [reviewList, setReviewList] = useState(reviews);
 
   const handleReplyClick = (review: Review) => {
     if (!isLoggedIn) {
-      newRegistrationMediationModalRef.current?.open();
+      // newRegistrationMediationModalRef.current?.open();
+      router.push('/signup');
       return;
     }
     reviewCommentReplyModalRef.current?.open(review);
@@ -39,7 +43,8 @@ export function ReviewListWithAvator({ reviews }: Props) {
 
   const handleFeedbackClick = (review: Review) => {
     if (!isLoggedIn) {
-      newRegistrationMediationModalRef.current?.open();
+      // newRegistrationMediationModalRef.current?.open();
+      router.push('/signup');
       return;
     }
     handleFeedbackToggle(review, (updatedReview) => {
@@ -128,7 +133,7 @@ export function ReviewListWithAvator({ reviews }: Props) {
           );
         }}
       />
-      <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
+      {/*<NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />*/}
     </div>
   );
 }

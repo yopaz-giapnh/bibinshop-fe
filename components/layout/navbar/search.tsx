@@ -28,14 +28,18 @@ export function Search({ isSignedIn }: Props) {
     search(text);
     setIsOpen(false);
   };
+  // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
+  console.log(isSignedIn);
 
   return (
     <Command
       className={
         (isOpen
-          ? `absolute left-0 top-0 z-50 h-screen w-screen pt-[15px] md:h-fit md:max-h-[300px] md:w-[462px] md:pt-[0px]`
-          : `absolute ${isSignedIn ? 'top-3' : 'top-9 md:mt-[20px]'} z-50  h-[48px] w-[172px]`) +
-        ` md:left-auto md:top-3 md:flex md:w-[456px] ${isSignedIn ? '' : 'md:mt-[20px]'}`
+          ? // ? `absolute left-0 top-0 z-50 h-screen w-screen pt-[15px] md:h-fit md:max-h-[300px] md:w-[462px] md:pt-[0px]`
+            // : `absolute ${isSignedIn ? 'top-3' : 'top-9 md:mt-[20px]'} z-50  h-[48px] w-[172px]`) +
+            // ` md:left-auto md:top-3 md:flex md:w-[456px] ${isSignedIn ? '' : 'md:mt-[20px]'}
+            `left-0 h-screen w-screen pt-[15px] md:h-fit md:max-h-[300px] md:w-[462px] md:pt-[0px]`
+          : `h-[48px] w-[172px]`) + `absolute top-3 z-50 md:left-auto md:flex md:w-[456px]`
       }
       value={searchValue}
     >
