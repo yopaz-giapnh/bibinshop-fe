@@ -14,15 +14,16 @@ import {
   removeFromFavorite
 } from '@/features/favorite-products/actions';
 import Rating from '@/features/review/components/rating';
-import {
-  NewRegistrationMediationModal,
-  NewRegistrationMediationModalRef
-} from '@/features/sns/components/new-registration-mediation-modal';
+// import {
+//   NewRegistrationMediationModal,
+//   NewRegistrationMediationModalRef
+// } from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { BadgeAlert, Check, Heart } from 'lucide-react';
 import Image from 'next/image';
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product, VariantSchema, VariantState } from '../types';
 import {
@@ -43,11 +44,13 @@ type Props = {
 
 // NOTE: ProductCartFormとロジックがほとんど一緒なので、共通化してもいいかも
 export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_, ref) => {
+  const router = useRouter();
   const { isLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
 
-  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
+  // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
+  // const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
 
   const [product, setProduct] = useState<Product>();
   const [selectedVariant, setSelectedVariant] = useState<VariantSchema>();
@@ -125,7 +128,8 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
 
   const onPressFavorite = async () => {
     if (!isLoggedIn) {
-      newRegistrationMediationModalRef.current?.open();
+      // newRegistrationMediationModalRef.current?.open()
+      router.push('/signup');
       return;
     }
 
@@ -330,7 +334,7 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
               )}
             </button>
 
-            <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
+            {/*<NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />*/}
           </div>
         </div>
       </DialogContent>

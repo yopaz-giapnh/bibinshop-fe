@@ -1,5 +1,5 @@
 import { getNewRegisterationCoupon } from '@/features/coupon/actions';
-import { RegistrationCouponGetModal } from '@/features/coupon/components/registration-coupon-get-modal';
+// import { RegistrationCouponGetModal } from '@/features/coupon/components/registration-coupon-get-modal';
 import { CouponSchema } from '@/features/coupon/types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -32,22 +32,23 @@ export default function RegistrationCompleteModal() {
 
   return (
     <>
-      {newRegistrationCoupon && showCompleteModal ? (
-        <RegistrationCouponGetModal coupon={newRegistrationCoupon} />
-      ) : (
-        <CompleteModal
-          open={showCompleteModal}
-          setOpen={(open) => {
-            if (open) {
-              onCompleteModalOpen();
-            } else {
-              handleCompleteModalClose();
-            }
-          }}
-          title="おめでとうございます。登録が完了しました！"
-          onClick={handleCompleteModalClose}
-        />
-      )}
+      {/*TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする*/}
+      {/*{newRegistrationCoupon && showCompleteModal ? (*/}
+      {/*  <RegistrationCouponGetModal coupon={newRegistrationCoupon} />*/}
+      {/*) : (*/}
+      <CompleteModal
+        open={showCompleteModal}
+        setOpen={(open) => {
+          if (open) {
+            onCompleteModalOpen();
+          } else {
+            handleCompleteModalClose();
+          }
+        }}
+        title="おめでとうございます。登録が完了しました！"
+        onClick={handleCompleteModalClose}
+      />
+      {/*)}*/}
     </>
   );
 }

@@ -30,7 +30,7 @@ export default function Page({
         } catch (error) {
           console.error(error);
         } finally {
-          router.replace('/?registration=failed');
+          router.replace('/?registration=complete');
         }
       }
     };

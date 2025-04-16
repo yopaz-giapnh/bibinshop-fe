@@ -14,16 +14,17 @@ import {
   removeFromFavorite
 } from '@/features/favorite-products/actions';
 import Rating from '@/features/review/components/rating';
-import {
-  NewRegistrationMediationModal,
-  NewRegistrationMediationModalRef
-} from '@/features/sns/components/new-registration-mediation-modal';
+// import {
+//   NewRegistrationMediationModal,
+//   NewRegistrationMediationModalRef
+// } from '@/features/sns/components/new-registration-mediation-modal';
 import { useAuth } from '@/hooks/use-auth';
 import { useIsPc } from '@/hooks/use-is-pc';
 import { calculateDiscountPercentage, formatedPrice, isDiscounted } from '@/utils/price';
 import { motion } from 'framer-motion';
 import { BadgeAlert, Check, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Product, VariantSchema, VariantState } from '../types';
@@ -40,6 +41,7 @@ type Props = {
 };
 
 export function ProductCartForm({ product, getCart }: Props) {
+  const router = useRouter();
   const isPc = useIsPc();
   const { isLoggedIn } = useAuth();
   const { toast } = useToast();
@@ -48,7 +50,8 @@ export function ProductCartForm({ product, getCart }: Props) {
 
   const [selectedVariant, setSelectedVariant] = useState<VariantSchema | undefined>(defaultVariant);
 
-  const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
+  // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
+  // const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
   const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
 
   const [selectedQuantity, setSelectedQuantity] = useState(1);
@@ -123,7 +126,8 @@ export function ProductCartForm({ product, getCart }: Props) {
 
   const onPressFavorite = async () => {
     if (!isLoggedIn) {
-      newRegistrationMediationModalRef.current?.open();
+      // newRegistrationMediationModalRef.current?.open();
+      router.push('/signup');
       return;
     }
 
@@ -368,7 +372,7 @@ export function ProductCartForm({ product, getCart }: Props) {
         </Link>
       </div>
 
-      <NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />
+      {/*<NewRegistrationMediationModal ref={newRegistrationMediationModalRef} />*/}
     </>
   );
 }

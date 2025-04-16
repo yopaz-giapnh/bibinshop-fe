@@ -2,7 +2,7 @@ import { Logo } from '@/components/icons/logo';
 import { CartMenuSkeleton } from '@/components/layout/navbar/skeletons/cart-menu-skeleton';
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
-import NewRegistrationCouponBanner from '@/features/coupon/components/new-registration-coupoun-banner';
+// import NewRegistrationCouponBanner from '@/features/coupon/components/new-registration-coupoun-banner';
 import { getTaxons } from '@/features/taxon/actions';
 import { Heart } from 'lucide-react';
 import Image from 'next/image';
@@ -20,7 +20,8 @@ type Props = Pick<ComponentProps<typeof AccountMenu>, 'isSignedIn'> & {
 export function Header({ isSignedIn, getTaxons }: Props) {
   return (
     <div>
-      {!isSignedIn && <NewRegistrationCouponBanner />}
+      {/*TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする*/}
+      {/*{!isSignedIn && <NewRegistrationCouponBanner />}*/}
       <div className="z-40 flex h-[72px] items-center justify-between border-b-[1px] bg-white-base px-[8px] py-3 md:px-[24px]">
         <div className="flex">
           <SpSideBar getTaxons={getTaxons} isSignedIn={isSignedIn} />
