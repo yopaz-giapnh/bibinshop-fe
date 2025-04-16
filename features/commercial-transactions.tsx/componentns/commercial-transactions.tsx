@@ -47,6 +47,12 @@ export function CommercialTransactions() {
             </tr>
             <tr className="border-b border-gray-200">
               <th className="whitespace-nowrap border-r border-gray-200 bg-gray-50 px-4 py-4 text-left align-top font-bold">
+                電話サポート対応時間
+              </th>
+              <td className="px-4 py-4">午前10時から午後18時まで</td>
+            </tr>
+            <tr className="border-b border-gray-200">
+              <th className="whitespace-nowrap border-r border-gray-200 bg-gray-50 px-4 py-4 text-left align-top font-bold">
                 電話番号
               </th>
               <td className="px-4 py-4">03-6441-2751</td>
