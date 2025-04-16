@@ -52,6 +52,7 @@ export async function updateCheckoutAddress(address: Address) {
     firstname_katakana: address.attributes.firstname_katakana || '',
     lastname_katakana: address.attributes.lastname_katakana || '',
     address1: address.attributes.address1 || '',
+    address2: address.attributes.address2 || '',
     city: address.attributes.city || '',
     phone: address.attributes.phone || '',
     zipcode: address.attributes.zipcode || '',
