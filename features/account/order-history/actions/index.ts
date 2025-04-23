@@ -51,7 +51,8 @@ export async function getAccountOrders({
         include: includes,
         'filter[shipment_state]': shipment_state,
         page,
-        per_page: 10
+        per_page: 10,
+        sort: '-completed_at'
       }
     },
     fetch: (request) => {
