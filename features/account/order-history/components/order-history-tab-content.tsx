@@ -9,7 +9,7 @@ type OrderHistoryTabsProps = {
   currentPage: number;
   orders: {
     data: Array<Order>;
-    meta: { total_pages: number /* other properties */ };
+    meta: { total_pages?: number; total_count?: number };
   };
   reviews: Review[];
 };

@@ -1,6 +1,7 @@
 import { BackButton } from '@/components/button/back-button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Typography } from '@/components/ui/typography';
+import { HistoryTabBanner } from '@/features/account/order-history/components/history-tab-banner';
 import { getMyReviews } from '@/features/review/actions';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -8,7 +9,6 @@ import { getAccountOrders } from '../actions';
 import { AnimatedOrderHistoryContainer } from './animated-order-history-container';
 import { OrderHistoryTabContent } from './order-history-tab-content';
 import { OrderHistoryTabContentSkeleton } from './skeletons/order-history-tab-content-skeleton';
-import { HistoryTabBanner } from '@/features/account/order-history/components/history-tab-banner';
 
 type Props = {
   currentPage: number;
@@ -45,6 +45,13 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
     return stateOrders.meta.total_count ?? 0;
   };
 
+  const orderCounts = await Promise.all(
+    tabs.map(async (tab) => ({
+      ...tab,
+      count: await getOrderCount(tab.value)
+    }))
+  );
+
   return (
     <AnimatedOrderHistoryContainer>
       <div className="mb-[24px] flex w-full items-center justify-between md:justify-center">
@@ -60,7 +67,7 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
       </div>
       <Tabs defaultValue={tabState} className="z-0 w-full items-center justify-center">
         <TabsList className="mb-[24px] flex h-fit w-full overflow-hidden border-[1px] bg-white-base">
-          {tabs.map((tab, index) => (
+          {orderCounts.map((tab, index) => (
             <Link
               key={tab.value}
               href={`?state=${tab.value}&page=1`}
@@ -82,31 +89,24 @@ export async function OrderHistoryTabs({ currentPage, tabState }: Props) {
                     tab.value === tabState ? 'text-bibinBlue-100' : ''
                   }`}
                 >
-                  {getOrderCount(tab.value)}
+                  {tab.count}
                 </Typography>
               </TabsTrigger>
-              {index !== tabs.length - 1 && <div className="h-[60px] w-[1px] bg-gray-300" />}
+              {index !== orderCounts.length - 1 && <div className="h-[60px] w-[1px] bg-gray-300" />}
             </Link>
           ))}
         </TabsList>
         <HistoryTabBanner title="レビューして" content="ポイントを獲得" />
-        {tabs.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value}>
-            <Suspense fallback={<OrderHistoryTabContentSkeleton />}>
-              <OrderHistoryTabContent
-                orders={{
-                  data: orders.data,
-                  meta: {
-                    total_pages: orders.meta.total_pages ?? 1
-                  }
-                }}
-                status={tabState}
-                currentPage={currentPage}
-                reviews={reviews.data}
-              />
-            </Suspense>
-          </TabsContent>
-        ))}
+        <TabsContent value={tabState}>
+          <Suspense fallback={<OrderHistoryTabContentSkeleton />}>
+            <OrderHistoryTabContent
+              orders={orders}
+              status={tabState}
+              currentPage={currentPage}
+              reviews={reviews.data}
+            />
+          </Suspense>
+        </TabsContent>
       </Tabs>
     </AnimatedOrderHistoryContainer>
   );
