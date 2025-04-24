@@ -148,7 +148,7 @@ export const ProductCard = forwardRef<HTMLDivElement, Props>(
             </div>
             <div className="mt-2 flex items-center justify-between">
               <Typography
-                as="xSmall"
+                as="small"
                 element="p"
                 className={
                   'mt-1 overflow-hidden whitespace-normal break-words' +
@@ -182,14 +182,6 @@ export const ProductCard = forwardRef<HTMLDivElement, Props>(
             </div>
             <div className={'items-center gap-2 md:flex' + (!available && ' opacity-50')}>
               <div className="mt-[4px] flex items-center justify-between md:mt-0">
-                <Typography
-                  as="xSmall"
-                  element="p"
-                  className={`md:hidden ${!available ? 'text-red-500' : 'text-black-70'}`}
-                >
-                  {!available ? '完売' : `${product.attributes.total_on_hand} 個販売`}
-                </Typography>
-
                 {isSagawaShipping && (
                   <div className="ml-1 flex shrink-0 items-center rounded-full border border-yellow-500 bg-yellow-50 p-[2px] md:hidden">
                     <Image
@@ -237,15 +229,6 @@ export const ProductCard = forwardRef<HTMLDivElement, Props>(
                     </div>
                   )}
                 </div>
-                <Typography
-                  as="xSmall"
-                  element="p"
-                  className={`hidden md:flex ${
-                    product.attributes.total_on_hand === 0 ? 'text-red-500' : 'text-black-70'
-                  }`}
-                >
-                  {!available ? '完売' : `${product.attributes.total_on_hand} 個販売`}
-                </Typography>
               </div>
               {isDiscounted(product.attributes.price, product.attributes.compare_at_price) && (
                 <div className="bg-red flex md:hidden">

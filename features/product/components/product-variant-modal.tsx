@@ -74,10 +74,6 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
     syncIsFavorite();
   }, [selectedVariant]);
 
-  const available = product?.attributes.total_on_hand
-    ? product.attributes.total_on_hand > 0
-    : false;
-
   const [state, formAction] = useFormState(addItem, null);
   const action = formAction.bind(null, {
     variantId: selectedVariant?.id || '',
@@ -258,16 +254,6 @@ export const ProductVariantModal = forwardRef<ProductVariantModalRef, Props>((_,
                   </Typography>
                 </div>
               </>
-            )}
-
-            {product.attributes.total_on_hand !== undefined && (
-              <Typography
-                as="boldSmall"
-                element="p"
-                className={`ml-2 ${!available ? 'text-red-500' : 'text-black-70'}`}
-              >
-                {!available ? '完売' : `${selectedVariant?.attributes.total_on_hand}個販売`}
-              </Typography>
             )}
           </div>
 
