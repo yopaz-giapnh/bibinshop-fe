@@ -52,7 +52,6 @@ export function ProductCartForm({ product, getCart }: Props) {
 
   // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
   // const newRegistrationMediationModalRef = useRef<NewRegistrationMediationModalRef>(null);
-  const available = product.attributes.total_on_hand ? product.attributes.total_on_hand > 0 : false;
 
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
@@ -181,7 +180,7 @@ export function ProductCartForm({ product, getCart }: Props) {
         <div>
           <div className="flex justify-between md:justify-normal">
             <Typography
-              as="small"
+              as="boldTitle"
               element="h1"
               className="max-w-[300px] overflow-hidden whitespace-normal break-words text-text-80 md:max-w-[500px]"
               style={{
@@ -232,16 +231,6 @@ export function ProductCartForm({ product, getCart }: Props) {
                 </Typography>
               </div>
             </>
-          )}
-
-          {selectedVariant?.attributes.total_on_hand !== undefined && (
-            <Typography
-              as="boldSmall"
-              element="p"
-              className={`ml-2 ${!available ? 'text-red-500' : 'text-black-70'}`}
-            >
-              {!available ? '完売' : `${selectedVariant.attributes.total_on_hand}個販売`}
-            </Typography>
           )}
         </div>
 

@@ -17,23 +17,6 @@ export async function Supplementary({ product }: Props) {
   return (
     <div className="rounded-[6px] bg-powderBlue px-6 py-4">
       <div className="flex flex-col">
-        {isSagawaShipping && (
-          <div className="mt-2 flex items-center">
-            <Image
-              src={'/bibin-official-badge.png'}
-              alt={'bibin official badge'}
-              width={24}
-              height={24}
-            />
-            <Typography
-              as="boldSmall"
-              element="p"
-              className="ml-1 bg-gradient-to-r from-[#00C2FF] to-[#00CC66] bg-clip-text text-transparent"
-            >
-              バッジ付きブランド２つで送料無料対象
-            </Typography>
-          </div>
-        )}
         <div className="mt-2 flex items-center">
           <Typography as="boldSmall" element="p" className="text-gray-500">
             配送料：
@@ -60,7 +43,7 @@ export async function Supplementary({ product }: Props) {
                 height={24}
               />
               <Typography as="boldSmall" element="p" className="text-black-200 ml-1">
-                バッジブランドをもう１つ追加すると、バッジのブランドは送料無料になります
+                バッジ付きブランドを合計2点以上購入すると、バッジ付きの商品は全て送料無料になります
               </Typography>
             </div>
           </div>
