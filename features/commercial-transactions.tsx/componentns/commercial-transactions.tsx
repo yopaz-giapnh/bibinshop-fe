@@ -90,9 +90,10 @@ export function CommercialTransactions() {
                 <br />
                 送料：ご購入先のブランドの所在地や配送業者により異なります。
                 <br />
-                【手数料】
+                {/* TODO: コンビニ決済審査通過後に表示 */}
+                {/* 【手数料】
                 <br />
-                ・コンビニ決済手数料：132円（税込）
+                ・コンビニ決済手数料：132円（税込） */}
               </td>
             </tr>
             <tr className="border-b border-gray-200">
@@ -103,10 +104,10 @@ export function CommercialTransactions() {
                 以下のいずれかの支払方法をお選びいただけます。
                 <br />
                 1.クレジットカード決済（Visa、American Express、MasterCard、JCB、）
-                <br />
-                2.コンビニエンスストアでの決済
-                <br />
-                3.PayPay決済
+                {/* TODO: コンビニ決済審査通過後に表示 */}
+                {/* 2.コンビニエンスストアでの決済
+                <br /> */}
+                2.PayPay決済
               </td>
             </tr>
             <tr className="border-b border-gray-200">
@@ -117,10 +118,11 @@ export function CommercialTransactions() {
                 【クレジットカード決済】
                 <br />
                 商品注文時
-                <br />
+                {/* TODO: コンビニ決済審査通過後に表示 */}
+                {/* <br />
                 【コンビニ決済】
                 <br />
-                注文日翌日から3営業日以内
+                注文日翌日から3営業日以内 */}
                 <br />
                 【PayPay決済】
                 <br />

@@ -1,9 +1,10 @@
-import FamilyMart from '@/assets/payment/family-mart.svg';
-import Lawson from '@/assets/payment/lawson.svg';
-import MiniStop from '@/assets/payment/mini-stop.svg';
+// TODO: コンビニ決済審査通過後に表示
+// import FamilyMart from '@/assets/payment/family-mart.svg';
+// import Lawson from '@/assets/payment/lawson.svg';
+// import MiniStop from '@/assets/payment/mini-stop.svg';
 import Paypay from '@/assets/payment/paypay.svg';
-import SeikoMart from '@/assets/payment/seiko-mart.svg';
-import Store from '@/assets/payment/store.svg';
+// import SeikoMart from '@/assets/payment/seiko-mart.svg';
+// import Store from '@/assets/payment/store.svg';
 
 import { RadioGroup } from '@/components/ui/radio-group';
 import { PaymentCreditCardOption } from '@/features/payment/components/payment-credit-card-ption';
@@ -86,7 +87,8 @@ export function PaymentList({
       />
 
       {/* コンビニ決済 */}
-      <PaymentMethodOption
+      {/* TODO: コンビニ決済審査通過後に表示 */}
+      {/* <PaymentMethodOption
         labelKey={availablePaymentMethod.konbini}
         icon={<Store />}
         title="コンビニ決済"
@@ -99,7 +101,7 @@ export function PaymentList({
             <SeikoMart />
           </>
         }
-      />
+      /> */}
 
       {/* クレジットカード一覧 */}
       {creditCards.map((creditCard) => {
