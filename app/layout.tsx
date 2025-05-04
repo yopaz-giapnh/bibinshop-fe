@@ -28,7 +28,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta name="robots" content="noindex" />
         <meta name="google-site-verification" content={META.googleSiteVerification} />
       </head>
       <body
