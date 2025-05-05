@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { Order } from '@/features/order/types';
 import { extractSlugs, getShipmentStateTitle, getTabValue } from '@/features/order/utils';
@@ -5,11 +6,15 @@ import { findImageFromLineItem } from '@/features/product/utils';
 import { Review } from '@/features/review/types';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { ClockIcon } from 'lucide-react';
+import { ClockIcon, Receipt } from 'lucide-react';
 import React from 'react';
 import { SortedLineItemGroup } from '../constants';
 import { DeliveryActionButtons } from './delivery-acction-buttons';
 import OrderHistoryItem from './order-history-item';
+import {
+  OrderReceiptPreviewModal,
+  OrderReceiptPreviewModalRef
+} from './order-receipt-preview-modal';
 
 type OrderHistoryListItemProps = {
   group: SortedLineItemGroup;
@@ -39,6 +44,7 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
   const shipment = order.shipments[index];
   const shipmentTrackerNumber = shipment?.attributes.tracking ?? '';
   const groupSlugs = extractSlugs([group]).filter((slug): slug is string => slug !== undefined);
+  const orderReceiptPreviewModalRef = React.useRef<OrderReceiptPreviewModalRef>(null);
 
   const isReviewed = group.items.some((item) =>
     reviews?.some(
@@ -79,18 +85,37 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
 
         {/* Desktop Action Buttons */}
         <div className="absolute right-0 top-[16px] hidden md:block">
-          <DeliveryActionButtons
-            orderNumber={`${order.attributes.number}`}
-            group={group}
-            shipment={shipment}
-            shipmentTrackerNumber={shipmentTrackerNumber}
-            setSelectedShipmentId={setSelectedShipmentId}
-            orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
-            handleShowShippingInfo={handleShowShippingInfo}
-            groupSlugs={groupSlugs}
-            isReviewed={isReviewed}
-            isKonbiniInfo={isDisplayKonbiniMessage}
-          />
+          <div className="flex flex-col gap-2">
+            <DeliveryActionButtons
+              orderNumber={`${order.attributes.number}`}
+              group={group}
+              shipment={shipment}
+              shipmentTrackerNumber={shipmentTrackerNumber}
+              setSelectedShipmentId={setSelectedShipmentId}
+              orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
+              handleShowShippingInfo={handleShowShippingInfo}
+              groupSlugs={groupSlugs}
+              isReviewed={isReviewed}
+              isKonbiniInfo={isDisplayKonbiniMessage}
+            />
+            <Button
+              className="flex h-[48px] w-full items-center justify-center gap-2 border border-bibinBlue-100 bg-white-base"
+              onClick={() => {
+                const vendorId = group.items[0]?.relationships.vendor?.data?.id;
+                if (vendorId && order.attributes.number) {
+                  orderReceiptPreviewModalRef.current?.open(
+                    order.attributes.number,
+                    Number(vendorId)
+                  );
+                }
+              }}
+            >
+              <Receipt className="h-[18px] w-[18px] text-bibinBlue-100" />
+              <Typography as="bold" element="p" className="text-bibinBlue-100">
+                領収書
+              </Typography>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -120,21 +145,42 @@ const OrderHistoryListItem: React.FC<OrderHistoryListItemProps> = ({
 
       {/* Mobile Action Buttons */}
       <div className="md:hidden">
-        <DeliveryActionButtons
-          orderNumber={`${order.attributes.number}`}
-          group={group}
-          shipment={shipment}
-          shipmentTrackerNumber={shipmentTrackerNumber}
-          setSelectedShipmentId={setSelectedShipmentId}
-          orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
-          handleShowShippingInfo={handleShowShippingInfo}
-          groupSlugs={groupSlugs}
-          isReviewed={isReviewed}
-          isKonbiniInfo={isDisplayKonbiniMessage}
-        />
+        <div className="flex flex-col gap-2">
+          <DeliveryActionButtons
+            orderNumber={`${order.attributes.number}`}
+            group={group}
+            shipment={shipment}
+            shipmentTrackerNumber={shipmentTrackerNumber}
+            setSelectedShipmentId={setSelectedShipmentId}
+            orderReceiptConfirmModalRef={orderReceiptConfirmModalRef}
+            handleShowShippingInfo={handleShowShippingInfo}
+            groupSlugs={groupSlugs}
+            isReviewed={isReviewed}
+            isKonbiniInfo={isDisplayKonbiniMessage}
+          />
+          <Button
+            className="flex h-[48px] w-full items-center justify-center gap-2 border border-bibinBlue-100 bg-white-base"
+            onClick={() => {
+              const vendorId = group.items[0]?.relationships.vendor?.data?.id;
+              if (vendorId && order.attributes.number) {
+                orderReceiptPreviewModalRef.current?.open(
+                  order.attributes.number,
+                  Number(vendorId)
+                );
+              }
+            }}
+          >
+            <Receipt className="h-[18px] w-[18px] text-bibinBlue-100" />
+            <Typography as="bold" element="p" className="text-bibinBlue-100">
+              領収書
+            </Typography>
+          </Button>
+        </div>
       </div>
 
       {!isLastGroup && <div className="hidden border-[1px] md:block" />}
+
+      <OrderReceiptPreviewModal ref={orderReceiptPreviewModalRef} />
     </div>
   );
 };
