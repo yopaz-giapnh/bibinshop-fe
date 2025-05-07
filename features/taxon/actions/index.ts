@@ -5,6 +5,8 @@ import { isTaxonImageSchema } from '@/features/product/utils';
 import { TAGS } from '../constans';
 import { TaxonIncludes, TaxonSchema, TaxonsListParameters } from '../types';
 
+const HIDDEN_CATEGORY = 'カテゴリー';
+
 export async function getTaxons(params?: TaxonsListParameters) {
   const { data, error } = await apiClient.GET('/api/v2/storefront/taxons', {
     params: {
@@ -59,14 +61,16 @@ function reshapeTaxons({
 }) {
   const allTaxonImages = taxonIncluded?.filter(isTaxonImageSchema) || [];
 
-  return taxons.map((taxon) => {
-    const taxonImage = allTaxonImages.find(
-      (image) => image.id === taxon.relationships.image?.data?.id
-    );
+  return taxons
+    .filter((taxon) => taxon.attributes.name !== HIDDEN_CATEGORY)
+    .map((taxon) => {
+      const taxonImage = allTaxonImages.find(
+        (image) => image.id === taxon.relationships.image?.data?.id
+      );
 
-    return {
-      ...taxon,
-      taxonImage
-    };
-  });
+      return {
+        ...taxon,
+        taxonImage
+      };
+    });
 }
