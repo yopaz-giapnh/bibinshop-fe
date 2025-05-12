@@ -238,6 +238,21 @@ export const ReviewCommentReplyModal = forwardRef<ReviewCommentReplyModalRef, Pr
                   >
                     {review.attributes.review}
                   </Typography>
+                  {/* レビュー画像がある場合のみ表示 */}
+                  {review.attributes.images && review.attributes.images.length > 0 && (
+                    <div className="mt-2 grid grid-cols-3 gap-2">
+                      {review.attributes.images.map((image, index) => (
+                        <div key={index} className="relative aspect-square">
+                          <Image
+                            src={image.url || ''}
+                            alt={`レビュー画像 ${index + 1}`}
+                            fill
+                            className="rounded-lg object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="mt-[8px]">
                     <FeedbackButton
                       isActive={!!review.attributes.feedback_id}
