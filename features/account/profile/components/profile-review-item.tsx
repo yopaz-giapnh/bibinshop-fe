@@ -18,8 +18,8 @@ import { useReviewFeedback } from '@/features/review/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { formatDateString } from '@/utils/date';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
 
 type ReviewProps = {
   review: Review;
@@ -69,6 +69,21 @@ export function ProfileReviewItem({ review: initialReview }: ReviewProps) {
       >
         {review.attributes.review}
       </Typography>
+      {/* レビュー画像がある場合のみ表示 */}
+      {review.attributes.images && review.attributes.images.length > 0 && (
+        <div className="mt-2 grid grid-cols-3 gap-2">
+          {review.attributes.images.map((image, index) => (
+            <div key={index} className="relative aspect-square">
+              <Image
+                src={image.url || ''}
+                alt={`レビュー画像 ${index + 1}`}
+                fill
+                className="rounded-lg object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      )}
       <div className="mt-[8px] flex items-center rounded-[4px] bg-paleFrostBlue p-[16px] md:mt-[32px]">
         <div className="relative h-[59px] w-[59px] md:h-[100px] md:w-[100px]">
           <Image

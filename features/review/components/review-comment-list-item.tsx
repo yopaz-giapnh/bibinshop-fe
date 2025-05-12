@@ -52,6 +52,20 @@ export function ReviewCommentListItem({
         >
           {comment.attributes?.content}
         </Typography>
+        {comment.attributes?.images && (
+          <div className="flex items-center gap-2">
+            {comment.attributes.images.map((image) => (
+              <Image
+                key={image}
+                src={image}
+                alt="コメント画像"
+                width={200}
+                height={200}
+                className="rounded-lg object-cover"
+              />
+            ))}
+          </div>
+        )}
         <FeedbackButton
           isActive={isFeedbackActive}
           onClick={() => onFeedbackToggle(isFeedbackActive)}
