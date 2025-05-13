@@ -221,27 +221,6 @@ export interface paths {
      */
     get: operations['review-points'];
   };
-  '/api/v2/storefront/account/campaign_winners': {
-    /**
-     * Retrieve Campaign Winners
-     * @description Returns the current user's campaign_winners.
-     */
-    get: operations['campaign-winner-list'];
-  };
-  '/api/v2/storefront/account/campaign_entries': {
-    /**
-     * List all campaigns the current user has entered
-     * @description Returns a list of all campaigns (past and present) the current user has entered.
-     */
-    get: operations['account-campaign-entries'];
-  };
-  '/api/v2/storefront/account/referral_urls': {
-    /**
-     * Create a Referral Url
-     * @description Create the current user's referral url.
-     */
-    post: operations['create-referral-url'];
-  };
   '/api/v2/storefront/account_confirmations': {
     /**
      * Send Account Confirmation Instructions
@@ -442,19 +421,16 @@ export interface paths {
   };
   '/api/v2/storefront/checkout/create_payment': {
     /**
-     * 新しい支払いの作成
-     * @description 現在のチェックアウトに対して新しい支払いを作成します。
+     * Create new Payment
+     * @description Creates new Payment for the current checkout.
      *
-     * 新しい支払い方法を作成するか、既存の支払い方法を使用できます（サインイン済みユーザーのみ）。
+     * You can either create new payment source (eg. a Credit Card) or use an existing (for signed in users only).
      *
-     * 新たに作成された支払いソースは、現在サインインしているユーザーに関連付けられます。
+     * Newly created payment source will be associated to the current signed in user.
      *
-     * システムは自動的に以前の（確定していない）支払いを無効化します（ストアクレジット/ギフトカード支払いを除く）。
+     * System will automatically invalidate previous (non-finalized) payments (excluding store credit / gift card payments).
      *
-     * このエンドポイントは従来のソース情報（source_attributes）または新しいStripe Payment Method ID（payment_method_param）のいずれかを受け付けます。
-     * Stripe Payment Method IDを使用する場合、3Dセキュア認証に対応したクライアントシークレットが返されます。
-     *
-     * [支払いシステムの詳細](/developer/core-concepts/payments)
+     * [More details on payment system](/developer/core-concepts/payments)
      */
     post: operations['create-payment'];
   };
@@ -531,14 +507,12 @@ export interface paths {
             'application/json': {
               success: boolean;
               payment: {
-                /** @description Unique payment number */
-                payment_number?: string;
+                number?: string;
                 state?: string;
                 /** Format: date-time */
                 updated_at?: string;
                 order?: {
-                  /** @description Unique order number */
-                  order_number?: string;
+                  number?: string;
                   state?: string;
                   /** Format: float */
                   total?: number;
@@ -546,7 +520,6 @@ export interface paths {
                   updated_at?: string;
                 };
               };
-              error?: string | null;
             };
           };
         };
@@ -557,135 +530,6 @@ export interface paths {
         /** @description Invalid state or payment processing error */
         422: {
           content: never;
-        };
-      };
-    };
-  };
-  '/api/v2/storefront/payments/{id}': {
-    /**
-     * Show a specific payment (JSON:API format)
-     * @description Returns information about a specific payment in JSON:API format.   If `include=order` is passed, the `order` relationship will be included in the `included` array.
-     */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Comma-separated list of related resources to include (e.g. `order`) */
-          include?: string;
-        };
-        path: {
-          /** @description Payment ID */
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Returns the payment details */
-        200: {
-          content: {
-            'application/json': {
-              data: {
-                /**
-                 * @description Payment ID
-                 * @example 350
-                 */
-                id?: string;
-                /**
-                 * @description Resource type (will be "payment")
-                 * @example payment
-                 */
-                type?: string;
-                attributes?: {
-                  /** @example 4642.0 */
-                  amount?: string;
-                  /** @example null */
-                  response_code?: string | null;
-                  /** @example PAR6X5OW */
-                  number?: string;
-                  /** @example null */
-                  cvv_response_code?: string | null;
-                  /** @example null */
-                  cvv_response_message?: string | null;
-                  /** @example 1 */
-                  payment_method_id?: number;
-                  /** @example Stripe */
-                  payment_method_name?: string;
-                  /** @example invalid */
-                  state?: string;
-                  /**
-                   * @description Additional metadata
-                   * @example {}
-                   */
-                  public_metadata?: Record<string, never>;
-                  /**
-                   * Format: date-time
-                   * @example 2025-01-21T20:23:19.494+09:00
-                   */
-                  created_at?: string;
-                  /**
-                   * Format: date-time
-                   * @example 2025-01-21T20:23:25.238+09:00
-                   */
-                  updated_at?: string;
-                };
-                relationships?: {
-                  /** @description Relationship to the order associated with this payment */
-                  order?: {
-                    data?: {
-                      /** @example 163 */
-                      id?: string;
-                      /** @example order */
-                      type?: string;
-                    };
-                  };
-                  /** @description Payment source (e.g., credit card) */
-                  source?: {
-                    data?: {
-                      /** @example 60 */
-                      id?: string;
-                      /** @example credit_card */
-                      type?: string;
-                    };
-                  };
-                  /** @description The payment method used (e.g., Stripe, PayPal, etc.) */
-                  payment_method?: {
-                    data?: {
-                      /** @example 1 */
-                      id?: string;
-                      /** @example payment_method */
-                      type?: string;
-                    };
-                  };
-                };
-              };
-              /** @description Included resources (e.g., order) if requested via `include=...` */
-              included?: {
-                /** @example 163 */
-                id?: string;
-                /** @example order */
-                type?: string;
-                attributes?: {
-                  /** @example R123456789 */
-                  number?: string;
-                  /** @example complete */
-                  state?: string;
-                  /** @example 4642.0 */
-                  total?: string;
-                  /** Format: date-time */
-                  created_at?: string;
-                  /** Format: date-time */
-                  updated_at?: string;
-                };
-              }[];
-            };
-          };
-        };
-        /** @description Payment not found */
-        404: {
-          content: {
-            'application/json': {
-              /** @example Payment not found */
-              error?: string;
-            };
-          };
         };
       };
     };
@@ -948,11 +792,6 @@ export interface paths {
   };
   '/api/v2/storefront/reviews/{id}': {
     /**
-     * レビュー詳細取得
-     * @description 指定したIDのレビュー詳細を返します。
-     */
-    get: operations['show-review'];
-    /**
      * Update an Review
      * @description Updates the specified review for the current user.
      */
@@ -1009,7 +848,30 @@ export interface paths {
      * レビューコメントの投稿
      * @description 指定されたレビューに対してコメントを投稿します
      */
-    post: operations['create-review-comment'];
+    post: {
+      parameters: {
+        path: {
+          /** @description レビューID */
+          review_id: string;
+        };
+      };
+      requestBody: {
+        content: {
+          'application/vnd.api+json': {
+            review_comment?: components['schemas']['ReviewCommentPayload'];
+          };
+        };
+      };
+      responses: {
+        /** @description コメントの投稿に成功 */
+        200: {
+          content: {
+            'application/vnd.api+json': components['schemas']['ReviewComment'];
+          };
+        };
+        422: components['responses']['UnprocessableEntity'];
+      };
+    };
     parameters: {
       path: {
         /** @description レビューID */
@@ -1099,7 +961,44 @@ export interface paths {
      * List Users
      * @description Returns a list of users with optional filtering and sorting.
      */
-    get: operations['get-users'];
+    get: {
+      parameters: {
+        query?: {
+          include?: components['parameters']['UserIncludeParam'];
+          /** @description Filter users by skin type */
+          'filter[skin_type]'?: string;
+          /** @description Filter users by personal colors */
+          'filter[personal_color]'?: string;
+          /** @description Filter users by skin concerns */
+          'filter[skin_concern]'?: string;
+          /** @description Filter users by scalp and hair concerns */
+          'filter[scalp_hair_concern]'?: string;
+          /** @description Filter users by scalp and hair concerns */
+          'filter[without_self]'?: boolean;
+          /** @description Sort users by followers count */
+          sort_by?: 'followers_asc' | 'followers_desc';
+          page?: components['parameters']['PageParam'];
+          per_page?: components['parameters']['PerPageParam'];
+        };
+      };
+      responses: {
+        /** @description Successful response */
+        200: {
+          content: {
+            'application/vnd.api+json': {
+              data?: components['schemas']['PublicUser'][];
+              meta?: components['schemas']['ListMeta'];
+              links?: components['schemas']['ListLinks'];
+              included?: (
+                | components['schemas']['UserSocialLink']
+                | components['schemas']['UserAvatar']
+              )[];
+            };
+          };
+        };
+        403: components['responses']['Forbidden'];
+      };
+    };
   };
   '/api/v2/storefront/users/{unique_key}/followers': {
     /**
@@ -1195,27 +1094,6 @@ export interface paths {
      * @description Returns a list of top 6 popular searches in the last 2 hours period. The list is sorted by the number of searches in descending order. This list updates at every even hour.
      */
     get: operations['popular-searches'];
-  };
-  '/api/v2/storefront/campaigns': {
-    /**
-     * Retrieve Campaigns
-     * @description Returns campaigns.
-     */
-    get: operations['campaign-list'];
-  };
-  '/api/v2/storefront/campaigns/{id}': {
-    /**
-     * Retrieve Campaign
-     * @description Returns campaign.
-     */
-    get: operations['campaign'];
-  };
-  '/api/v2/storefront/campaigns/{id}/entry': {
-    /**
-     * Entry Campaign
-     * @description Entry campaign.
-     */
-    post: operations['campaign-entry'];
   };
 }
 
@@ -1480,12 +1358,6 @@ export interface components {
           data?: components['schemas']['Relation'][];
         };
         cancellation_requests?: {
-          data?: components['schemas']['Relation'][];
-        };
-        vendor_totals?: {
-          data?: components['schemas']['Relation'][];
-        };
-        coupons?: {
           data?: components['schemas']['Relation'][];
         };
       };
@@ -2597,8 +2469,7 @@ export interface components {
         /**
          * @description The public metadata for this User
          * @example {
-         *   "user_segment": "supplier",
-         *   "referral_code": "referral_code"
+         *   "user_segment": "supplier"
          * }
          */
         public_metadata?: Record<string, never>;
@@ -2623,8 +2494,6 @@ export interface components {
         received_feedback_reviews_count?: number;
         /** @example 1234567890 */
         unique_key?: string;
-        multiplier?: number;
-        referral_url?: string | null;
       };
       relationships: {
         /** @description Default billing address associated with this Account */
@@ -2680,10 +2549,6 @@ export interface components {
         backorderable?: boolean;
         /** @example 10 */
         total_on_hand?: number;
-        /** @example 49.99 */
-        compare_at_price?: string | null;
-        /** @example $49.99 */
-        display_compare_at_price?: string | null;
       };
       relationships: {
         product?: {
@@ -2866,12 +2731,6 @@ export interface components {
         finish_rating?: number;
         /** @description 自分の肌質に合っているか */
         skin_type_rating?: number;
-        images?: {
-          /** @description 永続化されたレビュー画像レコードのID */
-          id?: string;
-          /** @description レビュー画像ファイルをアップロード */
-          url?: string;
-        }[];
       };
       relationships: {
         user?: {
@@ -2914,7 +2773,6 @@ export interface components {
         /** Format: date-time */
         created_at?: string;
         helpful_by_current_user?: boolean;
-        images?: string[];
       };
       relationships: {
         user?: {
@@ -2969,22 +2827,6 @@ export interface components {
       | components['schemas']['User']
       | components['schemas']['Review']
       | components['schemas']['UserAvatar'];
-    /** CampaignWinner Includes */
-    CampaignWinnereIncludes:
-      | components['schemas']['User']
-      | components['schemas']['Campaign']
-      | components['schemas']['CampaignPrize'];
-    /** CampaignWinner Includes */
-    CampaignIncludes: components['schemas']['CampaignPrize'];
-    ReviewImagePayload: {
-      /** @description Id of persisted review image record */
-      id?: string;
-      /**
-       * @description Flag to confirm delete review image
-       * @example 1
-       */
-      _destroy?: string;
-    };
     ReviewPayload: {
       product_id: string;
       /** @description 効果実感（期待した効果が得られたか） */
@@ -3027,10 +2869,7 @@ export interface components {
         image_url: string;
         created_at: components['schemas']['Timestamp'];
         notificationable?: {
-          /** @description ベンダーのID（商品の通知の場合のみ） */
           vendor_id?: string;
-          /** @description レビューのID（レビューコメント通知の場合のみ） */
-          review_id?: string;
         };
       };
       relationships: {
@@ -3359,79 +3198,6 @@ export interface components {
          * @example 2020-02-16T07:14:54.617Z
          */
         created_at: string;
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    CampaignWinner: {
-      id: string;
-      /** @enum {string} */
-      type: 'campaign_winner';
-      attributes: {
-        /** @enum {string} */
-        winning_type: 'instant' | 'lottery';
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    UserReferralUrl: {
-      id: string;
-      /** @enum {string} */
-      type: 'user_referral_url';
-      attributes: {
-        url: string;
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    Campaign: {
-      id: string;
-      /** @enum {string} */
-      type: 'campaign';
-      attributes: {
-        title?: string;
-        description?: string;
-        terms_and_conditions?: string;
-        /** Format: date-time */
-        start_at?: string;
-        /** Format: date-time */
-        end_at?: string;
-        instant_win_count?: number;
-        total_winner_count?: number;
-        total_views?: number;
-        banner_image_url?: string;
-        image_url?: string;
-        is_entered?: boolean;
-        is_instant_winner?: boolean;
-        /**
-         * @description ユーザーのキャンペーン参加ステータス（当選・落選・抽選中）
-         * @enum {string}
-         */
-        user_status?: 'won' | 'lost' | 'drawing';
-      };
-      relationships: {
-        order?: {
-          data?: components['schemas']['Relation'];
-        };
-      };
-    };
-    CampaignPrize: {
-      id: string;
-      /** @enum {string} */
-      type: 'campaign_prize';
-      attributes: {
-        name?: string;
-        description?: string;
-        image_url?: string;
       };
       relationships: {
         order?: {
@@ -3884,53 +3650,6 @@ export interface components {
         };
       };
     };
-    /** @description 200 Success - Returns an array of `campaign winner` objects. */
-    CampaignWinnerList: {
-      content: {
-        'application/vnd.api+json': {
-          data: components['schemas']['CampaignWinner'][];
-          included?: components['schemas']['CampaignWinnereIncludes'][];
-          meta: components['schemas']['ListMeta'];
-          links: components['schemas']['ListLinks'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns the `campaign winner` object. */
-    CampaignWinner: {
-      content: {
-        'application/vnd.api+json': {
-          data?: components['schemas']['CampaignWinner'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns the `user referral url` object. */
-    UserReferralUrl: {
-      content: {
-        'application/vnd.api+json': {
-          data?: components['schemas']['UserReferralUrl'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns an array of `campaign` objects. */
-    CampaignList: {
-      content: {
-        'application/vnd.api+json': {
-          data: components['schemas']['Campaign'][];
-          included?: components['schemas']['CampaignIncludes'][];
-          meta: components['schemas']['ListMeta'];
-          links: components['schemas']['ListLinks'];
-        };
-      };
-    };
-    /** @description 200 Success - Returns the `campaign` object. */
-    Campaign: {
-      content: {
-        'application/vnd.api+json': {
-          data?: components['schemas']['Campaign'];
-          included?: components['schemas']['CampaignIncludes'][];
-        };
-      };
-    };
   };
   parameters: {
     /**
@@ -4153,10 +3872,6 @@ export interface components {
     ReviewIncludeParam?: string;
     /** @example user,review */
     ReviewCommentIncludeParam?: string;
-    /** @example user,campaign */
-    CampaignWinnerIncludeParam?: string;
-    /** @example campaign_prizes */
-    CampaignIncludeParam?: string;
     /**
      * @description Specify the fields you would like returned in the response body. [More information](https://jsonapi.org/format/#fetching-sparse-fieldsets).
      * @example rating,review
@@ -4228,8 +3943,7 @@ export interface operations {
             /**
              * @description The public metadata for this User
              * @example {
-             *   "user_segment": "supplier",
-             *   "referral_code": "referral_code"
+             *   "user_segment": "supplier"
              * }
              */
             public_metadata?: Record<string, never>;
@@ -4575,8 +4289,6 @@ export interface operations {
         per_page?: components['parameters']['PerPageParam'];
         /** @example pending,ready,shipped,delivered */
         'filter[shipment_state]'?: string;
-        /** @example -completed_at */
-        sort?: string;
       };
     };
     responses: {
@@ -4848,58 +4560,6 @@ export interface operations {
     };
   };
   /**
-   * Retrieve Campaign Winners
-   * @description Returns the current user's campaign_winners.
-   */
-  'campaign-winner-list': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignWinnerIncludeParam'];
-      };
-    };
-    responses: {
-      200: components['responses']['CampaignWinnerList'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
-   * List all campaigns the current user has entered
-   * @description Returns a list of all campaigns (past and present) the current user has entered.
-   */
-  'account-campaign-entries': {
-    responses: {
-      /** @description 200 Success - Returns an array of `campaign` objects. */
-      200: {
-        content: {
-          'application/vnd.api+json': {
-            data: components['schemas']['Campaign'][];
-            included?: components['schemas']['CampaignIncludes'][];
-            meta: components['schemas']['ListMeta'];
-            links: components['schemas']['ListLinks'];
-          };
-        };
-      };
-    };
-  };
-  /**
-   * Create a Referral Url
-   * @description Create the current user's referral url.
-   */
-  'create-referral-url': {
-    requestBody?: {
-      content: {
-        'application/vnd.api+json': {
-          /** @description キャンペーンID。指定された場合、該当するCampaignEntryのis_sharedフラグがtrueに設定されます。 */
-          campaign_id?: number;
-        };
-      };
-    };
-    responses: {
-      200: components['responses']['UserReferralUrl'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
    * Send Account Confirmation Instructions
    * @description Sends confirmation instructions to the given email address.
    */
@@ -4928,12 +4588,6 @@ export interface operations {
    */
   'account-confirmation': {
     parameters: {
-      query?: {
-        /** @description 紹介コード。アカウント確認時に友達招待関係を作成するために使用されます。 */
-        referral_code?: string;
-        /** @description キャンペーンID。紹介関係にキャンペーン情報を関連付けるために使用されます。 */
-        campaign_id?: number;
-      };
       path: {
         id: components['parameters']['ConfirmationToken'];
       };
@@ -4955,8 +4609,6 @@ export interface operations {
           user?: {
             /** @example john@snow.org */
             email?: string;
-            /** @example true */
-            mobile?: boolean;
           };
         };
       };
@@ -5520,19 +5172,16 @@ export interface operations {
     };
   };
   /**
-   * 新しい支払いの作成
-   * @description 現在のチェックアウトに対して新しい支払いを作成します。
+   * Create new Payment
+   * @description Creates new Payment for the current checkout.
    *
-   * 新しい支払い方法を作成するか、既存の支払い方法を使用できます（サインイン済みユーザーのみ）。
+   * You can either create new payment source (eg. a Credit Card) or use an existing (for signed in users only).
    *
-   * 新たに作成された支払いソースは、現在サインインしているユーザーに関連付けられます。
+   * Newly created payment source will be associated to the current signed in user.
    *
-   * システムは自動的に以前の（確定していない）支払いを無効化します（ストアクレジット/ギフトカード支払いを除く）。
+   * System will automatically invalidate previous (non-finalized) payments (excluding store credit / gift card payments).
    *
-   * このエンドポイントは従来のソース情報（source_attributes）または新しいStripe Payment Method ID（payment_method_param）のいずれかを受け付けます。
-   * Stripe Payment Method IDを使用する場合、3Dセキュア認証に対応したクライアントシークレットが返されます。
-   *
-   * [支払いシステムの詳細](/developer/core-concepts/payments)
+   * [More details on payment system](/developer/core-concepts/payments)
    */
   'create-payment': {
     parameters: {
@@ -5543,45 +5192,32 @@ export interface operations {
     };
     requestBody?: {
       content: {
-        'application/json': {
-          /** @description 選択した支払い方法のID */
+        'application/vnd.api+json': {
+          /** @description ID of the selected Payment Method */
           payment_method_id: string;
-          /** @description 選択した支払いソースのID（クレジットカードなど、サインイン済みユーザーのみ） */
+          /** @description ID of the selected Payment Source (eg. Credit Card, only for signed in users) */
           source_id?: string;
-          /** @description 新しく作成された支払いの金額。空白の場合、注文合計（ストアクレジット/ギフトカードで使用された分を差し引いた）が使用されます */
+          /** @description Amount for the newly created payment, when left blank will use the entire Order Total (reduced by used Store Credits / Gift Cards) */
           amount?: number;
           source_attributes?: {
-            /** @description 支払いソース認証トークン、詳細は[Stripe実装](https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token)を参照 */
+            /** @description Payment source authorization token, more details for [Stripe implementation](https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token) */
             gateway_payment_profile_id: string;
             /** @enum {string} */
             cc_type?: 'visa' | 'master' | 'amex' | 'discover' | 'diners' | 'jcb' | 'unionpay';
-            /** @description クレジットカード番号の下4桁 */
+            /** @description Last 4 digits of CC number */
             last_digits?: string;
-            /** @description 有効期限の月 */
+            /** @description Expiration date month */
             month?: number;
-            /** @description 有効期限の年 */
+            /** @description Expiration date year */
             year?: number;
-            /** @description カード所有者名 */
+            /** @description Card holder name */
             name: string;
           };
-          /** @description Stripeから取得したPaymentMethod ID。3Dセキュア認証を使用する場合こちらを使用します。 */
-          payment_method_param?: string;
         };
       };
     };
     responses: {
-      /** @description 支払いが正常に作成された場合 */
-      200: {
-        content: {
-          'application/json': {
-            data?: components['schemas']['Cart'];
-            meta?: {
-              /** @description Stripe Payment Intentのクライアントシークレット（payment_method_paramを使用した場合のみ） */
-              client_secret?: string;
-            };
-          };
-        };
-      };
+      200: components['responses']['Cart'];
       404: components['responses']['NotFound'];
       422: components['responses']['UnprocessableEntity'];
     };
@@ -5662,6 +5298,11 @@ export interface operations {
            * @example R123456789
            */
           order_number: string;
+          /**
+           * @description Payment amount in cents/yen (optional, defaults to 1000)
+           * @example 1000
+           */
+          amount: number;
           /**
            * @description Flag to indicate if the request is from a mobile device
            * @example true
@@ -5766,12 +5407,12 @@ export interface operations {
              * @description The push token string.
              * @example example_push_token_value
              */
-            token?: string;
+            token: string;
             /**
              * @description Indicates if the push token is active.
              * @example true
              */
-            is_active: boolean;
+            is_active?: boolean;
           };
         };
       };
@@ -6451,8 +6092,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'multipart/form-data': {
-          review_images_attributes?: string[];
+        'application/vnd.api+json': {
           review?: components['schemas']['ReviewPayload'];
         };
       };
@@ -6460,33 +6100,6 @@ export interface operations {
     responses: {
       200: components['responses']['Review'];
       403: components['responses']['Forbidden'];
-    };
-  };
-  /**
-   * レビュー詳細取得
-   * @description 指定したIDのレビュー詳細を返します。
-   */
-  'show-review': {
-    parameters: {
-      path: {
-        /** @description レビューID */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description 成功時、レビュー詳細を返します */
-      200: {
-        content: {
-          'application/vnd.api+json': {
-            data?: components['schemas']['Review'];
-            included?: components['schemas']['ReviewIncludes'][];
-          };
-        };
-      };
-      /** @description レビューが見つからない場合 */
-      404: {
-        content: never;
-      };
     };
   };
   /**
@@ -6505,9 +6118,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'multipart/form-data': {
-          deleted_review_images_attributes?: components['schemas']['ReviewImagePayload'][];
-          review_images_attributes?: string[];
+        'application/vnd.api+json': {
           review?: components['schemas']['ReviewPayload'];
         };
       };
@@ -6562,35 +6173,6 @@ export interface operations {
       };
       403: components['responses']['Forbidden'];
       404: components['responses']['NotFound'];
-    };
-  };
-  /**
-   * レビューコメントの投稿
-   * @description 指定されたレビューに対してコメントを投稿します
-   */
-  'create-review-comment': {
-    parameters: {
-      path: {
-        /** @description レビューID */
-        review_id: string;
-      };
-    };
-    requestBody: {
-      content: {
-        'multipart/form-data': {
-          review_comment_images_attributes?: string[];
-          review_comment?: components['schemas']['ReviewCommentPayload'];
-        };
-      };
-    };
-    responses: {
-      /** @description コメントの投稿に成功 */
-      200: {
-        content: {
-          'application/vnd.api+json': components['schemas']['ReviewComment'];
-        };
-      };
-      422: components['responses']['UnprocessableEntity'];
     };
   };
   /**
@@ -6650,48 +6232,6 @@ export interface operations {
       };
       403: components['responses']['Forbidden'];
       422: components['responses']['UnprocessableEntity'];
-    };
-  };
-  /**
-   * List Users
-   * @description Returns a list of users with optional filtering and sorting.
-   */
-  'get-users': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['UserIncludeParam'];
-        /** @description Filter users by skin type */
-        'filter[skin_type]'?: string;
-        /** @description Filter users by personal colors */
-        'filter[personal_color]'?: string;
-        /** @description Filter users by skin concerns */
-        'filter[skin_concern]'?: string;
-        /** @description Filter users by scalp and hair concerns */
-        'filter[scalp_hair_concern]'?: string;
-        /** @description Filter users by scalp and hair concerns */
-        'filter[without_self]'?: boolean;
-        /** @description Sort users by followers count */
-        sort_by?: 'followers_asc' | 'followers_desc';
-        page?: components['parameters']['PageParam'];
-        per_page?: components['parameters']['PerPageParam'];
-      };
-    };
-    responses: {
-      /** @description Successful response */
-      200: {
-        content: {
-          'application/vnd.api+json': {
-            data?: components['schemas']['PublicUser'][];
-            meta?: components['schemas']['ListMeta'];
-            links?: components['schemas']['ListLinks'];
-            included?: (
-              | components['schemas']['UserSocialLink']
-              | components['schemas']['UserAvatar']
-            )[];
-          };
-        };
-      };
-      403: components['responses']['Forbidden'];
     };
   };
   /**
@@ -6899,59 +6439,6 @@ export interface operations {
           'application/vnd.api+json': components['schemas']['PopularSearch'][];
         };
       };
-    };
-  };
-  /**
-   * Retrieve Campaigns
-   * @description Returns campaigns.
-   */
-  'campaign-list': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignIncludeParam'];
-        page?: components['parameters']['PageParam'];
-        per_page?: components['parameters']['PerPageParam'];
-      };
-    };
-    responses: {
-      200: components['responses']['CampaignList'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
-   * Retrieve Campaign
-   * @description Returns campaign.
-   */
-  campaign: {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignIncludeParam'];
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      200: components['responses']['Campaign'];
-      403: components['responses']['Forbidden'];
-    };
-  };
-  /**
-   * Entry Campaign
-   * @description Entry campaign.
-   */
-  'campaign-entry': {
-    parameters: {
-      query?: {
-        include?: components['parameters']['CampaignIncludeParam'];
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      200: components['responses']['Campaign'];
-      403: components['responses']['Forbidden'];
     };
   };
 }
