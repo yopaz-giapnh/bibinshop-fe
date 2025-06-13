@@ -226,7 +226,7 @@ export async function TermsOfUse() {
               <div className="mt-2 space-y-2 pl-6">
                 <div className="flex gap-4">
                   <span>①</span>
-                  <span>会員が第17条に規定する禁止行為を行った場合</span>
+                  <span>会員が第18条に規定する禁止行為を行った場合</span>
                 </div>
                 <div className="flex gap-4">
                   <span>②</span>
@@ -391,6 +391,21 @@ export async function TermsOfUse() {
                 </li>
               </ol>
             </div>
+
+            <div>
+              <h3 className="mb-2">第16条 （レビューに関する規定）</h3>
+              <ol className="list-decimal space-y-2 pl-6">
+                <li>
+                  レビューに関わる著作権（日本国著作権法第27条及び第28条所定の権利を含む。）等の一切の権利は当社に帰属する。また、利用者はレビューに関して、著作者人格権その他いかなる権利も行使しないものとする。
+                </li>
+                <li>
+                  当社は、レビューの内容を、当該レビューを投稿した利用者に通知することなく、自由に転載、引用、開示、提供、出版、配信その他の方法により、無償で利用することができるものとし、利用者はこれに同意する。
+                </li>
+                <li>
+                  レビューを表示するかどうか、その表示期間および当社による保管期間については、当社の裁量で定めることができるものとし、利用者はこれに異議を述べることができないものとする。
+                </li>
+              </ol>
+            </div>
           </div>
         </section>
 
@@ -399,7 +414,7 @@ export async function TermsOfUse() {
 
           <div className="space-y-6">
             <div>
-              <h3 className="mb-2">第16条 （反社会的勢力の排除）</h3>
+              <h3 className="mb-2">第17条 （反社会的勢力の排除）</h3>
               <ol className="list-decimal space-y-2 pl-6">
                 <li>
                   会員は、自己又は自社、自社の株主・役員その他自社を実質的に所有し若しくは支配する者が、暴力団、暴力団員、暴力団員でなくなった時から5年を経過しない者、暴力団準構成員、暴力団関係企業、総会屋等、社会運動等標ぼうゴロ又は特殊知能暴力集団等、その他これらに準ずる者（以下総称して「反社会的勢力」という。）に該当しないこと、及び次の各号のいずれにも該当しないことを表明し、かつ将来にわたっても該当しないことを確約する。
@@ -441,7 +456,7 @@ export async function TermsOfUse() {
             </div>
 
             <div>
-              <h3 className="mb-2">第17条 （禁止事項）</h3>
+              <h3 className="mb-2">第18条 （禁止事項）</h3>
               <p className="mb-4">会員が次の各号に掲げる行為を行うことは禁止されている。</p>
               <div className="space-y-2 pl-6">
                 <div className="flex gap-4">
@@ -484,7 +499,7 @@ export async function TermsOfUse() {
             </div>
 
             <div>
-              <h3 className="mb-2">第18条 （本サービスの停止等）</h3>
+              <h3 className="mb-2">第19条 （本サービスの停止等）</h3>
               <p className="mb-2">
                 弊社は、次の各号のいずれかに該当する場合には、会員に事前に通知することなく、本サービスの全部または一部の提供を停止又は中断することができる。
               </p>
@@ -515,7 +530,7 @@ export async function TermsOfUse() {
             </div>
 
             <div>
-              <h3 className="mb-2">第19条 （規約の変更等）</h3>
+              <h3 className="mb-2">第20条 （規約の変更等）</h3>
               <ol className="list-decimal space-y-2 pl-6">
                 <li>
                   弊社は、必要な場合、特定のサービス又は状況に適用される補足規則及び方針を定めることができる。これらの補足規則及び方針、並びに指定プラットフォーム上に記載された公示、利用案内及び注意事項は本規約の一部を構成する。
@@ -530,7 +545,7 @@ export async function TermsOfUse() {
             </div>
 
             <div>
-              <h3 className="mb-2">第20条 （事業者の損害賠償責任の免除）</h3>
+              <h3 className="mb-2">第21条 （事業者の損害賠償責任の免除）</h3>
               <ol className="list-decimal space-y-2 pl-6">
                 <li>
                   次の各号に定める損害は、当該損害が弊社の故意又は過失に起因する場合を除き、当該損害を被った会員が負担する。また、当該損害が弊社の軽過失に起因する場合、弊社の賠償の範囲は、当該損害が発生した日から遡り直近12か月間に当該損害を被った会員が弊社に対して支払った手数料の総額又は５万円のいずれか高い金額を超えない範囲に限られる。
@@ -592,14 +607,14 @@ export async function TermsOfUse() {
             </div>
 
             <div>
-              <h3 className="mb-2">第21条 （会員に対する損害賠償）</h3>
+              <h3 className="mb-2">第22条 （会員に対する損害賠償）</h3>
               <p className="leading-relaxed">
                 会員が本条に定めるいずれかの条項に違反することにより、弊社が第三者から損害賠償を請求され、損害若しくは損失の補填、又は費用負担をした場合、会員は弊社に対し、その全額、及び関連する合理的な費用（弁護士費用を含みますが、これに限られません）を補償する。
               </p>
             </div>
 
             <div>
-              <h3 className="mb-2">第22条 （準拠法・専属的合意管轄）</h3>
+              <h3 className="mb-2">第23条 （準拠法・専属的合意管轄）</h3>
               <p className="leading-relaxed">
                 本規約は日本法に基づき解釈されるものとし、本サービスに関し紛争等の法的手続の必要を生じた場合には、東京地方裁判所を第一審の専属的合意管轄裁判所とする。
               </p>
@@ -607,7 +622,7 @@ export async function TermsOfUse() {
 
             <div className="mt-8 text-left">
               <p className="mt-8">株式会社bibin</p>
-              <p className="mt-8">2025年2月26日 制定</p>
+              <p className="mt-8">2025年6月13日 制定</p>
             </div>
           </div>
         </section>
