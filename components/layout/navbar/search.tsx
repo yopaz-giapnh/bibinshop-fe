@@ -2,6 +2,7 @@
 
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { useIsPc } from '@/hooks/use-is-pc';
+import { useTranslation } from '@/lib/i18n';
 import { ChevronLeft } from 'lucide-react';
 import { useState } from 'react';
 import { PopularSearch } from './popular-search';
@@ -22,13 +23,14 @@ export function Search({ isSignedIn }: Props) {
 
   const isPc = useIsPc();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleSearch = (text: string) => {
     setSearchValue(text);
     search(text);
     setIsOpen(false);
   };
-  // TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする
+  // TODO: hide initial registration coupon display before release
   console.log(isSignedIn);
 
   return (
@@ -54,7 +56,7 @@ export function Search({ isSignedIn }: Props) {
           <ChevronLeft size={32} />
         </button>
         <CommandInput
-          placeholder={isPc ? 'アゼライン酸10美容液' : 'アゼライン酸'}
+          placeholder={isPc ? t('search.placeholderPc') : t('search.placeholderSp')}
           className="w-full rounded-[44px] border-2 border-bibinBlue-100"
           value={searchValue}
           onFocus={() => setIsOpen(true)}

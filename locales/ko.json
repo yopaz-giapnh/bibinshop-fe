@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "category": "카테고리",
+    "home": "홈",
+    "bestseller": "베스트셀러",
+    "ranking": "랭킹",
+    "new": "신상품",
+    "cart": "장바구니",
+    "favorite": "즐겨찾기"
+  },
+  "footer": {
+    "menu": {
+      "shipping": "배송 안내",
+      "support": "지원 및 FAQ",
+      "signup": "회원 가입"
+    },
+    "links": {
+      "company": {
+        "title": "회사 정보",
+        "overview": "회사 개요",
+        "bibinews": "한국 종합 정보 사이트 \"bibinews\"",
+        "contact": "문의 및 취재 요청"
+      },
+      "service": {
+        "title": "고객 서비스",
+        "faq": "FAQ",
+        "shopContact": "샵 문의",
+        "terms": "이용 약관",
+        "privacy": "개인정보 처리방침",
+        "transactions": "상거래법 표기"
+      }
+    }
+  },
+  "account": {
+    "profile": "프로필",
+    "orders": "주문 내역",
+    "messages": "메시지",
+    "coupons": "쿠폰",
+    "points": "포인트 잔액",
+    "history": "열람 기록",
+    "address": "배송지 주소",
+    "payment": "결제 방법",
+    "security": "계정 보안",
+    "create": "계정 만들기",
+    "login": "로그인",
+    "manage": "계정 관리",
+    "signout": "로그아웃"
+  },
+  "search": {
+    "placeholderPc": "아젤라산 10 세럼",
+    "placeholderSp": "아젤라산"
+  },
+  "popularSearch": {
+    "title": "인기 검색어"
+  },
+  "home": {
+    "recommended": "추천 상품",
+    "hot": "인기 상품"
+  },
+  "notFound": {
+    "title": "404 not found",
+    "message": "죄송합니다. 요청하신 페이지를 찾을 수 없습니다."
+  },
+  "error": {
+    "title": "오류",
+    "message": "죄송합니다. 오류가 발생했습니다."
+  },
+  "common": {
+    "backHome": "홈으로 돌아가기"
+  }
+}

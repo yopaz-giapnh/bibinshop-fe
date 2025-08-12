@@ -12,6 +12,7 @@ import {
 import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
 import { logout } from '@/features/auth/actions';
+import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { NavigationMenuList } from '@radix-ui/react-navigation-menu';
 import { UserRound } from 'lucide-react';
@@ -25,43 +26,17 @@ type Props = {
 };
 
 export function AccountMenu({ isSignedIn, getAccount }: Props) {
-  const components: { title: string; href: string }[] = [
-    {
-      title: 'プロフィール',
-      href: '/account/profile'
-    },
-    {
-      title: '注文履歴',
-      href: '/account/order-history'
-    },
-    {
-      title: 'メッセージ',
-      href: '/account/message'
-    },
-    {
-      title: 'クーポン',
-      href: '/account/coupon'
-    },
-    {
-      title: 'ポイント残高',
-      href: '/account/point-balance'
-    },
-    {
-      title: '閲覧履歴',
-      href: '/account/browse-products'
-    },
-    {
-      title: 'お届け先住所',
-      href: '/account/address'
-    },
-    {
-      title: 'お支払い方法',
-      href: '/account/payment'
-    },
-    {
-      title: 'アカウントセキュリティ',
-      href: '/account/security'
-    }
+  const { t } = useTranslation();
+  const components: { key: string; href: string }[] = [
+    { key: 'profile', href: '/account/profile' },
+    { key: 'orders', href: '/account/order-history' },
+    { key: 'messages', href: '/account/message' },
+    { key: 'coupons', href: '/account/coupon' },
+    { key: 'points', href: '/account/point-balance' },
+    { key: 'history', href: '/account/browse-products' },
+    { key: 'address', href: '/account/address' },
+    { key: 'payment', href: '/account/payment' },
+    { key: 'security', href: '/account/security' }
   ];
   const acc = getAccount ? use(getAccount) : null;
 
@@ -78,12 +53,20 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
                 <UserName getAccount={getAccount} />
                 <Separator />
                 {components.map((component) =>
-                  component.title === 'メッセージ' && acc?.attributes.unread_notifications_count ? (
-                    <ListItem key={component.title} title={component.title} href={component.href}>
+                  component.key === 'messages' && acc?.attributes.unread_notifications_count ? (
+                    <ListItem
+                      key={component.key}
+                      title={t(`account.${component.key}`)}
+                      href={component.href}
+                    >
                       <div className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500"></div>
                     </ListItem>
                   ) : (
-                    <ListItem key={component.title} title={component.title} href={component.href} />
+                    <ListItem
+                      key={component.key}
+                      title={t(`account.${component.key}`)}
+                      href={component.href}
+                    />
                   )
                 )}
                 <Separator />
@@ -98,12 +81,12 @@ export function AccountMenu({ isSignedIn, getAccount }: Props) {
   ) : (
     <>
       <Link href="/signup" passHref className="mr-[20px] hidden md:block">
-        <Button type="button">アカウント作成</Button>
+        <Button type="button">{t('account.create')}</Button>
       </Link>
       <Link href="/login" passHref className="flex">
         <UserRound className="h-6 w-6" />
         <Typography as="small" element="p" className="ml-1 hidden md:block">
-          ログイン
+          {t('account.login')}
         </Typography>
       </Link>
     </>
@@ -114,6 +97,7 @@ const AccountLink: FC<{
   user: Awaited<ReturnType<typeof getAccount>> | null;
 }> = ({ user }) => {
   const { pending } = useFormStatus();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -148,7 +132,7 @@ const AccountLink: FC<{
               </span>
             )}
             <Typography as="small" element="p" className="ml-1">
-              アカウント管理
+              {t('account.manage')}
             </Typography>
           </>
         )}
@@ -221,6 +205,7 @@ const SignOut = React.forwardRef<
   React.ElementRef<'button'>,
   React.ComponentPropsWithoutRef<'button'>
 >(({ className, ...props }, ref) => {
+  const { t } = useTranslation();
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -233,7 +218,7 @@ const SignOut = React.forwardRef<
           {...props}
         >
           <Typography as="caption" element="p" className="text-black-50">
-            サインアウト
+            {t('account.signout')}
           </Typography>
         </button>
       </NavigationMenuLink>

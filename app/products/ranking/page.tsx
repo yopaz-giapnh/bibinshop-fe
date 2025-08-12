@@ -3,6 +3,8 @@ import { getProductsOnTaxons, getTaxonId } from '@/features/product/actions';
 import { ProductOverview } from '@/features/product/components/product-overview';
 import { ProductSkeleton } from '@/features/product/components/skeletons/product-skeleton';
 import { getTaxons } from '@/features/taxon/actions';
+import { Locale, translate } from '@/lib/i18n';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -15,6 +17,8 @@ export default async function Page({ searchParams }: { searchParams?: { page?: s
 
   const products = await getProductsOnTaxons([rankigTaxonId], currentPage);
   const totalPages = products.meta.total_pages;
+  const locale = (cookies().get('NEXT_LOCALE')?.value || 'ja') as Locale;
+  const t = (key: string) => translate(locale, key);
 
   return (
     <div className="h-full w-full">
@@ -25,7 +29,7 @@ export default async function Page({ searchParams }: { searchParams?: { page?: s
         <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">
           <Suspense fallback={<ProductSkeleton />}>
             <ProductOverview
-              title={'ランキング'}
+              title={t('nav.ranking')}
               products={products.data}
               columns={5}
               totalPages={totalPages}

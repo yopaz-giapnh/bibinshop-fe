@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "category": "Danh mục",
+    "home": "Trang chủ",
+    "bestseller": "Bán chạy",
+    "ranking": "Xếp hạng",
+    "new": "Mới",
+    "cart": "Giỏ hàng",
+    "favorite": "Yêu thích"
+  },
+  "footer": {
+    "menu": {
+      "shipping": "Thông tin giao hàng",
+      "support": "Hỗ trợ & FAQ",
+      "signup": "Đăng ký thành viên"
+    },
+    "links": {
+      "company": {
+        "title": "Thông tin công ty",
+        "overview": "Giới thiệu công ty",
+        "bibinews": "Trang thông tin Hàn Quốc \"bibinews\"",
+        "contact": "Liên hệ / yêu cầu phỏng vấn"
+      },
+      "service": {
+        "title": "Dịch vụ khách hàng",
+        "faq": "FAQ",
+        "shopContact": "Liên hệ cửa hàng",
+        "terms": "Điều khoản sử dụng",
+        "privacy": "Chính sách bảo mật",
+        "transactions": "Hiển thị theo luật thương mại"
+      }
+    }
+  },
+  "account": {
+    "profile": "Hồ sơ",
+    "orders": "Lịch sử đơn hàng",
+    "messages": "Tin nhắn",
+    "coupons": "Phiếu giảm giá",
+    "points": "Số dư điểm",
+    "history": "Lịch sử duyệt",
+    "address": "Địa chỉ giao hàng",
+    "payment": "Phương thức thanh toán",
+    "security": "Bảo mật tài khoản",
+    "create": "Tạo tài khoản",
+    "login": "Đăng nhập",
+    "manage": "Quản lý tài khoản",
+    "signout": "Đăng xuất"
+  },
+  "search": {
+    "placeholderPc": "Serum axit azelaic 10",
+    "placeholderSp": "Axit azelaic"
+  },
+  "popularSearch": {
+    "title": "Từ khóa phổ biến"
+  },
+  "home": {
+    "recommended": "Sản phẩm gợi ý",
+    "hot": "Sản phẩm bán chạy"
+  },
+  "notFound": {
+    "title": "404 not found",
+    "message": "Xin lỗi, trang bạn yêu cầu không tồn tại."
+  },
+  "error": {
+    "title": "Lỗi",
+    "message": "Xin lỗi, đã xảy ra lỗi."
+  },
+  "common": {
+    "backHome": "Quay lại trang chủ"
+  }
+}

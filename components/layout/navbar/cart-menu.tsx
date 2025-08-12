@@ -1,11 +1,14 @@
 import { Typography } from '@/components/ui/typography';
 import { getCart } from '@/features/cart/actions';
+import { Locale, translate } from '@/lib/i18n';
 import { ShoppingCart } from 'lucide-react';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 export async function CartMenu() {
   const cart = await getCart({ cache: 'force-cache' });
   const cartIetmCount = cart?.attributes.item_count;
+  const locale = (cookies().get('NEXT_LOCALE')?.value || 'ja') as Locale;
 
   return (
     <Link href="/cart" passHref className="md:ml-[20px]">
@@ -21,7 +24,7 @@ export async function CartMenu() {
           )}
         </div>
         <Typography as="small" element="p" className="ml-1 hidden md:block">
-          カート
+          {translate(locale, 'nav.cart')}
         </Typography>
       </div>
     </Link>

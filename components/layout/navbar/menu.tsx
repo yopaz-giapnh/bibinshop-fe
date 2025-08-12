@@ -17,6 +17,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Typography } from '@/components/ui/typography';
 import { getTaxons } from '@/features/taxon/actions';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
+import { LanguageSwitcher } from './language-switcher';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { HandThumbUpIcon, MegaphoneIcon, StarIcon } from '@heroicons/react/24/solid';
 
@@ -26,6 +28,7 @@ type Props = {
 export function Menu({ getTaxons }: Props) {
   const categoriesList = React.use(getTaxons);
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   return (
     <div className="mt-[10px] flex h-[44px] items-center justify-center bg-white-base md:mt-0 md:h-[56px] md:justify-normal md:bg-bibinBlue-100 md:pl-[190px]">
@@ -36,7 +39,7 @@ export function Menu({ getTaxons }: Props) {
               <NavigationMenuTrigger className="h-[56px] w-[268px] justify-start border-l border-r border-white-30 pl-[22px]">
                 <Bars3Icon className="h-6 w-6 text-white-base" />
                 <Typography as="linkBase" element="p" className="ml-1">
-                  カテゴリー
+                  {t('nav.category')}
                 </Typography>
               </NavigationMenuTrigger>
             </div>
@@ -63,7 +66,7 @@ export function Menu({ getTaxons }: Props) {
                 })}
               >
                 <Typography as="linkSmall" element="p" className="text-black-90">
-                  ホーム
+                  {t('nav.home')}
                 </Typography>
               </NavigationMenuLink>
             </Link>
@@ -82,7 +85,7 @@ export function Menu({ getTaxons }: Props) {
                   element="p"
                   className="ml-0.5 text-black-90 md:text-white-base"
                 >
-                  ベストセラー
+                  {t('nav.bestseller')}
                 </Typography>
               </NavigationMenuLink>
             </Link>
@@ -101,7 +104,7 @@ export function Menu({ getTaxons }: Props) {
                   element="p"
                   className="ml-0.5 text-black-90 md:text-white-base"
                 >
-                  ランキング
+                  {t('nav.ranking')}
                 </Typography>
               </NavigationMenuLink>
             </Link>
@@ -120,13 +123,14 @@ export function Menu({ getTaxons }: Props) {
                   element="p"
                   className="ml-0.5 text-black-90 md:text-white-base"
                 >
-                  新着
+                  {t('nav.new')}
                 </Typography>
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+      <LanguageSwitcher />
     </div>
   );
 }

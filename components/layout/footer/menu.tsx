@@ -2,17 +2,19 @@ import { Question } from '@/components/icons/question';
 import { Shipping } from '@/components/icons/shipping';
 import { User } from '@/components/icons/user';
 import { Typography } from '@/components/ui/typography';
+import { useTranslation } from '@/lib/i18n';
 import Link from 'next/link';
 
 export function Menu() {
+  const { t } = useTranslation();
   return (
     <div className="flex h-[114px] w-full items-center justify-center gap-5 bg-bibinBlue-100 pl-[16px] md:h-[124px] md:gap-16">
-      {/* TODO: リンク先を設定する */}
-      <MenuItem href="/" icon={<Shipping />} label="配送について" />
+      {/* TODO: set link destinations */}
+      <MenuItem href="/" icon={<Shipping />} label={t('footer.menu.shipping')} />
       <Separator />
-      <MenuItem href="/" icon={<Question />} label="サポート＆FAQ" />
+      <MenuItem href="/" icon={<Question />} label={t('footer.menu.support')} />
       <Separator />
-      <MenuItem href="/signup" icon={<User />} label="メンバー登録" />
+      <MenuItem href="/signup" icon={<User />} label={t('footer.menu.signup')} />
     </div>
   );
 }
