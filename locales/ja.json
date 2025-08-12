@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "category": "カテゴリー",
+    "home": "ホーム",
+    "bestseller": "ベストセラー",
+    "ranking": "ランキング",
+    "new": "新着",
+    "cart": "カート",
+    "favorite": "お気に入り"
+  },
+  "footer": {
+    "menu": {
+      "shipping": "配送について",
+      "support": "サポート＆FAQ",
+      "signup": "メンバー登録"
+    },
+    "links": {
+      "company": {
+        "title": "会社情報",
+        "overview": "会社概要（会社HP）",
+        "bibinews": "韓国総合情報サイト「bibinews」",
+        "contact": "お問い合わせ・取材の依頼"
+      },
+      "service": {
+        "title": "カスタマサービス",
+        "faq": "FAQ",
+        "shopContact": "shopへのお問い合わせ",
+        "terms": "利用規約",
+        "privacy": "プライバシーポリシー",
+        "transactions": "特定商取引法に基づく表記"
+      }
+    }
+  },
+  "account": {
+    "profile": "プロフィール",
+    "orders": "注文履歴",
+    "messages": "メッセージ",
+    "coupons": "クーポン",
+    "points": "ポイント残高",
+    "history": "閲覧履歴",
+    "address": "お届け先住所",
+    "payment": "お支払い方法",
+    "security": "アカウントセキュリティ",
+    "create": "アカウント作成",
+    "login": "ログイン",
+    "manage": "アカウント管理",
+    "signout": "サインアウト"
+  },
+  "search": {
+    "placeholderPc": "アゼライン酸10美容液",
+    "placeholderSp": "アゼライン酸"
+  },
+  "popularSearch": {
+    "title": "人気ワード"
+  }
+}

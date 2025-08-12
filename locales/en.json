@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "category": "Category",
+    "home": "Home",
+    "bestseller": "Best Seller",
+    "ranking": "Ranking",
+    "new": "New",
+    "cart": "Cart",
+    "favorite": "Favorites"
+  },
+  "footer": {
+    "menu": {
+      "shipping": "Shipping Info",
+      "support": "Support & FAQ",
+      "signup": "Sign Up"
+    },
+    "links": {
+      "company": {
+        "title": "Company Info",
+        "overview": "Company Overview",
+        "bibinews": "Korean info site \"bibinews\"",
+        "contact": "Contact / Media request"
+      },
+      "service": {
+        "title": "Customer Service",
+        "faq": "FAQ",
+        "shopContact": "Shop inquiries",
+        "terms": "Terms of Use",
+        "privacy": "Privacy Policy",
+        "transactions": "Legal Notice"
+      }
+    }
+  },
+  "account": {
+    "profile": "Profile",
+    "orders": "Order History",
+    "messages": "Messages",
+    "coupons": "Coupons",
+    "points": "Point Balance",
+    "history": "Browsing History",
+    "address": "Shipping Addresses",
+    "payment": "Payment Methods",
+    "security": "Account Security",
+    "create": "Create Account",
+    "login": "Login",
+    "manage": "Account Settings",
+    "signout": "Sign Out"
+  },
+  "search": {
+    "placeholderPc": "Azelainic acid 10 serum",
+    "placeholderSp": "Azelainic acid"
+  },
+  "popularSearch": {
+    "title": "Popular Words"
+  }
+}

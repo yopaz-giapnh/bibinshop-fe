@@ -4,7 +4,9 @@ import { Typography } from '@/components/ui/typography';
 import { getAccount } from '@/features/account/profile/actions';
 // import NewRegistrationCouponBanner from '@/features/coupon/components/new-registration-coupoun-banner';
 import { getTaxons } from '@/features/taxon/actions';
+import { Locale, translate } from '@/lib/i18n';
 import { Heart } from 'lucide-react';
+import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ComponentProps, Suspense } from 'react';
@@ -18,10 +20,11 @@ type Props = Pick<ComponentProps<typeof AccountMenu>, 'isSignedIn'> & {
 };
 
 export function Header({ isSignedIn, getTaxons }: Props) {
+  const locale = (cookies().get('NEXT_LOCALE')?.value || 'ja') as Locale;
   return (
     <div>
-      {/*TODO: 初回登録クーポン関連の表示をリリース時には表示させないようにする*/}
-      {/*{!isSignedIn && <NewRegistrationCouponBanner />}*/}
+      {/* TODO: hide initial registration coupon banner before release */}
+      {/* {!isSignedIn && <NewRegistrationCouponBanner />} */}
       <div className="z-40 flex h-[72px] items-center justify-between border-b-[1px] bg-white-base px-[8px] py-3 md:px-[24px]">
         <div className="flex">
           <SpSideBar getTaxons={getTaxons} isSignedIn={isSignedIn} />
@@ -51,7 +54,7 @@ export function Header({ isSignedIn, getTaxons }: Props) {
           <Link href="/favorite-products" className="flex md:ml-6">
             <Heart className="h-6 w-6" />
             <Typography as="small" element="p" className="ml-1 hidden md:block">
-              お気に入り
+              {translate(locale, 'nav.favorite')}
             </Typography>
           </Link>
           <Suspense fallback={<CartMenuSkeleton />}>

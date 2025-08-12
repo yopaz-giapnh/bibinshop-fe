@@ -2,6 +2,7 @@
 
 import { Typography } from '@/components/ui/typography';
 import { getPopularSearches } from '@/features/search/actions';
+import { useTranslation } from '@/lib/i18n';
 import { useEffect, useState } from 'react';
 import { useRecentSearches } from './use-recent-search';
 
@@ -11,6 +12,7 @@ type Props = {
 
 export function PopularSearch({ onSearch }: Props) {
   const { search } = useRecentSearches();
+  const { t } = useTranslation();
 
   const handleSearch = (text: string) => {
     if (onSearch) {
@@ -34,7 +36,7 @@ export function PopularSearch({ onSearch }: Props) {
   return (
     <>
       <Typography element="p" as="bold" className="m-2">
-        人気ワード
+        {t('popularSearch.title')}
       </Typography>
       <div className="flex flex-wrap text-xs">
         {popularSearches.map((item, idx) => (
