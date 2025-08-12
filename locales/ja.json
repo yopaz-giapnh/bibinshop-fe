@@ -52,5 +52,20 @@
   },
   "popularSearch": {
     "title": "人気ワード"
+  },
+  "home": {
+    "recommended": "おすすめ商品",
+    "hot": "売れてる商品"
+  },
+  "notFound": {
+    "title": "404 not found",
+    "message": "申し訳ございません。指定されたページは存在いたしません。"
+  },
+  "error": {
+    "title": "エラー",
+    "message": "申し訳ございません。エラーが発生しました。"
+  },
+  "common": {
+    "backHome": "ホームに戻る"
   }
 }

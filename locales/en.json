@@ -52,5 +52,20 @@
   },
   "popularSearch": {
     "title": "Popular Words"
+  },
+  "home": {
+    "recommended": "Recommended Products",
+    "hot": "Hot Items"
+  },
+  "notFound": {
+    "title": "404 not found",
+    "message": "Sorry, the page you requested could not be found."
+  },
+  "error": {
+    "title": "Error",
+    "message": "Sorry, an error has occurred."
+  },
+  "common": {
+    "backHome": "Back to Home"
   }
 }

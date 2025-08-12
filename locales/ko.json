@@ -52,5 +52,20 @@
   },
   "popularSearch": {
     "title": "인기 검색어"
+  },
+  "home": {
+    "recommended": "추천 상품",
+    "hot": "인기 상품"
+  },
+  "notFound": {
+    "title": "404 not found",
+    "message": "죄송합니다. 요청하신 페이지를 찾을 수 없습니다."
+  },
+  "error": {
+    "title": "오류",
+    "message": "죄송합니다. 오류가 발생했습니다."
+  },
+  "common": {
+    "backHome": "홈으로 돌아가기"
   }
 }

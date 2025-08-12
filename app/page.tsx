@@ -12,9 +12,13 @@ import { TaxonList } from '@/features/taxon/components/taxon-list';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { Locale, translate } from '@/lib/i18n';
+import { cookies } from 'next/headers';
 
 export default async function Page() {
   const isSignedIn = await session.isSignedIn();
+  const locale = (cookies().get('NEXT_LOCALE')?.value || 'ja') as Locale;
+  const t = (key: string) => translate(locale, key);
 
   return (
     <div className="h-full w-full">
@@ -54,27 +58,37 @@ export default async function Page() {
           <div className="flex flex-col items-center gap-6 px-[8px] py-6 md:px-[46.5px]">
             <Suspense fallback={<ProductSkeleton />}>
               <ProductOverviewByTaxon
-                title="おすすめ商品"
+                title={t('home.recommended')}
                 seeMoreUrl="/products/recommended?page=1"
+                recommended
               />
             </Suspense>
             <Suspense fallback={<ProductSkeleton />}>
               <ProductOverviewByTaxon
-                title="ベストセラー"
+                title={t('nav.bestseller')}
+                taxonName="ベストセラー"
                 seeMoreUrl="/products/bestseller?page=1"
               />
             </Suspense>
             <Suspense fallback={<ProductSkeleton />}>
-              <ProductOverviewByTaxon title="新着" seeMoreUrl="/products/new?page=1" />
+              <ProductOverviewByTaxon
+                title={t('nav.new')}
+                taxonName="新着"
+                seeMoreUrl="/products/new?page=1"
+              />
             </Suspense>
           </div>
           <div className="flex flex-col items-center bg-paleFrostBlue px-[8px] py-6 md:px-[46.5px]">
             <Typography as="bold" element="h2" className="text-bibinBlue-100">
-              \ 売れてる商品 /
+              {`\\ ${t('home.hot')} /`}
             </Typography>
             <div className="mt-1">
               <Suspense fallback={<ProductSkeleton />}>
-                <ProductOverviewByTaxon title="ランキング" seeMoreUrl="/products/ranking?page=1" />
+                <ProductOverviewByTaxon
+                  title={t('nav.ranking')}
+                  taxonName="ランキング"
+                  seeMoreUrl="/products/ranking?page=1"
+                />
               </Suspense>
             </div>
           </div>

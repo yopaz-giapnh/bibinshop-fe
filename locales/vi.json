@@ -52,5 +52,20 @@
   },
   "popularSearch": {
     "title": "Từ khóa phổ biến"
+  },
+  "home": {
+    "recommended": "Sản phẩm gợi ý",
+    "hot": "Sản phẩm bán chạy"
+  },
+  "notFound": {
+    "title": "404 not found",
+    "message": "Xin lỗi, trang bạn yêu cầu không tồn tại."
+  },
+  "error": {
+    "title": "Lỗi",
+    "message": "Xin lỗi, đã xảy ra lỗi."
+  },
+  "common": {
+    "backHome": "Quay lại trang chủ"
   }
 }
